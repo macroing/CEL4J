@@ -13,9 +13,11 @@ ant
 
 Supported Features
 ------------------
-This library consists of a few different more or less unrelated subprojects. They are presented below.
+This library consists of several projects. They are presented below.
 
 #### CEL4J Java Binary
+The APIs in this project allows you to read, manipulate and write Java bytecode.
+
 * `org.macroing.cel4j.java.binary.classfile` - An API that models the general parts of a `ClassFile` structure.
 * `org.macroing.cel4j.java.binary.classfile.attributeinfo` - An API that models specific `attribute_info` structures.
 * `org.macroing.cel4j.java.binary.classfile.cpinfo` - An API that models specific `cp_info` structures.
@@ -23,19 +25,27 @@ This library consists of a few different more or less unrelated subprojects. The
 * `org.macroing.cel4j.java.binary.reader` - An API that provides capabilities to read the `ClassFile` models from streams of bytes.
 
 #### CEL4J Java Decompiler
+The APIs in this project allows you to decompile Java bytecode into Java source code.
+
 * `org.macroing.cel4j.java.decompiler` - An API that provides the general contract for a Java decompiler.
 * `org.macroing.cel4j.java.decompiler.simple` - An API that provides a simple Java decompiler implementation.
 
 #### CEL4J Java Source
+The APIs in this project allows you to parse, manipulate and format Java source code.
+
 * `org.macroing.cel4j.java.source.lexical` - An API that models the lexical structure of a `CompilationUnit`.
 
 #### CEL4J JSON
+The APIs in this project allows you to parse, manipulate and format JSON.
+
 * `org.macroing.cel4j.json` - An API that contains an object-oriented JSON model, as well as parsing and formatting functionality.
 
 #### CEL4J Node
 * `org.macroing.cel4j.node` - An API that models data types that can be filtered and traversed in various ways.
 
 #### CEL4J PHP
+The APIs in this project allows you to generate PHP source code.
+
 * `org.macroing.cel4j.php.generator` - An API used to generate object-oriented PHP class models from simple definitions.
 * `org.macroing.cel4j.php.generator.propertybuilder` - An API that contains `PropertyBuilder` implementations.
 * `org.macroing.cel4j.php.model` - An API that models PHP source code in an object-oriented manner.
@@ -576,4 +586,4 @@ Dependencies
 
 Note
 ----
-This library has not been properly released yet. This means, even though it says it's version 1.0.0 in the build.xml file and all Java source code files, it should not be treated as such. When this library gets released, it will be tagged and available on the "releases" page.
+This library has not been properly released yet. This means, even though it says it's version 1.0.0 in all Java source code files, it should not be treated as such. When this library gets released, it will be tagged and available on the "releases" page.
