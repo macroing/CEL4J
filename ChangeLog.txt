@@ -1,8 +1,231 @@
 2020-06-07  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
-	* ADD:		Add all files from project CEL4J JSON with some modifications.
-	* ADD:		Add all files from project CEL4J Java Binary with some modifications.
-	* ADD:		Add all files from project CEL4J Java Decompiler with some modifications.
-	* ADD:		Add all files from project CEL4J Java Source with some modifications.
-	* ADD:		Add all files from project CEL4J PHP with some modifications.
-	* CHANGE:	Update README.md.
+	CEL4J Java Binary:
+
+		* ADD:		All all files to the new project CEL4J.
+		* CHANGE:	Update the copyright notice to org.macroing.cel4j and 2009 - 2020.
+		* CHANGE:	Move all classes and interfaces in package org.macroing.cel4j.java.binary.node to org.macroing.cel4j.node.
+		* CHANGE:	Move all classes and interfaces in package org.macroing.cel4j.java.binary.util to org.macroing.cel4j.util.
+		* REMOVE:	Remove the package org.macroing.cel4j.java.binary.node.
+		* REMOVE:	Remove the package org.macroing.cel4j.java.binary.util.
+
+	CEL4J Java Decompiler:
+
+		* ADD:		All all files to the new project CEL4J.
+		* CHANGE:	Update the copyright notice to org.macroing.cel4j and 2009 - 2020.
+		* CHANGE:	Move all classes and interfaces in package org.macroing.cel4j.java.decompiler.model to org.macroing.cel4j.java.decompiler.simple.
+		* REMOVE:	Remove the package org.macroing.cel4j.java.decompiler.model.
+		* REMOVE:	Remove the interface Decompilable.
+
+	CEL4J Java Source:
+
+		* ADD:		All all files to the new project CEL4J.
+		* CHANGE:	Update the copyright notice to org.macroing.cel4j and 2009 - 2020.
+		* CHANGE:	Move all classes and interfaces in package org.macroing.cel4j.java.source.node to org.macroing.cel4j.node.
+		* CHANGE:	Move all classes and interfaces in package org.macroing.cel4j.java.source.util to org.macroing.cel4j.util.
+		* REMOVE:	Remove the package org.macroing.cel4j.java.source.node.
+		* REMOVE:	Remove the package org.macroing.cel4j.java.source.util.
+		* REMOVE:	Remove the package org.macroing.cel4j.java.source.syntactic with all its classes and interfaces. These needs to be rewritten.
+
+	CEL4J JSON:
+
+		* ADD:		All all files to the new project CEL4J.
+		* CHANGE:	Update the copyright notice to org.macroing.cel4j and 2009 - 2020.
+
+	CEL4J Node:
+
+		* ADD:		All all files to the new project CEL4J.
+		* CHANGE:	Update the copyright notice to org.macroing.cel4j and 2009 - 2020.
+
+	CEL4J PHP:
+
+		* ADD:		All all files to the new project CEL4J.
+		* CHANGE:	Update the copyright notice to org.macroing.cel4j and 2009 - 2020.
+		* CHANGE:	Move all classes and interfaces in package org.macroing.cel4j.php.util to org.macroing.cel4j.util.
+		* REMOVE:	Remove the package org.macroing.cel4j.php.util.
+
+	CEL4J Utilities:
+
+		* ADD:		All all files to the new project CEL4J.
+		* CHANGE:	Update the copyright notice to org.macroing.cel4j and 2009 - 2020.
+
+2020-06-05  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Binary:
+
+		* ADD:		A lot of new static methods have been added to the CPInfo implementation classes.
+		* CHANGE:	Move all internal classes of AttributeInfo implementations to external classes in the package org.macroing.cel4j.java.binary.classfile.attributeinfo.
+		* CHANGE:	A bug in the Parameter class used by MethodParametersAttribute has been found and fixed.
+		* REMOVE:	The classes ClassFiles and Instructions in the package org.macroing.cel4j.java.binary.support have been removed, along with the package itself.
+		* REMOVE:	The classes XMLReader, XMLReaderException, XMLWriter and XMLWriterException in the package org.macroing.cel4j.java.binary.support.xml have been removed, along with the package itself.
+
+	CEL4J Java Decompiler:
+
+		* CHANGE:	Update most of the models because CEL4J Java Binary was refactored.
+		* REMOVE:	The package org.macroing.cel4j.java.decompiler.test was removed with all classes in it.
+		* REMOVE:	The package org.macroing.cel4j.java.decompiler.util was removed with all classes in it.
+
+2020-06-04  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Binary:
+
+		* ADD:		Add a new class, AttributeInfoFilters, with methods for filtering AttributeInfo instances.
+		* ADD:		Add more methods for filtering CPInfo instances to the CPInfoFilters class.
+		* CHANGE:	Move the AbstractClassFileHierarchicalVisitor class from org.macroing.cel4j.java.binary.visitor to org.macroing.cel4j.java.binary.classfile.
+		* CHANGE:	Move the methods in AttributeInfoFilters to specific AttributeInfo implementations.
+		* CHANGE:	Move the methods in CPInfoFilters to specific CPInfo implementations.
+		* CHANGE:	Move the methods in MethodInfoFilters to the MethodInfo class.
+		* CHANGE:	Rename the findX(Node) methods in specific AttributeInfo implementations to find(Node).
+		* CHANGE:	Fix a bug when writing a ClassFile to a file in a directory that does not exist. Now the directories are created.
+		* REMOVE:	Remove the classes AttributeInfoFilters, CPInfoFilters and MethodInfoFilters, as well as their package, org.macroing.cel4j.java.binary.filter.
+		* REMOVE:	Remove the package org.macroing.cel4j.java.binary.visitor.
+
+2020-06-02  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Binary:
+
+		* ADD:		Add new methods to the Instruction class. Some of the methods are used for retrieving the index of some instruction types. Other methods are used for retrieving a single operand and the operand count. Previously, it was only possible to retrieve a copy of the operand array, which is not very efficient.
+		* ADD:		Add new methods to the ConstantUTF8Info class. The methods are used for retrieving ConstantUTF8Info instances from AttributeInfo, ConstantStringInfo, FieldInfo and MethodInfo instances.
+		* ADD:		Add new methods to the ClassFile, FieldInfo and MethodInfo classes. The methods are used for retrieving AttributeInfo, CPInfo, FieldInfo and MethodInfo instances in other ways than previously.
+		* CHANGE:	Move methods from the class ClassFiles to other parts of the library, where they are more suited.
+
+	CEL4J Java Decompiler:
+
+		* CHANGE:	Update most of the models because CEL4J Java Binary was refactored.
+
+2020-06-01  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Binary:
+
+		* ADD:		Add the methods collectNames() and collectNames(BiFunction) to the TypeParameters class. These methods provide the same functionality as the method getAllNames(TypeParameters) in the ClassFiles class.
+		* ADD:		Add the method toExternalForm(BiFunction) to the TypeParameters class. This method provides the same functionality as the AbstractTypeParametersWriter class.
+		* ADD:		Add TODOs for public API that should be documented with Javadocs but currently are not.
+		* CHANGE:	Move the method indexOf(ClassFile, CPInfo) in the ClassFiles class, to the method indexOf(CPInfo) in the ClassFile class. The method was rewritten, because it had a bug that caused the wrong index to be returned in some cases.
+		* CHANGE:	Move methods from the class ClassFiles to other parts of the library, where they are more suited.
+		* CHANGE:	Remove public visibility for two classes that should not be public. They were made public by accident.
+		* CHANGE:	Reorder methods to be more consistent across the codebase.
+		* REMOVE:	Remove the newly added method getAllNames(TypeParameters) from the class ClassFiles. It used the now removed class AbstractTypeParametersWriter.
+		* REMOVE:	Remove the newly added class AbstractTypeParametersWriter.
+
+	CEL4J Java Decompiler:
+
+		* CHANGE:	Update most of the models because CEL4J Java Binary was refactored.
+		* CHANGE:	Update the code that handles type parameters. Breaking changes were made to CEL4J Java Binary.
+
+2020-05-31  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Binary:
+
+		* ADD:		Add a class called AbstractTypeParametersWriter that can be used to update the type names in a TypeParameters instance.
+		* CHANGE:	Update the copyright notice to 2009 - 2020.
+
+	CEL4J Java Decompiler:
+
+		* ADD:		Add support for discarding unnecessary or imported package names for type parameters.
+		* CHANGE:	Update the way type parameters are managed.
+
+2020-05-30  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Decompiler:
+
+		* ADD:		Add type parameters to the import statements.
+		* ADD:		Add a configuration parameter for separating groups with comments.
+		* ADD:		Add a configuration parameter for sorting groups. The sorting still needs to be added.
+		* ADD:		Add a configuration parameter for displaying a comment with the configuration parameters used when decompiling.
+		* ADD:		Add a configuration parameter for displaying attribute_info structure information as a comment in decompiled methods.
+		* ADD:		Add Javadocs for the classes JInnerType, JModifier, JPrimitive, JType and JVoid.
+		* ADD:		Add new constants to the JModifier enum.
+		* ADD:		Add the JModifiers JModifier.TRANSIENT and JModifier.VOLATILE to the JField class.
+		* CHANGE:	Update the algorithm used to find out if a method is overridden or not. Previously it did not work for implemented interfaces and their super interfaces.
+		* CHANGE:	Move all String generator methods in the classes of the package org.macroing.cel4j.java.decompiler.model to the class SourceCodeGenerator in the package org.macroing.cel4j.java.decompiler.simple. This simplifies the usage of the DecompilerConfiguration class.
+		* CHANGE:	Update all getModifiers() methods to return a List of JModifier rather than a List of String.
+		* REMOVE:	Remove the StringUtilities class in the package org.macroing.cel4j.java.decompiler.model.
+
+2020-05-29  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Decompiler:
+
+		* ADD:		Add a class called Test that the DecompilerTest class decompiles.
+		* ADD:		Add a new configuration parameter called ImportingTypes to the DecompilerConfiguration class.
+		* ADD:		Add a new enum called JModifier.
+		* CHANGE:	Update the copyright notice to 2016 - 2020.
+
+2020-05-28  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J JSON:
+
+		* CHANGE:	Update the copyright notice to 2017 - 2020.
+		* CHANGE:	Update the order of certain fields and methods.
+
+	CEL4J PHP:
+
+		* ADD:		Add all files for the library.
+
+2019-02-08  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Decompiler:
+
+		* CHANGE:	Update the copyright notice to 2009 - 2019.
+
+	CEL4J JSON:
+
+		* CHANGE:	Update the copyright notice to 2009 - 2019.
+
+2018-03-23  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Decompiler:
+
+		* CHANGE:	Update the copyright notice to 2009 - 2018.
+		* REMOVE:	Remove the dependency to CIT Java.
+
+	CEL4J JSON:
+
+		* ADD:		Add a JSONUtilities class to format JSONType instances and retrieve JSONType instances given a path.
+		* CHANGE:	Update the JSONLexer class. Possibly because a bug was found.
+		* CHANGE:	Update the copyright notice to 2009 - 2018.
+
+2017-11-08  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J JSON:
+
+		* ADD:		Add all files for the library.
+
+2017-08-24  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Decompiler:
+
+		* CHANGE:	Fix a few mistakes in the Javadocs.
+
+2017-08-15  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Decompiler:
+
+		* ADD:		Add a new method to the class Consumers.
+		* CHANGE:	Split the configuration parameter DiscardingPublicAndAbstractInterfaceMethodModifiers in the class DecompilerConfiguration into two. These are DiscardingAbstractInterfaceMethodModifier and DiscardingPublicInterfaceMethodModifier. This change also affects the JField and JMethod classes.
+
+2017-02-27  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Decompiler:
+
+		* CHANGE:	Update the copyright notice to 2009 - 2017.
+		* REMOVE:	Remove the dependency to CEL4J Java Source.
+
+2016-10-23  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Decompiler:
+
+		* ADD:		Add support for displaying instruction branch offsets to the method generateCommentWithInstructions(Document) in the class JMethod.
+		* CHANGE:	Replace the method toString(ClassFile, MethodInfo, Instruction) in the class JMethod with the method toString(ClassFile, MethodInfo, Instruction) in the class ClassFiles.
+		* CHANGE:	Change the message provided to the IllegalArgumentException thrown when adding an invalid JClass to a JPackage.
+
+2016-06-17  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Decompiler:
+
+		* ADD:		Add support for more instructions in the method toString(ClassFile, MethodInfo, Instruction) of the class JMethod.
+
+2016-05-17  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Decompiler:
+
+		* ADD:		Add all files for the library.
