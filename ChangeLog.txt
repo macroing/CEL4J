@@ -1,0 +1,7 @@
+2020-06-07  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	* ADD:		Add all files from project CEL4J JSON with some modifications.
+	* ADD:		Add all files from project CEL4J Java Binary with some modifications.
+	* ADD:		Add all files from project CEL4J Java Decompiler with some modifications.
+	* ADD:		Add all files from project CEL4J Java Source with some modifications.
+	* ADD:		Add all files from project CEL4J PHP with some modifications.
