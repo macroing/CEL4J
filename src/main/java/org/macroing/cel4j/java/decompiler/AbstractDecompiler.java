@@ -52,7 +52,12 @@ public abstract class AbstractDecompiler implements Decompiler {
 	/**
 	 * Constructs a new {@code AbstractDecompiler} instance.
 	 * <p>
-	 * Calling this constructor is equivalent to calling {@code AbstractDecompiler(Consumers.print())}.
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * super(Consumers.print());
+	 * }
+	 * </pre>
 	 */
 	protected AbstractDecompiler() {
 		this(Consumers.print());
@@ -63,7 +68,7 @@ public abstract class AbstractDecompiler implements Decompiler {
 	 * <p>
 	 * If {@code defaultSourceConsumer} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param defaultSourceConsumer the default source {@code Consumer<String>} to use
+	 * @param defaultSourceConsumer a {@code Consumer} of type {@code String} that will consume the decompiled source code by default
 	 * @throws NullPointerException thrown if, and only if, {@code defaultSourceConsumer} is {@code null}
 	 */
 	protected AbstractDecompiler(final Consumer<String> defaultSourceConsumer) {
@@ -75,14 +80,13 @@ public abstract class AbstractDecompiler implements Decompiler {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns the currently assigned default source {@code Consumer<String>}.
+	 * Returns a {@code Consumer} of type {@code String} that represents the currently assigned default source consumer.
 	 * <p>
-	 * If no default source {@code Consumer<String>} has been explicitly set by the user of this API, the initial default source {@code Consumer<String>} will print the source to standard out via a call to
-	 * {@code System.out.println(source)}.
+	 * If no default source consumer has been explicitly set by the user of this API, the initial default source consumer will print the source to standard output via a call to {@code System.out.println(String)}.
 	 * <p>
 	 * This method will not return {@code null}.
 	 * 
-	 * @return the currently assigned default source {@code Consumer<String>}
+	 * @return a {@code Consumer} of type {@code String} that represents the currently assigned default source consumer
 	 */
 	@Override
 	public final Consumer<String> getDefaultSourceConsumer() {
@@ -100,11 +104,11 @@ public abstract class AbstractDecompiler implements Decompiler {
 	}
 	
 	/**
-	 * Returns a {@code List} will all currently added {@link DecompilerObserver} instances.
+	 * Returns a {@code List} with all currently added {@link DecompilerObserver} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code AbstractDecompiler} instance.
 	 * 
-	 * @return a {@code List} will all currently added {@code DecompilerObserver} instances
+	 * @return a {@code List} with all currently added {@code DecompilerObserver} instances
 	 */
 	@Override
 	public final List<DecompilerObserver> getDecompilerObservers() {
@@ -112,13 +116,18 @@ public abstract class AbstractDecompiler implements Decompiler {
 	}
 	
 	/**
-	 * Adds the given {@code Class<?>} to be decompiled.
-	 * <p>
-	 * Calling this method is equivalent to calling {@code decompiler.addClass(clazz, decompiler.getDefaultSourceConsumer())}.
+	 * Adds {@code clazz} for decompilation.
 	 * <p>
 	 * If {@code clazz} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * decompiler.addClass(clazz, decompiler.getDefaultSourceConsumer());
+	 * }
+	 * </pre>
 	 * 
-	 * @param clazz the {@code Class<?>} to add
+	 * @param clazz the {@code Class} to add for decompilation
 	 * @throws NullPointerException thrown if, and only if, {@code clazz} is {@code null}
 	 */
 	@Override
@@ -127,16 +136,21 @@ public abstract class AbstractDecompiler implements Decompiler {
 	}
 	
 	/**
-	 * Adds the given {@code Class<?>} to be decompiled, given its fully qualified name.
-	 * <p>
-	 * Calling this method is equivalent to calling {@code decompiler.addClass(className, decompiler.getDefaultSourceConsumer())}.
+	 * Adds {@code Class.forName(className)} for decompilation.
 	 * <p>
 	 * If {@code className} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If no such class- or interface-type can be found, a {@code ClassNotFoundException} will be thrown.
+	 * If {@code Class.forName(className)} fails, a {@code ClassNotFoundException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * decompiler.addClass(className, decompiler.getDefaultSourceConsumer());
+	 * }
+	 * </pre>
 	 * 
-	 * @param className the fully qualified name of the class- or interface-type to find
-	 * @throws ClassNotFoundException thrown if, and only if, no such class- or interface-type can be found
+	 * @param className the fully qualified name of a {@code Class}
+	 * @throws ClassNotFoundException thrown if, and only if, {@code Class.forName(className)} fails
 	 * @throws NullPointerException thrown if, and only if, {@code className} is {@code null}
 	 */
 	@Override
@@ -145,17 +159,22 @@ public abstract class AbstractDecompiler implements Decompiler {
 	}
 	
 	/**
-	 * Adds the given {@code Class<?>} to be decompiled, given its fully qualified name and the source {@code Consumer<String>} to hand its decompiled source code.
-	 * <p>
-	 * Calling this method is equivalent to calling {@code decompiler.addClass(Class.forName(className), sourceConsumer)}.
+	 * Adds {@code Class.forName(className)} for decompilation with {@code sourceConsumer} as the consumer of the decompiled source code.
 	 * <p>
 	 * If either {@code className} or {@code sourceConsumer} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If no such class- or interface-type can be found, a {@code ClassNotFoundException} will be thrown.
+	 * If {@code Class.forName(className)} fails, a {@code ClassNotFoundException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * decompiler.addClass(Class.forName(className), sourceConsumer);
+	 * }
+	 * </pre>
 	 * 
-	 * @param className the fully qualified name of the class- or interface-type to find
-	 * @param sourceConsumer the source {@code Consumer<String>} to hand the decompiled source code to
-	 * @throws ClassNotFoundException thrown if, and only if, no such class- or interface-type can be found
+	 * @param className the fully qualified name of a {@code Class}
+	 * @param sourceConsumer a {@code Consumer} of type {@code String} that will consume the decompiled source code
+	 * @throws ClassNotFoundException thrown if, and only if, {@code Class.forName(className)} fails
 	 * @throws NullPointerException thrown if, and only if, either {@code className} or {@code sourceConsumer} are {@code null}
 	 */
 	@Override
@@ -194,7 +213,7 @@ public abstract class AbstractDecompiler implements Decompiler {
 	 * <p>
 	 * If {@code files} or any of its elements are {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param files the {@code List} of {@code File}s representing the files to add to the class-path
+	 * @param files a {@code List} of type {@code File} that represents the files to add to the class-path
 	 * @throws NullPointerException thrown if, and only if, {@code files} or any of its elements are {@code null}
 	 */
 	@Override
@@ -219,7 +238,7 @@ public abstract class AbstractDecompiler implements Decompiler {
 	 * <p>
 	 * If {@code filename} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param filename the filename representing the file to add to the class-path
+	 * @param filename the filename of the file to add to the class-path
 	 * @throws NullPointerException thrown if, and only if, {@code filename} is {@code null}
 	 */
 	@Override
@@ -241,14 +260,13 @@ public abstract class AbstractDecompiler implements Decompiler {
 	}
 	
 	/**
-	 * Sets a new default source {@code Consumer<String>} for this {@code AbstractDecompiler} instance.
-	 * <p>
-	 * If no default source {@code Consumer<String>} has been explicitly set by the user of this API, the initial default source {@code Consumer<String>} will print the source to standard out via a call to
-	 * {@code System.out.println(source)}.
+	 * Sets a new default source consumer for this {@code AbstractDecompiler} instance.
 	 * <p>
 	 * If {@code defaultSourceConsumer} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If no default source consumer has been explicitly set by the user of this API, the initial default source consumer will print the source to standard output via a call to {@code System.out.println(String)}.
 	 * 
-	 * @param defaultSourceConsumer the new default source {@code Consumer<String>}
+	 * @param defaultSourceConsumer a {@code Consumer} of type {@code String} that will consume the decompiled source code by default
 	 * @throws NullPointerException thrown if, and only if, {@code defaultSourceConsumer} is {@code null}
 	 */
 	@Override

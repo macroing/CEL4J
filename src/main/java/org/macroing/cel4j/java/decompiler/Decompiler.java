@@ -28,7 +28,7 @@ import java.util.function.Consumer;
  * <p>
  * Implementations of this interface may or may not be thread-safe.
  * <p>
- * To use a {@code Decompiler}, consider the following example, that will print the decompiled source code to standard out:
+ * To use a {@code Decompiler}, consider the following example, that will print the decompiled source code to standard output:
  * <pre>
  * Decompiler decompiler = Decompiler.newInstance();
  * decompiler.addClass(Integer.class);
@@ -40,14 +40,13 @@ import java.util.function.Consumer;
  */
 public interface Decompiler {
 	/**
-	 * Returns the currently assigned default source {@code Consumer<String>}.
+	 * Returns a {@code Consumer} of type {@code String} that represents the currently assigned default source consumer.
 	 * <p>
-	 * If no default source {@code Consumer<String>} has been explicitly set by the user of this API, the initial default source {@code Consumer<String>} will print the source to standard out via a call to
-	 * {@code System.out.println(source)}.
+	 * If no default source consumer has been explicitly set by the user of this API, the initial default source consumer will print the source to standard output via a call to {@code System.out.println(String)}.
 	 * <p>
 	 * This method will not return {@code null}.
 	 * 
-	 * @return the currently assigned default source {@code Consumer<String>}
+	 * @return a {@code Consumer} of type {@code String} that represents the currently assigned default source consumer
 	 */
 	Consumer<String> getDefaultSourceConsumer();
 	
@@ -59,64 +58,79 @@ public interface Decompiler {
 	DecompilerConfiguration getDecompilerConfiguration();
 	
 	/**
-	 * Returns a {@code List} will all currently added {@link DecompilerObserver} instances.
+	 * Returns a {@code List} with all currently added {@link DecompilerObserver} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code Decompiler} instance.
 	 * 
-	 * @return a {@code List} will all currently added {@code DecompilerObserver} instances
+	 * @return a {@code List} with all currently added {@code DecompilerObserver} instances
 	 */
 	List<DecompilerObserver> getDecompilerObservers();
 	
 	/**
-	 * Adds the given {@code Class<?>} to be decompiled.
-	 * <p>
-	 * Calling this method is equivalent to calling {@code decompiler.addClass(clazz, decompiler.getDefaultSourceConsumer())}.
+	 * Adds {@code clazz} for decompilation.
 	 * <p>
 	 * If {@code clazz} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * decompiler.addClass(clazz, decompiler.getDefaultSourceConsumer());
+	 * }
+	 * </pre>
 	 * 
-	 * @param clazz the {@code Class<?>} to add
+	 * @param clazz the {@code Class} to add for decompilation
 	 * @throws NullPointerException thrown if, and only if, {@code clazz} is {@code null}
 	 */
 	void addClass(final Class<?> clazz);
 	
 	/**
-	 * Adds the given {@code Class<?>} to be decompiled and the source {@code Consumer<String>} to hand its decompiled source code.
+	 * Adds {@code clazz} for decompilation with {@code sourceConsumer} as the consumer of the decompiled source code.
 	 * <p>
 	 * If either {@code clazz} or {@code sourceConsumer} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param clazz the {@code Class<?>} to add
-	 * @param sourceConsumer the source {@code Consumer<String>} to hand the decompiled source code to
+	 * @param clazz the {@code Class} to add for decompilation
+	 * @param sourceConsumer a {@code Consumer} of type {@code String} that will consume the decompiled source code
 	 * @throws NullPointerException thrown if, and only if, either {@code clazz} or {@code sourceConsumer} are {@code null}
 	 */
 	void addClass(final Class<?> clazz, final Consumer<String> sourceConsumer);
 	
 	/**
-	 * Adds the given {@code Class<?>} to be decompiled, given its fully qualified name.
-	 * <p>
-	 * Calling this method is equivalent to calling {@code decompiler.addClass(className, decompiler.getDefaultSourceConsumer())}.
+	 * Adds {@code Class.forName(className)} for decompilation.
 	 * <p>
 	 * If {@code className} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If no such class- or interface-type can be found, a {@code ClassNotFoundException} will be thrown.
+	 * If {@code Class.forName(className)} fails, a {@code ClassNotFoundException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * decompiler.addClass(className, decompiler.getDefaultSourceConsumer());
+	 * }
+	 * </pre>
 	 * 
-	 * @param className the fully qualified name of the class- or interface-type to find
-	 * @throws ClassNotFoundException thrown if, and only if, no such class- or interface-type can be found
+	 * @param className the fully qualified name of a {@code Class}
+	 * @throws ClassNotFoundException thrown if, and only if, {@code Class.forName(className)} fails
 	 * @throws NullPointerException thrown if, and only if, {@code className} is {@code null}
 	 */
 	void addClass(final String className) throws ClassNotFoundException;
 	
 	/**
-	 * Adds the given {@code Class<?>} to be decompiled, given its fully qualified name and the source {@code Consumer<String>} to hand its decompiled source code.
-	 * <p>
-	 * Calling this method is equivalent to calling {@code decompiler.addClass(Class.forName(className), sourceConsumer)}.
+	 * Adds {@code Class.forName(className)} for decompilation with {@code sourceConsumer} as the consumer of the decompiled source code.
 	 * <p>
 	 * If either {@code className} or {@code sourceConsumer} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If no such class- or interface-type can be found, a {@code ClassNotFoundException} will be thrown.
+	 * If {@code Class.forName(className)} fails, a {@code ClassNotFoundException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * decompiler.addClass(Class.forName(className), sourceConsumer);
+	 * }
+	 * </pre>
 	 * 
-	 * @param className the fully qualified name of the class- or interface-type to find
-	 * @param sourceConsumer the source {@code Consumer<String>} to hand the decompiled source code to
-	 * @throws ClassNotFoundException thrown if, and only if, no such class- or interface-type can be found
+	 * @param className the fully qualified name of a {@code Class}
+	 * @param sourceConsumer a {@code Consumer} of type {@code String} that will consume the decompiled source code
+	 * @throws ClassNotFoundException thrown if, and only if, {@code Class.forName(className)} fails
 	 * @throws NullPointerException thrown if, and only if, either {@code className} or {@code sourceConsumer} are {@code null}
 	 */
 	void addClass(final String className, final Consumer<String> sourceConsumer) throws ClassNotFoundException;
@@ -146,7 +160,7 @@ public interface Decompiler {
 	 * <p>
 	 * If {@code files} or any of its elements are {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param files the {@code List} of {@code File}s representing the files to add to the class-path
+	 * @param files a {@code List} of type {@code File} that represents the files to add to the class-path
 	 * @throws NullPointerException thrown if, and only if, {@code files} or any of its elements are {@code null}
 	 */
 	void addToClassPath(final List<File> files);
@@ -156,23 +170,22 @@ public interface Decompiler {
 	 * <p>
 	 * If {@code filename} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param filename the filename representing the file to add to the class-path
+	 * @param filename the filename of the file to add to the class-path
 	 * @throws NullPointerException thrown if, and only if, {@code filename} is {@code null}
 	 */
 	void addToClassPath(final String filename);
 	
 	/**
-	 * Decompiles the class- and interface-types that were added to this {@code Decompiler} instance.
+	 * Decompiles the {@code Class} instances that were added to this {@code Decompiler} instance for decompilation.
 	 * <p>
-	 * The methods to add the class- and interface-types are the following:
+	 * The methods to add {@code Class} instances for decompilation, are the following:
 	 * <ul>
 	 * <li>{@link #addClass(Class)}</li>
 	 * <li>{@link #addClass(Class, Consumer)}</li>
 	 * <li>{@link #addClass(String)}</li>
 	 * <li>{@link #addClass(String, Consumer)}</li>
 	 * </ul>
-	 * When the decompilation process is finished, the source code of the decompiled class- and interface-types will be handed to the source {@code Consumer<String>} instances that were given to each individual class- and
-	 * interface-type, respectively.
+	 * When the decompilation process is finished, the source code of the decompiled {@code Class} instances will be consumed by the source consumers that were added along with them.
 	 * <p>
 	 * If the decompilation process fails, a {@link DecompilationException} will be thrown.
 	 * 
@@ -191,14 +204,13 @@ public interface Decompiler {
 	void removeDecompilerObserver(final DecompilerObserver decompilerObserver);
 	
 	/**
-	 * Sets a new default source {@code Consumer<String>} for this {@code Decompiler} instance.
-	 * <p>
-	 * If no default source {@code Consumer<String>} has been explicitly set by the user of this API, the initial default source {@code Consumer<String>} will print the source to standard out via a call to
-	 * {@code System.out.println(source)}.
+	 * Sets a new default source consumer for this {@code Decompiler} instance.
 	 * <p>
 	 * If {@code defaultSourceConsumer} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If no default source consumer has been explicitly set by the user of this API, the initial default source consumer will print the source to standard output via a call to {@code System.out.println(String)}.
 	 * 
-	 * @param defaultSourceConsumer the new default source {@code Consumer<String>}
+	 * @param defaultSourceConsumer a {@code Consumer} of type {@code String} that will consume the decompiled source code by default
 	 * @throws NullPointerException thrown if, and only if, {@code defaultSourceConsumer} is {@code null}
 	 */
 	void setDefaultSourceConsumer(final Consumer<String> defaultSourceConsumer);

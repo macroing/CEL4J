@@ -39,7 +39,7 @@ public interface LocalVariableNameGenerator {
 	/**
 	 * Returns a {@code LocalVariableNameGenerator} that generates the local variable name based on the simple name of the type.
 	 * <p>
-	 * A method with the signature {@code doSomething(String, Object)} would become {@code doSomething(String string0, Object object1)}.
+	 * A method with the signature {@code format(String, Object[])} would become {@code format(String string0, Object[] objectArray1)}.
 	 * 
 	 * @return a {@code LocalVariableNameGenerator} that generates the local variable name based on the simple name of the type
 	 */

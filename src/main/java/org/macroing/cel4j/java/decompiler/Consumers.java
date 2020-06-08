@@ -27,7 +27,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
- * A class that consists exclusively of static methods that return {@code Consumer}s of type {@code String} and can be used with this Decompiler API.
+ * A class that consists exclusively of static methods that return {@code Consumer}s of type {@code String} and can be used with this Java Decompiler API.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
@@ -67,9 +67,9 @@ public final class Consumers {
 	/**
 	 * Returns a {@code Consumer} that will write the source code to a file in the root directory represented by {@code file}.
 	 * <p>
-	 * The package name of {@code clazz} will be used in the path to the file.
-	 * <p>
 	 * If either {@code file} or {@code clazz} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * The package name of {@code clazz} will be used in the path to the file.
 	 * <p>
 	 * If an I/O-error occurs while writing to the file, an {@code UncheckedIOException} will be thrown. Calling this method will, however, not throw an {@code UncheckedIOException}.
 	 * 
@@ -85,11 +85,16 @@ public final class Consumers {
 	/**
 	 * Returns a {@code Consumer} that will write the source code to the file represented by the filename given by {@code filename}.
 	 * <p>
-	 * Calling this method is equivalent to calling {@code Consumers.file(new File(filename))}, assuming that {@code filename} is not {@code null}.
-	 * <p>
 	 * If {@code filename} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
 	 * If an I/O-error occurs while writing to the file, an {@code UncheckedIOException} will be thrown. Calling this method will, however, not throw an {@code UncheckedIOException}.
+	 * <p>
+	 * Calling this method is equivalent to the following, assuming that {@code filename} is not {@code null}:
+	 * <pre>
+	 * {@code
+	 * Consumers.file(new File(filename));
+	 * }
+	 * </pre>
 	 * 
 	 * @param filename the filename of the file to write the source code to
 	 * @return a {@code Consumer} that will write the source code to the file represented by the filename given by {@code filename}
@@ -102,9 +107,9 @@ public final class Consumers {
 	/**
 	 * Returns a {@code Consumer} that will write the source code to a file in the root directory represented by {@code filename}.
 	 * <p>
-	 * The package name of {@code clazz} will be used in the path to the file.
-	 * <p>
 	 * If either {@code filename} or {@code clazz} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * The package name of {@code clazz} will be used in the path to the file.
 	 * <p>
 	 * If an I/O-error occurs while writing to the file, an {@code UncheckedIOException} will be thrown. Calling this method will, however, not throw an {@code UncheckedIOException}.
 	 * 
@@ -120,27 +125,37 @@ public final class Consumers {
 	/**
 	 * Returns a {@code Consumer} that will write the source code to a file in the root directory represented by {@code filename}.
 	 * <p>
-	 * The package name of {@code className} will be used in the path to the file.
-	 * <p>
 	 * If either {@code filename} or {@code className} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
+	 * If {@code Class.forName(className)} fails, a {@code ClassNotFoundException} will be thrown.
+	 * <p>
+	 * The package name of {@code Class.forName(className)} will be used in the path to the file.
+	 * <p>
 	 * If an I/O-error occurs while writing to the file, an {@code UncheckedIOException} will be thrown. Calling this method will, however, not throw an {@code UncheckedIOException}.
+	 * <p>
+	 * Calling this method is equivalent to the following, assuming that {@code className} is not {@code null}:
+	 * <pre>
+	 * {@code
+	 * Consumers.file(filename, Class.forName(className));
+	 * }
+	 * </pre>
 	 * 
 	 * @param filename the root directory to write the file to
 	 * @param className the name of a class
 	 * @return a {@code Consumer} that will write the source code to a file in the root directory represented by {@code filename}
+	 * @throws ClassNotFoundException thrown if, and only if, {@code Class.forName(className)} fails
 	 * @throws NullPointerException thrown if, and only if, either {@code filename} or {@code className} are {@code null}
 	 */
-	public static Consumer<String> file(final String filename, final String className) {
-		return file(new File(Objects.requireNonNull(filename, "filename == null"), className.replace('.', '/') + ".java"));
+	public static Consumer<String> file(final String filename, final String className) throws ClassNotFoundException {
+		return file(filename, Class.forName(Objects.requireNonNull(className, "className == null")));
 	}
 	
 	/**
-	 * Returns a {@code Consumer} that will print the source code to standard out.
+	 * Returns a {@code Consumer} that will print the source code to standard output.
 	 * <p>
-	 * The source code will be printed by calling {@code System.out.println(source)}.
+	 * The source code will be printed by calling {@code System.out.println(String)}.
 	 * 
-	 * @return a {@code Consumer} that will print the source code to standard out
+	 * @return a {@code Consumer} that will print the source code to standard output
 	 */
 	public static Consumer<String> print() {
 		return source -> System.out.println(source);

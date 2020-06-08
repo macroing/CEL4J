@@ -19,7 +19,7 @@
 package org.macroing.cel4j.java.decompiler;
 
 /**
- * Implement this {@code DecompilerObserver} interface in order to listen for decompilation progress.
+ * A {@code DecompilerObserver} is an observer of decompilation progress.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
@@ -35,11 +35,11 @@ public interface DecompilerObserver {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code DecompilerObserver} that will print the progress to standard out.
+	 * Returns a {@code DecompilerObserver} that will print the progress to standard output.
 	 * <p>
-	 * The progress will be printed by calling {@code System.out.println(progress)}.
+	 * The progress will be printed by calling {@code System.out.println(String)}.
 	 * 
-	 * @return a {@code DecompilerObserver} that will print the progress to standard out
+	 * @return a {@code DecompilerObserver} that will print the progress to standard output
 	 */
 	static DecompilerObserver print() {
 		return progress -> System.out.println(progress);
