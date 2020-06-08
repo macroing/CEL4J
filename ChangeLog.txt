@@ -3,6 +3,7 @@
 	CEL4J Java Decompiler:
 
 		* ADD:		Two new static methods have been added to the Decompiler interface. These are used to create a new Decompiler instance.
+		* CHANGE:	Move the interface DecompilerConfiguration.LocalVariableNameGenerator to its own compilation unit, LocalVariableNameGenerator.
 		* CHANGE:	The class SimpleDecompiler has been renamed to DecompilerImpl and its public access modifier has been removed.
 		* CHANGE:	All classes and interfaces in the package org.macroing.cel4j.java.decompiler.simple have been moved to the parent package org.macroing.cel4j.java.decompiler.
 		* REMOVE:	The package org.macroing.cel4j.java.decompiler.simple has been removed.

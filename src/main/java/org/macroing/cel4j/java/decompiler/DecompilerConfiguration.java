@@ -368,42 +368,4 @@ public final class DecompilerConfiguration {
 	public void setSortingGroups(final boolean isSortingGroups) {
 		this.isSortingGroups.set(isSortingGroups);
 	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * A {@code LocalVariableNameGenerator} is used to generate the name of a local variable.
-	 * 
-	 * @since 1.0.0
-	 * @author J&#246;rgen Lundgren
-	 */
-	public static interface LocalVariableNameGenerator {
-		/**
-		 * Returns the name of a local variable.
-		 * 
-		 * @param typeName a {@code String} with the name of the type of the local variable
-		 * @param index the position of the local variable in the method or constructor
-		 * @return the name of a local variable
-		 */
-		String generateLocalVariableName(final String typeName, final int index);
-		
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		/**
-		 * Returns a {@code LocalVariableNameGenerator} that generates the local variable name based on the simple name of the type.
-		 * <p>
-		 * A method with the signature {@code doSomething(String, Object)} would become {@code doSomething(String string0, Object object1)}.
-		 * 
-		 * @return a {@code LocalVariableNameGenerator} that generates the local variable name based on the simple name of the type
-		 */
-		static LocalVariableNameGenerator newSimpleName() {
-			return (typeName, index) -> {
-				final String fullyQualifiedName = typeName;
-				final String simpleName = fullyQualifiedName.lastIndexOf(".") >= 0 ? fullyQualifiedName.substring(fullyQualifiedName.lastIndexOf(".") + 1) : fullyQualifiedName;
-				final String localVariableName = (Character.toLowerCase(simpleName.charAt(0)) + (simpleName.length() > 1 ? simpleName.substring(1) : "") + index).replace("[]", "Array");
-				
-				return localVariableName;
-			};
-		}
-	}
 }
