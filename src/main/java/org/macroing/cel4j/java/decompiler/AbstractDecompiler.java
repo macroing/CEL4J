@@ -165,7 +165,7 @@ public abstract class AbstractDecompiler implements Decompiler {
 	 * <p>
 	 * If {@code Class.forName(className)} fails, a {@code ClassNotFoundException} will be thrown.
 	 * <p>
-	 * Calling this method is equivalent to the following:
+	 * Calling this method is equivalent to the following, assuming that {@code className} is not {@code null}:
 	 * <pre>
 	 * {@code
 	 * decompiler.addClass(Class.forName(className), sourceConsumer);
