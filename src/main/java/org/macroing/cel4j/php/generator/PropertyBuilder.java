@@ -39,7 +39,7 @@ public interface PropertyBuilder {
 	 * 
 	 * @param property the {@link Property} instance to generate for
 	 * @return a {@code List} of {@code PConst} with the consts to generate for {@code property}
-	 * @throw NullPointerException thrown if, and only if, {@code property} is {@code null}
+	 * @throws NullPointerException thrown if, and only if, {@code property} is {@code null}
 	 */
 	List<PConst> toConsts(final Property property);
 	
@@ -50,7 +50,7 @@ public interface PropertyBuilder {
 	 * 
 	 * @param property the {@link Property} instance to generate for
 	 * @return a {@code List} of {@code PField} with the fields to generate for {@code property}
-	 * @throw NullPointerException thrown if, and only if, {@code property} is {@code null}
+	 * @throws NullPointerException thrown if, and only if, {@code property} is {@code null}
 	 */
 	List<PField> toFields(final Property property);
 	
@@ -61,7 +61,7 @@ public interface PropertyBuilder {
 	 * 
 	 * @param property the {@link Property} instance to generate for
 	 * @return a {@code List} of {@code PMethod} with the methods to generate for {@code property}
-	 * @throw NullPointerException thrown if, and only if, {@code property} is {@code null}
+	 * @throws NullPointerException thrown if, and only if, {@code property} is {@code null}
 	 */
 	List<PMethod> toMethods(final Property property);
 	
@@ -72,40 +72,44 @@ public interface PropertyBuilder {
 	 * 
 	 * @param property the {@link Property} instance to generate for
 	 * @return a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated constructor
-	 * @throw NullPointerException thrown if, and only if, {@code property} is {@code null}
+	 * @throws NullPointerException thrown if, and only if, {@code property} is {@code null}
 	 */
 	List<String> toConstructorLines(final Property property);
 	
 	/**
 	 * Returns a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated method {@code copy()}.
 	 * <p>
-	 * If {@code property} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
+	 * If either {@code property} or {@code nameType} are {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
 	 * 
 	 * @param property the {@link Property} instance to generate for
+	 * @param nameType the name of the type
 	 * @return a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated method {@code copy()}
-	 * @throw NullPointerException thrown if, and only if, {@code property} is {@code null}
+	 * @throws NullPointerException thrown if, and only if, either {@code property} or {@code nameType} are {@code null}
 	 */
 	List<String> toMethodCopyLines(final Property property, final String nameType);
 	
 	/**
 	 * Returns a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated method {@code parseArray(array)}.
 	 * <p>
-	 * If {@code property} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
+	 * If either {@code property}, {@code nameArray} or {@code nameType} are {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
 	 * 
 	 * @param property the {@link Property} instance to generate for
+	 * @param nameArray the name of the array
+	 * @param nameType the name of the type
 	 * @return a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated method {@code parseArray(array)}
-	 * @throw NullPointerException thrown if, and only if, {@code property} is {@code null}
+	 * @throws NullPointerException thrown if, and only if, either {@code property}, {@code nameArray} or {@code nameType} are {@code null}
 	 */
 	List<String> toMethodParseArrayLines(final Property property, final String nameArray, final String nameType);
 	
 	/**
 	 * Returns a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated method {@code set(Type)}.
 	 * <p>
-	 * If {@code property} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
+	 * If either {@code property} or {@code nameType} are {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
 	 * 
 	 * @param property the {@link Property} instance to generate for
+	 * @param nameType the name of the type
 	 * @return a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated method {@code set(Type)}
-	 * @throw NullPointerException thrown if, and only if, {@code property} is {@code null}
+	 * @throws NullPointerException thrown if, and only if, either {@code property} or {@code nameType} are {@code null}
 	 */
 	List<String> toMethodSetLines(final Property property, final String nameType);
 	
@@ -116,7 +120,7 @@ public interface PropertyBuilder {
 	 * 
 	 * @param property the {@link Property} instance to generate for
 	 * @return a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated method {@code toArray(bool)}
-	 * @throw NullPointerException thrown if, and only if, {@code property} is {@code null}
+	 * @throws NullPointerException thrown if, and only if, {@code property} is {@code null}
 	 */
 	List<String> toMethodToArrayLines(final Property property);
 	
