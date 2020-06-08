@@ -28,8 +28,8 @@ import org.macroing.cel4j.util.Document;
 
 //TODO: Add Javadocs!
 public final class PConstructor {
-	private final List<PParameterArgument> pParameterArguments;
-	private final PBlock pBlock;
+	private final List<PParameterArgument> parameterArguments;
+	private final PBlock block;
 	private boolean isFinal;
 	private boolean isPrivate;
 	private boolean isProtected;
@@ -39,8 +39,8 @@ public final class PConstructor {
 	
 //	TODO: Add Javadocs!
 	public PConstructor() {
-		this.pParameterArguments = new ArrayList<>();
-		this.pBlock = new PBlock();
+		this.parameterArguments = new ArrayList<>();
+		this.block = new PBlock();
 		this.isFinal = false;
 		this.isPrivate = false;
 		this.isProtected = false;
@@ -56,16 +56,16 @@ public final class PConstructor {
 	
 //	TODO: Add Javadocs!
 	public Document write(final Document document) {
-		final PBlock pBlock = this.pBlock;
+		final PBlock block = this.block;
 		
 		final String accessModifier = isPrivate() ? "private" : isProtected() ? "protected" : isPublic() ? "public" : "public";
 		final String finalModifier = isFinal() ? " final" : "";
-		final String parameterArguments = this.pParameterArguments.stream().map(pParameterArgument -> pParameterArgument.getSourceCode()).collect(Collectors.joining(", "));
+		final String parameterArguments = this.parameterArguments.stream().map(parameterArgument -> parameterArgument.getSourceCode()).collect(Collectors.joining(", "));
 		
 		document.linef("%s%s function __construct(%s) {", accessModifier, finalModifier, parameterArguments);
 		document.indent();
 		
-		pBlock.write(document);
+		block.write(document);
 		
 		document.outdent();
 		document.line("}");
@@ -74,21 +74,21 @@ public final class PConstructor {
 	}
 	
 //	TODO: Add Javadocs!
-	public List<PParameterArgument> getPParameterArguments() {
-		return new ArrayList<>(this.pParameterArguments);
+	public List<PParameterArgument> getParameterArguments() {
+		return new ArrayList<>(this.parameterArguments);
 	}
 	
 //	TODO: Add Javadocs!
-	public PBlock getPBlock() {
-		return this.pBlock;
+	public PBlock getBlock() {
+		return this.block;
 	}
 	
 //	TODO: Add Javadocs!
 	public boolean isDefaultCallable() {
 		boolean isDefaultCallable = true;
 		
-		for(final PParameterArgument pParameterArgument : this.pParameterArguments) {
-			if(!pParameterArgument.hasPValue()) {
+		for(final PParameterArgument parameterArgument : this.parameterArguments) {
+			if(!parameterArgument.hasValue()) {
 				isDefaultCallable = false;
 			}
 		}
@@ -117,13 +117,13 @@ public final class PConstructor {
 	}
 	
 //	TODO: Add Javadocs!
-	public void addPParameterArgument(final PParameterArgument pParameterArgument) {
-		this.pParameterArguments.add(Objects.requireNonNull(pParameterArgument, "pParameterArgument == null"));
+	public void addParameterArgument(final PParameterArgument parameterArgument) {
+		this.parameterArguments.add(Objects.requireNonNull(parameterArgument, "parameterArgument == null"));
 	}
 	
 //	TODO: Add Javadocs!
-	public void removePParameterArgument(final PParameterArgument pParameterArgument) {
-		this.pParameterArguments.remove(Objects.requireNonNull(pParameterArgument, "pParameterArgument == null"));
+	public void removeParameterArgument(final PParameterArgument parameterArgument) {
+		this.parameterArguments.remove(Objects.requireNonNull(parameterArgument, "parameterArgument == null"));
 	}
 	
 //	TODO: Add Javadocs!

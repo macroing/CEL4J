@@ -34,15 +34,15 @@ public final class PConst implements Comparable<PConst> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private PValue pValue;
+	private PValue value;
 	private String name;
 	private int accessFlags;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 //	TODO: Add Javadocs!
-	public PConst(final String name, final PValue pValue) {
-		this.pValue = Objects.requireNonNull(pValue, "pValue == null");
+	public PConst(final String name, final PValue value) {
+		this.value = Objects.requireNonNull(value, "value == null");
 		this.name = Objects.requireNonNull(name, "name == null");
 		this.accessFlags = ACCESS_FLAG_PUBLIC;
 	}
@@ -69,7 +69,7 @@ public final class PConst implements Comparable<PConst> {
 			stringBuilder.append(" ");
 		}
 		
-		document.linef("%sconst %s%s = %s;", accessModifiers, this.name, stringBuilder.toString(), this.pValue.getSourceCode());
+		document.linef("%sconst %s%s = %s;", accessModifiers, this.name, stringBuilder.toString(), this.value.getSourceCode());
 		
 		return document;
 	}
@@ -113,8 +113,8 @@ public final class PConst implements Comparable<PConst> {
 	}
 	
 //	TODO: Add Javadocs!
-	public PValue getPValue() {
-		return this.pValue;
+	public PValue getValue() {
+		return this.value;
 	}
 	
 //	TODO: Add Javadocs!
@@ -129,7 +129,7 @@ public final class PConst implements Comparable<PConst> {
 			return true;
 		} else if(!(object instanceof PConst)) {
 			return false;
-		} else if(!Objects.equals(this.pValue, PConst.class.cast(object).pValue)) {
+		} else if(!Objects.equals(this.value, PConst.class.cast(object).value)) {
 			return false;
 		} else if(!Objects.equals(this.name, PConst.class.cast(object).name)) {
 			return false;
@@ -158,32 +158,32 @@ public final class PConst implements Comparable<PConst> {
 //	TODO: Add Javadocs!
 	@Override
 	public int compareTo(final PConst pConst) {
-		final PConst pConstThis = this;
-		final PConst pConstThat = pConst;
+		final PConst constThis = this;
+		final PConst constThat = pConst;
 		
-		final boolean isPublicThis = pConstThis.isPublic();
-		final boolean isPublicThat = pConstThat.isPublic();
+		final boolean isPublicThis = constThis.isPublic();
+		final boolean isPublicThat = constThat.isPublic();
 		
 		if(isPublicThis != isPublicThat) {
 			return isPublicThis ? -1 : 1;
 		}
 		
-		final boolean isProtectedThis = pConstThis.isProtected();
-		final boolean isProtectedThat = pConstThat.isProtected();
+		final boolean isProtectedThis = constThis.isProtected();
+		final boolean isProtectedThat = constThat.isProtected();
 		
 		if(isProtectedThis != isProtectedThat) {
 			return isProtectedThis ? -1 : 1;
 		}
 		
-		final boolean isPrivateThis = pConstThis.isPrivate();
-		final boolean isPrivateThat = pConstThat.isPrivate();
+		final boolean isPrivateThis = constThis.isPrivate();
+		final boolean isPrivateThat = constThat.isPrivate();
 		
 		if(isPrivateThis != isPrivateThat) {
 			return isPrivateThis ? -1 : 1;
 		}
 		
-		final String nameThis = pConstThis.name;
-		final String nameThat = pConstThat.name;
+		final String nameThis = constThis.name;
+		final String nameThat = constThat.name;
 		
 		return nameThis.compareTo(nameThat);
 	}
@@ -191,17 +191,12 @@ public final class PConst implements Comparable<PConst> {
 //	TODO: Add Javadocs!
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.pValue, this.name, Integer.valueOf(this.accessFlags));
+		return Objects.hash(this.value, this.name, Integer.valueOf(this.accessFlags));
 	}
 	
 //	TODO: Add Javadocs!
 	public void setName(final String name) {
 		this.name = Objects.requireNonNull(name, "name == null");
-	}
-	
-//	TODO: Add Javadocs!
-	public void setPValue(final PValue pValue) {
-		this.pValue = Objects.requireNonNull(pValue, "pValue == null");
 	}
 	
 //	TODO: Add Javadocs!
@@ -237,19 +232,24 @@ public final class PConst implements Comparable<PConst> {
 		}
 	}
 	
+//	TODO: Add Javadocs!
+	public void setValue(final PValue value) {
+		this.value = Objects.requireNonNull(value, "value == null");
+	}
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 //	TODO: Add Javadocs!
-	public static boolean isInDifferentGroups(final PConst pConstA, final PConst pConstB) {
-		if(pConstA.isPublic() != pConstB.isPublic()) {
+	public static boolean isInDifferentGroups(final PConst constA, final PConst constB) {
+		if(constA.isPublic() != constB.isPublic()) {
 			return true;
 		}
 		
-		if(pConstA.isProtected() != pConstB.isProtected()) {
+		if(constA.isProtected() != constB.isProtected()) {
 			return true;
 		}
 		
-		if(pConstA.isPrivate() != pConstB.isPrivate()) {
+		if(constA.isPrivate() != constB.isPrivate()) {
 			return true;
 		}
 		

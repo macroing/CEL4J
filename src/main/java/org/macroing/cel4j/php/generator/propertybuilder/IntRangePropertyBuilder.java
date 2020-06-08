@@ -48,16 +48,16 @@ public final class IntRangePropertyBuilder extends AbstractPropertyBuilder {
 	
 //	TODO: Add Javadocs!
 	@Override
-	public List<PMethod> toPMethods(final Property property) {
-		final List<PMethod> pMethods = new ArrayList<>();
+	public List<PMethod> toMethods(final Property property) {
+		final List<PMethod> methods = new ArrayList<>();
 		
-		pMethods.add(toPMethodDoParseInt());
-		pMethods.add(toPMethodGet(property));
-		pMethods.add(toPMethodHas(property));
-		pMethods.add(doToPMethodSet(property, this.minimumValue, this.maximumValue));
-		pMethods.add(doToPMethodDoUpdateIntByRange());
+		methods.add(toMethodDoParseInt());
+		methods.add(toMethodGet(property));
+		methods.add(toMethodHas(property));
+		methods.add(doToMethodSet(property, this.minimumValue, this.maximumValue));
+		methods.add(doToMethodDoUpdateIntByRange());
 		
-		return pMethods;
+		return methods;
 	}
 	
 //	TODO: Add Javadocs!
@@ -78,10 +78,10 @@ public final class IntRangePropertyBuilder extends AbstractPropertyBuilder {
 	
 //	TODO: Add Javadocs!
 	@Override
-	public boolean isPTypeSupported(final PType pType) {
-		final String pTypeName = pType.getName();
+	public boolean isTypeSupported(final PType type) {
+		final String typeName = type.getName();
 		
-		switch(pTypeName) {
+		switch(typeName) {
 			case "int":
 				return true;
 			default:
@@ -107,32 +107,32 @@ public final class IntRangePropertyBuilder extends AbstractPropertyBuilder {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private static PMethod doToPMethodDoUpdateIntByRange() {
+	private static PMethod doToMethodDoUpdateIntByRange() {
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument("newInt", PType.INT, null, true));
-		pMethod.addPParameterArgument(new PParameterArgument("oldInt", PType.INT, null, true));
-		pMethod.addPParameterArgument(new PParameterArgument("minimumValue", PType.INT, null, false));
-		pMethod.addPParameterArgument(new PParameterArgument("maximumValue", PType.INT, null, false));
-		pMethod.getPBlock().addLine("if($newInt === null) {");
-		pMethod.getPBlock().addLine("	return $newInt;");
-		pMethod.getPBlock().addLine("} else if($newInt >= $minimumValue && $newInt <= $maximumValue) {");
-		pMethod.getPBlock().addLine("	return $newInt;");
-		pMethod.getPBlock().addLine("} else {");
-		pMethod.getPBlock().addLine("	return $oldInt;");
-		pMethod.getPBlock().addLine("}");
+		pMethod.addParameterArgument(new PParameterArgument("newInt", PType.INT, null, true));
+		pMethod.addParameterArgument(new PParameterArgument("oldInt", PType.INT, null, true));
+		pMethod.addParameterArgument(new PParameterArgument("minimumValue", PType.INT, null, false));
+		pMethod.addParameterArgument(new PParameterArgument("maximumValue", PType.INT, null, false));
+		pMethod.getBlock().addLine("if($newInt === null) {");
+		pMethod.getBlock().addLine("	return $newInt;");
+		pMethod.getBlock().addLine("} else if($newInt >= $minimumValue && $newInt <= $maximumValue) {");
+		pMethod.getBlock().addLine("	return $newInt;");
+		pMethod.getBlock().addLine("} else {");
+		pMethod.getBlock().addLine("	return $oldInt;");
+		pMethod.getBlock().addLine("}");
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("doUpdateIntByRange");
-		pMethod.setPReturnType(new PReturnType(PType.INT, true));
 		pMethod.setPrivate(true);
+		pMethod.setReturnType(new PReturnType(PType.INT, true));
 		pMethod.setStatic(true);
 		
 		return pMethod;
 	}
 	
-	private static PMethod doToPMethodSet(final Property property, final int minimumValue, final int maximumValue) {
-		final PType pType = property.getPType();
+	private static PMethod doToMethodSet(final Property property, final int minimumValue, final int maximumValue) {
+		final PType type = property.getType();
 		
 		final String name = property.getName();
 		final String nameCamelCase = Strings.formatCamelCase(name);
@@ -140,12 +140,12 @@ public final class IntRangePropertyBuilder extends AbstractPropertyBuilder {
 		
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument(nameCamelCaseModified, pType, PValue.NULL, true));
-		pMethod.getPBlock().addLinef("return ($this->%s = self::doUpdateIntByRange($%s, $this->%s, %s, %s)) === $%s;", nameCamelCaseModified, nameCamelCaseModified, nameCamelCaseModified, Integer.toString(minimumValue), Integer.toString(maximumValue), nameCamelCaseModified);
+		pMethod.addParameterArgument(new PParameterArgument(nameCamelCaseModified, type, PValue.NULL, true));
+		pMethod.getBlock().addLinef("return ($this->%s = self::doUpdateIntByRange($%s, $this->%s, %s, %s)) === $%s;", nameCamelCaseModified, nameCamelCaseModified, nameCamelCaseModified, Integer.toString(minimumValue), Integer.toString(maximumValue), nameCamelCaseModified);
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("set" + nameCamelCase);
-		pMethod.setPReturnType(new PReturnType(PType.BOOL, false));
+		pMethod.setReturnType(new PReturnType(PType.BOOL, false));
 		
 		return pMethod;
 	}

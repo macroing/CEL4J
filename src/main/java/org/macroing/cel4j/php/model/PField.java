@@ -148,39 +148,39 @@ public final class PField implements Comparable<PField> {
 	
 //	TODO: Add Javadocs!
 	@Override
-	public int compareTo(final PField pField) {
-		final PField pFieldThis = this;
-		final PField pFieldThat = pField;
+	public int compareTo(final PField field) {
+		final PField fieldThis = this;
+		final PField fieldThat = field;
 		
-		final boolean isStaticThis = pFieldThis.isStatic();
-		final boolean isStaticThat = pFieldThat.isStatic();
+		final boolean isStaticThis = fieldThis.isStatic();
+		final boolean isStaticThat = fieldThat.isStatic();
 		
 		if(isStaticThis != isStaticThat) {
 			return isStaticThis ? -1 : 1;
 		}
 		
-		final boolean isPublicThis = pFieldThis.isPublic();
-		final boolean isPublicThat = pFieldThat.isPublic();
+		final boolean isPublicThis = fieldThis.isPublic();
+		final boolean isPublicThat = fieldThat.isPublic();
 		
 		if(isPublicThis != isPublicThat) {
 			return isPublicThis ? -1 : 1;
 		}
 		
-		final boolean isProtectedThis = pFieldThis.isProtected();
-		final boolean isProtectedThat = pFieldThat.isProtected();
+		final boolean isProtectedThis = fieldThis.isProtected();
+		final boolean isProtectedThat = fieldThat.isProtected();
 		
 		if(isProtectedThis != isProtectedThat) {
 			return isProtectedThis ? -1 : 1;
 		}
 		
-		final boolean isPrivateThis = pFieldThis.isPrivate();
-		final boolean isPrivateThat = pFieldThat.isPrivate();
+		final boolean isPrivateThis = fieldThis.isPrivate();
+		final boolean isPrivateThat = fieldThat.isPrivate();
 		
 		if(isPrivateThis != isPrivateThat) {
 			return isPrivateThis ? -1 : 1;
 		}
 		
-		return this.name.compareTo(pField.name);
+		return this.name.compareTo(field.name);
 	}
 	
 //	TODO: Add Javadocs!
@@ -239,20 +239,20 @@ public final class PField implements Comparable<PField> {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 //	TODO: Add Javadocs!
-	public static boolean isInDifferentGroups(final PField pFieldA, final PField pFieldB) {
-		if(pFieldA.isStatic() != pFieldB.isStatic()) {
+	public static boolean isInDifferentGroups(final PField fieldA, final PField fieldB) {
+		if(fieldA.isStatic() != fieldB.isStatic()) {
 			return true;
 		}
 		
-		if(pFieldA.isPublic() != pFieldB.isPublic()) {
+		if(fieldA.isPublic() != fieldB.isPublic()) {
 			return true;
 		}
 		
-		if(pFieldA.isProtected() != pFieldB.isProtected()) {
+		if(fieldA.isProtected() != fieldB.isProtected()) {
 			return true;
 		}
 		
-		if(pFieldA.isPrivate() != pFieldB.isPrivate()) {
+		if(fieldA.isPrivate() != fieldB.isPrivate()) {
 			return true;
 		}
 		

@@ -28,14 +28,14 @@ import org.macroing.cel4j.util.Document;
 
 //TODO: Add Javadocs!
 public final class PInterface {
-	private final List<PMethod> pMethods;
+	private final List<PMethod> methods;
 	private String name;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 //	TODO: Add Javadocs!
 	public PInterface() {
-		this.pMethods = new ArrayList<>();
+		this.methods = new ArrayList<>();
 		this.name = "MyInterface";
 	}
 	
@@ -48,24 +48,24 @@ public final class PInterface {
 	
 //	TODO: Add Javadocs!
 	public Document write(final Document document) {
-		final List<PMethod> pMethods = getPMethods();
+		final List<PMethod> methods = getMethods();
 		
 		final String name = getName();
 		
 		document.linef("interface %s {", name);
 		document.indent();
 		
-		for(int i = 0; i < pMethods.size(); i++) {
-			final PMethod pMethodA = pMethods.get(i);
-			final PMethod pMethodB = pMethods.get(i + 1 < pMethods.size() ? i + 1 : i);
+		for(int i = 0; i < methods.size(); i++) {
+			final PMethod methodA = methods.get(i);
+			final PMethod methodB = methods.get(i + 1 < methods.size() ? i + 1 : i);
 			
-			pMethodA.write(document);
+			methodA.write(document);
 			
-			if(PMethod.isInDifferentGroups(pMethodA, pMethodB)) {
+			if(PMethod.isInDifferentGroups(methodA, methodB)) {
 				document.line();
 				document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
 				document.line();
-			} else if(pMethodA != pMethodB) {
+			} else if(methodA != methodB) {
 				document.line();
 			}
 		}
@@ -77,8 +77,8 @@ public final class PInterface {
 	}
 	
 //	TODO: Add Javadocs!
-	public List<PMethod> getPMethods() {
-		return new ArrayList<>(this.pMethods);
+	public List<PMethod> getMethods() {
+		return new ArrayList<>(this.methods);
 	}
 	
 //	TODO: Add Javadocs!
@@ -87,13 +87,13 @@ public final class PInterface {
 	}
 	
 //	TODO: Add Javadocs!
-	public void addPMethod(final PMethod pMethod) {
-		this.pMethods.add(Objects.requireNonNull(pMethod, "pMethod == null"));
+	public void addMethod(final PMethod method) {
+		this.methods.add(Objects.requireNonNull(method, "method == null"));
 	}
 	
 //	TODO: Add Javadocs!
-	public void removePMethod(final PMethod pMethod) {
-		this.pMethods.remove(Objects.requireNonNull(pMethod, "pMethod == null"));
+	public void removeMethod(final PMethod method) {
+		this.methods.remove(Objects.requireNonNull(method, "method == null"));
 	}
 	
 //	TODO: Add Javadocs!
@@ -103,6 +103,6 @@ public final class PInterface {
 	
 //	TODO: Add Javadocs!
 	public void sort() {
-		Collections.sort(this.pMethods);
+		Collections.sort(this.methods);
 	}
 }

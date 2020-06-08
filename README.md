@@ -1,4 +1,4 @@
-CEL4J - Version 0.5.0
+CEL4J - Version 0.5.1
 =====================
 CEL4J is a Code Engineering Library for Java. It provides functionality for JSON, Java and PHP.
 
@@ -294,29 +294,29 @@ import org.macroing.cel4j.php.model.PValue;
 public class ModelExample {
     public static void main(String[] args) {
         PConstructor pConstructor = new PConstructor();
-        pConstructor.getPBlock().addLine("");
+        pConstructor.getBlock().addLine("");
         pConstructor.setFinal(true);
         pConstructor.setPublic(true);
         
         PMethod pMethod = new PMethod();
-        pMethod.addPParameterArgument(new PParameterArgument("name", PType.STRING, PValue.valueOf("you")));
-        pMethod.getPBlock().addLine("echo sprintf('Hello %s!', $name);");
+        pMethod.addParameterArgument(new PParameterArgument("name", PType.STRING, PValue.valueOf("you")));
+        pMethod.getBlock().addLine("echo sprintf('Hello %s!', $name);");
         pMethod.setEnclosedByClass(true);
         pMethod.setFinal(true);
         pMethod.setName("greet");
-        pMethod.setPReturnType(new PReturnType(PType.VOID));
         pMethod.setPublic(true);
+        pMethod.setReturnType(new PReturnType(PType.VOID));
         
         PClass pClass = new PClass();
-        pClass.addPMethod(pMethod);
+        pClass.addMethod(pMethod);
+        pClass.setConstructor(pConstructor);
         pClass.setFinal(true);
         pClass.setName("Greeter");
-        pClass.setPConstructor(pConstructor);
         
         PDocument pDocument = new PDocument();
-        pDocument.addPClass(pClass);
-        pDocument.getPBlock().addLine("$greeter = new Greeter();");
-        pDocument.getPBlock().addLine("$greeter->greet('John Doe');");
+        pDocument.addClass(pClass);
+        pDocument.getBlock().addLine("$greeter = new Greeter();");
+        pDocument.getBlock().addLine("$greeter->greet('John Doe');");
         pDocument.setNamespace(PDocument.toNamespace("com", "example", "greeter"));
         
         System.out.println(pDocument.write());
@@ -371,7 +371,7 @@ public class GeneratorExample {
         model.addProperty(new Property(PType.STRING, new StringOptionPropertyBuilder(new StringOption("female", "GenderFemale"), new StringOption("male", "GenderMale")), "gender", "Gender"));
         model.addProperty(new Property(PType.valueOf("School"), new DefaultPropertyBuilder(), "school", "School"));
         
-        PDocument pDocument = model.toPDocument(PDocument.toNamespace("com", "example", "person"));
+        PDocument pDocument = model.toDocument(PDocument.toNamespace("com", "example", "person"));
         
         System.out.println(pDocument.write(new Document(), true));
     }

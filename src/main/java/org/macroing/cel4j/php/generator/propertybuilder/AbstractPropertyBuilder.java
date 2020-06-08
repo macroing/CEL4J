@@ -44,157 +44,157 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 	
 //	TODO: Add Javadocs!
 	@Override
-	public List<PConst> toPConsts(final Property property) {
-		final List<PConst> pConsts = new ArrayList<>();
+	public List<PConst> toConsts(final Property property) {
+		final List<PConst> consts = new ArrayList<>();
 		
-		pConsts.add(toPConst(property));
+		consts.add(toConst(property));
 		
-		return pConsts;
+		return consts;
 	}
 	
 //	TODO: Add Javadocs!
 	@Override
-	public List<PField> toPFields(final Property property) {
-		final List<PField> pFields = new ArrayList<>();
+	public List<PField> toFields(final Property property) {
+		final List<PField> fields = new ArrayList<>();
 		
-		pFields.add(toPField(property));
+		fields.add(toField(property));
 		
-		return pFields;
+		return fields;
 	}
 	
 //	TODO: Add Javadocs!
 	@Override
-	public List<PMethod> toPMethods(final Property property) {
-		final List<PMethod> pMethods = new ArrayList<>();
+	public List<PMethod> toMethods(final Property property) {
+		final List<PMethod> methods = new ArrayList<>();
 		
-		final PType pType = property.getPType();
+		final PType type = property.getType();
 		
-		final String pTypeName = pType.getName();
+		final String typeName = type.getName();
 		
-		switch(pTypeName) {
+		switch(typeName) {
 			case "array":
-				pMethods.add(toPMethodDoParseArray());
+				methods.add(toMethodDoParseArray());
 				
 				break;
 			case "bool":
-				pMethods.add(toPMethodDoParseBool());
+				methods.add(toMethodDoParseBool());
 				
 				break;
 			case "callable":
 				break;
 			case "float":
-				pMethods.add(toPMethodDoParseFloat());
+				methods.add(toMethodDoParseFloat());
 				
 				break;
 			case "int":
-				pMethods.add(toPMethodDoParseInt());
+				methods.add(toMethodDoParseInt());
 				
 				break;
 			case "iterable":
 				break;
 			case "object":
-				pMethods.add(toPMethodDoParseObject());
+				methods.add(toMethodDoParseObject());
 				
 				break;
 			case "self":
 				break;
 			case "string":
-				pMethods.add(toPMethodDoParseString());
+				methods.add(toMethodDoParseString());
 				
 				break;
 			case "void":
 				break;
 			default:
-				pMethods.add(toPMethodDoParse(pTypeName));
+				methods.add(toMethodDoParse(typeName));
 				
 				break;
 		}
 		
-		pMethods.add(toPMethodGet(property));
-		pMethods.add(toPMethodHas(property));
-		pMethods.add(toPMethodSet(property));
+		methods.add(toMethodGet(property));
+		methods.add(toMethodHas(property));
+		methods.add(toMethodSet(property));
 		
-		return pMethods;
+		return methods;
 	}
 	
 //	TODO: Add Javadocs!
 	@Override
-	public List<String> toPConstructorLines(final Property property) {
+	public List<String> toConstructorLines(final Property property) {
 		final String name = property.getName();
 		final String nameCamelCase = Strings.formatCamelCase(name);
 		
-		final List<String> pConstructorLines = new ArrayList<>();
+		final List<String> constructorLines = new ArrayList<>();
 		
-		pConstructorLines.add(String.format("$this->set%s();", nameCamelCase));
+		constructorLines.add(String.format("$this->set%s();", nameCamelCase));
 		
-		return pConstructorLines;
+		return constructorLines;
 	}
 	
 //	TODO: Add Javadocs!
 	@Override
-	public List<String> toPMethodCopyLines(final Property property, final String nameType) {
+	public List<String> toMethodCopyLines(final Property property, final String nameType) {
 		final String name = property.getName();
 		final String nameCamelCase = Strings.formatCamelCase(name);
 		
-		final List<String> pMethodCopyLines = new ArrayList<>();
+		final List<String> methodCopyLines = new ArrayList<>();
 		
-		pMethodCopyLines.add(String.format("$%s->set%s($this->get%s());", nameType, nameCamelCase, nameCamelCase));
+		methodCopyLines.add(String.format("$%s->set%s($this->get%s());", nameType, nameCamelCase, nameCamelCase));
 		
-		return pMethodCopyLines;
+		return methodCopyLines;
 	}
 	
 //	TODO: Add Javadocs!
 	@Override
-	public List<String> toPMethodParseArrayLines(final Property property, final String nameArray, final String nameType) {
+	public List<String> toMethodParseArrayLines(final Property property, final String nameArray, final String nameType) {
 		final String name = property.getName();
 		final String nameCamelCase = Strings.formatCamelCase(name);
 		final String nameMethod = doGetNameMethod(property);
 		final String nameUnderscoreSeparatedUpperCase = Strings.formatUnderscoreSeparatedUpperCase(name);
 		
-		final List<String> pMethodParseArrayLines = new ArrayList<>();
+		final List<String> methodParseArrayLines = new ArrayList<>();
 		
 		if(!nameMethod.isEmpty()) {
-			pMethodParseArrayLines.add(String.format("$%s->set%s(self::%s($%s, self::%s));", nameType, nameCamelCase, nameMethod, nameArray, nameUnderscoreSeparatedUpperCase));
+			methodParseArrayLines.add(String.format("$%s->set%s(self::%s($%s, self::%s));", nameType, nameCamelCase, nameMethod, nameArray, nameUnderscoreSeparatedUpperCase));
 		}
 		
-		return pMethodParseArrayLines;
+		return methodParseArrayLines;
 	}
 	
 //	TODO: Add Javadocs!
 	@Override
-	public List<String> toPMethodSetLines(final Property property, final String nameType) {
+	public List<String> toMethodSetLines(final Property property, final String nameType) {
 		final String name = property.getName();
 		final String nameCamelCase = Strings.formatCamelCase(name);
 		
-		final List<String> pMethodSetLines = new ArrayList<>();
+		final List<String> methodSetLines = new ArrayList<>();
 		
-		pMethodSetLines.add(String.format("$this->set%s($%s->get%s());", nameCamelCase, nameType, nameCamelCase));
+		methodSetLines.add(String.format("$this->set%s($%s->get%s());", nameCamelCase, nameType, nameCamelCase));
 		
-		return pMethodSetLines;
+		return methodSetLines;
 	}
 	
 //	TODO: Add Javadocs!
 	@Override
-	public List<String> toPMethodToArrayLines(final Property property) {
-		final PType pType = property.getPType();
+	public List<String> toMethodToArrayLines(final Property property) {
+		final PType type = property.getType();
 		
-		final String pTypeName = pType.getName();
+		final String typeName = type.getName();
 		
 		final String name = property.getName();
 		final String nameCamelCase = Strings.formatCamelCase(name);
 		final String nameUnderscoreSeparatedUpperCase = Strings.formatUnderscoreSeparatedUpperCase(name);
 		
-		final List<String> pMethodToArrayLines = new ArrayList<>();
+		final List<String> methodToArrayLines = new ArrayList<>();
 		
-		switch(pTypeName) {
+		switch(typeName) {
 			case "array":
 			case "bool":
 			case "float":
 			case "int":
 			case "string":
-				pMethodToArrayLines.add(String.format("if($isIncludingNull || $this->has%s()) {", nameCamelCase));
-				pMethodToArrayLines.add(String.format("	$array[self::%s] = $this->get%s();", nameUnderscoreSeparatedUpperCase, nameCamelCase));
-				pMethodToArrayLines.add(String.format("}"));
+				methodToArrayLines.add(String.format("if($isIncludingNull || $this->has%s()) {", nameCamelCase));
+				methodToArrayLines.add(String.format("	$array[self::%s] = $this->get%s();", nameUnderscoreSeparatedUpperCase, nameCamelCase));
+				methodToArrayLines.add(String.format("}"));
 				
 				break;
 			case "callable":
@@ -204,22 +204,22 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 			case "void":
 				break;
 			default:
-				pMethodToArrayLines.add(String.format("if($isIncludingNull || $this->has%s()) {", nameCamelCase));
-				pMethodToArrayLines.add(String.format("	$array[self::%s] = ($this->has%s() ? $this->get%s()->toArray($isIncludingNull) : $this->get%s());", nameUnderscoreSeparatedUpperCase, nameCamelCase, nameCamelCase, nameCamelCase));
-				pMethodToArrayLines.add(String.format("}"));
+				methodToArrayLines.add(String.format("if($isIncludingNull || $this->has%s()) {", nameCamelCase));
+				methodToArrayLines.add(String.format("	$array[self::%s] = ($this->has%s() ? $this->get%s()->toArray($isIncludingNull) : $this->get%s());", nameUnderscoreSeparatedUpperCase, nameCamelCase, nameCamelCase, nameCamelCase));
+				methodToArrayLines.add(String.format("}"));
 				
 				break;
 		}
 		
-		return pMethodToArrayLines;
+		return methodToArrayLines;
 	}
 	
 //	TODO: Add Javadocs!
 	@Override
-	public boolean isPTypeSupported(final PType pType) {
-		final String pTypeName = pType.getName();
+	public boolean isTypeSupported(final PType type) {
+		final String typeName = type.getName();
 		
-		switch(pTypeName) {
+		switch(typeName) {
 			case "array":
 				return true;
 			case "bool":
@@ -248,12 +248,12 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 //	TODO: Add Javadocs!
-	protected static PConst toPConst(final Property property) {
+	protected static PConst toConst(final Property property) {
 		return new PConst(Strings.formatUnderscoreSeparatedUpperCase(property.getName()), PValue.valueOf(property.getCode()));
 	}
 	
 //	TODO: Add Javadocs!
-	protected static PField toPField(final Property property) {
+	protected static PField toField(final Property property) {
 		final
 		PField pField = new PField();
 		pField.setName(Strings.formatCamelCaseModified(property.getName()));
@@ -263,139 +263,139 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 	}
 	
 //	TODO: Add Javadocs!
-	protected static PMethod toPMethodDoParse(final String pTypeName) {
-		final String pTypeNameCamelCase = Strings.formatCamelCase(pTypeName);
+	protected static PMethod toMethodDoParse(final String typeName) {
+		final String typeNameCamelCase = Strings.formatCamelCase(typeName);
 		
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
-		pMethod.addPParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
-		pMethod.getPBlock().addLinef("return array_key_exists($key, $array) ? (is_array($array[$key]) ? %s::parseArray($array[$key]) : null) : null;", pTypeNameCamelCase);
+		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
+		pMethod.addParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
+		pMethod.getBlock().addLinef("return array_key_exists($key, $array) ? (is_array($array[$key]) ? %s::parseArray($array[$key]) : null) : null;", typeNameCamelCase);
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
-		pMethod.setName("doParse" + pTypeNameCamelCase);
-		pMethod.setPReturnType(new PReturnType(PType.valueOf(pTypeNameCamelCase), true));
+		pMethod.setName("doParse" + typeNameCamelCase);
 		pMethod.setPrivate(true);
+		pMethod.setReturnType(new PReturnType(PType.valueOf(typeNameCamelCase), true));
 		pMethod.setStatic(true);
 		
 		return pMethod;
 	}
 	
 //	TODO: Add Javadocs!
-	protected static PMethod toPMethodDoParseArray() {
+	protected static PMethod toMethodDoParseArray() {
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
-		pMethod.addPParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
-		pMethod.getPBlock().addLine("return array_key_exists($key, $array) ? (is_array($array[$key]) ? $array[$key] : null) : null;");
+		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
+		pMethod.addParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
+		pMethod.getBlock().addLine("return array_key_exists($key, $array) ? (is_array($array[$key]) ? $array[$key] : null) : null;");
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("doParseArray");
-		pMethod.setPReturnType(new PReturnType(PType.ARRAY, true));
 		pMethod.setPrivate(true);
+		pMethod.setReturnType(new PReturnType(PType.ARRAY, true));
 		pMethod.setStatic(true);
 		
 		return pMethod;
 	}
 	
 //	TODO: Add Javadocs!
-	protected static PMethod toPMethodDoParseBool() {
+	protected static PMethod toMethodDoParseBool() {
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
-		pMethod.addPParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
-		pMethod.getPBlock().addLine("return array_key_exists($key, $array) ? ($array[$key] !== null ? boolval($array[$key]) : null) : null;");
+		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
+		pMethod.addParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
+		pMethod.getBlock().addLine("return array_key_exists($key, $array) ? ($array[$key] !== null ? boolval($array[$key]) : null) : null;");
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("doParseBool");
-		pMethod.setPReturnType(new PReturnType(PType.BOOL, true));
 		pMethod.setPrivate(true);
+		pMethod.setReturnType(new PReturnType(PType.BOOL, true));
 		pMethod.setStatic(true);
 		
 		return pMethod;
 	}
 	
 //	TODO: Add Javadocs!
-	protected static PMethod toPMethodDoParseFloat() {
+	protected static PMethod toMethodDoParseFloat() {
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
-		pMethod.addPParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
-		pMethod.getPBlock().addLine("return array_key_exists($key, $array) ? ($array[$key] !== null ? floatval($array[$key]) : null) : null;");
+		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
+		pMethod.addParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
+		pMethod.getBlock().addLine("return array_key_exists($key, $array) ? ($array[$key] !== null ? floatval($array[$key]) : null) : null;");
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("doParseFloat");
-		pMethod.setPReturnType(new PReturnType(PType.FLOAT, true));
 		pMethod.setPrivate(true);
+		pMethod.setReturnType(new PReturnType(PType.FLOAT, true));
 		pMethod.setStatic(true);
 		
 		return pMethod;
 	}
 	
 //	TODO: Add Javadocs!
-	protected static PMethod toPMethodDoParseInt() {
+	protected static PMethod toMethodDoParseInt() {
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
-		pMethod.addPParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
-		pMethod.getPBlock().addLine("return array_key_exists($key, $array) ? ($array[$key] !== null ? intval($array[$key]) : null) : null;");
+		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
+		pMethod.addParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
+		pMethod.getBlock().addLine("return array_key_exists($key, $array) ? ($array[$key] !== null ? intval($array[$key]) : null) : null;");
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("doParseInt");
-		pMethod.setPReturnType(new PReturnType(PType.INT, true));
 		pMethod.setPrivate(true);
+		pMethod.setReturnType(new PReturnType(PType.INT, true));
 		pMethod.setStatic(true);
 		
 		return pMethod;
 	}
 	
 //	TODO: Add Javadocs!
-	protected static PMethod toPMethodDoParseObject() {
+	protected static PMethod toMethodDoParseObject() {
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
-		pMethod.addPParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
-		pMethod.getPBlock().addLine("return null;");
+		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
+		pMethod.addParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
+		pMethod.getBlock().addLine("return null;");
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("doParseObject");
-		pMethod.setPReturnType(new PReturnType(PType.OBJECT, true));
 		pMethod.setPrivate(true);
+		pMethod.setReturnType(new PReturnType(PType.OBJECT, true));
 		pMethod.setStatic(true);
 		
 		return pMethod;
 	}
 	
 //	TODO: Add Javadocs!
-	protected static PMethod toPMethodDoParseString() {
+	protected static PMethod toMethodDoParseString() {
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
-		pMethod.addPParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
-		pMethod.getPBlock().addLine("return array_key_exists($key, $array) ? ($array[$key] !== null ? strval($array[$key]) : null) : null;");
+		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
+		pMethod.addParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
+		pMethod.getBlock().addLine("return array_key_exists($key, $array) ? ($array[$key] !== null ? strval($array[$key]) : null) : null;");
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("doParseString");
-		pMethod.setPReturnType(new PReturnType(PType.STRING, true));
 		pMethod.setPrivate(true);
+		pMethod.setReturnType(new PReturnType(PType.STRING, true));
 		pMethod.setStatic(true);
 		
 		return pMethod;
 	}
 	
 //	TODO: Add Javadocs!
-	protected static PMethod toPMethodGet(final Property property) {
-		return PMethod.newClassMethodGet(Strings.formatCamelCase(property.getName()), property.getPType(), true);
+	protected static PMethod toMethodGet(final Property property) {
+		return PMethod.newClassMethodGet(Strings.formatCamelCase(property.getName()), property.getType(), true);
 	}
 	
 //	TODO: Add Javadocs!
-	protected static PMethod toPMethodHas(final Property property) {
+	protected static PMethod toMethodHas(final Property property) {
 		return PMethod.newClassMethodHas(Strings.formatCamelCase(property.getName()));
 	}
 	
 //	TODO: Add Javadocs!
-	protected static PMethod toPMethodSet(final Property property) {
-		final PType pType = property.getPType();
+	protected static PMethod toMethodSet(final Property property) {
+		final PType type = property.getType();
 		
 		final String name = property.getName();
 		final String nameCamelCase = Strings.formatCamelCase(name);
@@ -403,12 +403,12 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument(nameCamelCaseModified, pType, PValue.NULL, true));
-		pMethod.getPBlock().addLinef("return ($this->%s = $%s) === $%s;", nameCamelCaseModified, nameCamelCaseModified, nameCamelCaseModified);
+		pMethod.addParameterArgument(new PParameterArgument(nameCamelCaseModified, type, PValue.NULL, true));
+		pMethod.getBlock().addLinef("return ($this->%s = $%s) === $%s;", nameCamelCaseModified, nameCamelCaseModified, nameCamelCaseModified);
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("set" + nameCamelCase);
-		pMethod.setPReturnType(new PReturnType(PType.BOOL, false));
+		pMethod.setReturnType(new PReturnType(PType.BOOL, false));
 		
 		return pMethod;
 	}
@@ -416,11 +416,11 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private static String doGetNameMethod(final Property property) {
-		final PType pType = property.getPType();
+		final PType type = property.getType();
 		
-		final String pTypeName = pType.getName();
+		final String typeName = type.getName();
 		
-		switch(pTypeName) {
+		switch(typeName) {
 			case "array":
 				return "doParseArray";
 			case "bool":
@@ -442,7 +442,7 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 			case "void":
 				return "";
 			default:
-				return "doParse" + Strings.formatCamelCase(pTypeName);
+				return "doParse" + Strings.formatCamelCase(typeName);
 		}
 	}
 }

@@ -48,30 +48,30 @@ public final class StringOptionPropertyBuilder extends AbstractPropertyBuilder {
 	
 //	TODO: Add Javadocs!
 	@Override
-	public List<PConst> toPConsts(final Property property) {
-		final List<PConst> pConsts = new ArrayList<>();
+	public List<PConst> toConsts(final Property property) {
+		final List<PConst> consts = new ArrayList<>();
 		
-		pConsts.add(toPConst(property));
+		consts.add(toConst(property));
 		
 		for(final StringOption stringOption : getStringOptions()) {
-			pConsts.add(stringOption.toPConst());
+			consts.add(stringOption.toConst());
 		}
 		
-		return pConsts;
+		return consts;
 	}
 	
 //	TODO: Add Javadocs!
 	@Override
-	public List<PMethod> toPMethods(final Property property) {
-		final List<PMethod> pMethods = new ArrayList<>();
+	public List<PMethod> toMethods(final Property property) {
+		final List<PMethod> methods = new ArrayList<>();
 		
-		pMethods.add(toPMethodDoParseString());
-		pMethods.add(toPMethodGet(property));
-		pMethods.add(toPMethodHas(property));
-		pMethods.add(doToPMethodSet(property, getStringOptions()));
-		pMethods.add(doToPMethodDoUpdateStringByOption());
+		methods.add(toMethodDoParseString());
+		methods.add(toMethodGet(property));
+		methods.add(toMethodHas(property));
+		methods.add(doToMethodSet(property, getStringOptions()));
+		methods.add(doToMethodDoUpdateStringByOption());
 		
-		return pMethods;
+		return methods;
 	}
 	
 //	TODO: Add Javadocs!
@@ -95,10 +95,10 @@ public final class StringOptionPropertyBuilder extends AbstractPropertyBuilder {
 	
 //	TODO: Add Javadocs!
 	@Override
-	public boolean isPTypeSupported(final PType pType) {
-		final String pTypeName = pType.getName();
+	public boolean isTypeSupported(final PType type) {
+		final String typeName = type.getName();
 		
-		switch(pTypeName) {
+		switch(typeName) {
 			case "string":
 				return true;
 			default:
@@ -130,7 +130,7 @@ public final class StringOptionPropertyBuilder extends AbstractPropertyBuilder {
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 //		TODO: Add Javadocs!
-		public PConst toPConst() {
+		public PConst toConst() {
 			return new PConst(Strings.formatUnderscoreSeparatedUpperCase(getName()), PValue.valueOf(getCode()));
 		}
 		
@@ -179,31 +179,31 @@ public final class StringOptionPropertyBuilder extends AbstractPropertyBuilder {
 		return list;
 	}
 	
-	private static PMethod doToPMethodDoUpdateStringByOption() {
+	private static PMethod doToMethodDoUpdateStringByOption() {
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument("newString", PType.STRING, null, true));
-		pMethod.addPParameterArgument(new PParameterArgument("oldString", PType.STRING, null, true));
-		pMethod.addPParameterArgument(new PParameterArgument("stringOptions", PType.ARRAY, null, false));
-		pMethod.getPBlock().addLine("if($newString === null) {");
-		pMethod.getPBlock().addLine("	return $newString;");
-		pMethod.getPBlock().addLine("} else if(in_array($newString, $stringOptions, true)) {");
-		pMethod.getPBlock().addLine("	return $newString;");
-		pMethod.getPBlock().addLine("} else {");
-		pMethod.getPBlock().addLine("	return $oldString;");
-		pMethod.getPBlock().addLine("}");
+		pMethod.addParameterArgument(new PParameterArgument("newString", PType.STRING, null, true));
+		pMethod.addParameterArgument(new PParameterArgument("oldString", PType.STRING, null, true));
+		pMethod.addParameterArgument(new PParameterArgument("stringOptions", PType.ARRAY, null, false));
+		pMethod.getBlock().addLine("if($newString === null) {");
+		pMethod.getBlock().addLine("	return $newString;");
+		pMethod.getBlock().addLine("} else if(in_array($newString, $stringOptions, true)) {");
+		pMethod.getBlock().addLine("	return $newString;");
+		pMethod.getBlock().addLine("} else {");
+		pMethod.getBlock().addLine("	return $oldString;");
+		pMethod.getBlock().addLine("}");
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("doUpdateStringByOption");
-		pMethod.setPReturnType(new PReturnType(PType.STRING, true));
 		pMethod.setPrivate(true);
+		pMethod.setReturnType(new PReturnType(PType.STRING, true));
 		pMethod.setStatic(true);
 		
 		return pMethod;
 	}
 	
-	private static PMethod doToPMethodSet(final Property property, final List<StringOption> stringOptions) {
-		final PType pType = property.getPType();
+	private static PMethod doToMethodSet(final Property property, final List<StringOption> stringOptions) {
+		final PType type = property.getType();
 		
 		final String name = property.getName();
 		final String nameCamelCase = Strings.formatCamelCase(name);
@@ -213,12 +213,12 @@ public final class StringOptionPropertyBuilder extends AbstractPropertyBuilder {
 		
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument(nameCamelCaseModified, pType, PValue.NULL, true));
-		pMethod.getPBlock().addLinef("return ($this->%s = self::doUpdateStringByOption($%s, $this->%s, %s)) === $%s;", nameCamelCaseModified, nameCamelCaseModified, nameCamelCaseModified, stringOptionsArray, nameCamelCaseModified);
+		pMethod.addParameterArgument(new PParameterArgument(nameCamelCaseModified, type, PValue.NULL, true));
+		pMethod.getBlock().addLinef("return ($this->%s = self::doUpdateStringByOption($%s, $this->%s, %s)) === $%s;", nameCamelCaseModified, nameCamelCaseModified, nameCamelCaseModified, stringOptionsArray, nameCamelCaseModified);
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("set" + nameCamelCase);
-		pMethod.setPReturnType(new PReturnType(PType.BOOL, false));
+		pMethod.setReturnType(new PReturnType(PType.BOOL, false));
 		
 		return pMethod;
 	}

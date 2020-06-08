@@ -39,9 +39,9 @@ public final class PMethod implements Comparable<PMethod> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final List<PParameterArgument> pParameterArguments;
-	private final PBlock pBlock;
-	private PReturnType pReturnType;
+	private final List<PParameterArgument> parameterArguments;
+	private final PBlock block;
+	private PReturnType returnType;
 	private String name;
 	private boolean isEnclosedByClass;
 	private boolean isEnclosedByInterface;
@@ -51,9 +51,9 @@ public final class PMethod implements Comparable<PMethod> {
 	
 //	TODO: Add Javadocs!
 	public PMethod() {
-		this.pParameterArguments = new ArrayList<>();
-		this.pBlock = new PBlock();
-		this.pReturnType = null;
+		this.parameterArguments = new ArrayList<>();
+		this.block = new PBlock();
+		this.returnType = null;
 		this.name = "name";
 		this.isEnclosedByClass = true;
 		this.isEnclosedByInterface = false;
@@ -69,12 +69,12 @@ public final class PMethod implements Comparable<PMethod> {
 	
 //	TODO: Add Javadocs!
 	public Document write(final Document document) {
-		final PBlock pBlock = this.pBlock;
+		final PBlock block = this.block;
 		
 		final String accessModifiers = getAccessModifiersAsString("", " ");
 		final String name = getName();
-		final String parameterArguments = this.pParameterArguments.stream().map(pParameterArgument -> pParameterArgument.getSourceCode()).collect(Collectors.joining(", "));
-		final String returnType = hasPReturnType() ? ": " + this.pReturnType.getSourceCode() : "";
+		final String parameterArguments = this.parameterArguments.stream().map(pParameterArgument -> pParameterArgument.getSourceCode()).collect(Collectors.joining(", "));
+		final String returnType = hasReturnType() ? ": " + this.returnType.getSourceCode() : "";
 		
 		if(isEnclosedByClass()) {
 			if(isAbstract()) {
@@ -83,7 +83,7 @@ public final class PMethod implements Comparable<PMethod> {
 				document.linef("%sfunction %s(%s)%s {", accessModifiers, name, parameterArguments, returnType);
 				document.indent();
 				
-				pBlock.write(document);
+				block.write(document);
 				
 				document.outdent();
 				document.line("}");
@@ -96,8 +96,8 @@ public final class PMethod implements Comparable<PMethod> {
 	}
 	
 //	TODO: Add Javadocs!
-	public List<PParameterArgument> getPParameterArguments() {
-		return new ArrayList<>(this.pParameterArguments);
+	public List<PParameterArgument> getParameterArguments() {
+		return new ArrayList<>(this.parameterArguments);
 	}
 	
 //	TODO: Add Javadocs!
@@ -132,13 +132,13 @@ public final class PMethod implements Comparable<PMethod> {
 	}
 	
 //	TODO: Add Javadocs!
-	public Optional<PReturnType> getPReturnType() {
-		return Optional.ofNullable(this.pReturnType);
+	public Optional<PReturnType> getReturnType() {
+		return Optional.ofNullable(this.returnType);
 	}
 	
 //	TODO: Add Javadocs!
-	public PBlock getPBlock() {
-		return this.pBlock;
+	public PBlock getBlock() {
+		return this.block;
 	}
 	
 //	TODO: Add Javadocs!
@@ -166,8 +166,8 @@ public final class PMethod implements Comparable<PMethod> {
 	}
 	
 //	TODO: Add Javadocs!
-	public boolean hasPReturnType() {
-		return this.pReturnType != null;
+	public boolean hasReturnType() {
+		return this.returnType != null;
 	}
 	
 //	TODO: Add Javadocs!
@@ -179,8 +179,8 @@ public final class PMethod implements Comparable<PMethod> {
 	public boolean isDefaultCallable() {
 		boolean isDefaultCallable = true;
 		
-		for(final PParameterArgument pParameterArgument : this.pParameterArguments) {
-			if(!pParameterArgument.hasPValue()) {
+		for(final PParameterArgument parameterArgument : this.parameterArguments) {
+			if(!parameterArgument.hasValue()) {
 				isDefaultCallable = false;
 			}
 		}
@@ -225,63 +225,63 @@ public final class PMethod implements Comparable<PMethod> {
 	
 //	TODO: Add Javadocs!
 	@Override
-	public int compareTo(final PMethod pMethod) {
-		final PMethod pMethodThis = this;
-		final PMethod pMethodThat = pMethod;
+	public int compareTo(final PMethod method) {
+		final PMethod methodThis = this;
+		final PMethod methodThat = method;
 		
-		final boolean isStaticThis = pMethodThis.isStatic();
-		final boolean isStaticThat = pMethodThat.isStatic();
+		final boolean isStaticThis = methodThis.isStatic();
+		final boolean isStaticThat = methodThat.isStatic();
 		
 		if(isStaticThis != isStaticThat) {
 			return isStaticThis ? 1 : -1;
 		}
 		
-		final boolean isPublicThis = pMethodThis.isPublic();
-		final boolean isPublicThat = pMethodThat.isPublic();
+		final boolean isPublicThis = methodThis.isPublic();
+		final boolean isPublicThat = methodThat.isPublic();
 		
 		if(isPublicThis != isPublicThat) {
 			return isPublicThis ? -1 : 1;
 		}
 		
-		final boolean isProtectedThis = pMethodThis.isProtected();
-		final boolean isProtectedThat = pMethodThat.isProtected();
+		final boolean isProtectedThis = methodThis.isProtected();
+		final boolean isProtectedThat = methodThat.isProtected();
 		
 		if(isProtectedThis != isProtectedThat) {
 			return isProtectedThis ? -1 : 1;
 		}
 		
-		final boolean isPrivateThis = pMethodThis.isPrivate();
-		final boolean isPrivateThat = pMethodThat.isPrivate();
+		final boolean isPrivateThis = methodThis.isPrivate();
+		final boolean isPrivateThat = methodThat.isPrivate();
 		
 		if(isPrivateThis != isPrivateThat) {
 			return isPrivateThis ? -1 : 1;
 		}
 		
-		final boolean isAbstractThis = pMethodThis.isAbstract();
-		final boolean isAbstractThat = pMethodThat.isAbstract();
+		final boolean isAbstractThis = methodThis.isAbstract();
+		final boolean isAbstractThat = methodThat.isAbstract();
 		
 		if(isAbstractThis != isAbstractThat) {
 			return isAbstractThis ? -1 : 1;
 		}
 		
-		final boolean isFinalThis = pMethodThis.isFinal();
-		final boolean isFinalThat = pMethodThat.isFinal();
+		final boolean isFinalThis = methodThis.isFinal();
+		final boolean isFinalThat = methodThat.isFinal();
 		
 		if(isFinalThis != isFinalThat) {
 			return isFinalThis ? -1 : 1;
 		}
 		
-		return this.name.compareTo(pMethod.name);
+		return this.name.compareTo(method.name);
 	}
 	
 //	TODO: Add Javadocs!
-	public void addPParameterArgument(final PParameterArgument pParameterArgument) {
-		this.pParameterArguments.add(Objects.requireNonNull(pParameterArgument, "pParameterArgument == null"));
+	public void addParameterArgument(final PParameterArgument parameterArgument) {
+		this.parameterArguments.add(Objects.requireNonNull(parameterArgument, "parameterArgument == null"));
 	}
 	
 //	TODO: Add Javadocs!
-	public void removePParameterArgument(final PParameterArgument pParameterArgument) {
-		this.pParameterArguments.remove(Objects.requireNonNull(pParameterArgument, "pParameterArgument == null"));
+	public void removeParameterArgument(final PParameterArgument parameterArgument) {
+		this.parameterArguments.remove(Objects.requireNonNull(parameterArgument, "parameterArgument == null"));
 	}
 	
 //	TODO: Add Javadocs!
@@ -324,11 +324,6 @@ public final class PMethod implements Comparable<PMethod> {
 	}
 	
 //	TODO: Add Javadocs!
-	public void setPReturnType(final PReturnType pReturnType) {
-		this.pReturnType = pReturnType;
-	}
-	
-//	TODO: Add Javadocs!
 	public void setPrivate(final boolean isPrivate) {
 		if(isPrivate) {
 			this.accessFlags |= ACCESS_FLAG_PRIVATE;
@@ -362,6 +357,11 @@ public final class PMethod implements Comparable<PMethod> {
 	}
 	
 //	TODO: Add Javadocs!
+	public void setReturnType(final PReturnType returnType) {
+		this.returnType = returnType;
+	}
+	
+//	TODO: Add Javadocs!
 	public void setStatic(final boolean isStatic) {
 		if(isStatic) {
 			this.accessFlags |= ACCESS_FLAG_STATIC;
@@ -373,17 +373,17 @@ public final class PMethod implements Comparable<PMethod> {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 //	TODO: Add Javadocs!
-	public static PMethod newClassMethodGet(final String name, final PType pType, final boolean isNullable) {
+	public static PMethod newClassMethodGet(final String name, final PType type, final boolean isNullable) {
 		final String nameCamelCaseModified = Strings.formatCamelCaseModified(name);
 		final String nameCamelCase = Strings.formatCamelCase(name);
 		
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.getPBlock().addLinef("return $this->%s;", nameCamelCaseModified);
+		pMethod.getBlock().addLinef("return $this->%s;", nameCamelCaseModified);
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("get" + nameCamelCase);
-		pMethod.setPReturnType(new PReturnType(pType, isNullable));
+		pMethod.setReturnType(new PReturnType(type, isNullable));
 		
 		return pMethod;
 	}
@@ -395,56 +395,56 @@ public final class PMethod implements Comparable<PMethod> {
 		
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.getPBlock().addLinef("return $this->%s !== null;", nameCamelCaseModified);
+		pMethod.getBlock().addLinef("return $this->%s !== null;", nameCamelCaseModified);
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("has" + nameCamelCase);
-		pMethod.setPReturnType(new PReturnType(PType.BOOL));
+		pMethod.setReturnType(new PReturnType(PType.BOOL));
 		
 		return pMethod;
 	}
 	
 //	TODO: Add Javadocs!
-	public static PMethod newClassMethodSet(final String name, final PType pType, final PValue pValue, final boolean isNullable) {
+	public static PMethod newClassMethodSet(final String name, final PType type, final PValue value, final boolean isNullable) {
 		final String nameCamelCaseModified = Strings.formatCamelCaseModified(name);
 		final String nameCamelCase = Strings.formatCamelCase(name);
 		
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument(nameCamelCaseModified, pType, pValue, isNullable));
-		pMethod.getPBlock().addLinef("$this->%s = $%s;", nameCamelCaseModified, nameCamelCaseModified);
+		pMethod.addParameterArgument(new PParameterArgument(nameCamelCaseModified, type, value, isNullable));
+		pMethod.getBlock().addLinef("$this->%s = $%s;", nameCamelCaseModified, nameCamelCaseModified);
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("set" + nameCamelCase);
-		pMethod.setPReturnType(new PReturnType(PType.VOID, false));
+		pMethod.setReturnType(new PReturnType(PType.VOID, false));
 		
 		return pMethod;
 	}
 	
 //	TODO: Add Javadocs!
-	public static PMethod newInterfaceMethod(final String name, final PParameterArgument[] pParameterArguments, final PReturnType pReturnType) {
+	public static PMethod newInterfaceMethod(final String name, final PParameterArgument[] parameterArguments, final PReturnType returnType) {
 		final
 		PMethod pMethod = new PMethod();
 		pMethod.setEnclosedByInterface(true);
 		pMethod.setName(name);
-		pMethod.setPReturnType(pReturnType);
+		pMethod.setReturnType(returnType);
 		
-		for(final PParameterArgument pParameterArgument : pParameterArguments) {
-			pMethod.addPParameterArgument(pParameterArgument);
+		for(final PParameterArgument parameterArgument : parameterArguments) {
+			pMethod.addParameterArgument(parameterArgument);
 		}
 		
 		return pMethod;
 	}
 	
 //	TODO: Add Javadocs!
-	public static PMethod newInterfaceMethodGet(final String name, final PType pType, final boolean isNullable) {
+	public static PMethod newInterfaceMethodGet(final String name, final PType type, final boolean isNullable) {
 		final String nameCamelCase = Strings.formatCamelCase(name);
 		
 		final
 		PMethod pMethod = new PMethod();
 		pMethod.setEnclosedByInterface(true);
 		pMethod.setName("get" + nameCamelCase);
-		pMethod.setPReturnType(pType != null ? new PReturnType(pType, isNullable) : null);
+		pMethod.setReturnType(type != null ? new PReturnType(type, isNullable) : null);
 		
 		return pMethod;
 	}
@@ -457,49 +457,49 @@ public final class PMethod implements Comparable<PMethod> {
 		PMethod pMethod = new PMethod();
 		pMethod.setEnclosedByInterface(true);
 		pMethod.setName("has" + nameCamelCase);
-		pMethod.setPReturnType(new PReturnType(PType.BOOL));
+		pMethod.setReturnType(new PReturnType(PType.BOOL));
 		
 		return pMethod;
 	}
 	
 //	TODO: Add Javadocs!
-	public static PMethod newInterfaceMethodSet(final String name, final PType pType, final PValue pValue, final boolean isNullable) {
+	public static PMethod newInterfaceMethodSet(final String name, final PType type, final PValue value, final boolean isNullable) {
 		final String nameCamelCaseModified = Strings.formatCamelCaseModified(name);
 		final String nameCamelCase = Strings.formatCamelCase(name);
 		
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument(nameCamelCaseModified, pType, pValue, isNullable));
+		pMethod.addParameterArgument(new PParameterArgument(nameCamelCaseModified, type, value, isNullable));
 		pMethod.setEnclosedByInterface(true);
 		pMethod.setName("set" + nameCamelCase);
-		pMethod.setPReturnType(new PReturnType(PType.VOID, false));
+		pMethod.setReturnType(new PReturnType(PType.VOID, false));
 		
 		return pMethod;
 	}
 	
 //	TODO: Add Javadocs!
-	public static boolean isInDifferentGroups(final PMethod pMethodA, final PMethod pMethodB) {
-		if(pMethodA.isStatic() != pMethodB.isStatic()) {
+	public static boolean isInDifferentGroups(final PMethod methodA, final PMethod methodB) {
+		if(methodA.isStatic() != methodB.isStatic()) {
 			return true;
 		}
 		
-		if(pMethodA.isPublic() != pMethodB.isPublic()) {
+		if(methodA.isPublic() != methodB.isPublic()) {
 			return true;
 		}
 		
-		if(pMethodA.isProtected() != pMethodB.isProtected()) {
+		if(methodA.isProtected() != methodB.isProtected()) {
 			return true;
 		}
 		
-		if(pMethodA.isPrivate() != pMethodB.isPrivate()) {
+		if(methodA.isPrivate() != methodB.isPrivate()) {
 			return true;
 		}
 		
-		if(pMethodA.isAbstract() != pMethodB.isAbstract()) {
+		if(methodA.isAbstract() != methodB.isAbstract()) {
 			return true;
 		}
 		
-		if(pMethodA.isFinal() != pMethodB.isFinal()) {
+		if(methodA.isFinal() != methodB.isFinal()) {
 			return true;
 		}
 		

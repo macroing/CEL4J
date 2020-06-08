@@ -36,10 +36,10 @@ import org.macroing.cel4j.util.Document;
 
 //TODO: Add Javadocs!
 public final class PDocument {
-	private final List<PClass> pClasses;
-	private final List<PInterface> pInterfaces;
+	private final List<PClass> classes;
+	private final List<PInterface> interfaces;
 	private final List<String> uses;
-	private final PBlock pBlock;
+	private final PBlock block;
 	private String namespace;
 	private boolean isGeneratingComment;
 	
@@ -47,10 +47,10 @@ public final class PDocument {
 	
 //	TODO: Add Javadocs!
 	public PDocument() {
-		this.pClasses = new ArrayList<>();
-		this.pInterfaces = new ArrayList<>();
+		this.classes = new ArrayList<>();
+		this.interfaces = new ArrayList<>();
 		this.uses = new ArrayList<>();
-		this.pBlock = new PBlock();
+		this.block = new PBlock();
 		this.namespace = "";
 		this.isGeneratingComment = false;
 	}
@@ -68,16 +68,16 @@ public final class PDocument {
 	}
 	
 //	TODO: Add Javadocs!
-	public Document write(final Document document, final boolean isAligningPConsts) {
-		final List<PClass> pClasses = getPClasses();
-		final List<PInterface> pInterfaces = getPInterfaces();
+	public Document write(final Document document, final boolean isAligningConsts) {
+		final List<PClass> classes = getClasses();
+		final List<PInterface> interfaces = getInterfaces();
 		final List<String> uses = getUses();
 		
-		final PBlock pBlock = getPBlock();
+		final PBlock block = getBlock();
 		
-		final boolean hasPBlockLines = !pBlock.isEmpty();
-		final boolean hasPClasses = pClasses.size() > 0;
-		final boolean hasPInterfaces = pInterfaces.size() > 0;
+		final boolean hasBlockLines = !block.isEmpty();
+		final boolean hasClasses = classes.size() > 0;
+		final boolean hasInterfaces = interfaces.size() > 0;
 		
 		final boolean isGeneratingComment = isGeneratingComment();
 		
@@ -116,45 +116,45 @@ public final class PDocument {
 			document.line();
 		}
 		
-		for(int i = 0; i < pInterfaces.size(); i++) {
-			final PInterface pInterfaceA = pInterfaces.get(i);
-			final PInterface pInterfaceB = pInterfaces.get(i + 1 < pInterfaces.size() ? i + 1 : i);
+		for(int i = 0; i < interfaces.size(); i++) {
+			final PInterface interfaceA = interfaces.get(i);
+			final PInterface interfaceB = interfaces.get(i + 1 < interfaces.size() ? i + 1 : i);
 			
-			pInterfaceA.write(document);
+			interfaceA.write(document);
 			
-			if(pInterfaceA != pInterfaceB) {
+			if(interfaceA != interfaceB) {
 				document.line();
 				document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
 				document.line();
 			}
 		}
 		
-		if((hasPClasses || hasPBlockLines) && hasPInterfaces) {
+		if((hasClasses || hasBlockLines) && hasInterfaces) {
 			document.line();
 			document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
 			document.line();
 		}
 		
-		for(int i = 0; i < pClasses.size(); i++) {
-			final PClass pClassA = pClasses.get(i);
-			final PClass pClassB = pClasses.get(i + 1 < pClasses.size() ? i + 1 : i);
+		for(int i = 0; i < classes.size(); i++) {
+			final PClass classA = classes.get(i);
+			final PClass classB = classes.get(i + 1 < classes.size() ? i + 1 : i);
 			
-			pClassA.write(document, isAligningPConsts);
+			classA.write(document, isAligningConsts);
 			
-			if(pClassA != pClassB) {
+			if(classA != classB) {
 				document.line();
 				document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
 				document.line();
 			}
 		}
 		
-		if(hasPClasses && hasPBlockLines) {
+		if(hasClasses && hasBlockLines) {
 			document.line();
 			document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
 			document.line();
 		}
 		
-		pBlock.write(document);
+		block.write(document);
 		
 		return document;
 	}
@@ -180,13 +180,13 @@ public final class PDocument {
 	}
 	
 //	TODO: Add Javadocs!
-	public List<PClass> getPClasses() {
-		return new ArrayList<>(this.pClasses);
+	public List<PClass> getClasses() {
+		return new ArrayList<>(this.classes);
 	}
 	
 //	TODO: Add Javadocs!
-	public List<PInterface> getPInterfaces() {
-		return new ArrayList<>(this.pInterfaces);
+	public List<PInterface> getInterfaces() {
+		return new ArrayList<>(this.interfaces);
 	}
 	
 //	TODO: Add Javadocs!
@@ -195,8 +195,8 @@ public final class PDocument {
 	}
 	
 //	TODO: Add Javadocs!
-	public PBlock getPBlock() {
-		return this.pBlock;
+	public PBlock getBlock() {
+		return this.block;
 	}
 	
 //	TODO: Add Javadocs!
@@ -210,13 +210,13 @@ public final class PDocument {
 	}
 	
 //	TODO: Add Javadocs!
-	public void addPClass(final PClass pClass) {
-		this.pClasses.add(Objects.requireNonNull(pClass, "pClass == null"));
+	public void addClass(final PClass pClass) {
+		this.classes.add(Objects.requireNonNull(pClass, "pClass == null"));
 	}
 	
 //	TODO: Add Javadocs!
-	public void addPInterface(final PInterface pInterface) {
-		this.pInterfaces.add(Objects.requireNonNull(pInterface, "pInterface == null"));
+	public void addInterface(final PInterface pInterface) {
+		this.interfaces.add(Objects.requireNonNull(pInterface, "pInterface == null"));
 	}
 	
 //	TODO: Add Javadocs!
@@ -225,13 +225,13 @@ public final class PDocument {
 	}
 	
 //	TODO: Add Javadocs!
-	public void removePClass(final PClass pClass) {
-		this.pClasses.remove(Objects.requireNonNull(pClass, "pClass == null"));
+	public void removeClass(final PClass pClass) {
+		this.classes.remove(Objects.requireNonNull(pClass, "pClass == null"));
 	}
 	
 //	TODO: Add Javadocs!
-	public void removePInterface(final PInterface pInterface) {
-		this.pInterfaces.remove(Objects.requireNonNull(pInterface, "pInterface == null"));
+	public void removeInterface(final PInterface pInterface) {
+		this.interfaces.remove(Objects.requireNonNull(pInterface, "pInterface == null"));
 	}
 	
 //	TODO: Add Javadocs!

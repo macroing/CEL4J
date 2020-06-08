@@ -48,16 +48,16 @@ public final class FloatRangePropertyBuilder extends AbstractPropertyBuilder {
 	
 //	TODO: Add Javadocs!
 	@Override
-	public List<PMethod> toPMethods(final Property property) {
-		final List<PMethod> pMethods = new ArrayList<>();
+	public List<PMethod> toMethods(final Property property) {
+		final List<PMethod> methods = new ArrayList<>();
 		
-		pMethods.add(toPMethodDoParseFloat());
-		pMethods.add(toPMethodGet(property));
-		pMethods.add(toPMethodHas(property));
-		pMethods.add(doToPMethodSet(property, this.minimumValue, this.maximumValue));
-		pMethods.add(doToPMethodDoUpdateFloatByRange());
+		methods.add(toMethodDoParseFloat());
+		methods.add(toMethodGet(property));
+		methods.add(toMethodHas(property));
+		methods.add(doToMethodSet(property, this.minimumValue, this.maximumValue));
+		methods.add(doToMethodDoUpdateFloatByRange());
 		
-		return pMethods;
+		return methods;
 	}
 	
 //	TODO: Add Javadocs!
@@ -78,10 +78,10 @@ public final class FloatRangePropertyBuilder extends AbstractPropertyBuilder {
 	
 //	TODO: Add Javadocs!
 	@Override
-	public boolean isPTypeSupported(final PType pType) {
-		final String pTypeName = pType.getName();
+	public boolean isTypeSupported(final PType type) {
+		final String typeName = type.getName();
 		
-		switch(pTypeName) {
+		switch(typeName) {
 			case "float":
 				return true;
 			default:
@@ -107,32 +107,32 @@ public final class FloatRangePropertyBuilder extends AbstractPropertyBuilder {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private static PMethod doToPMethodDoUpdateFloatByRange() {
+	private static PMethod doToMethodDoUpdateFloatByRange() {
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument("newFloat", PType.FLOAT, null, true));
-		pMethod.addPParameterArgument(new PParameterArgument("oldFloat", PType.FLOAT, null, true));
-		pMethod.addPParameterArgument(new PParameterArgument("minimumValue", PType.FLOAT, null, false));
-		pMethod.addPParameterArgument(new PParameterArgument("maximumValue", PType.FLOAT, null, false));
-		pMethod.getPBlock().addLine("if($newFloat === null) {");
-		pMethod.getPBlock().addLine("	return $newFloat;");
-		pMethod.getPBlock().addLine("} else if($newFloat >= $minimumValue && $newFloat <= $maximumValue) {");
-		pMethod.getPBlock().addLine("	return $newFloat;");
-		pMethod.getPBlock().addLine("} else {");
-		pMethod.getPBlock().addLine("	return $oldFloat;");
-		pMethod.getPBlock().addLine("}");
+		pMethod.addParameterArgument(new PParameterArgument("newFloat", PType.FLOAT, null, true));
+		pMethod.addParameterArgument(new PParameterArgument("oldFloat", PType.FLOAT, null, true));
+		pMethod.addParameterArgument(new PParameterArgument("minimumValue", PType.FLOAT, null, false));
+		pMethod.addParameterArgument(new PParameterArgument("maximumValue", PType.FLOAT, null, false));
+		pMethod.getBlock().addLine("if($newFloat === null) {");
+		pMethod.getBlock().addLine("	return $newFloat;");
+		pMethod.getBlock().addLine("} else if($newFloat >= $minimumValue && $newFloat <= $maximumValue) {");
+		pMethod.getBlock().addLine("	return $newFloat;");
+		pMethod.getBlock().addLine("} else {");
+		pMethod.getBlock().addLine("	return $oldFloat;");
+		pMethod.getBlock().addLine("}");
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("doUpdateFloatByRange");
-		pMethod.setPReturnType(new PReturnType(PType.FLOAT, true));
 		pMethod.setPrivate(true);
+		pMethod.setReturnType(new PReturnType(PType.FLOAT, true));
 		pMethod.setStatic(true);
 		
 		return pMethod;
 	}
 	
-	private static PMethod doToPMethodSet(final Property property, final float minimumValue, final float maximumValue) {
-		final PType pType = property.getPType();
+	private static PMethod doToMethodSet(final Property property, final float minimumValue, final float maximumValue) {
+		final PType type = property.getType();
 		
 		final String name = property.getName();
 		final String nameCamelCase = Strings.formatCamelCase(name);
@@ -140,12 +140,12 @@ public final class FloatRangePropertyBuilder extends AbstractPropertyBuilder {
 		
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument(nameCamelCaseModified, pType, PValue.NULL, true));
-		pMethod.getPBlock().addLinef("return ($this->%s = self::doUpdateFloatByRange($%s, $this->%s, %s, %s)) === $%s;", nameCamelCaseModified, nameCamelCaseModified, nameCamelCaseModified, Float.toString(minimumValue), Float.toString(maximumValue), nameCamelCaseModified);
+		pMethod.addParameterArgument(new PParameterArgument(nameCamelCaseModified, type, PValue.NULL, true));
+		pMethod.getBlock().addLinef("return ($this->%s = self::doUpdateFloatByRange($%s, $this->%s, %s, %s)) === $%s;", nameCamelCaseModified, nameCamelCaseModified, nameCamelCaseModified, Float.toString(minimumValue), Float.toString(maximumValue), nameCamelCaseModified);
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("set" + nameCamelCase);
-		pMethod.setPReturnType(new PReturnType(PType.BOOL, false));
+		pMethod.setReturnType(new PReturnType(PType.BOOL, false));
 		
 		return pMethod;
 	}

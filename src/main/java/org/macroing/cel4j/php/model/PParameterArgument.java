@@ -24,8 +24,8 @@ import java.util.Optional;
 
 //TODO: Add Javadocs!
 public final class PParameterArgument {
-	private final PType pType;
-	private final PValue pValue;
+	private final PType type;
+	private final PValue value;
 	private final String name;
 	private final boolean isNullable;
 	
@@ -42,19 +42,19 @@ public final class PParameterArgument {
 	}
 	
 //	TODO: Add Javadocs!
-	public PParameterArgument(final String name, final PType pType) {
-		this(name, pType, null);
+	public PParameterArgument(final String name, final PType type) {
+		this(name, type, null);
 	}
 	
 //	TODO: Add Javadocs!
-	public PParameterArgument(final String name, final PType pType, final PValue pValue) {
-		this(name, pType, pValue, false);
+	public PParameterArgument(final String name, final PType type, final PValue value) {
+		this(name, type, value, false);
 	}
 	
 //	TODO: Add Javadocs!
-	public PParameterArgument(final String name, final PType pType, final PValue pValue, final boolean isNullable) {
-		this.pType = pType;
-		this.pValue = pValue;
+	public PParameterArgument(final String name, final PType type, final PValue value, final boolean isNullable) {
+		this.type = type;
+		this.value = value;
 		this.name = Objects.requireNonNull(name, "name == null");
 		this.isNullable = isNullable;
 	}
@@ -62,13 +62,13 @@ public final class PParameterArgument {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 //	TODO: Add Javadocs!
-	public Optional<PType> getPType() {
-		return Optional.ofNullable(this.pType);
+	public Optional<PType> getType() {
+		return Optional.ofNullable(this.type);
 	}
 	
 //	TODO: Add Javadocs!
-	public Optional<PValue> getPValue() {
-		return Optional.ofNullable(this.pValue);
+	public Optional<PValue> getValue() {
+		return Optional.ofNullable(this.value);
 	}
 	
 //	TODO: Add Javadocs!
@@ -80,14 +80,14 @@ public final class PParameterArgument {
 	public String getSourceCode() {
 		final
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append(hasPType() && isNullable() ? "?" : "");
-		stringBuilder.append(hasPType() ? this.pType.getName() : "");
-		stringBuilder.append(hasPType() ? " " : "");
+		stringBuilder.append(hasType() && isNullable() ? "?" : "");
+		stringBuilder.append(hasType() ? this.type.getName() : "");
+		stringBuilder.append(hasType() ? " " : "");
 		stringBuilder.append("$" + getName());
 		
-		if(hasPValue()) {
+		if(hasValue()) {
 			stringBuilder.append(" = ");
-			stringBuilder.append(this.pValue.getSourceCode());
+			stringBuilder.append(this.value.getSourceCode());
 		}
 		
 		return stringBuilder.toString();
@@ -100,9 +100,9 @@ public final class PParameterArgument {
 			return true;
 		} else if(!(object instanceof PParameterArgument)) {
 			return false;
-		} else if(!Objects.equals(this.pType, PParameterArgument.class.cast(object).pType)) {
+		} else if(!Objects.equals(this.type, PParameterArgument.class.cast(object).type)) {
 			return false;
-		} else if(!Objects.equals(this.pValue, PParameterArgument.class.cast(object).pValue)) {
+		} else if(!Objects.equals(this.value, PParameterArgument.class.cast(object).value)) {
 			return false;
 		} else if(!Objects.equals(this.name, PParameterArgument.class.cast(object).name)) {
 			return false;
@@ -114,13 +114,13 @@ public final class PParameterArgument {
 	}
 	
 //	TODO: Add Javadocs!
-	public boolean hasPType() {
-		return this.pType != null;
+	public boolean hasType() {
+		return this.type != null;
 	}
 	
 //	TODO: Add Javadocs!
-	public boolean hasPValue() {
-		return this.pValue != null;
+	public boolean hasValue() {
+		return this.value != null;
 	}
 	
 //	TODO: Add Javadocs!
@@ -131,6 +131,6 @@ public final class PParameterArgument {
 //	TODO: Add Javadocs!
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.pType, this.pValue, this.name, Boolean.valueOf(this.isNullable));
+		return Objects.hash(this.type, this.value, this.name, Boolean.valueOf(this.isNullable));
 	}
 }

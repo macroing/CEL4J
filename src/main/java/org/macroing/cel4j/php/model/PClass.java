@@ -35,11 +35,11 @@ public final class PClass {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final List<PConst> pConsts;
-	private final List<PField> pFields;
-	private final List<PMethod> pMethods;
+	private final List<PConst> consts;
+	private final List<PField> fields;
+	private final List<PMethod> methods;
 	private final List<String> implementedInterfaces;
-	private PConstructor pConstructor;
+	private PConstructor constructor;
 	private String extendedClass;
 	private String name;
 	private int accessFlags;
@@ -48,11 +48,11 @@ public final class PClass {
 	
 //	TODO: Add Javadocs!
 	public PClass() {
-		this.pConsts = new ArrayList<>();
-		this.pFields = new ArrayList<>();
-		this.pMethods = new ArrayList<>();
+		this.consts = new ArrayList<>();
+		this.fields = new ArrayList<>();
+		this.methods = new ArrayList<>();
 		this.implementedInterfaces = new ArrayList<>();
-		this.pConstructor = null;
+		this.constructor = null;
 		this.extendedClass = null;
 		this.name = "MyClass";
 		this.accessFlags = 0;
@@ -71,17 +71,17 @@ public final class PClass {
 	}
 	
 //	TODO: Add Javadocs!
-	public Document write(final Document document, final boolean isAligningPConsts) {
-		final List<PConst> pConsts = getPConsts();
-		final List<PField> pFields = getPFields();
-		final List<PMethod> pMethods = getPMethods();
+	public Document write(final Document document, final boolean isAligningConsts) {
+		final List<PConst> consts = getConsts();
+		final List<PField> fields = getFields();
+		final List<PMethod> methods = getMethods();
 		
-		final PConstructor pConstructor = this.pConstructor;
+		final PConstructor constructor = this.constructor;
 		
-		final boolean hasPConsts = pConsts.size() > 0;
-		final boolean hasPConstructor = pConstructor != null;
-		final boolean hasPFields = pFields.size() > 0;
-		final boolean hasPMethods = pMethods.size() > 0;
+		final boolean hasConsts = consts.size() > 0;
+		final boolean hasConstructor = constructor != null;
+		final boolean hasFields = fields.size() > 0;
+		final boolean hasMethods = methods.size() > 0;
 		
 		final String accessModifier = isAbstract() ? "abstract " : isFinal() ? "final " : "";
 		final String name = getName();
@@ -91,34 +91,34 @@ public final class PClass {
 		document.linef("%sclass %s%s%s {", accessModifier, name, extendsClause, implementsClause);
 		document.indent();
 		
-		if(hasPConsts) {
-			if(isAligningPConsts) {
+		if(hasConsts) {
+			if(isAligningConsts) {
 				int maximumLength = 0;
 				
-				for(final PConst pConst : pConsts) {
-					maximumLength = Math.max(maximumLength, pConst.getAccessModifiersAsString("", " ").length() + pConst.getName().length());
+				for(final PConst currentConst : consts) {
+					maximumLength = Math.max(maximumLength, currentConst.getAccessModifiersAsString("", " ").length() + currentConst.getName().length());
 				}
 				
-				for(int i = 0; i < pConsts.size(); i++) {
-					final PConst pConstA = pConsts.get(i);
-					final PConst pConstB = pConsts.get(i + 1 < pConsts.size() ? i + 1 : i);
+				for(int i = 0; i < consts.size(); i++) {
+					final PConst constA = consts.get(i);
+					final PConst constB = consts.get(i + 1 < consts.size() ? i + 1 : i);
 					
-					pConstA.write(document, maximumLength);
+					constA.write(document, maximumLength);
 					
-					if(PConst.isInDifferentGroups(pConstA, pConstB)) {
+					if(PConst.isInDifferentGroups(constA, constB)) {
 						document.line();
 						document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
 						document.line();
 					}
 				}
 			} else {
-				for(int i = 0; i < pConsts.size(); i++) {
-					final PConst pConstA = pConsts.get(i);
-					final PConst pConstB = pConsts.get(i + 1 < pConsts.size() ? i + 1 : i);
+				for(int i = 0; i < consts.size(); i++) {
+					final PConst constA = consts.get(i);
+					final PConst constB = consts.get(i + 1 < consts.size() ? i + 1 : i);
 					
-					pConstA.write(document);
+					constA.write(document);
 					
-					if(PConst.isInDifferentGroups(pConstA, pConstB)) {
+					if(PConst.isInDifferentGroups(constA, constB)) {
 						document.line();
 						document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
 						document.line();
@@ -126,55 +126,55 @@ public final class PClass {
 				}
 			}
 			
-			if(hasPConstructor || hasPFields || hasPMethods) {
+			if(hasConstructor || hasFields || hasMethods) {
 				document.line();
 				document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
 				document.line();
 			}
 		}
 		
-		if(hasPFields) {
-			for(int i = 0; i < pFields.size(); i++) {
-				final PField pFieldA = pFields.get(i);
-				final PField pFieldB = pFields.get(i + 1 < pFields.size() ? i + 1 : i);
+		if(hasFields) {
+			for(int i = 0; i < fields.size(); i++) {
+				final PField fieldA = fields.get(i);
+				final PField fieldB = fields.get(i + 1 < fields.size() ? i + 1 : i);
 				
-				pFieldA.write(document);
+				fieldA.write(document);
 				
-				if(PField.isInDifferentGroups(pFieldA, pFieldB)) {
+				if(PField.isInDifferentGroups(fieldA, fieldB)) {
 					document.line();
 					document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
 					document.line();
 				}
 			}
 			
-			if(hasPConstructor || hasPMethods) {
+			if(hasConstructor || hasMethods) {
 				document.line();
 				document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
 				document.line();
 			}
 		}
 		
-		if(pConstructor != null) {
-			pConstructor.write(document);
+		if(constructor != null) {
+			constructor.write(document);
 			
-			if(hasPMethods) {
+			if(hasMethods) {
 				document.line();
 				document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
 				document.line();
 			}
 		}
 		
-		for(int i = 0; i < pMethods.size(); i++) {
-			final PMethod pMethodA = pMethods.get(i);
-			final PMethod pMethodB = pMethods.get(i + 1 < pMethods.size() ? i + 1 : i);
+		for(int i = 0; i < methods.size(); i++) {
+			final PMethod methodA = methods.get(i);
+			final PMethod methodB = methods.get(i + 1 < methods.size() ? i + 1 : i);
 			
-			pMethodA.write(document);
+			methodA.write(document);
 			
-			if(PMethod.isInDifferentGroups(pMethodA, pMethodB)) {
+			if(PMethod.isInDifferentGroups(methodA, methodB)) {
 				document.line();
 				document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
 				document.line();
-			} else if(pMethodA != pMethodB) {
+			} else if(methodA != methodB) {
 				document.line();
 			}
 		}
@@ -186,18 +186,18 @@ public final class PClass {
 	}
 	
 //	TODO: Add Javadocs!
-	public List<PConst> getPConsts() {
-		return new ArrayList<>(this.pConsts);
+	public List<PConst> getConsts() {
+		return new ArrayList<>(this.consts);
 	}
 	
 //	TODO: Add Javadocs!
-	public List<PField> getPFields() {
-		return new ArrayList<>(this.pFields);
+	public List<PField> getFields() {
+		return new ArrayList<>(this.fields);
 	}
 	
 //	TODO: Add Javadocs!
-	public List<PMethod> getPMethods() {
-		return new ArrayList<>(this.pMethods);
+	public List<PMethod> getMethods() {
+		return new ArrayList<>(this.methods);
 	}
 	
 //	TODO: Add Javadocs!
@@ -206,8 +206,8 @@ public final class PClass {
 	}
 	
 //	TODO: Add Javadocs!
-	public Optional<PConstructor> getPConstructor() {
-		return Optional.ofNullable(this.pConstructor);
+	public Optional<PConstructor> getConstructor() {
+		return Optional.ofNullable(this.constructor);
 	}
 	
 //	TODO: Add Javadocs!
@@ -231,29 +231,39 @@ public final class PClass {
 	}
 	
 //	TODO: Add Javadocs!
+	public void addConst(final PConst pConst) {
+		if(!doContainsConstByName(Objects.requireNonNull(pConst, "pConst == null"))) {
+			this.consts.add(pConst);
+		}
+	}
+	
+//	TODO: Add Javadocs!
+	public void addField(final PField field) {
+		if(!doContainsFieldByName(Objects.requireNonNull(field, "field == null"))) {
+			this.fields.add(field);
+		}
+	}
+	
+//	TODO: Add Javadocs!
 	public void addImplementedInterface(final String implementedInterface) {
 		this.implementedInterfaces.add(Objects.requireNonNull(implementedInterface, "implementedInterface == null"));
 	}
 	
 //	TODO: Add Javadocs!
-	public void addPConst(final PConst pConst) {
-		if(!doContainsPConstByName(Objects.requireNonNull(pConst, "pConst == null"))) {
-			this.pConsts.add(pConst);
+	public void addMethod(final PMethod method) {
+		if(!doContainsMethodByName(Objects.requireNonNull(method, "method == null"))) {
+			this.methods.add(method);
 		}
 	}
 	
 //	TODO: Add Javadocs!
-	public void addPField(final PField pField) {
-		if(!doContainsPFieldByName(Objects.requireNonNull(pField, "pField == null"))) {
-			this.pFields.add(pField);
-		}
+	public void removeConst(final PConst pConst) {
+		this.consts.remove(Objects.requireNonNull(pConst, "pConst == null"));
 	}
 	
 //	TODO: Add Javadocs!
-	public void addPMethod(final PMethod pMethod) {
-		if(!doContainsPMethodByName(Objects.requireNonNull(pMethod, "pMethod == null"))) {
-			this.pMethods.add(pMethod);
-		}
+	public void removeField(final PField field) {
+		this.fields.remove(Objects.requireNonNull(field, "field == null"));
 	}
 	
 //	TODO: Add Javadocs!
@@ -262,18 +272,8 @@ public final class PClass {
 	}
 	
 //	TODO: Add Javadocs!
-	public void removePConst(final PConst pConst) {
-		this.pConsts.remove(Objects.requireNonNull(pConst, "pConst == null"));
-	}
-	
-//	TODO: Add Javadocs!
-	public void removePField(final PField pField) {
-		this.pFields.remove(Objects.requireNonNull(pField, "pField == null"));
-	}
-	
-//	TODO: Add Javadocs!
-	public void removePMethod(final PMethod pMethod) {
-		this.pMethods.remove(Objects.requireNonNull(pMethod, "pMethod == null"));
+	public void removeMethod(final PMethod method) {
+		this.methods.remove(Objects.requireNonNull(method, "method == null"));
 	}
 	
 //	TODO: Add Javadocs!
@@ -284,6 +284,11 @@ public final class PClass {
 		} else {
 			this.accessFlags &= ~ACCESS_FLAG_ABSTRACT;
 		}
+	}
+	
+//	TODO: Add Javadocs!
+	public void setConstructor(final PConstructor constructor) {
+		this.constructor = constructor;
 	}
 	
 //	TODO: Add Javadocs!
@@ -307,15 +312,10 @@ public final class PClass {
 	}
 	
 //	TODO: Add Javadocs!
-	public void setPConstructor(final PConstructor pConstructor) {
-		this.pConstructor = pConstructor;
-	}
-	
-//	TODO: Add Javadocs!
 	public void sort() {
-		Collections.sort(this.pConsts);
-		Collections.sort(this.pFields);
-		Collections.sort(this.pMethods);
+		Collections.sort(this.consts);
+		Collections.sort(this.fields);
+		Collections.sort(this.methods);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -354,15 +354,15 @@ public final class PClass {
 		return stringBuilder.toString();
 	}
 	
-	private boolean doContainsPConstByName(final PConst pConst) {
-		return this.pConsts.stream().anyMatch(currentPConst -> currentPConst.getName().equals(pConst.getName()));
+	private boolean doContainsConstByName(final PConst pConst) {
+		return this.consts.stream().anyMatch(currentPConst -> currentPConst.getName().equals(pConst.getName()));
 	}
 	
-	private boolean doContainsPFieldByName(final PField pField) {
-		return this.pFields.stream().anyMatch(currentPField -> currentPField.getName().equals(pField.getName()));
+	private boolean doContainsFieldByName(final PField field) {
+		return this.fields.stream().anyMatch(currentField -> currentField.getName().equals(field.getName()));
 	}
 	
-	private boolean doContainsPMethodByName(final PMethod pMethod) {
-		return this.pMethods.stream().anyMatch(currentPMethod -> currentPMethod.getName().equals(pMethod.getName()));
+	private boolean doContainsMethodByName(final PMethod method) {
+		return this.methods.stream().anyMatch(currentMethod -> currentMethod.getName().equals(method.getName()));
 	}
 }

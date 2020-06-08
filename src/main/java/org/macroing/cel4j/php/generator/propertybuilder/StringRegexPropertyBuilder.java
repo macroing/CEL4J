@@ -46,16 +46,16 @@ public final class StringRegexPropertyBuilder extends AbstractPropertyBuilder {
 	
 //	TODO: Add Javadocs!
 	@Override
-	public List<PMethod> toPMethods(final Property property) {
-		final List<PMethod> pMethods = new ArrayList<>();
+	public List<PMethod> toMethods(final Property property) {
+		final List<PMethod> methods = new ArrayList<>();
 		
-		pMethods.add(toPMethodDoParseString());
-		pMethods.add(toPMethodGet(property));
-		pMethods.add(toPMethodHas(property));
-		pMethods.add(doToPMethodSet(property, this.pattern));
-		pMethods.add(doToPMethodDoUpdateStringByRegex());
+		methods.add(toMethodDoParseString());
+		methods.add(toMethodGet(property));
+		methods.add(toMethodHas(property));
+		methods.add(doToMethodSet(property, this.pattern));
+		methods.add(doToMethodDoUpdateStringByRegex());
 		
-		return pMethods;
+		return methods;
 	}
 	
 //	TODO: Add Javadocs!
@@ -79,10 +79,10 @@ public final class StringRegexPropertyBuilder extends AbstractPropertyBuilder {
 	
 //	TODO: Add Javadocs!
 	@Override
-	public boolean isPTypeSupported(final PType pType) {
-		final String pTypeName = pType.getName();
+	public boolean isTypeSupported(final PType type) {
+		final String typeName = type.getName();
 		
-		switch(pTypeName) {
+		switch(typeName) {
 			case "string":
 				return true;
 			default:
@@ -98,31 +98,31 @@ public final class StringRegexPropertyBuilder extends AbstractPropertyBuilder {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private static PMethod doToPMethodDoUpdateStringByRegex() {
+	private static PMethod doToMethodDoUpdateStringByRegex() {
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument("newString", PType.STRING, null, true));
-		pMethod.addPParameterArgument(new PParameterArgument("oldString", PType.STRING, null, true));
-		pMethod.addPParameterArgument(new PParameterArgument("pattern", PType.STRING, null, false));
-		pMethod.getPBlock().addLine("if($newString === null) {");
-		pMethod.getPBlock().addLine("	return $newString;");
-		pMethod.getPBlock().addLine("} else if(preg_match($pattern, $newString)) {");
-		pMethod.getPBlock().addLine("	return $newString;");
-		pMethod.getPBlock().addLine("} else {");
-		pMethod.getPBlock().addLine("	return $oldString;");
-		pMethod.getPBlock().addLine("}");
+		pMethod.addParameterArgument(new PParameterArgument("newString", PType.STRING, null, true));
+		pMethod.addParameterArgument(new PParameterArgument("oldString", PType.STRING, null, true));
+		pMethod.addParameterArgument(new PParameterArgument("pattern", PType.STRING, null, false));
+		pMethod.getBlock().addLine("if($newString === null) {");
+		pMethod.getBlock().addLine("	return $newString;");
+		pMethod.getBlock().addLine("} else if(preg_match($pattern, $newString)) {");
+		pMethod.getBlock().addLine("	return $newString;");
+		pMethod.getBlock().addLine("} else {");
+		pMethod.getBlock().addLine("	return $oldString;");
+		pMethod.getBlock().addLine("}");
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("doUpdateStringByRegex");
-		pMethod.setPReturnType(new PReturnType(PType.STRING, true));
 		pMethod.setPrivate(true);
+		pMethod.setReturnType(new PReturnType(PType.STRING, true));
 		pMethod.setStatic(true);
 		
 		return pMethod;
 	}
 	
-	private static PMethod doToPMethodSet(final Property property, final String pattern) {
-		final PType pType = property.getPType();
+	private static PMethod doToMethodSet(final Property property, final String pattern) {
+		final PType type = property.getType();
 		
 		final String name = property.getName();
 		final String nameCamelCase = Strings.formatCamelCase(name);
@@ -130,12 +130,12 @@ public final class StringRegexPropertyBuilder extends AbstractPropertyBuilder {
 		
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addPParameterArgument(new PParameterArgument(nameCamelCaseModified, pType, PValue.NULL, true));
-		pMethod.getPBlock().addLinef("return ($this->%s = self::doUpdateStringByRegex($%s, $this->%s, '%s')) === $%s;", nameCamelCaseModified, nameCamelCaseModified, nameCamelCaseModified, pattern, nameCamelCaseModified);
+		pMethod.addParameterArgument(new PParameterArgument(nameCamelCaseModified, type, PValue.NULL, true));
+		pMethod.getBlock().addLinef("return ($this->%s = self::doUpdateStringByRegex($%s, $this->%s, '%s')) === $%s;", nameCamelCaseModified, nameCamelCaseModified, nameCamelCaseModified, pattern, nameCamelCaseModified);
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("set" + nameCamelCase);
-		pMethod.setPReturnType(new PReturnType(PType.BOOL, false));
+		pMethod.setReturnType(new PReturnType(PType.BOOL, false));
 		
 		return pMethod;
 	}

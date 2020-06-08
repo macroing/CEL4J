@@ -120,23 +120,23 @@ public final class PType implements Comparable<PType> {
 	}
 	
 	/**
-	 * Compares this {@code PType} instance to {@code pType}.
+	 * Compares this {@code PType} instance to {@code type}.
 	 * <p>
 	 * Returns a comparison value.
 	 * <p>
-	 * If {@code pType} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code type} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param pType the {@code PType} to compare this {@code PType} instance to
+	 * @param type the {@code PType} to compare this {@code PType} instance to
 	 * @return a comparison value
-	 * @throws NullPointerException thrown if, and only if, {@code pType} is {@code null}
+	 * @throws NullPointerException thrown if, and only if, {@code type} is {@code null}
 	 */
 	@Override
-	public int compareTo(final PType pType) {
-		final PType pTypeThis = this;
-		final PType pTypeThat = pType;
+	public int compareTo(final PType type) {
+		final PType typeThis = this;
+		final PType typeThat = type;
 		
-		final String nameThis = pTypeThis.name;
-		final String nameThat = pTypeThat.name;
+		final String nameThis = typeThis.name;
+		final String nameThat = typeThat.name;
 		
 		return nameThis.compareTo(nameThat);
 	}

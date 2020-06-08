@@ -27,7 +27,7 @@ import java.util.Objects;
  * @author J&#246;rgen Lundgren
  */
 public final class PReturnType implements Comparable<PReturnType> {
-	private final PType pType;
+	private final PType type;
 	private final boolean isNullable;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,33 +49,33 @@ public final class PReturnType implements Comparable<PReturnType> {
 	/**
 	 * Constructs a new {@code PReturnType} instance.
 	 * <p>
-	 * If {@code pType} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code type} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
 	 * Calling this constructor is equivalent to the following:
 	 * <pre>
 	 * {@code
-	 * new PReturnType(pType, false);
+	 * new PReturnType(type, false);
 	 * }
 	 * </pre>
 	 * 
-	 * @param pType the {@link PType} to use
-	 * @throws NullPointerException thrown if, and only if, {@code pType} is {@code null}
+	 * @param type the {@link PType} to use
+	 * @throws NullPointerException thrown if, and only if, {@code type} is {@code null}
 	 */
-	public PReturnType(final PType pType) {
-		this(pType, false);
+	public PReturnType(final PType type) {
+		this(type, false);
 	}
 	
 	/**
 	 * Constructs a new {@code PReturnType} instance.
 	 * <p>
-	 * If {@code pType} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code type} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param pType the {@link PType} to use
-	 * @param isNullable {@code true} if, and only if, {@code pType} can be {@code null}, {@code false} otherwise
-	 * @throws NullPointerException thrown if, and only if, {@code pType} is {@code null}
+	 * @param type the {@link PType} to use
+	 * @param isNullable {@code true} if, and only if, {@code type} can be {@code null} in the PHP source code, {@code false} otherwise
+	 * @throws NullPointerException thrown if, and only if, {@code type} is {@code null}
 	 */
-	public PReturnType(final PType pType, final boolean isNullable) {
-		this.pType = Objects.requireNonNull(pType, "pType == null");
+	public PReturnType(final PType type, final boolean isNullable) {
+		this.type = Objects.requireNonNull(type, "type == null");
 		this.isNullable = isNullable;
 	}
 	
@@ -86,8 +86,8 @@ public final class PReturnType implements Comparable<PReturnType> {
 	 * 
 	 * @return the {@code PType} assigned to this {@code PReturnType} instance
 	 */
-	public PType getPType() {
-		return this.pType;
+	public PType getType() {
+		return this.type;
 	}
 	
 	/**
@@ -99,7 +99,7 @@ public final class PReturnType implements Comparable<PReturnType> {
 		final
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append(isNullable() ? "?" : "");
-		stringBuilder.append(getPType().getName());
+		stringBuilder.append(getType().getName());
 		
 		return stringBuilder.toString();
 	}
@@ -118,7 +118,7 @@ public final class PReturnType implements Comparable<PReturnType> {
 			return true;
 		} else if(!(object instanceof PReturnType)) {
 			return false;
-		} else if(!Objects.equals(this.pType, PReturnType.class.cast(object).pType)) {
+		} else if(!Objects.equals(this.type, PReturnType.class.cast(object).type)) {
 			return false;
 		} else if(this.isNullable != PReturnType.class.cast(object).isNullable) {
 			return false;
@@ -128,41 +128,41 @@ public final class PReturnType implements Comparable<PReturnType> {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, the {@link PType} assigned to this {@code PReturnType} can be {@code null}, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, the {@link PType} assigned to this {@code PReturnType} can be {@code null} in the PHP source code, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, the {@code PType} assigned to this {@code PReturnType} can be {@code null}, {@code false} otherwise
+	 * @return {@code true} if, and only if, the {@code PType} assigned to this {@code PReturnType} can be {@code null} in the PHP source code, {@code false} otherwise
 	 */
 	public boolean isNullable() {
 		return this.isNullable;
 	}
 	
 	/**
-	 * Compares this {@code PReturnType} instance to {@code pReturnType}.
+	 * Compares this {@code PReturnType} instance to {@code returnType}.
 	 * <p>
 	 * Returns a comparison value.
 	 * <p>
-	 * If {@code pReturnType} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code returnType} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param pReturnType the {@code PReturnType} to compare this {@code PReturnType} instance to
+	 * @param returnType the {@code PReturnType} to compare this {@code PReturnType} instance to
 	 * @return a comparison value
-	 * @throws NullPointerException thrown if, and only if, {@code pReturnType} is {@code null}
+	 * @throws NullPointerException thrown if, and only if, {@code returnType} is {@code null}
 	 */
 	@Override
-	public int compareTo(final PReturnType pReturnType) {
-		final PReturnType pReturnTypeThis = this;
-		final PReturnType pReturnTypeThat = pReturnType;
+	public int compareTo(final PReturnType returnType) {
+		final PReturnType returnTypeThis = this;
+		final PReturnType returnTypeThat = returnType;
 		
-		final PType pTypeThis = pReturnTypeThis.pType;
-		final PType pTypeThat = pReturnTypeThat.pType;
+		final PType typeThis = returnTypeThis.type;
+		final PType typeThat = returnTypeThat.type;
 		
-		final int compareToPType = pTypeThis.compareTo(pTypeThat);
+		final int compareToType = typeThis.compareTo(typeThat);
 		
-		if(compareToPType != 0) {
-			return compareToPType;
+		if(compareToType != 0) {
+			return compareToType;
 		}
 		
-		final boolean isNullableThis = pReturnTypeThis.isNullable;
-		final boolean isNullableThat = pReturnTypeThat.isNullable;
+		final boolean isNullableThis = returnTypeThis.isNullable;
+		final boolean isNullableThat = returnTypeThat.isNullable;
 		
 		return Boolean.compare(isNullableThis, isNullableThat);
 	}
@@ -174,6 +174,6 @@ public final class PReturnType implements Comparable<PReturnType> {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.pType, Boolean.valueOf(this.isNullable));
+		return Objects.hash(this.type, Boolean.valueOf(this.isNullable));
 	}
 }
