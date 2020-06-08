@@ -16,36 +16,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.java.decompiler.simple;
+package org.macroing.cel4j.java.decompiler;
 
 import java.util.Objects;
 
-enum JModifier {
-	ABSTRACT("abstract"),
-	FINAL("final"),
-	NATIVE("native"),
-	PRIVATE("private"),
-	PROTECTED("protected"),
-	PUBLIC("public"),
-	STATIC("static"),
-	STRICT_F_P("strictfp"),
-	SYNCHRONIZED("synchronized"),
-	TRANSIENT("transient"),
-	VOLATILE("volatile");
+interface JPackageNameFilter {
+	boolean isAccepted(final String packageName, final String simpleName);
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final String keyword;
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	private JModifier(final String keyword) {
-		this.keyword = Objects.requireNonNull(keyword, "keyword == null");
+	static JPackageNameFilter newUnnecessaryPackageName(final String packageName) {
+		return newUnnecessaryPackageName(packageName, true);
 	}
 	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	public String getKeyword() {
-		return this.keyword;
+	static JPackageNameFilter newUnnecessaryPackageName(final String packageName, final boolean isDiscardingUnnecessaryPackageNames) {
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return (packageName0, simpleName) -> isDiscardingUnnecessaryPackageNames && (packageName0.equals(packageName) || packageName0.equals("java.lang")) ? false : true;
 	}
 }

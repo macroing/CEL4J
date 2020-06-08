@@ -22,6 +22,8 @@ import java.util.Objects;
 
 /**
  * A {@code PReturnType} represents a return type.
+ * <p>
+ * This class is immutable and thread-safe.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren

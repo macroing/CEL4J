@@ -1,4 +1,4 @@
-CEL4J - Version 0.5.1
+CEL4J - Version 0.5.2
 =====================
 CEL4J is a Code Engineering Library for Java. It provides functionality for JSON, Java and PHP.
 
@@ -174,14 +174,13 @@ import org.macroing.cel4j.java.decompiler.Consumers;
 import org.macroing.cel4j.java.decompiler.DecompilationException;
 import org.macroing.cel4j.java.decompiler.Decompiler;
 import org.macroing.cel4j.java.decompiler.DecompilerObserver;
-import org.macroing.cel4j.java.decompiler.simple.SimpleDecompiler;
 
 public class DecompilationExample {
     public static void main(String[] args) {
         try {
             Class<?> clazz = Integer.class;
             
-            Decompiler decompiler = new SimpleDecompiler();
+            Decompiler decompiler = Decompiler.newInstance();
             decompiler.addClass(clazz, Consumers.file("tmp", clazz));
             decompiler.addDecompilerObserver(DecompilerObserver.print());
             decompiler.getDecompilerConfiguration().setDisplayingInstructions(true);

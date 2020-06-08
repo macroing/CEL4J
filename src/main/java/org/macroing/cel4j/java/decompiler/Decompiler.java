@@ -20,6 +20,7 @@ package org.macroing.cel4j.java.decompiler;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -29,7 +30,7 @@ import java.util.function.Consumer;
  * <p>
  * To use a {@code Decompiler}, consider the following example, that will print the decompiled source code to standard out:
  * <pre>
- * Decompiler decompiler = new SimpleDecompiler();
+ * Decompiler decompiler = Decompiler.newInstance();
  * decompiler.addClass(Integer.class);
  * decompiler.decompile();
  * </pre>
@@ -201,4 +202,39 @@ public interface Decompiler {
 	 * @throws NullPointerException thrown if, and only if, {@code defaultSourceConsumer} is {@code null}
 	 */
 	void setDefaultSourceConsumer(final Consumer<String> defaultSourceConsumer);
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns a new {@code Decompiler} instance.
+	 * <p>
+	 * The {@code Decompiler} instance returned by this method is not thread-safe.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * Decompiler.newInstance(Consumers.print());
+	 * }
+	 * </pre>
+	 * 
+	 * @return a new {@code Decompiler} instance
+	 */
+	static Decompiler newInstance() {
+		return newInstance(Consumers.print());
+	}
+	
+	/**
+	 * Returns a new {@code Decompiler} instance.
+	 * <p>
+	 * If {@code defaultSourceConsumer} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * The {@code Decompiler} instance returned by this method is not thread-safe.
+	 * 
+	 * @param defaultSourceConsumer the default source {@code Consumer<String>} to use
+	 * @return a new {@code Decompiler} instance
+	 * @throws NullPointerException thrown if, and only if, {@code defaultSourceConsumer} is {@code null}
+	 */
+	static Decompiler newInstance(final Consumer<String> defaultSourceConsumer) {
+		return new DecompilerImpl(Objects.requireNonNull(defaultSourceConsumer, "defaultSourceConsumer == null"));
+	}
 }

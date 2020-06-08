@@ -18,11 +18,17 @@
  */
 package org.macroing.cel4j.php.model;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 import java.util.Optional;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code PParameterArgument} represents a parameter argument and can be added to a {@link PConstructor} or a {@link PMethod}.
+ * <p>
+ * This class is immutable and thread-safe.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class PParameterArgument {
 	private final PType type;
 	private final PValue value;
@@ -31,27 +37,91 @@ public final class PParameterArgument {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Constructs a new {@code PParameterArgument} instance.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new PParameterArgument("name");
+	 * }
+	 * </pre>
+	 */
 	public PParameterArgument() {
 		this("name");
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Constructs a new {@code PParameterArgument} instance.
+	 * <p>
+	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new PParameterArgument(name, null);
+	 * }
+	 * </pre>
+	 * 
+	 * @param name the name of the parameter argument
+	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 */
 	public PParameterArgument(final String name) {
 		this(name, null);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Constructs a new {@code PParameterArgument} instance.
+	 * <p>
+	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new PParameterArgument(name, type, null);
+	 * }
+	 * </pre>
+	 * 
+	 * @param name the name of the parameter argument
+	 * @param type the type of the parameter argument, which may be {@code null}
+	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 */
 	public PParameterArgument(final String name, final PType type) {
 		this(name, type, null);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Constructs a new {@code PParameterArgument} instance.
+	 * <p>
+	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new PParameterArgument(name, type, value, false);
+	 * }
+	 * </pre>
+	 * 
+	 * @param name the name of the parameter argument
+	 * @param type the type of the parameter argument, which may be {@code null}
+	 * @param value the default value of the parameter argument, which may be {@code null}
+	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 */
 	public PParameterArgument(final String name, final PType type, final PValue value) {
 		this(name, type, value, false);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Constructs a new {@code PParameterArgument} instance.
+	 * <p>
+	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param name the name of the parameter argument
+	 * @param type the type of the parameter argument, which may be {@code null}
+	 * @param value the default value of the parameter argument, which may be {@code null}
+	 * @param isNullable {@code true} if, and only if, the parameter argument may be {@code null} in the PHP source code, {@code false} otherwise
+	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 */
 	public PParameterArgument(final String name, final PType type, final PValue value, final boolean isNullable) {
 		this.type = type;
 		this.value = value;
@@ -61,22 +131,38 @@ public final class PParameterArgument {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns an {@code Optional} of {@link PType} with the optional type associated with this {@code PParameterArgument}.
+	 * 
+	 * @return an {@code Optional} of {@code PType} with the optional type associated with this {@code PParameterArgument}
+	 */
 	public Optional<PType> getType() {
 		return Optional.ofNullable(this.type);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns an {@code Optional} of {@link PValue} with the optional default value associated with this {@code PParameterArgument}.
+	 * 
+	 * @return an {@code Optional} of {@code PValue} with the optional default value associated with this {@code PParameterArgument}
+	 */
 	public Optional<PValue> getValue() {
 		return Optional.ofNullable(this.value);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the name associated with this {@code PParameterArgument}.
+	 * 
+	 * @return the name associated with this {@code PParameterArgument}
+	 */
 	public String getName() {
 		return this.name;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} with PHP source code.
+	 * 
+	 * @return a {@code String} with PHP source code
+	 */
 	public String getSourceCode() {
 		final
 		StringBuilder stringBuilder = new StringBuilder();
@@ -93,7 +179,14 @@ public final class PParameterArgument {
 		return stringBuilder.toString();
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Compares {@code object} to this {@code PParameterArgument} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code PParameterArgument}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code PParameterArgument} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code PParameterArgument}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -113,22 +206,38 @@ public final class PParameterArgument {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns {@code true} if, and only if, this {@code PParameterArgument} instance is associated with a type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code PParameterArgument} instance is associated with a type, {@code false} otherwise
+	 */
 	public boolean hasType() {
 		return this.type != null;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns {@code true} if, and only if, this {@code PParameterArgument} instance is associated with a default value, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code PParameterArgument} instance is associated with a default value, {@code false} otherwise
+	 */
 	public boolean hasValue() {
 		return this.value != null;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns {@code true} if, and only if, this {@code PParameterArgument} instance allows {@code null} in the PHP source code, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code PParameterArgument} instance allows {@code null} in the PHP source code, {@code false} otherwise
+	 */
 	public boolean isNullable() {
 		return this.isNullable;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code PParameterArgument} instance.
+	 * 
+	 * @return a hash code for this {@code PParameterArgument} instance
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.type, this.value, this.name, Boolean.valueOf(this.isNullable));

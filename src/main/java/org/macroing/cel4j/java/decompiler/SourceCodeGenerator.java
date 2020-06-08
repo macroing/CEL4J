@@ -16,11 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.java.decompiler.simple;
+package org.macroing.cel4j.java.decompiler;
 
 import java.util.Objects;
 
-import org.macroing.cel4j.java.decompiler.DecompilerConfiguration;
 import org.macroing.cel4j.util.Document;
 
 final class SourceCodeGenerator {

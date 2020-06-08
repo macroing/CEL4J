@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.java.decompiler.simple;
+package org.macroing.cel4j.java.decompiler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,6 @@ import org.macroing.cel4j.java.binary.classfile.string.ClassName;
 import org.macroing.cel4j.java.binary.classfile.string.ClassSignature;
 import org.macroing.cel4j.java.binary.classfile.string.SuperInterfaceSignature;
 import org.macroing.cel4j.java.binary.classfile.string.TypeParameters;
-import org.macroing.cel4j.java.decompiler.DecompilerConfiguration;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 

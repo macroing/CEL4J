@@ -43,9 +43,9 @@ import java.util.function.Consumer;
  * @author J&#246;rgen Lundgren
  */
 public abstract class AbstractDecompiler implements Decompiler {
-	private final AtomicReference<Consumer<String>> defaultSourceConsumer = new AtomicReference<>();
-	private final CopyOnWriteArrayList<DecompilerObserver> decompilerObservers = new CopyOnWriteArrayList<>();
-	private final DecompilerConfiguration decompilerConfiguration = new DecompilerConfiguration();
+	private final AtomicReference<Consumer<String>> defaultSourceConsumer;
+	private final CopyOnWriteArrayList<DecompilerObserver> decompilerObservers;
+	private final DecompilerConfiguration decompilerConfiguration;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -67,7 +67,9 @@ public abstract class AbstractDecompiler implements Decompiler {
 	 * @throws NullPointerException thrown if, and only if, {@code defaultSourceConsumer} is {@code null}
 	 */
 	protected AbstractDecompiler(final Consumer<String> defaultSourceConsumer) {
-		setDefaultSourceConsumer(defaultSourceConsumer);
+		this.defaultSourceConsumer = new AtomicReference<>(Objects.requireNonNull(defaultSourceConsumer, "defaultSourceConsumer == null"));
+		this.decompilerObservers = new CopyOnWriteArrayList<>();
+		this.decompilerConfiguration = new DecompilerConfiguration();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

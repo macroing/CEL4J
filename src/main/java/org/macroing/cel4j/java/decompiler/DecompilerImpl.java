@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.java.decompiler.simple;
+package org.macroing.cel4j.java.decompiler;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -26,84 +26,26 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import org.macroing.cel4j.java.decompiler.AbstractDecompiler;
-import org.macroing.cel4j.java.decompiler.Consumers;
-import org.macroing.cel4j.java.decompiler.DecompilationException;
-import org.macroing.cel4j.java.decompiler.Decompiler;
-
-/**
- * A {@code SimpleDecompiler} is a simple {@link Decompiler} implementation.
- * <p>
- * To use this class, consider the following example, that will print the decompiled source code to standard out:
- * <pre>
- * Decompiler decompiler = new SimpleDecompiler();
- * decompiler.addClass(Integer.class);
- * decompiler.decompile();
- * </pre>
- * This class is not thread-safe.
- * 
- * @since 1.0.0
- * @author J&#246;rgen Lundgren
- */
-public final class SimpleDecompiler extends AbstractDecompiler {
+final class DecompilerImpl extends AbstractDecompiler {
 	private final Map<Class<?>, Consumer<String>> classes = new LinkedHashMap<>();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	/**
-	 * Constructs a new {@code SimpleDecompiler} instance.
-	 * <p>
-	 * Calling this constructor is equivalent to calling {@code new SimpleDecompiler(Consumers.print())}.
-	 */
-	public SimpleDecompiler() {
+	public DecompilerImpl() {
 		this(Consumers.print());
 	}
 	
-	/**
-	 * Constructs a new {@code SimpleDecompiler} instance.
-	 * <p>
-	 * If {@code defaultSourceConsumer} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param defaultSourceConsumer the default source {@code Consumer<String>} to use
-	 * @throws NullPointerException thrown if, and only if, {@code defaultSourceConsumer} is {@code null}
-	 */
-	public SimpleDecompiler(final Consumer<String> defaultSourceConsumer) {
+	public DecompilerImpl(final Consumer<String> defaultSourceConsumer) {
 		super(defaultSourceConsumer);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	/**
-	 * Adds the given {@code Class<?>} to be decompiled and the source {@code Consumer<String>} to hand its decompiled source code.
-	 * <p>
-	 * If either {@code clazz} or {@code sourceConsumer} are {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param clazz the {@code Class<?>} to add
-	 * @param sourceConsumer the source {@code Consumer<String>} to hand the decompiled source code to
-	 * @throws NullPointerException thrown if, and only if, either {@code clazz} or {@code sourceConsumer} are {@code null}
-	 */
 	@Override
 	public void addClass(final Class<?> clazz, final Consumer<String> sourceConsumer) {
 		this.classes.put(Objects.requireNonNull(clazz, "clazz == null"), Objects.requireNonNull(sourceConsumer, "sourceConsumer == null"));
 	}
 	
-	/**
-	 * Decompiles the class- and interface-types that were added to this {@code SimpleDecompiler} instance.
-	 * <p>
-	 * The methods to add the class- and interface-types are the following:
-	 * <ul>
-	 * <li>{@link #addClass(Class)}</li>
-	 * <li>{@link #addClass(Class, Consumer)}</li>
-	 * <li>{@link #addClass(String)}</li>
-	 * <li>{@link #addClass(String, Consumer)}</li>
-	 * </ul>
-	 * When the decompilation process is finished, the source code of the decompiled class- and interface-types will be handed to the source {@code Consumer<String>} instances that were given to each individual class- and
-	 * interface-type, respectively.
-	 * <p>
-	 * If the decompilation process fails, a {@link DecompilationException} will be thrown.
-	 * 
-	 * @throws DecompilationException thrown if, and only if, the decompilation process fails
-	 */
 	@Override
 	public void decompile() {
 		try {

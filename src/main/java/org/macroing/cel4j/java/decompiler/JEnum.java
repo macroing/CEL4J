@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.java.decompiler.simple;
+package org.macroing.cel4j.java.decompiler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,14 +28,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.string.ClassName;
 import org.macroing.cel4j.java.binary.reader.ClassFileReader;
-import org.macroing.cel4j.java.decompiler.DecompilerConfiguration;
 import org.macroing.cel4j.node.NodeFormatException;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 
-final class JAnnotation extends JType {
+final class JEnum extends JType {
 	private static final Map<String, ClassFile> CLASS_FILES = new HashMap<>();
-	private static final Map<String, JAnnotation> J_ANNOTATIONS = new HashMap<>();
+	private static final Map<String, JEnum> J_ENUMS = new HashMap<>();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -47,7 +46,7 @@ final class JAnnotation extends JType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private JAnnotation(final Class<?> associatedClass, final ClassFile associatedClassFile) {
+	private JEnum(final Class<?> associatedClass, final ClassFile associatedClassFile) {
 		this.hasInitialized = new AtomicBoolean();
 		this.associatedClass = associatedClass;
 		this.associatedClassFile = associatedClassFile;
@@ -83,10 +82,10 @@ final class JAnnotation extends JType {
 		
 		document.linef("package %s;", packageName);
 		document.linef("");
-		document.linef("%s@interface %s {", modifiers, simpleName);
+		document.linef("%senum %s {", modifiers, simpleName);
 		document.indent();
 		document.outdent();
-		document.line("}");
+		document.linef("}");
 		
 		return document;
 	}
@@ -104,11 +103,11 @@ final class JAnnotation extends JType {
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
-		} else if(!(object instanceof JAnnotation)) {
+		} else if(!(object instanceof JEnum)) {
 			return false;
-		} else if(!Objects.equals(this.associatedClass, JAnnotation.class.cast(object).associatedClass)) {
+		} else if(!Objects.equals(this.associatedClass, JEnum.class.cast(object).associatedClass)) {
 			return false;
-		} else if(!Objects.equals(this.associatedClassFile, JAnnotation.class.cast(object).associatedClassFile)) {
+		} else if(!Objects.equals(this.associatedClassFile, JEnum.class.cast(object).associatedClassFile)) {
 			return false;
 		} else {
 			return true;
@@ -131,25 +130,25 @@ final class JAnnotation extends JType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public static JAnnotation valueOf(final Class<?> associatedClass) {
-		if(!associatedClass.isAnnotation()) {
-			throw new JTypeException(String.format("A JAnnotation must refer to an annotation: %s", associatedClass));
+	public static JEnum valueOf(final Class<?> associatedClass) {
+		if(!associatedClass.isEnum()) {
+			throw new JTypeException(String.format("A JEnum must refer to an enumeration: %s", associatedClass));
 		}
 		
 		try {
-			synchronized(J_ANNOTATIONS) {
+			synchronized(J_ENUMS) {
 				final
-				JAnnotation jAnnotation = J_ANNOTATIONS.computeIfAbsent(associatedClass.getName(), name -> new JAnnotation(associatedClass, CLASS_FILES.computeIfAbsent(name, name0 -> ClassFileReader.newInstance().readClassFile(associatedClass))));
-				jAnnotation.doInitialize();
+				JEnum jEnum = J_ENUMS.computeIfAbsent(associatedClass.getName(), name -> new JEnum(associatedClass, CLASS_FILES.computeIfAbsent(name, name0 -> ClassFileReader.newInstance().readClassFile(associatedClass))));
+				jEnum.doInitialize();
 				
-				return jAnnotation;
+				return jEnum;
 			}
 		} catch(final NodeFormatException e) {
 			throw new JTypeException(e);
 		}
 	}
 	
-	public static JAnnotation valueOf(final String name) {
+	public static JEnum valueOf(final String name) {
 		try {
 			return valueOf(Class.forName(name));
 		} catch(final ClassNotFoundException | LinkageError e) {
@@ -158,8 +157,8 @@ final class JAnnotation extends JType {
 	}
 	
 	public static void clearCache() {
-		synchronized(J_ANNOTATIONS) {
-			J_ANNOTATIONS.clear();
+		synchronized(J_ENUMS) {
+			J_ENUMS.clear();
 			
 			CLASS_FILES.clear();
 		}

@@ -16,48 +16,42 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.java.decompiler.simple;
+package org.macroing.cel4j.java.decompiler;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
-final class JArray extends JType {
-	private static final Map<String, JArray> J_ARRAYS = new HashMap<>();
+final class JVoid extends JType {
+	public static final JVoid VOID = new JVoid(Void.TYPE);
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final JType componentType;
+	private final Class<?> clazz;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private JArray(final JType componentType) {
-		this.componentType = componentType;
+	private JVoid(final Class<?> clazz) {
+		this.clazz = clazz;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	public JType getComponentType() {
-		return this.componentType;
-	}
 	
 	@Override
 	public String getName() {
-		return getComponentType().getName() + "[]";
+		return this.clazz.getName();
 	}
 	
 	@Override
 	public String toString() {
-		return String.format("JArray: [Name=%s], [ComponentType=%s]", getName(), getComponentType());
+		return String.format("JVoid: [Name=%s]", getName());
 	}
 	
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
-		} else if(!(object instanceof JArray)) {
+		} else if(!(object instanceof JVoid)) {
 			return false;
-		} else if(!Objects.equals(getComponentType(), JArray.class.cast(object).getComponentType())) {
+		} else if(!Objects.equals(this.clazz, JVoid.class.cast(object).clazz)) {
 			return false;
 		} else {
 			return true;
@@ -71,36 +65,26 @@ final class JArray extends JType {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(getComponentType());
+		return Objects.hash(this.clazz);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public static JArray valueOf(final Class<?> clazz) {
-		if(!clazz.isArray()) {
-			throw new JTypeException(String.format("A JArray must refer to an array: %s", clazz));
+	public static JVoid valueOf(final Class<?> clazz) {
+		if(clazz == Void.TYPE) {
+			return VOID;
 		}
 		
-		synchronized(J_ARRAYS) {
-			return J_ARRAYS.computeIfAbsent(clazz.getName(), name -> new JArray(JType.valueOf(clazz.getComponentType())));
-		}
+		throw new JTypeException(String.format("A JVoid must refer to the void type: %s", clazz));
 	}
 	
-	public static JArray valueOf(final String name) {
-		if(!name.startsWith("[")) {
-			throw new JTypeException(String.format("A JArray must refer to an array: %s", name));
-		}
-		
-		try {
-			return valueOf(Class.forName(name));
-		} catch(final ClassNotFoundException | LinkageError e) {
-			throw new JTypeException(e);
-		}
-	}
-	
-	public static void clearCache() {
-		synchronized(J_ARRAYS) {
-			J_ARRAYS.clear();
+	public static JVoid valueOf(final String name) {
+		switch(name) {
+			case "V":
+			case "void":
+				return VOID;
+			default:
+				throw new JTypeException(String.format("A JVoid must refer to the void type: %s", name));
 		}
 	}
 }

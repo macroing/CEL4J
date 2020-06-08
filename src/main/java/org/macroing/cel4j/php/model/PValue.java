@@ -24,11 +24,18 @@ import java.util.Objects;
  * A {@code PValue} represents a value assigned to a constant or a default value assigned to a parameter argument.
  * <p>
  * The classes {@link PConst} and {@link PParameterArgument} can contain an instance of this {@code PValue} class. For the {@code PConst} class it is required, but for the {@code PParameterArgument} class it is optional.
+ * <p>
+ * This class is immutable and thread-safe.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class PValue {
+	/**
+	 * A {@code PValue} instance used to represent an array.
+	 */
+	public static final PValue ARRAY = new PValue(new Object[] {});
+	
 	/**
 	 * A {@code PValue} instance used to represent {@code null}.
 	 */
@@ -158,19 +165,6 @@ public final class PValue {
 	}
 	
 	/**
-	 * Returns a {@code PValue} instance given an {@code Object[]} value.
-	 * <p>
-	 * If {@code value} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param value the {@code Object[]} value
-	 * @return a {@code PValue} instance given an {@code Object[]} value
-	 * @throws NullPointerException thrown if, and only if, {@code value} is {@code null}
-	 */
-	public static PValue valueOf(final Object[] value) {
-		return new PValue(Objects.requireNonNull(value, "value == null"));
-	}
-	
-	/**
 	 * Returns a {@code PValue} instance given a {@link PType} value.
 	 * <p>
 	 * If {@code pType} is {@code null}, a {@code NullPointerException} will be thrown.
@@ -185,7 +179,7 @@ public final class PValue {
 	public static PValue valueOf(final PType pType) {
 		switch(pType.getName()) {
 			case "array":
-				return valueOf(new Object[] {});
+				return ARRAY;
 			case "bool":
 				return valueOf(false);
 			case "float":
