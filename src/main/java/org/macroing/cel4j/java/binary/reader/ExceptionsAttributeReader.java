@@ -25,7 +25,6 @@ import java.util.List;
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.ExceptionsAttribute;
-import org.macroing.cel4j.node.NodeFormatException;
 
 final class ExceptionsAttributeReader implements AttributeInfoReader {
 	public ExceptionsAttributeReader() {
@@ -35,22 +34,26 @@ final class ExceptionsAttributeReader implements AttributeInfoReader {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public AttributeInfo readAttributeInfo(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
-		final ExceptionsAttribute exceptionsAttribute = ExceptionsAttribute.newInstance(attributeNameIndex);
-		
-		final int numberOfExceptions = doReadU2(dataInput);
-		
-		for(int i = 0; i < numberOfExceptions; i++) {
-			final int exceptionIndex = doReadU2(dataInput);
+	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
+		try {
+			final ExceptionsAttribute exceptionsAttribute = ExceptionsAttribute.newInstance(attributeNameIndex);
 			
-			exceptionsAttribute.addExceptionIndex(exceptionIndex);
+			final int numberOfExceptions = doReadU2(dataInput);
+			
+			for(int i = 0; i < numberOfExceptions; i++) {
+				final int exceptionIndex = doReadU2(dataInput);
+				
+				exceptionsAttribute.addExceptionIndex(exceptionIndex);
+			}
+			
+			return exceptionsAttribute;
+		} catch(final IllegalArgumentException e) {
+			throw new AttributeInfoReaderException(e);
 		}
-		
-		return exceptionsAttribute;
 	}
 	
 	@Override
-	public boolean isAttributeInfoReadingSupportedFor(final String name) {
+	public boolean isSupported(final String name) {
 		return name.equals(ExceptionsAttribute.NAME);
 	}
 	
@@ -60,7 +63,7 @@ final class ExceptionsAttributeReader implements AttributeInfoReader {
 		try {
 			return dataInput.readUnsignedShort();
 		} catch(final IOException e) {
-			throw new NodeFormatException(e);
+			throw new AttributeInfoReaderException(e);
 		}
 	}
 }

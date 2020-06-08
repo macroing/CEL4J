@@ -41,7 +41,6 @@ import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantNameAndTypeInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantPackageInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantStringInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
-import org.macroing.cel4j.node.NodeFormatException;
 import org.macroing.cel4j.util.ParameterArguments;
 
 final class CPInfoReaderImpl implements CPInfoReader {
@@ -73,20 +72,20 @@ final class CPInfoReaderImpl implements CPInfoReader {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public CPInfo readCPInfo(final DataInput dataInput, final int tag) {
+	public CPInfo read(final DataInput dataInput, final int tag) {
 		final Integer tag0 = Integer.valueOf(ParameterArguments.requireRange(tag, 0, Integer.MAX_VALUE));
 		
 		final CPInfoReader cPInfoReader = this.cPInfoReaders.get(tag0);
 		
 		if(cPInfoReader == null) {
-			throw new NodeFormatException(String.format("Unable to read cp_info: tag=%s", tag0));
+			throw new CPInfoReaderException(String.format("Unable to read cp_info: tag=%s", tag0));
 		}
 		
-		return cPInfoReader.readCPInfo(Objects.requireNonNull(dataInput, "dataInput == null"), tag);
+		return cPInfoReader.read(Objects.requireNonNull(dataInput, "dataInput == null"), tag);
 	}
 	
 	@Override
-	public boolean isCPInfoReadingSupportedFor(final int tag) {
+	public boolean isSupported(final int tag) {
 		return this.cPInfoReaders.get(Integer.valueOf(ParameterArguments.requireRange(tag, 0, Integer.MAX_VALUE))) != null;
 	}
 }

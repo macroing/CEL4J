@@ -28,7 +28,6 @@ import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.MethodInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.UnimplementedAttribute;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
-import org.macroing.cel4j.node.NodeFormatException;
 
 final class MethodInfoReader {
 	private final ServiceLoader<AttributeInfoReader> attributeInfoReaders;
@@ -41,7 +40,7 @@ final class MethodInfoReader {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public MethodInfo readMethodInfo(final DataInput dataInput, final ClassFile classFile) {
+	public MethodInfo read(final DataInput dataInput, final ClassFile classFile) {
 		doReloadAttributeInfoReaders();
 		
 		return doReadMethodInfo(Objects.requireNonNull(dataInput, "dataInput == null"), Objects.requireNonNull(classFile, "classFile == null"));
@@ -58,15 +57,15 @@ final class MethodInfoReader {
 		final String name = constantUTF8Info.toString();
 		
 		for(final AttributeInfoReader attributeInfoReader : this.attributeInfoReaders) {
-			if(attributeInfoReader.isAttributeInfoReadingSupportedFor(name)) {
-				return attributeInfoReader.readAttributeInfo(dataInput, attributeNameIndex, classFile.getCPInfos());
+			if(attributeInfoReader.isSupported(name)) {
+				return attributeInfoReader.read(dataInput, attributeNameIndex, classFile.getCPInfos());
 			}
 		}
 		
 		final AttributeInfoReader attributeInfoReader = new AttributeInfoReaderImpl();
 		
-		if(attributeInfoReader.isAttributeInfoReadingSupportedFor(name)) {
-			return attributeInfoReader.readAttributeInfo(dataInput, attributeNameIndex, classFile.getCPInfos());
+		if(attributeInfoReader.isSupported(name)) {
+			return attributeInfoReader.read(dataInput, attributeNameIndex, classFile.getCPInfos());
 		}
 		
 		try {
@@ -76,7 +75,7 @@ final class MethodInfoReader {
 			
 			return UnimplementedAttribute.newInstance(name, attributeNameIndex, info);
 		} catch(final IOException e) {
-			throw new NodeFormatException("Unable to read attribute_info: name = " + name);
+			throw new ClassFileReaderException("Unable to read attribute_info: name = " + name);
 		}
 	}
 	
@@ -91,7 +90,7 @@ final class MethodInfoReader {
 			
 			return methodInfo;
 		} catch(final IllegalArgumentException e) {
-			throw new NodeFormatException("Unable to read method_info", e);
+			throw new ClassFileReaderException("Unable to read method_info", e);
 		}
 	}
 	
@@ -119,7 +118,7 @@ final class MethodInfoReader {
 		try {
 			return dataInput.readUnsignedShort();
 		} catch(final IOException e) {
-			throw new NodeFormatException(e);
+			throw new ClassFileReaderException(e);
 		}
 	}
 	
@@ -127,7 +126,7 @@ final class MethodInfoReader {
 		try {
 			return dataInput.readInt();
 		} catch(final IOException e) {
-			throw new NodeFormatException(e);
+			throw new ClassFileReaderException(e);
 		}
 	}
 	

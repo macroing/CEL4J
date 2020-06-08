@@ -414,7 +414,7 @@ final class JClass extends JType {
 			try {
 				synchronized(J_CLASSES) {
 					final
-					JClass jClass = J_CLASSES.computeIfAbsent(associatedClass.getName(), name -> new JClass(associatedClass, CLASS_FILES.computeIfAbsent(name, name0 -> ClassFileReader.newInstance().readClassFile(associatedClass))));
+					JClass jClass = J_CLASSES.computeIfAbsent(associatedClass.getName(), name -> new JClass(associatedClass, CLASS_FILES.computeIfAbsent(name, name0 -> new ClassFileReader().read(associatedClass))));
 					jClass.doInitialize();
 					
 					return jClass;

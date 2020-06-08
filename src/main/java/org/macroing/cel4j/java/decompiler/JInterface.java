@@ -312,7 +312,7 @@ final class JInterface extends JType {
 		try {
 			synchronized(J_INTERFACES) {
 				final
-				JInterface jInterface = J_INTERFACES.computeIfAbsent(associatedClass.getName(), name -> new JInterface(associatedClass, CLASS_FILES.computeIfAbsent(name, name0 -> ClassFileReader.newInstance().readClassFile(associatedClass))));
+				JInterface jInterface = J_INTERFACES.computeIfAbsent(associatedClass.getName(), name -> new JInterface(associatedClass, CLASS_FILES.computeIfAbsent(name, name0 -> new ClassFileReader().read(associatedClass))));
 				jInterface.doInitialize();
 				
 				return jInterface;

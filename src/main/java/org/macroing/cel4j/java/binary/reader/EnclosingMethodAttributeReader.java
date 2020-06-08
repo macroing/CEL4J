@@ -25,7 +25,6 @@ import java.util.List;
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.EnclosingMethodAttribute;
-import org.macroing.cel4j.node.NodeFormatException;
 
 final class EnclosingMethodAttributeReader implements AttributeInfoReader {
 	public EnclosingMethodAttributeReader() {
@@ -35,7 +34,7 @@ final class EnclosingMethodAttributeReader implements AttributeInfoReader {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public AttributeInfo readAttributeInfo(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
+	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
 			final int classIndex = dataInput.readUnsignedShort();
 			final int methodIndex = dataInput.readUnsignedShort();
@@ -43,13 +42,13 @@ final class EnclosingMethodAttributeReader implements AttributeInfoReader {
 			final AttributeInfo attributeInfo = EnclosingMethodAttribute.newInstance(attributeNameIndex, classIndex, methodIndex);
 			
 			return attributeInfo;
-		} catch(final IOException e) {
-			throw new NodeFormatException("Unable to read EnclosingMethod_attribute", e);
+		} catch(final IOException | IllegalArgumentException e) {
+			throw new AttributeInfoReaderException("Unable to read EnclosingMethod_attribute", e);
 		}
 	}
 	
 	@Override
-	public boolean isAttributeInfoReadingSupportedFor(final String name) {
+	public boolean isSupported(final String name) {
 		return name.equals(EnclosingMethodAttribute.NAME);
 	}
 }

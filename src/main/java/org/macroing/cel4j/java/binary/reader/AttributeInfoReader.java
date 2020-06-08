@@ -23,44 +23,46 @@ import java.util.List;
 
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
-import org.macroing.cel4j.node.NodeFormatException;
 
 /**
- * A means to read {@link AttributeInfo}s.
+ * An {@code AttributeInfoReader} is used for reading sequences of bytes into instances of the {@link AttributeInfo} interface.
  * <p>
- * It's also used as a Service Provider Interface (SPI) for the same reason.
+ * This interface is implemented and used internally by the API. But it is exposed to the public in order to act as a Service Provider Interface (SPI). This allows the user of this API to implement their own {@code AttributeInfo} and
+ * {@code AttributeInfoReader} implementations. It is even possible to override existing implementations, but it is not recommended.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public interface AttributeInfoReader {
 	/**
-	 * Returns an {@link AttributeInfo} based on the data provided by {@code dataInput}.
+	 * Reads the byte sequence provided by {@code dataInput} into an {@link AttributeInfo} instance.
 	 * <p>
-	 * If either {@code dataInput}, {@code constantPool} or any entries in {@code constantPool} are {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
+	 * Returns an {@code AttributeInfo} instance.
 	 * <p>
-	 * If the {@code AttributeInfo} cannot be read, a {@code NodeFormatException} should be thrown.
+	 * If either {@code dataInput}, {@code constantPool} or any of its elements are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} may be thrown. But no guarantees can be made.
+	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * <p>
+	 * If the {@code AttributeInfo} cannot be read, an {@code AttributeInfoReaderException} will be thrown.
 	 * 
-	 * @param dataInput the {@code DataInput} to read the data from
-	 * @param attributeNameIndex the attribute_name_index of the {@code AttributeInfo} to read
-	 * @param constantPool a {@code List} of {@link CPInfo}s that represents the constant_pool table
-	 * @return an {@code AttributeInfo} based on the data provided by {@code dataInput}
+	 * @param dataInput the {@code DataInput} to read an {@code AttributeInfo} instance from
+	 * @param attributeNameIndex the attribute_name_index of the {@code AttributeInfo}
+	 * @param constantPool a {@code List} of {@link CPInfo} instances that represents the constant_pool table
+	 * @return an {@code AttributeInfo} instance
+	 * @throws AttributeInfoReaderException thrown if, and only if, the {@code AttributeInfo} cannot be read
 	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
-	 * @throws NodeFormatException thrown if, and only if, the {@code AttributeInfo} cannot be read
-	 * @throws NullPointerException thrown if, and only if, either {@code dataInput}, {@code constantPool} or any entries in {@code constantPool} are {@code null}
+	 * @throws NullPointerException thrown if, and only if, either {@code dataInput}, {@code constantPool} or any of its elements are {@code null}
 	 */
-	AttributeInfo readAttributeInfo(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool);
+	AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool);
 	
 	/**
-	 * Returns {@code true} if, and only if, this {@code AttributeInfoReader} supports reading an {@link AttributeInfo} given a {@code String} with its name, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, this {@code AttributeInfoReader} supports reading {@link AttributeInfo} instances with a name of {@code name}, {@code false} otherwise.
 	 * <p>
-	 * If {@code name} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
+	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param name the {@code String} with the name for the {@code AttributeInfo} we are eventually about to read
-	 * @return {@code true} if, and only if, this {@code AttributeInfoReader} supports reading an {@code AttributeInfo} given a {@code String} with its name, {@code false} otherwise
+	 * @param name the name of the {@code AttributeInfo} instance to read
+	 * @return {@code true} if, and only if, this {@code AttributeInfoReader} supports reading {@code AttributeInfo} instances with a name of {@code name}, {@code false} otherwise
 	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
 	 */
-	boolean isAttributeInfoReadingSupportedFor(final String name);
+	boolean isSupported(final String name);
 }

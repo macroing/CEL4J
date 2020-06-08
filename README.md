@@ -1,4 +1,4 @@
-CEL4J - Version 0.5.2
+CEL4J - Version 0.5.3
 =====================
 CEL4J is a Code Engineering Library for Java. It provides functionality for JSON, Java and PHP.
 
@@ -73,7 +73,7 @@ public class ReadAndWriteClassFileExample {
         ClassFileReader classFileReader = new ClassFileReader();
         
 //      Read the ClassFile instance for the String class using the ClassFileReader instance:
-        ClassFile classFile = classFileReader.readClassFile(String.class);
+        ClassFile classFile = classFileReader.read(String.class);
         
 //      Write the ClassFile instance to a file:
         classFile.write(new File("bin/java/lang/String.class"));
@@ -96,7 +96,7 @@ public class PrintInstructionsExample {
         ClassFileReader classFileReader = new ClassFileReader();
         
 //      Read the ClassFile instance for the String class using the ClassFileReader instance:
-        ClassFile classFile = classFileReader.readClassFile(String.class);
+        ClassFile classFile = classFileReader.read(String.class);
         
 //      Example #1 - Using Java 8 Stream APIs:
         classFile.getMethodInfos().forEach(methodInfo -> methodInfo.getAttributeInfos().stream().filter(node -> node instanceof CodeAttribute).map(node -> CodeAttribute.class.cast(node)).forEach(codeAttribute -> {
@@ -146,7 +146,7 @@ public class DescriptorAndSignatureExample {
         ClassFileReader classFileReader = new ClassFileReader();
         
 //      Read the ClassFile instance for the ArrayList class using the ClassFileReader instance:
-        ClassFile classFile = classFileReader.readClassFile(java.util.ArrayList.class);
+        ClassFile classFile = classFileReader.read(java.util.ArrayList.class);
         
 //      Parse the optional ClassSignature instance in the ClassFile and, if present, print it in external form to standard output:
         ClassSignature.parseClassSignatureOptionally(classFile).ifPresent(classSignature -> System.out.printf("%-17s %s%n", "ClassSignature:", classSignature.toExternalForm()));
@@ -181,7 +181,7 @@ public class DecompilationExample {
             Class<?> clazz = Integer.class;
             
             Decompiler decompiler = Decompiler.newInstance();
-            decompiler.addClass(clazz, Consumers.file("tmp", clazz));
+            decompiler.addClass(clazz, Consumers.file("generated", clazz));
             decompiler.addDecompilerObserver(DecompilerObserver.print());
             decompiler.getDecompilerConfiguration().setDisplayingInstructions(true);
             decompiler.decompile();

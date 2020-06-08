@@ -26,7 +26,6 @@ import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.LineNumber;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.LineNumberTableAttribute;
-import org.macroing.cel4j.node.NodeFormatException;
 
 final class LineNumberTableAttributeReader implements AttributeInfoReader {
 	public LineNumberTableAttributeReader() {
@@ -36,22 +35,26 @@ final class LineNumberTableAttributeReader implements AttributeInfoReader {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public AttributeInfo readAttributeInfo(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
-		final LineNumberTableAttribute lineNumberTableAttribute = LineNumberTableAttribute.newInstance(attributeNameIndex);
-		
-		final int lineNumberTableLength = doReadU2(dataInput);
-		
-		for(int i = 0; i < lineNumberTableLength; i++) {
-			final LineNumber lineNumber = LineNumber.newInstance(doReadU2(dataInput), doReadU2(dataInput));
+	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
+		try {
+			final LineNumberTableAttribute lineNumberTableAttribute = LineNumberTableAttribute.newInstance(attributeNameIndex);
 			
-			lineNumberTableAttribute.addLineNumber(lineNumber);
+			final int lineNumberTableLength = doReadU2(dataInput);
+			
+			for(int i = 0; i < lineNumberTableLength; i++) {
+				final LineNumber lineNumber = LineNumber.newInstance(doReadU2(dataInput), doReadU2(dataInput));
+				
+				lineNumberTableAttribute.addLineNumber(lineNumber);
+			}
+			
+			return lineNumberTableAttribute;
+		} catch(final IllegalArgumentException e) {
+			throw new AttributeInfoReaderException(e);
 		}
-		
-		return lineNumberTableAttribute;
 	}
 	
 	@Override
-	public boolean isAttributeInfoReadingSupportedFor(final String name) {
+	public boolean isSupported(final String name) {
 		return name.equals(LineNumberTableAttribute.NAME);
 	}
 	
@@ -61,7 +64,7 @@ final class LineNumberTableAttributeReader implements AttributeInfoReader {
 		try {
 			return dataInput.readUnsignedShort();
 		} catch(final IOException e) {
-			throw new NodeFormatException(e);
+			throw new AttributeInfoReaderException(e);
 		}
 	}
 }

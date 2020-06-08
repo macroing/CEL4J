@@ -26,7 +26,6 @@ import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.LocalVariableType;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.LocalVariableTypeTableAttribute;
-import org.macroing.cel4j.node.NodeFormatException;
 
 final class LocalVariableTypeTableAttributeReader  implements AttributeInfoReader {
 	public LocalVariableTypeTableAttributeReader() {
@@ -36,22 +35,26 @@ final class LocalVariableTypeTableAttributeReader  implements AttributeInfoReade
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public AttributeInfo readAttributeInfo(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
-		final LocalVariableTypeTableAttribute localVariableTypeTableAttribute = LocalVariableTypeTableAttribute.newInstance(attributeNameIndex);
-		
-		final int localVariableTypeTableLength = doReadU2(dataInput);
-		
-		for(int i = 0; i < localVariableTypeTableLength; i++) {
-			final LocalVariableType localVariableType = LocalVariableType.newInstance(doReadU2(dataInput), doReadU2(dataInput), doReadU2(dataInput), doReadU2(dataInput), doReadU2(dataInput));
+	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
+		try {
+			final LocalVariableTypeTableAttribute localVariableTypeTableAttribute = LocalVariableTypeTableAttribute.newInstance(attributeNameIndex);
 			
-			localVariableTypeTableAttribute.addLocalVariableType(localVariableType);
+			final int localVariableTypeTableLength = doReadU2(dataInput);
+			
+			for(int i = 0; i < localVariableTypeTableLength; i++) {
+				final LocalVariableType localVariableType = LocalVariableType.newInstance(doReadU2(dataInput), doReadU2(dataInput), doReadU2(dataInput), doReadU2(dataInput), doReadU2(dataInput));
+				
+				localVariableTypeTableAttribute.addLocalVariableType(localVariableType);
+			}
+			
+			return localVariableTypeTableAttribute;
+		} catch(final IllegalArgumentException e) {
+			throw new AttributeInfoReaderException(e);
 		}
-		
-		return localVariableTypeTableAttribute;
 	}
 	
 	@Override
-	public boolean isAttributeInfoReadingSupportedFor(final String name) {
+	public boolean isSupported(final String name) {
 		return name.equals(LocalVariableTypeTableAttribute.NAME);
 	}
 	
@@ -61,7 +64,7 @@ final class LocalVariableTypeTableAttributeReader  implements AttributeInfoReade
 		try {
 			return dataInput.readUnsignedShort();
 		} catch(final IOException e) {
-			throw new NodeFormatException(e);
+			throw new AttributeInfoReaderException(e);
 		}
 	}
 }

@@ -35,7 +35,6 @@ import org.macroing.cel4j.java.binary.classfile.attributeinfo.EnumConstValueUnio
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.ParameterAnnotation;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.RuntimeVisibleParameterAnnotationsAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.Union;
-import org.macroing.cel4j.node.NodeFormatException;
 
 final class RuntimeVisibleParameterAnnotationsAttributeReader  implements AttributeInfoReader {
 	public RuntimeVisibleParameterAnnotationsAttributeReader() {
@@ -45,7 +44,7 @@ final class RuntimeVisibleParameterAnnotationsAttributeReader  implements Attrib
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public AttributeInfo readAttributeInfo(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
+	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
 			final RuntimeVisibleParameterAnnotationsAttribute runtimeVisibleParameterAnnotationsAttribute = RuntimeVisibleParameterAnnotationsAttribute.newInstance(attributeNameIndex);
 			
@@ -56,13 +55,13 @@ final class RuntimeVisibleParameterAnnotationsAttributeReader  implements Attrib
 			}
 			
 			return runtimeVisibleParameterAnnotationsAttribute;
-		} catch(final IOException e) {
-			throw new NodeFormatException("Unable to read RuntimeVisibleParameterAnnotations_attribute", e);
+		} catch(final IOException | IllegalArgumentException e) {
+			throw new AttributeInfoReaderException("Unable to read RuntimeVisibleParameterAnnotations_attribute", e);
 		}
 	}
 	
 	@Override
-	public boolean isAttributeInfoReadingSupportedFor(final String name) {
+	public boolean isSupported(final String name) {
 		return name.equals(RuntimeVisibleParameterAnnotationsAttribute.NAME);
 	}
 	

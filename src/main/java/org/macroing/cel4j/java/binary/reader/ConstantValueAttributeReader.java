@@ -25,7 +25,6 @@ import java.util.List;
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.ConstantValueAttribute;
-import org.macroing.cel4j.node.NodeFormatException;
 
 final class ConstantValueAttributeReader implements AttributeInfoReader {
 	public ConstantValueAttributeReader() {
@@ -35,20 +34,20 @@ final class ConstantValueAttributeReader implements AttributeInfoReader {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public AttributeInfo readAttributeInfo(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
+	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
 			final int constantValueIndex = dataInput.readUnsignedShort();
 			
 			final AttributeInfo attributeInfo = ConstantValueAttribute.newInstance(attributeNameIndex, constantValueIndex);
 			
 			return attributeInfo;
-		} catch(final IOException e) {
-			throw new NodeFormatException("Unable to read ConstantValue_attribute", e);
+		} catch(final IOException | IllegalArgumentException e) {
+			throw new AttributeInfoReaderException("Unable to read ConstantValue_attribute", e);
 		}
 	}
 	
 	@Override
-	public boolean isAttributeInfoReadingSupportedFor(final String name) {
+	public boolean isSupported(final String name) {
 		return name.equals(ConstantValueAttribute.NAME);
 	}
 }

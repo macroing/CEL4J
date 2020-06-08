@@ -44,7 +44,6 @@ import org.macroing.cel4j.java.binary.classfile.attributeinfo.TopVariableInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.UninitializedThisVariableInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.UninitializedVariableInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.VerificationTypeInfo;
-import org.macroing.cel4j.node.NodeFormatException;
 
 final class StackMapTableAttributeReader implements AttributeInfoReader {
 	public StackMapTableAttributeReader() {
@@ -54,7 +53,7 @@ final class StackMapTableAttributeReader implements AttributeInfoReader {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public AttributeInfo readAttributeInfo(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
+	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
 			final StackMapTableAttribute stackMapTableAttribute = StackMapTableAttribute.newInstance(attributeNameIndex);
 			
@@ -66,12 +65,12 @@ final class StackMapTableAttributeReader implements AttributeInfoReader {
 			
 			return stackMapTableAttribute;
 		} catch(final IOException | IllegalArgumentException e) {
-			throw new NodeFormatException("Unable to read StackMapTable_attribute", e);
+			throw new AttributeInfoReaderException("Unable to read StackMapTable_attribute", e);
 		}
 	}
 	
 	@Override
-	public boolean isAttributeInfoReadingSupportedFor(final String name) {
+	public boolean isSupported(final String name) {
 		return name.equals(StackMapTableAttribute.NAME);
 	}
 	
@@ -122,7 +121,7 @@ final class StackMapTableAttributeReader implements AttributeInfoReader {
 			return FullFrame.newInstance(frameType, offsetDelta, locals, stack);
 		}
 		
-		throw new NodeFormatException(String.format("Illegal frame_type: %s", Integer.toString(frameType)));
+		throw new AttributeInfoReaderException(String.format("Illegal frame_type: %s", Integer.toString(frameType)));
 	}
 	
 	private static VerificationTypeInfo doReadVerificationTypeInfo(final DataInput dataInput) throws IOException {
@@ -148,7 +147,7 @@ final class StackMapTableAttributeReader implements AttributeInfoReader {
 			case VerificationTypeInfo.ITEM_UNINITIALIZED_THIS:
 				return UninitializedThisVariableInfo.getInstance();
 			default:
-				throw new NodeFormatException(String.format("Illegal tag: %s", Integer.toString(tag)));
+				throw new AttributeInfoReaderException(String.format("Illegal tag: %s", Integer.toString(tag)));
 		}
 	}
 }

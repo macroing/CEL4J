@@ -31,7 +31,6 @@ import org.macroing.cel4j.java.binary.classfile.attributeinfo.ExceptionHandler;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.Instruction;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.UnimplementedAttribute;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
-import org.macroing.cel4j.node.NodeFormatException;
 
 final class CodeAttributeReader implements AttributeInfoReader {
 	private final ServiceLoader<AttributeInfoReader> attributeInfoReaders = ServiceLoader.load(AttributeInfoReader.class);
@@ -45,7 +44,7 @@ final class CodeAttributeReader implements AttributeInfoReader {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public AttributeInfo readAttributeInfo(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
+	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
 			doReloadAttributeInfoReaders();
 			
@@ -80,13 +79,13 @@ final class CodeAttributeReader implements AttributeInfoReader {
 			doReadAttributeInfos(dataInput, codeAttribute, constantPool);
 			
 			return codeAttribute;
-		} catch(final IOException e) {
-			throw new NodeFormatException("Unable to read Code_attribute", e);
+		} catch(final IOException | IllegalArgumentException e) {
+			throw new AttributeInfoReaderException("Unable to read Code_attribute", e);
 		}
 	}
 	
 	@Override
-	public boolean isAttributeInfoReadingSupportedFor(final String name) {
+	public boolean isSupported(final String name) {
 		return name.equals(CodeAttribute.NAME);
 	}
 	
@@ -101,15 +100,15 @@ final class CodeAttributeReader implements AttributeInfoReader {
 		final String name = constantUTF8Info.toString();
 		
 		for(final AttributeInfoReader attributeInfoReader : this.attributeInfoReaders) {
-			if(attributeInfoReader.isAttributeInfoReadingSupportedFor(name)) {
-				return attributeInfoReader.readAttributeInfo(dataInput, attributeNameIndex, constantPool);
+			if(attributeInfoReader.isSupported(name)) {
+				return attributeInfoReader.read(dataInput, attributeNameIndex, constantPool);
 			}
 		}
 		
 		final AttributeInfoReader attributeInfoReader = new AttributeInfoReaderImpl();
 		
-		if(attributeInfoReader.isAttributeInfoReadingSupportedFor(name)) {
-			return attributeInfoReader.readAttributeInfo(dataInput, attributeNameIndex, constantPool);
+		if(attributeInfoReader.isSupported(name)) {
+			return attributeInfoReader.read(dataInput, attributeNameIndex, constantPool);
 		}
 		
 		try {
@@ -119,7 +118,7 @@ final class CodeAttributeReader implements AttributeInfoReader {
 			
 			return UnimplementedAttribute.newInstance(name, attributeNameIndex, info);
 		} catch(final IOException e) {
-			throw new NodeFormatException("Unable to read attribute_info: name = " + name);
+			throw new AttributeInfoReaderException("Unable to read attribute_info: name = " + name);
 		}
 	}
 	
@@ -147,7 +146,7 @@ final class CodeAttributeReader implements AttributeInfoReader {
 		try {
 			return dataInput.readUnsignedShort();
 		} catch(final IOException e) {
-			throw new NodeFormatException(e);
+			throw new AttributeInfoReaderException(e);
 		}
 	}
 	
@@ -155,7 +154,7 @@ final class CodeAttributeReader implements AttributeInfoReader {
 		try {
 			return dataInput.readInt();
 		} catch(final IOException e) {
-			throw new NodeFormatException(e);
+			throw new AttributeInfoReaderException(e);
 		}
 	}
 	

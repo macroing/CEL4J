@@ -33,12 +33,16 @@ final class SyntheticAttributeReader implements AttributeInfoReader {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public AttributeInfo readAttributeInfo(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
-		return SyntheticAttribute.newInstance(attributeNameIndex);
+	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
+		try {
+			return SyntheticAttribute.newInstance(attributeNameIndex);
+		} catch(final IllegalArgumentException e) {
+			throw new AttributeInfoReaderException(e);
+		}
 	}
 	
 	@Override
-	public boolean isAttributeInfoReadingSupportedFor(final String name) {
+	public boolean isSupported(final String name) {
 		return name.equals(SyntheticAttribute.NAME);
 	}
 }

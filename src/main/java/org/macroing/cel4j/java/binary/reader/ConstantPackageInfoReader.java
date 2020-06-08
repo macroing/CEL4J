@@ -23,7 +23,6 @@ import java.io.IOException;
 
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantPackageInfo;
-import org.macroing.cel4j.node.NodeFormatException;
 import org.macroing.cel4j.util.ParameterArguments;
 
 final class ConstantPackageInfoReader implements CPInfoReader {
@@ -34,20 +33,20 @@ final class ConstantPackageInfoReader implements CPInfoReader {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public CPInfo readCPInfo(final DataInput dataInput, final int tag) {
+	public CPInfo read(final DataInput dataInput, final int tag) {
 		try {
 			final int nameIndex = dataInput.readUnsignedShort();
 			
 			final CPInfo cPInfo = ConstantPackageInfo.newInstance(nameIndex);
 			
 			return cPInfo;
-		} catch(final IOException e) {
-			throw new NodeFormatException("Unable to read CONSTANT_Package_info", e);
+		} catch(final IOException | IllegalArgumentException e) {
+			throw new CPInfoReaderException("Unable to read CONSTANT_Package_info", e);
 		}
 	}
 	
 	@Override
-	public boolean isCPInfoReadingSupportedFor(final int tag) {
+	public boolean isSupported(final int tag) {
 		return ParameterArguments.requireRange(tag, 0, Integer.MAX_VALUE) == ConstantPackageInfo.TAG;
 	}
 }

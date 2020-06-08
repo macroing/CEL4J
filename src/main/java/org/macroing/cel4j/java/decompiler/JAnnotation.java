@@ -138,7 +138,7 @@ final class JAnnotation extends JType {
 		try {
 			synchronized(J_ANNOTATIONS) {
 				final
-				JAnnotation jAnnotation = J_ANNOTATIONS.computeIfAbsent(associatedClass.getName(), name -> new JAnnotation(associatedClass, CLASS_FILES.computeIfAbsent(name, name0 -> ClassFileReader.newInstance().readClassFile(associatedClass))));
+				JAnnotation jAnnotation = J_ANNOTATIONS.computeIfAbsent(associatedClass.getName(), name -> new JAnnotation(associatedClass, CLASS_FILES.computeIfAbsent(name, name0 -> new ClassFileReader().read(associatedClass))));
 				jAnnotation.doInitialize();
 				
 				return jAnnotation;

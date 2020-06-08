@@ -46,7 +46,6 @@ import org.macroing.cel4j.java.binary.classfile.attributeinfo.SourceFileAttribut
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.StackMapTableAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.SyntheticAttribute;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
-import org.macroing.cel4j.node.NodeFormatException;
 import org.macroing.cel4j.util.ParameterArguments;
 
 final class AttributeInfoReaderImpl implements AttributeInfoReader {
@@ -80,20 +79,20 @@ final class AttributeInfoReaderImpl implements AttributeInfoReader {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public AttributeInfo readAttributeInfo(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
+	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		final String name = doGetName(ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE), ParameterArguments.requireNonNullList(constantPool, "constantPool"));
 		
 		final AttributeInfoReader attributeInfoReader = this.attributeInfoReaders.get(name);
 		
 		if(attributeInfoReader == null) {
-			throw new NodeFormatException(String.format("Unable to read attribute_info: name=%s", name));
+			throw new AttributeInfoReaderException(String.format("Unable to read attribute_info: name=%s", name));
 		}
 		
-		return attributeInfoReader.readAttributeInfo(Objects.requireNonNull(dataInput, "dataInput == null"), attributeNameIndex, constantPool);
+		return attributeInfoReader.read(Objects.requireNonNull(dataInput, "dataInput == null"), attributeNameIndex, constantPool);
 	}
 	
 	@Override
-	public boolean isAttributeInfoReadingSupportedFor(final String name) {
+	public boolean isSupported(final String name) {
 		return this.attributeInfoReaders.containsKey(Objects.requireNonNull(name, "name == null"));
 	}
 	

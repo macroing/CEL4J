@@ -34,12 +34,20 @@ import org.macroing.cel4j.java.binary.classfile.FieldInfo;
 import org.macroing.cel4j.java.binary.classfile.MethodInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.UnimplementedAttribute;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
-import org.macroing.cel4j.node.NodeFormatException;
 
 /**
- * A {@code ClassFileReader} is used for reading {@link ClassFile}s from binary data.
+ * A {@code ClassFileReader} is used for reading sequences of bytes into instances of the {@link ClassFile} class.
  * <p>
  * This class is not thread-safe.
+ * <p>
+ * To use this class, consider the following example:
+ * <pre>
+ * {@code
+ * ClassFileReader classFileReader = new ClassFileReader();
+ * 
+ * ClassFile classFile = classFileReader.read(Integer.class);
+ * }
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
@@ -65,18 +73,20 @@ public final class ClassFileReader {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@link ClassFile} representation of {@code clazz}, by reading its binary data.
+	 * Reads the byte sequence provided by {@code clazz} into a {@link ClassFile} instance.
+	 * <p>
+	 * Returns a {@code ClassFile} instance.
 	 * <p>
 	 * If {@code clazz} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If the read binary data is invalid for some reason, a {@code NodeFormatException} will be thrown.
+	 * If the {@code ClassFile} cannot be read, a {@code ClassFileReaderException} will be thrown.
 	 * 
-	 * @param clazz the {@code Class} from which to read binary data into a {@code ClassFile} instance
-	 * @return a {@code ClassFile} representation of {@code clazz}, by reading its binary data
-	 * @throws NodeFormatException thrown if, and only if, the read binary data is invalid
+	 * @param clazz the {@code Class} to read a {@code ClassFile} instance from
+	 * @return a {@code ClassFile} instance
+	 * @throws ClassFileReaderException thrown if, and only if, the {@code ClassFile} cannot be read
 	 * @throws NullPointerException thrown if, and only if, {@code clazz} is {@code null}
 	 */
-	public ClassFile readClassFile(final Class<?> clazz) {
+	public ClassFile read(final Class<?> clazz) {
 		doReloadAttributeInfoReaders();
 		doReloadCPInfoReaders();
 		
@@ -84,18 +94,20 @@ public final class ClassFileReader {
 	}
 	
 	/**
-	 * Returns a {@link ClassFile}, by reading some binary data from {@code dataInput}.
+	 * Reads the byte sequence provided by {@code dataInput} into a {@link ClassFile} instance.
+	 * <p>
+	 * Returns a {@code ClassFile} instance.
 	 * <p>
 	 * If {@code dataInput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If the read binary data is invalid for some reason, a {@code NodeFormatException} will be thrown.
+	 * If the {@code ClassFile} cannot be read, a {@code ClassFileReaderException} will be thrown.
 	 * 
-	 * @param dataInput the {@code DataInput} from which to read binary data into a {@code ClassFile} instance
-	 * @return a {@code ClassFile}, by reading some binary data from {@code dataInput}
-	 * @throws NodeFormatException thrown if, and only if, the read binary data is invalid
+	 * @param dataInput the {@code DataInput} to read a {@code ClassFile} instance from
+	 * @return a {@code ClassFile} instance
+	 * @throws ClassFileReaderException thrown if, and only if, the {@code ClassFile} cannot be read
 	 * @throws NullPointerException thrown if, and only if, {@code dataInput} is {@code null}
 	 */
-	public ClassFile readClassFile(final DataInput dataInput) {
+	public ClassFile read(final DataInput dataInput) {
 		doReloadAttributeInfoReaders();
 		doReloadCPInfoReaders();
 		
@@ -103,18 +115,20 @@ public final class ClassFileReader {
 	}
 	
 	/**
-	 * Returns a {@link ClassFile}, by reading some binary data given a {@code File}.
+	 * Reads the byte sequence provided by {@code file} into a {@link ClassFile} instance.
+	 * <p>
+	 * Returns a {@code ClassFile} instance.
 	 * <p>
 	 * If {@code file} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If the read binary data is invalid for some reason, a {@code NodeFormatException} will be thrown.
+	 * If the {@code ClassFile} cannot be read, a {@code ClassFileReaderException} will be thrown.
 	 * 
-	 * @param file the {@code File} from which to read binary data into a {@code ClassFile} instance
-	 * @return a {@code ClassFile}, by reading some binary data given a {@code File}
-	 * @throws NodeFormatException thrown if, and only if, the read binary data is invalid
+	 * @param file the {@code File} to read a {@code ClassFile} instance from
+	 * @return a {@code ClassFile} instance
+	 * @throws ClassFileReaderException thrown if, and only if, the {@code ClassFile} cannot be read
 	 * @throws NullPointerException thrown if, and only if, {@code file} is {@code null}
 	 */
-	public ClassFile readClassFile(final File file) {
+	public ClassFile read(final File file) {
 		doReloadAttributeInfoReaders();
 		doReloadCPInfoReaders();
 		
@@ -122,33 +136,24 @@ public final class ClassFileReader {
 	}
 	
 	/**
-	 * Returns a {@link ClassFile} representation of the {@code Class} that can be obtained by {@code Class.forName(className)}, by reading its binary data.
+	 * Reads the byte sequence provided by {@code Class.forName(className)} into a {@link ClassFile} instance.
+	 * <p>
+	 * Returns a {@code ClassFile} instance.
 	 * <p>
 	 * If {@code className} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If the read binary data is invalid for some reason, or no such {@code Class} exists, a {@code NodeFormatException} will be thrown.
+	 * If the {@code ClassFile} cannot be read, a {@code ClassFileReaderException} will be thrown.
 	 * 
-	 * @param className the name of the {@code Class} from which to read binary data into a {@code ClassFile} instance
-	 * @return a {@code ClassFile} representation of the {@code Class} that can be obtained by {@code Class.forName(className)}, by reading its binary data
-	 * @throws NodeFormatException thrown if, and only if, the read binary data is invalid, or no such {@code Class} exists
+	 * @param className the fully qualified name of the {@code Class} to read a {@code ClassFile} instance from
+	 * @return a {@code ClassFile} instance
+	 * @throws ClassFileReaderException thrown if, and only if, the {@code ClassFile} cannot be read
 	 * @throws NullPointerException thrown if, and only if, {@code className} is {@code null}
 	 */
-	public ClassFile readClassFile(final String className) {
+	public ClassFile read(final String className) {
 		doReloadAttributeInfoReaders();
 		doReloadCPInfoReaders();
 		
 		return doReadClassFile(Objects.requireNonNull(className, "className == null"));
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code ClassFileReader} instance.
-	 * 
-	 * @return a new {@code ClassFileReader} instance
-	 */
-	public static ClassFileReader newInstance() {
-		return new ClassFileReader();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -162,15 +167,15 @@ public final class ClassFileReader {
 		final String name = doGetName(attributeNameIndex, constantPool);
 		
 		for(final AttributeInfoReader attributeInfoReader : this.attributeInfoReaders) {
-			if(attributeInfoReader.isAttributeInfoReadingSupportedFor(name)) {
-				return attributeInfoReader.readAttributeInfo(dataInput, attributeNameIndex, classFile.getCPInfos());
+			if(attributeInfoReader.isSupported(name)) {
+				return attributeInfoReader.read(dataInput, attributeNameIndex, classFile.getCPInfos());
 			}
 		}
 		
 		final AttributeInfoReader attributeInfoReader = new AttributeInfoReaderImpl();
 		
-		if(attributeInfoReader.isAttributeInfoReadingSupportedFor(name)) {
-			return attributeInfoReader.readAttributeInfo(dataInput, attributeNameIndex, classFile.getCPInfos());
+		if(attributeInfoReader.isSupported(name)) {
+			return attributeInfoReader.read(dataInput, attributeNameIndex, classFile.getCPInfos());
 		}
 		
 		try {
@@ -180,7 +185,7 @@ public final class ClassFileReader {
 			
 			return UnimplementedAttribute.newInstance(name, attributeNameIndex, info);
 		} catch(final IOException e) {
-			throw new NodeFormatException("Unable to read attribute_info: name = " + name);
+			throw new ClassFileReaderException("Unable to read attribute_info: name = " + name);
 		}
 	}
 	
@@ -188,18 +193,18 @@ public final class ClassFileReader {
 		final int tag = doReadU1(dataInput);
 		
 		for(final CPInfoReader cPInfoReader : this.cPInfoReaders) {
-			if(cPInfoReader.isCPInfoReadingSupportedFor(tag)) {
-				return cPInfoReader.readCPInfo(dataInput, tag);
+			if(cPInfoReader.isSupported(tag)) {
+				return cPInfoReader.read(dataInput, tag);
 			}
 		}
 		
 		final CPInfoReader cPInfoReader = new CPInfoReaderImpl();
 		
-		if(cPInfoReader.isCPInfoReadingSupportedFor(tag)) {
-			return cPInfoReader.readCPInfo(dataInput, tag);
+		if(cPInfoReader.isSupported(tag)) {
+			return cPInfoReader.read(dataInput, tag);
 		}
 		
-		throw new NodeFormatException(String.format("Unable to read cp_info: tag = %s", Integer.toString(tag)));
+		throw new ClassFileReaderException(String.format("Unable to read cp_info: tag = %s", Integer.toString(tag)));
 	}
 	
 	private ClassFile doReadClassFile(final Class<?> clazz) {
@@ -223,8 +228,8 @@ public final class ClassFileReader {
 			doReadAttributes(dataInput, classFile);
 			
 			return classFile;
-		} catch(final IllegalArgumentException | NullPointerException e) {
-			throw new NodeFormatException(String.format("Unable to read ClassFile: %s", string), e);
+		} catch(final AttributeInfoReaderException | CPInfoReaderException | IllegalArgumentException | NullPointerException e) {
+			throw new ClassFileReaderException(String.format("Unable to read ClassFile: %s", string), e);
 		}
 	}
 	
@@ -232,7 +237,7 @@ public final class ClassFileReader {
 		try(final DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file))) {
 			return doReadClassFile(dataInputStream, file.getName());
 		} catch(final IOException e) {
-			throw new NodeFormatException(String.format("Unable to read ClassFile: %s", file), e);
+			throw new ClassFileReaderException(String.format("Unable to read ClassFile: %s", file), e);
 		}
 	}
 	
@@ -240,7 +245,7 @@ public final class ClassFileReader {
 		try {
 			return doReadClassFile(Class.forName(className));
 		} catch(final ClassNotFoundException e) {
-			throw new NodeFormatException(e);
+			throw new ClassFileReaderException(e);
 		}
 	}
 	
@@ -280,7 +285,7 @@ public final class ClassFileReader {
 		final int fieldsCount = doReadU2(dataInput);
 		
 		for(int i = 0; i < fieldsCount; i++) {
-			final FieldInfo fieldInfo = this.fieldInfoReader.readFieldInfo(dataInput, classFile);
+			final FieldInfo fieldInfo = this.fieldInfoReader.read(dataInput, classFile);
 			
 			classFile.addFieldInfo(fieldInfo);
 		}
@@ -290,7 +295,7 @@ public final class ClassFileReader {
 		final int methodsCount = doReadU2(dataInput);
 		
 		for(int i = 0; i < methodsCount; i++) {
-			final MethodInfo methodInfo = this.methodInfoReader.readMethodInfo(dataInput, classFile);
+			final MethodInfo methodInfo = this.methodInfoReader.read(dataInput, classFile);
 			
 			classFile.addMethodInfo(methodInfo);
 		}
@@ -342,7 +347,7 @@ public final class ClassFileReader {
 		try {
 			return dataInput.readUnsignedByte();
 		} catch(final IOException e) {
-			throw new NodeFormatException(e);
+			throw new ClassFileReaderException(e);
 		}
 	}
 	
@@ -350,7 +355,7 @@ public final class ClassFileReader {
 		try {
 			return dataInput.readUnsignedShort();
 		} catch(final IOException e) {
-			throw new NodeFormatException(e);
+			throw new ClassFileReaderException(e);
 		}
 	}
 	
@@ -358,7 +363,7 @@ public final class ClassFileReader {
 		try {
 			return dataInput.readInt();
 		} catch(final IOException e) {
-			throw new NodeFormatException(e);
+			throw new ClassFileReaderException(e);
 		}
 	}
 	

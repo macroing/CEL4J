@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.reader;
 import java.io.DataInput;
 
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
-import org.macroing.cel4j.node.NodeFormatException;
 
 /**
  * A means to read {@link CPInfo}s.
@@ -31,24 +30,35 @@ import org.macroing.cel4j.node.NodeFormatException;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
+/**
+ * A {@code CPInfoReader} is used for reading sequences of bytes into instances of the {@link CPInfo} interface.
+ * <p>
+ * This interface is implemented and used internally by the API. But it is exposed to the public in order to act as a Service Provider Interface (SPI). This allows the user of this API to implement their own {@code CPInfo} and {@code CPInfoReader}
+ * implementations. It is even possible to override existing implementations, but it is not recommended.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public interface CPInfoReader {
 	/**
-	 * Returns a {@link CPInfo} based on the data provided by {@code dataInput}.
+	 * Reads the byte sequence provided by {@code dataInput} into a {@link CPInfo} instance.
 	 * <p>
-	 * If {@code dataInput} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
+	 * Returns a {@code CPInfo} instance.
 	 * <p>
-	 * If {@code tag} is less than {@code 0}, an {@code IllegalArgumentException} may be thrown. But no guarantees can be made.
+	 * If {@code dataInput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If the {@code CPInfo} cannot be read, a {@code NodeFormatException} should be thrown.
+	 * If {@code tag} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * <p>
+	 * If the {@code CPInfo} cannot be read, a {@code CPInfoReaderException} will be thrown.
 	 * 
-	 * @param dataInput the {@code DataInput} to read the data from
-	 * @param tag an {@code int} denoting the tag for the {@code CPInfo} we are about to read
-	 * @return a {@code CPInfo} based on the data provided by {@code dataInput}
+	 * @param dataInput the {@code DataInput} to read a {@code CPInfo} instance from
+	 * @param tag the tag of the {@code CPInfo}
+	 * @return a {@code CPInfo} instance
+	 * @throws CPInfoReaderException thrown if, and only if, the {@code CPInfo} cannot be read
 	 * @throws IllegalArgumentException thrown if, and only if, {@code tag} is less than {@code 0}
-	 * @throws NodeFormatException thrown if, and only if, the {@code CPInfo} cannot be read
 	 * @throws NullPointerException thrown if, and only if, {@code dataInput} is {@code null}
 	 */
-	CPInfo readCPInfo(final DataInput dataInput, final int tag);
+	CPInfo read(final DataInput dataInput, final int tag);
 	
 	/**
 	 * Returns {@code true} if, and only if, this {@code CPInfoReader} supports reading a {@link CPInfo} given an {@code int} denoting a tag, {@code false} otherwise.
@@ -59,5 +69,14 @@ public interface CPInfoReader {
 	 * @return {@code true} if, and only if, this {@code CPInfoReader} supports reading a {@code CPInfo} given an {@code int} denoting a tag, {@code false} otherwise
 	 * @throws IllegalArgumentException thrown if, and only if, {@code tag} is less than {@code 0}
 	 */
-	boolean isCPInfoReadingSupportedFor(final int tag);
+	/**
+	 * Returns {@code true} if, and only if, this {@code CPInfoReader} supports reading {@link CPInfo} instances with a tag of {@code tag}, {@code false} otherwise.
+	 * <p>
+	 * If {@code tag} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param tag the tag of the {@code CPInfo} instance to read
+	 * @return {@code true} if, and only if, this {@code CPInfoReader} supports reading {@code CPInfo} instances with a tag of {@code tag}, {@code false} otherwise
+	 * @throws IllegalArgumentException thrown if, and only if, {@code tag} is less than {@code 0}
+	 */
+	boolean isSupported(final int tag);
 }

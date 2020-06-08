@@ -26,7 +26,6 @@ import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.MethodParametersAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.Parameter;
-import org.macroing.cel4j.node.NodeFormatException;
 
 final class MethodParametersAttributeReader implements AttributeInfoReader {
 	public MethodParametersAttributeReader() {
@@ -36,7 +35,7 @@ final class MethodParametersAttributeReader implements AttributeInfoReader {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public AttributeInfo readAttributeInfo(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
+	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
 			final MethodParametersAttribute methodParametersAttribute = MethodParametersAttribute.newInstance(attributeNameIndex);
 			
@@ -57,13 +56,13 @@ final class MethodParametersAttributeReader implements AttributeInfoReader {
 			}
 			
 			return methodParametersAttribute;
-		} catch(final IOException e) {
-			throw new NodeFormatException("Unable to read MethodParameters_attribute", e);
+		} catch(final IOException | IllegalArgumentException e) {
+			throw new AttributeInfoReaderException("Unable to read MethodParameters_attribute", e);
 		}
 	}
 	
 	@Override
-	public boolean isAttributeInfoReadingSupportedFor(final String name) {
+	public boolean isSupported(final String name) {
 		return name.equals(MethodParametersAttribute.NAME);
 	}
 }

@@ -23,7 +23,6 @@ import java.io.IOException;
 
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantDoubleInfo;
-import org.macroing.cel4j.node.NodeFormatException;
 import org.macroing.cel4j.util.ParameterArguments;
 
 final class ConstantDoubleInfoReader implements CPInfoReader {
@@ -34,20 +33,20 @@ final class ConstantDoubleInfoReader implements CPInfoReader {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public CPInfo readCPInfo(final DataInput dataInput, final int tag) {
+	public CPInfo read(final DataInput dataInput, final int tag) {
 		try {
 			final double toDouble = dataInput.readDouble();
 			
 			final CPInfo cPInfo = ConstantDoubleInfo.newInstance(toDouble);
 			
 			return cPInfo;
-		} catch(final IOException e) {
-			throw new NodeFormatException("Unable to read CONSTANT_Class_info", e);
+		} catch(final IOException | IllegalArgumentException e) {
+			throw new CPInfoReaderException("Unable to read CONSTANT_Class_info", e);
 		}
 	}
 	
 	@Override
-	public boolean isCPInfoReadingSupportedFor(final int tag) {
+	public boolean isSupported(final int tag) {
 		return ParameterArguments.requireRange(tag, 0, Integer.MAX_VALUE) == ConstantDoubleInfo.TAG;
 	}
 }

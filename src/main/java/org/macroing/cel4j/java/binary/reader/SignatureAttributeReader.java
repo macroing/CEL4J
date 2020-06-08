@@ -25,7 +25,6 @@ import java.util.List;
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.SignatureAttribute;
-import org.macroing.cel4j.node.NodeFormatException;
 
 final class SignatureAttributeReader implements AttributeInfoReader {
 	public SignatureAttributeReader() {
@@ -35,20 +34,20 @@ final class SignatureAttributeReader implements AttributeInfoReader {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public AttributeInfo readAttributeInfo(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
+	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
 			final int signatureIndex = dataInput.readUnsignedShort();
 			
 			final AttributeInfo attributeInfo = SignatureAttribute.newInstance(attributeNameIndex, signatureIndex);
 			
 			return attributeInfo;
-		} catch(final IOException e) {
-			throw new NodeFormatException("Unable to read Signature_attribute", e);
+		} catch(final IOException | IllegalArgumentException e) {
+			throw new AttributeInfoReaderException("Unable to read Signature_attribute", e);
 		}
 	}
 	
 	@Override
-	public boolean isAttributeInfoReadingSupportedFor(final String name) {
+	public boolean isSupported(final String name) {
 		return name.equals(SignatureAttribute.NAME);
 	}
 }

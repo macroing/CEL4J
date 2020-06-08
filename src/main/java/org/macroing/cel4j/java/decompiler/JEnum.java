@@ -138,7 +138,7 @@ final class JEnum extends JType {
 		try {
 			synchronized(J_ENUMS) {
 				final
-				JEnum jEnum = J_ENUMS.computeIfAbsent(associatedClass.getName(), name -> new JEnum(associatedClass, CLASS_FILES.computeIfAbsent(name, name0 -> ClassFileReader.newInstance().readClassFile(associatedClass))));
+				JEnum jEnum = J_ENUMS.computeIfAbsent(associatedClass.getName(), name -> new JEnum(associatedClass, CLASS_FILES.computeIfAbsent(name, name0 -> new ClassFileReader().read(associatedClass))));
 				jEnum.doInitialize();
 				
 				return jEnum;
