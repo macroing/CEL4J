@@ -9,6 +9,10 @@
 		* CHANGE:	Rename the methods readCPInfo(DataInput, int) and isCPInfoReadingSupportedFor(int) in the interface CPInfoReader, to read(DataInput, int) and isSupported(int), respectively.
 		* CHANGE:	Rename the methods readClassFile(...) in the class ClassFileReader, to read(...).
 
+	CEL4J Java Decompiler:
+
+		* CHANGE:	Update all readClassFile(...) method calls on the class ClassFileReader to read(...). It was changed.
+
 2020-06-08  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
