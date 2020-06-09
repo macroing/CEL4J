@@ -16,14 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.php.generator.propertybuilder;
+package org.macroing.cel4j.php.generator;
 
 import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 
-import org.macroing.cel4j.php.generator.Property;
-import org.macroing.cel4j.php.generator.PropertyBuilder;
 import org.macroing.cel4j.php.model.PConst;
 import org.macroing.cel4j.php.model.PField;
 import org.macroing.cel4j.php.model.PMethod;

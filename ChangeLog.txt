@@ -3,6 +3,7 @@
 	CEL4J Java Binary:
 
 		* ADD:		Add the classes AttributeInfoReaderException, CPInfoReaderException and ClassFileReaderException to the package org.macroing.cel4j.java.binary.reader.
+		* CHANGE:	Update the Javadocs for package-info.java.
 		* CHANGE:	Update the Javadocs for AttributeInfoReader, CPInfoReader and ClassFileReader.
 		* CHANGE:	Replace the thrown NodeFormatException in the Java Binary Reader API with AttributeInfoReaderException, CPInfoReaderException and ClassFileReaderException.
 		* CHANGE:	Rename the methods readAttributeInfo(DataInput, int, List) and isAttributeInfoReadingSupportedFor(String) in the interface AttributeInfoReader, to read(DataInput, int, List) and isSupported(String), respectively.
@@ -11,7 +12,34 @@
 
 	CEL4J Java Decompiler:
 
+		* CHANGE:	Update the Javadocs for package-info.java.
 		* CHANGE:	Update all readClassFile(...) method calls on the class ClassFileReader to read(...). It was changed.
+
+	CEL4J Java Source:
+
+		* CHANGE:	Update the Javadocs for package-info.java.
+
+	CEL4J JSON:
+
+		* ADD:		Add an extends clause for Node to the JSONType interface and an implements clause for Node to the Property class.
+		* ADD:		Add implementations for the accept(NodeHierarchicalVisitor) method to the JSONArray, JSONObject and Property classes.
+		* CHANGE:	Update the Javadocs for package-info.java.
+
+	CEL4J Node:
+
+		* CHANGE:	Update the Javadocs for package-info.java.
+
+	CEL4J PHP:
+
+		* ADD:		Add static methods to the PropertyBuilder to create new instances of various PropertyBuilder implementations.
+		* CHANGE:	Move all implementations of PropertyBuilder from the package org.macroing.cel4j.php.generator.propertybuilder to the package org.macroing.cel4j.php.generator and remove their public access modifier.
+		* CHANGE:	Update the Javadocs for package-info.java.
+		* REMOVE:	Remove the package org.macroing.cel4j.php.generator.propertybuilder.
+
+	CEL4J Utilities:
+
+		* ADD:		Add a new generic Pair class that can hold two values, X and Y.
+		* CHANGE:	Update the Javadocs for package-info.java.
 
 2020-06-08  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 

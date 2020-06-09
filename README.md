@@ -1,4 +1,4 @@
-CEL4J - Version 0.5.3
+CEL4J - Version 0.5.4
 =====================
 CEL4J is a Code Engineering Library for Java. It provides functionality for JSON, Java and PHP.
 
@@ -351,24 +351,24 @@ The following example demonstrates how PHP class models can be generated with si
 
 First the Java program has to be created.
 ```java
+import java.util.Arrays;
+
 import org.macroing.cel4j.php.generator.Model;
 import org.macroing.cel4j.php.generator.Property;
-import org.macroing.cel4j.php.generator.propertybuilder.DefaultPropertyBuilder;
-import org.macroing.cel4j.php.generator.propertybuilder.StringLengthPropertyBuilder;
-import org.macroing.cel4j.php.generator.propertybuilder.StringOptionPropertyBuilder;
-import org.macroing.cel4j.php.generator.propertybuilder.StringOptionPropertyBuilder.StringOption;
+import org.macroing.cel4j.php.generator.PropertyBuilder;
 import org.macroing.cel4j.php.model.PDocument;
 import org.macroing.cel4j.php.model.PType;
 import org.macroing.cel4j.php.util.Document;
+import org.macroing.cel4j.php.util.Pair
 
 public class GeneratorExample {
     public static void main(String[] args) {
         Model model = new Model("person", "Person");
-        model.addProperty(new Property(PType.INT, new DefaultPropertyBuilder(), "age", "Age"));
-        model.addProperty(new Property(PType.STRING, new StringLengthPropertyBuilder(1, 20), "first_name", "FirstName"));
-        model.addProperty(new Property(PType.STRING, new StringLengthPropertyBuilder(1, 20), "last_name", "LastName"));
-        model.addProperty(new Property(PType.STRING, new StringOptionPropertyBuilder(new StringOption("female", "GenderFemale"), new StringOption("male", "GenderMale")), "gender", "Gender"));
-        model.addProperty(new Property(PType.valueOf("School"), new DefaultPropertyBuilder(), "school", "School"));
+        model.addProperty(new Property(PType.INT, PropertyBuilder.newDefault(), "age", "Age"));
+        model.addProperty(new Property(PType.STRING, PropertyBuilder.newStringLength(1, 20), "first_name", "FirstName"));
+        model.addProperty(new Property(PType.STRING, PropertyBuilder.newStringLength(1, 20), "last_name", "LastName"));
+        model.addProperty(new Property(PType.STRING, PropertyBuilder.newStringOption(Arrays.asList(new Pair<>("female", "GenderFemale"), new Pair<>("male", "GenderMale"))), "gender", "Gender"));
+        model.addProperty(new Property(PType.valueOf("School"), PropertyBuilder.newDefault(), "school", "School"));
         
         PDocument pDocument = model.toDocument(PDocument.toNamespace("com", "example", "person"));
         

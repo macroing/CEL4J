@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.macroing.cel4j.node.NodeHierarchicalVisitor;
+import org.macroing.cel4j.node.NodeTraversalException;
+
 /**
  * A {@code JSONArray} denotes a JSON array.
  * <p>
@@ -32,7 +35,7 @@ import java.util.stream.Collectors;
  * @author J&#246;rgen Lundgren
  */
 public final class JSONArray implements JSONType {
-	private final List<JSONType> values = new ArrayList<>();
+	private final List<JSONType> values;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -40,7 +43,7 @@ public final class JSONArray implements JSONType {
 	 * Constructs a new empty {@code JSONArray} instance.
 	 */
 	public JSONArray() {
-		
+		this.values = new ArrayList<>();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,6 +77,46 @@ public final class JSONArray implements JSONType {
 	@Override
 	public String toString() {
 		return "new JSONArray()";
+	}
+	
+	/**
+	 * Accepts a {@link NodeHierarchicalVisitor}.
+	 * <p>
+	 * Returns the result of {@code nodeHierarchicalVisitor.visitLeave(this)}.
+	 * <p>
+	 * If {@code nodeHierarchicalVisitor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}, a {@code NodeTraversalException} will be thrown with the {@code RuntimeException} wrapped.
+	 * <p>
+	 * This implementation will:
+	 * <ul>
+	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
+	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
+	 * <li>traverse child {@code Node}s, if it has any.</li>
+	 * </ul>
+	 * 
+	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
+	 * @return the result of {@code nodeHierarchicalVisitor.visitLeave(this)}
+	 * @throws NodeTraversalException thrown if, and only if, a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}
+	 * @throws NullPointerException thrown if, and only if, {@code nodeHierarchicalVisitor} is {@code null}
+	 */
+	@Override
+	public boolean accept(final NodeHierarchicalVisitor nodeHierarchicalVisitor) {
+		Objects.requireNonNull(nodeHierarchicalVisitor, "nodeHierarchicalVisitor == null");
+		
+		try {
+			if(nodeHierarchicalVisitor.visitEnter(this)) {
+				for(final JSONType value : this.values) {
+					if(!value.accept(nodeHierarchicalVisitor)) {
+						return nodeHierarchicalVisitor.visitLeave(this);
+					}
+				}
+			}
+			
+			return nodeHierarchicalVisitor.visitLeave(this);
+		} catch(final RuntimeException e) {
+			throw new NodeTraversalException(e);
+		}
 	}
 	
 	/**

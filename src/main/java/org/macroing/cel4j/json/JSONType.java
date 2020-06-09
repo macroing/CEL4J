@@ -18,13 +18,15 @@
  */
 package org.macroing.cel4j.json;
 
+import org.macroing.cel4j.node.Node;
+
 /**
  * A {@code JSONType} denotes a JSON type.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public interface JSONType {
+public interface JSONType extends Node {
 	/**
 	 * Returns a {@code String} with the source code of this {@code JSONType} instance.
 	 * 

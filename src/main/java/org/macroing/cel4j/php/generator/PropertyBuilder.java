@@ -24,6 +24,7 @@ import org.macroing.cel4j.php.model.PConst;
 import org.macroing.cel4j.php.model.PField;
 import org.macroing.cel4j.php.model.PMethod;
 import org.macroing.cel4j.php.model.PType;
+import org.macroing.cel4j.util.Pair;
 
 /**
  * A {@code PropertyBuilder} is responsible for generating all consts, fields, methods and more for a given {@link Property} instance.
@@ -134,4 +135,80 @@ public interface PropertyBuilder {
 	 * @throws NullPointerException thrown if, and only if, {@code type} is {@code null}
 	 */
 	boolean isTypeSupported(final PType type);
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns a {@code PropertyBuilder} instance based on a default implementation.
+	 * 
+	 * @return a {@code PropertyBuilder} instance based on a default implementation
+	 */
+	static PropertyBuilder newDefault() {
+		return new DefaultPropertyBuilder();
+	}
+	
+	/**
+	 * Returns a {@code PropertyBuilder} instance based on an implementation that checks for {@code float} values within a range.
+	 * 
+	 * @param valueA the minimum or maximum value
+	 * @param valueB the maximum or minimum value
+	 * @return a {@code PropertyBuilder} instance based on an implementation that checks for {@code float} values within a range
+	 */
+	static PropertyBuilder newFloatRange(final float valueA, final float valueB) {
+		return new FloatRangePropertyBuilder(valueA, valueB);
+	}
+	
+	/**
+	 * Returns a {@code PropertyBuilder} instance based on an implementation that checks for {@code int} values within a range.
+	 * 
+	 * @param valueA the minimum or maximum value
+	 * @param valueB the maximum or minimum value
+	 * @return a {@code PropertyBuilder} instance based on an implementation that checks for {@code int} values within a range
+	 */
+	static PropertyBuilder newIntRange(final int valueA, final int valueB) {
+		return new IntRangePropertyBuilder(valueA, valueB);
+	}
+	
+	/**
+	 * Returns a {@code PropertyBuilder} instance based on an implementation that checks for {@code String} values with a length within a range.
+	 * 
+	 * @param lengthA the minimum or maximum length
+	 * @param lengthB the maximum or minimum length
+	 * @return a {@code PropertyBuilder} instance based on an implementation that checks for {@code String} values with a length within a range
+	 */
+	static PropertyBuilder newStringLength(final int lengthA, final int lengthB) {
+		return new StringLengthPropertyBuilder(lengthA, lengthB);
+	}
+	
+	/**
+	 * Returns a {@code PropertyBuilder} instance based on an implementation that checks that a {@code String} value is one of several options.
+	 * <p>
+	 * If either {@code stringOptions} or any of its elements are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Each {@code Pair} has two values, X and Y. In this case, both are {@code String}s. X represents the code and Y represents the name of the option.
+	 * <p>
+	 * The code is a {@code String} used in the const of the PHP class. This const is used when checking the value.
+	 * <p>
+	 * The name is a {@code String} used to generate the name of the const.
+	 * 
+	 * @param stringOptions a {@code List} of {@code Pair} instances that represents the options a {@code String} may be equal to
+	 * @return a {@code PropertyBuilder} instance based on an implementation that checks that a {@code String} value is one of several options
+	 * @throws NullPointerException thrown if, and only if, either {@code stringOptions} or any of its elements are {@code null}
+	 */
+	static PropertyBuilder newStringOption(final List<Pair<String, String>> stringOptions) {
+		return new StringOptionPropertyBuilder(stringOptions);
+	}
+	
+	/**
+	 * Returns a {@code PropertyBuilder} instance based on an implementation that checks that a {@code String} matches a Regular Expression.
+	 * <p>
+	 * If {@code pattern} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param pattern the pattern of the Regular Expression
+	 * @return a {@code PropertyBuilder} instance based on an implementation that checks that a {@code String} matches a Regular Expression
+	 * @throws NullPointerException thrown if, and only if, {@code pattern} is {@code null}
+	 */
+	static PropertyBuilder newStringRegex(final String pattern) {
+		return new StringRegexPropertyBuilder(pattern);
+	}
 }

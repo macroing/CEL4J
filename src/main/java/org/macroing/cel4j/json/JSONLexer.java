@@ -57,8 +57,8 @@ public final class JSONLexer {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final Map<String, Function<Matcher, JSONToken>> functions = doCreateFunctions();
-	private final Pattern pattern = Pattern.compile(REGEX_INPUT_ELEMENT);
+	private final Map<String, Function<Matcher, JSONToken>> functions;
+	private final Pattern pattern;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -66,7 +66,8 @@ public final class JSONLexer {
 	 * Constructs a new {@code JSONLexer} instance.
 	 */
 	public JSONLexer() {
-		
+		this.functions = doCreateFunctions();
+		this.pattern = Pattern.compile(REGEX_INPUT_ELEMENT);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,8 +97,7 @@ public final class JSONLexer {
 	 * <p>
 	 * Returns a {@code List} with {@link JSONToken}s.
 	 * <p>
-	 * If {@code isSkippingSkippables} is {@code true}, all {@code JSONToken}s that have an {@code isSkippable()} method that returns {@code true} will be skipped. That is, they will not be added to the returned
-	 * {@code List}.
+	 * If {@code isSkippingSkippables} is {@code true}, all {@code JSONToken}s that have an {@code isSkippable()} method that returns {@code true} will be skipped. That is, they will not be added to the returned {@code List}.
 	 * <p>
 	 * If {@code input} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>

@@ -16,21 +16,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.php.generator.propertybuilder;
+package org.macroing.cel4j.php.generator;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 
-//TODO: Add Javadocs!
-public final class DefaultPropertyBuilder extends AbstractPropertyBuilder {
-//	TODO: Add Javadocs!
+final class DefaultPropertyBuilder extends AbstractPropertyBuilder {
 	public DefaultPropertyBuilder() {
 		
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -42,7 +38,6 @@ public final class DefaultPropertyBuilder extends AbstractPropertyBuilder {
 		}
 	}
 	
-//	TODO: Add Javadocs!
 	@Override
 	public int hashCode() {
 		return Objects.hash();

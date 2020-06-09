@@ -16,14 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.php.generator.propertybuilder;
+package org.macroing.cel4j.php.generator;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.macroing.cel4j.php.generator.Property;
 import org.macroing.cel4j.php.model.PMethod;
 import org.macroing.cel4j.php.model.PParameterArgument;
 import org.macroing.cel4j.php.model.PReturnType;
@@ -31,107 +29,86 @@ import org.macroing.cel4j.php.model.PType;
 import org.macroing.cel4j.php.model.PValue;
 import org.macroing.cel4j.util.Strings;
 
-//TODO: Add Javadocs!
-public final class IntRangePropertyBuilder extends AbstractPropertyBuilder {
-	private final int maximumValue;
-	private final int minimumValue;
+final class StringRegexPropertyBuilder extends AbstractPropertyBuilder {
+	private final String pattern;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
-	public IntRangePropertyBuilder(final int valueA, final int valueB) {
-		this.maximumValue = Math.max(valueA, valueB);
-		this.minimumValue = Math.min(valueA, valueB);
+	public StringRegexPropertyBuilder(final String pattern) {
+		this.pattern = Objects.requireNonNull(pattern, "pattern == null");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
 	@Override
 	public List<PMethod> toMethods(final Property property) {
 		final List<PMethod> methods = new ArrayList<>();
 		
-		methods.add(toMethodDoParseInt());
+		methods.add(toMethodDoParseString());
 		methods.add(toMethodGet(property));
 		methods.add(toMethodHas(property));
-		methods.add(doToMethodSet(property, this.minimumValue, this.maximumValue));
-		methods.add(doToMethodDoUpdateIntByRange());
+		methods.add(doToMethodSet(property, this.pattern));
+		methods.add(doToMethodDoUpdateStringByRegex());
 		
 		return methods;
 	}
 	
-//	TODO: Add Javadocs!
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
-		} else if(!(object instanceof IntRangePropertyBuilder)) {
+		} else if(!(object instanceof StringRegexPropertyBuilder)) {
 			return false;
-		} else if(this.maximumValue != IntRangePropertyBuilder.class.cast(object).maximumValue) {
-			return false;
-		} else if(this.minimumValue != IntRangePropertyBuilder.class.cast(object).minimumValue) {
+		} else if(!Objects.equals(this.pattern, StringRegexPropertyBuilder.class.cast(object).pattern)) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 	
-//	TODO: Add Javadocs!
 	@Override
 	public boolean isTypeSupported(final PType type) {
 		final String typeName = type.getName();
 		
 		switch(typeName) {
-			case "int":
+			case "string":
 				return true;
 			default:
 				return false;
 		}
 	}
 	
-//	TODO: Add Javadocs!
-	public float getMaximumValue() {
-		return this.maximumValue;
-	}
-	
-//	TODO: Add Javadocs!
-	public float getMinimumValue() {
-		return this.minimumValue;
-	}
-	
-//	TODO: Add Javadocs!
 	@Override
 	public int hashCode() {
-		return Objects.hash(Integer.valueOf(this.maximumValue), Integer.valueOf(this.minimumValue));
+		return Objects.hash(this.pattern);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private static PMethod doToMethodDoUpdateIntByRange() {
+	private static PMethod doToMethodDoUpdateStringByRegex() {
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.addParameterArgument(new PParameterArgument("newInt", PType.INT, null, true));
-		pMethod.addParameterArgument(new PParameterArgument("oldInt", PType.INT, null, true));
-		pMethod.addParameterArgument(new PParameterArgument("minimumValue", PType.INT, null, false));
-		pMethod.addParameterArgument(new PParameterArgument("maximumValue", PType.INT, null, false));
-		pMethod.getBlock().addLine("if($newInt === null) {");
-		pMethod.getBlock().addLine("	return $newInt;");
-		pMethod.getBlock().addLine("} else if($newInt >= $minimumValue && $newInt <= $maximumValue) {");
-		pMethod.getBlock().addLine("	return $newInt;");
+		pMethod.addParameterArgument(new PParameterArgument("newString", PType.STRING, null, true));
+		pMethod.addParameterArgument(new PParameterArgument("oldString", PType.STRING, null, true));
+		pMethod.addParameterArgument(new PParameterArgument("pattern", PType.STRING, null, false));
+		pMethod.getBlock().addLine("if($newString === null) {");
+		pMethod.getBlock().addLine("	return $newString;");
+		pMethod.getBlock().addLine("} else if(preg_match($pattern, $newString)) {");
+		pMethod.getBlock().addLine("	return $newString;");
 		pMethod.getBlock().addLine("} else {");
-		pMethod.getBlock().addLine("	return $oldInt;");
+		pMethod.getBlock().addLine("	return $oldString;");
 		pMethod.getBlock().addLine("}");
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
-		pMethod.setName("doUpdateIntByRange");
+		pMethod.setName("doUpdateStringByRegex");
 		pMethod.setPrivate(true);
-		pMethod.setReturnType(new PReturnType(PType.INT, true));
+		pMethod.setReturnType(new PReturnType(PType.STRING, true));
 		pMethod.setStatic(true);
 		
 		return pMethod;
 	}
 	
-	private static PMethod doToMethodSet(final Property property, final int minimumValue, final int maximumValue) {
+	private static PMethod doToMethodSet(final Property property, final String pattern) {
 		final PType type = property.getType();
 		
 		final String name = property.getName();
@@ -141,7 +118,7 @@ public final class IntRangePropertyBuilder extends AbstractPropertyBuilder {
 		final
 		PMethod pMethod = new PMethod();
 		pMethod.addParameterArgument(new PParameterArgument(nameCamelCaseModified, type, PValue.NULL, true));
-		pMethod.getBlock().addLinef("return ($this->%s = self::doUpdateIntByRange($%s, $this->%s, %s, %s)) === $%s;", nameCamelCaseModified, nameCamelCaseModified, nameCamelCaseModified, Integer.toString(minimumValue), Integer.toString(maximumValue), nameCamelCaseModified);
+		pMethod.getBlock().addLinef("return ($this->%s = self::doUpdateStringByRegex($%s, $this->%s, '%s')) === $%s;", nameCamelCaseModified, nameCamelCaseModified, nameCamelCaseModified, pattern, nameCamelCaseModified);
 		pMethod.setEnclosedByClass(true);
 		pMethod.setFinal(true);
 		pMethod.setName("set" + nameCamelCase);
