@@ -47,7 +47,6 @@ The APIs in this project allows you to parse, manipulate and format JSON.
 The APIs in this project allows you to generate PHP source code.
 
 * `org.macroing.cel4j.php.generator` - An API used to generate object-oriented PHP class models from simple definitions.
-* `org.macroing.cel4j.php.generator.propertybuilder` - An API that contains `PropertyBuilder` implementations.
 * `org.macroing.cel4j.php.model` - An API that models PHP source code in an object-oriented manner.
 
 #### CEL4J Utilities
