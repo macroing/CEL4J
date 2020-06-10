@@ -69,8 +69,8 @@ public final class Strings {
 	 * @throws IllegalArgumentException thrown if, and only if, {@code string} contains an illegal Unicode escape sequence
 	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
 	 */
-	public static String convertUnicodeEscapeSequencesToString(final String string) {
-		return doConvertUnicodeEscapeSequencesToString(Objects.requireNonNull(string, "string == null").toCharArray());
+	public static String convertUnicodeEscapeSequences(final String string) {
+		return doConvertUnicodeEscapeSequences(Objects.requireNonNull(string, "string == null").toCharArray());
 	}
 	
 	/**
@@ -87,8 +87,8 @@ public final class Strings {
 	 * @throws IllegalArgumentException thrown if, and only if, {@code characters} contains an illegal Unicode escape sequence
 	 * @throws NullPointerException thrown if, and only if, {@code characters} is {@code null}
 	 */
-	public static String convertUnicodeEscapeSequencesToString(final char[] characters) {
-		return doConvertUnicodeEscapeSequencesToString(Objects.requireNonNull(characters, "characters == null"));
+	public static String convertUnicodeEscapeSequences(final char[] characters) {
+		return doConvertUnicodeEscapeSequences(Objects.requireNonNull(characters, "characters == null"));
 	}
 	
 	/**
@@ -454,7 +454,7 @@ public final class Strings {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private static String doConvertUnicodeEscapeSequencesToString(final char[] oldCharacters) {
+	private static String doConvertUnicodeEscapeSequences(final char[] oldCharacters) {
 		int oldCharactersLength = oldCharacters.length;
 		int oldCharactersOffset = 0;
 		
