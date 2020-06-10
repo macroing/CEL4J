@@ -1,3 +1,13 @@
+2020-06-10  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Binary:
+
+		* CHANGE:	Update the Javadocs for package-info.java.
+
+	CEL4J Utilities:
+
+		* ADD:		Add new methods to the class Strings that converts Unicode escape sequences in Strings and char arrays into new Strings.
+
 2020-06-09  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:

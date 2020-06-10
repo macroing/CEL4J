@@ -56,6 +56,42 @@ public final class Strings {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Converts all Unicode escape sequences in {@code string}.
+	 * <p>
+	 * Returns a {@code String} with the result of the conversion.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} contains an illegal Unicode escape sequence, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string a {@code String}
+	 * @return a {@code String} with the result of the conversion
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} contains an illegal Unicode escape sequence
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
+	public static String convertUnicodeEscapeSequencesToString(final String string) {
+		return doConvertUnicodeEscapeSequencesToString(Objects.requireNonNull(string, "string == null").toCharArray());
+	}
+	
+	/**
+	 * Converts all Unicode escape sequences in {@code characters}.
+	 * <p>
+	 * Returns a {@code String} with the result of the conversion.
+	 * <p>
+	 * If {@code characters} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code characters} contains an illegal Unicode escape sequence, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param characters a {@code char} array
+	 * @return a {@code String} with the result of the conversion
+	 * @throws IllegalArgumentException thrown if, and only if, {@code characters} contains an illegal Unicode escape sequence
+	 * @throws NullPointerException thrown if, and only if, {@code characters} is {@code null}
+	 */
+	public static String convertUnicodeEscapeSequencesToString(final char[] characters) {
+		return doConvertUnicodeEscapeSequencesToString(Objects.requireNonNull(characters, "characters == null"));
+	}
+	
+	/**
 	 * Formats {@code string} similar to {@code "CamelCase"}.
 	 * <p>
 	 * Returns the formatted {@code String}.
@@ -414,5 +450,92 @@ public final class Strings {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static String doConvertUnicodeEscapeSequencesToString(final char[] oldCharacters) {
+		int oldCharactersLength = oldCharacters.length;
+		int oldCharactersOffset = 0;
+		
+		int newCharactersLength = 0;
+		int newCharactersOffset = 0;
+		
+		final char[] newCharacters = new char[oldCharactersLength];
+		
+		while(oldCharactersOffset < oldCharactersLength) {
+			char character = oldCharacters[oldCharactersOffset++];
+			
+			if(character == '\\') {
+				character = oldCharacters[oldCharactersOffset++];
+				
+				if(character == 'u') {
+					int value = 0;
+					
+					for(int i = 0; i < 4; i++) {
+						character = oldCharacters[oldCharactersOffset++];
+						
+						switch(character) {
+							case '0':
+							case '1':
+							case '2':
+							case '3':
+							case '4':
+							case '5':
+							case '6':
+							case '7':
+							case '8':
+							case '9':
+								value = (value << 4) + character - '0';
+								
+								break;
+							case 'a':
+							case 'b':
+							case 'c':
+							case 'd':
+							case 'e':
+							case 'f':
+								value = (value << 4) + 10 + character - 'a';
+								
+								break;
+							case 'A':
+							case 'B':
+							case 'C':
+							case 'D':
+							case 'E':
+							case 'F':
+								value = (value << 4) + 10 + character - 'A';
+								
+								break;
+							default:
+								throw new IllegalArgumentException("Illegal Unicode escape sequence.");
+						}
+					}
+					
+					newCharacters[newCharactersOffset++] = (char)(value);
+				} else {
+					if(character == 't') {
+						character = '\t';
+					} else if(character == 'r') {
+						character = '\r';
+					} else if(character == 'n') {
+						character = '\n';
+					} else if(character == 'f') {
+						character = '\f';
+					} else {
+						newCharacters[newCharactersOffset++] = '\\';
+					}
+					
+					newCharacters[newCharactersOffset++] = character;
+				}
+			} else {
+				newCharacters[newCharactersOffset++] = character;
+			}
+		}
+		
+		newCharactersLength = newCharactersOffset;
+		newCharactersOffset = 0;
+		
+		return new String(newCharacters, newCharactersOffset, newCharactersLength);
 	}
 }
