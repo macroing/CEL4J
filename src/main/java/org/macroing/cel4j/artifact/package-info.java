@@ -1,5 +1,7 @@
 /**
- * Provides a {@code ScriptEngine} implementation called Artifact that evaluates a super-set of Java source code.
+ * Provides the Artifact API.
+ * <p>
+ * The Artifact API contains a {@code ScriptEngine} implementation called Artifact that evaluates a super-set of Java source code.
  * <p>
  * The {@code ScriptEngine} provided compiles the source code into {@code CompiledScript}s and loads them, using the context {@code ClassLoader}. It caches the {@code CompiledScript}s using a normalized version of the source code provided for that
  * {@code CompiledScript}. By doing so, no re-compilation will be performed when you add whitespace in other places than {@code String} literals.
