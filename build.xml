@@ -12,6 +12,7 @@
 	<property name="project.directory.binary" location="bin"/>
 	<property name="project.directory.distribution" location="${project.directory.root}/distribution"/>
 	<property name="project.directory.distribution.current" location="${project.directory.distribution}/${project.name}"/>
+	<property name="project.directory.resources" location="src/main/resources"/>
 	<property name="project.directory.source" location="src/main/java"/>
 	
 	<target name="clean" description="Deletes generated directories and files for project ${project.name}.">
@@ -49,6 +50,8 @@
 				<attribute name="Implementation-Version" value="${project.version}"/>
 				<attribute name="Implementation-Vendor" value="${project.vendor}"/>
 			</manifest>
+			
+			<fileset dir="${project.directory.resources}" excludes="**/.*/**"/>
 		</jar>
 		
 		<!--Generate Javadocs.-->
@@ -64,6 +67,8 @@
 		
 		<!--Copy files.-->
 		<copy todir="${project.directory.distribution.current}">
+			<fileset dir="." includes="Artifact-CLI.bat"/>
+			<fileset dir="." includes="Artifact-GUI.bat"/>
 			<fileset dir="." includes="ChangeLog.txt"/>
 			<fileset dir="." includes="COPYING"/>
 			<fileset dir="." includes="COPYING.LESSER"/>

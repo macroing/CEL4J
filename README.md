@@ -15,6 +15,13 @@ Supported Features
 ------------------
 This library consists of several projects. They are presented below.
 
+#### CEL4J Artifact
+The APIs in this project adds support for Java as a scripting language using the Java Scripting API.
+
+* `org.macroing.cel4j.artifact` - An API that implements a `ScriptEngine` for Java and adds configurations and tools for it.
+
+For more information about CEL4J Artifact, visit the [documentation](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Artifact).
+
 #### CEL4J Java Binary
 The APIs in this project allows you to read, manipulate and write Java bytecode.
 

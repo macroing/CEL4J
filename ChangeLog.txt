@@ -1,5 +1,9 @@
 2020-06-11  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
+	CEL4J Artifact:
+
+		* ADD:		Add all files to the new project CEL4J.
+
 	CEL4J Scanner:
 
 		* ADD:		Add a new Scanner API for scanning data in various forms.
