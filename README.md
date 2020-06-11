@@ -25,10 +25,7 @@ The APIs in this project allows you to read, manipulate and write Java bytecode.
 * `org.macroing.cel4j.java.binary.reader` - An API that provides capabilities to read the `ClassFile` models from streams of bytes.
 
 #### CEL4J Java Decompiler
-The APIs in this project allows you to decompile Java bytecode into Java source code.
-
-* `org.macroing.cel4j.java.decompiler` - An API that provides the general contract for a Java decompiler.
-* `org.macroing.cel4j.java.decompiler.simple` - An API that provides a simple Java decompiler implementation.
+* `org.macroing.cel4j.java.decompiler` - An API that provides the general contract for a Java decompiler and a simple implementation.
 
 #### CEL4J Java Source
 The APIs in this project allows you to parse, manipulate and format Java source code.
@@ -36,8 +33,6 @@ The APIs in this project allows you to parse, manipulate and format Java source 
 * `org.macroing.cel4j.java.source.lexical` - An API that models the lexical structure of a `CompilationUnit`.
 
 #### CEL4J JSON
-The APIs in this project allows you to parse, manipulate and format JSON.
-
 * `org.macroing.cel4j.json` - An API that contains an object-oriented JSON model, as well as parsing and formatting functionality.
 
 #### CEL4J Node
@@ -48,6 +43,9 @@ The APIs in this project allows you to generate PHP source code.
 
 * `org.macroing.cel4j.php.generator` - An API used to generate object-oriented PHP class models from simple definitions.
 * `org.macroing.cel4j.php.model` - An API that models PHP source code in an object-oriented manner.
+
+#### CEL4J Scanner
+* `org.macroing.cel4j.scanner` - An API that provides scanning functionality for data in various forms.
 
 #### CEL4J Utilities
 * `org.macroing.cel4j.util` - An API that provides unrelated functionality used by the library.
