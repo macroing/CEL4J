@@ -1,4 +1,4 @@
-CEL4J - Version 0.5.4
+CEL4J - Version 0.5.5
 =====================
 CEL4J is a Code Engineering Library for Java. It provides functionality for JSON, Java and PHP.
 
@@ -576,6 +576,38 @@ When the above Java program is executed, it emits the following PHP source code 
             }
         }
     }
+```
+
+#### CEL4J Scanner
+Below follows a few examples that demonstrates various features in CEL4J Scanner.
+
+###### Text Scanner Example
+The following example demonstrates how a `TextScanner` can be used to scan text.
+```java
+import java.util.regex.Pattern;
+
+import org.macroing.cel4j.scanner.TextScanner;
+
+public class TextScannerExample {
+    public static void main(String[] args) {
+        String string = "\"Hello, World!\"";
+        
+        StringBuilder stringBuilder = new StringBuilder();
+        
+        Pattern pattern = Pattern.compile("[a-zA-Z]+|,|\\s|!");
+        
+        TextScanner textScanner = new TextScanner(string);
+        
+        while(textScanner.nextRegex(pattern) || textScanner.nextCharacter('"')) {
+            System.out.print(textScanner.consumption());
+            
+            textScanner.consume(stringBuilder);
+        }
+        
+        System.out.println();
+        System.out.print(stringBuilder);
+    }
+}
 ```
 
 Dependencies

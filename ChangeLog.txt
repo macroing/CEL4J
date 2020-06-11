@@ -1,3 +1,9 @@
+2020-06-11  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Scanner:
+
+		* ADD:		Add a new Scanner API for scanning data in various forms.
+
 2020-06-10  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
