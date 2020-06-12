@@ -19,21 +19,13 @@ This library consists of several projects. They are presented below.
 [CEL4J Artifact](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Artifact) provides a `ScriptEngine` implementation that evaluates Java source code.
 
 #### CEL4J Java Binary
-The APIs in this project allows you to read, manipulate and write Java bytecode.
-
-* `org.macroing.cel4j.java.binary.classfile` - An API that models the general parts of a `ClassFile` structure.
-* `org.macroing.cel4j.java.binary.classfile.attributeinfo` - An API that models specific `attribute_info` structures.
-* `org.macroing.cel4j.java.binary.classfile.cpinfo` - An API that models specific `cp_info` structures.
-* `org.macroing.cel4j.java.binary.classfile.string` - An API that models descriptors and signatures.
-* `org.macroing.cel4j.java.binary.reader` - An API that provides capabilities to read the `ClassFile` models from streams of bytes.
+[CEL4J Java Binary](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Java-Binary) provides functionality for reading, manipulating and writing Java bytecode.
 
 #### CEL4J Java Decompiler
 [CEL4J Java Decompiler](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Java-Decompiler) provides a decompiler that can decompile Java bytecode into Java source code.
 
 #### CEL4J Java Source
-The APIs in this project allows you to parse, manipulate and format Java source code.
-
-* `org.macroing.cel4j.java.source.lexical` - An API that models the lexical structure of a `CompilationUnit`.
+[CEL4J Java Source](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Java-Source) provides functionality for reading, manipulating and writing Java source code.
 
 #### CEL4J JSON
 * `org.macroing.cel4j.json` - An API that contains an object-oriented JSON model, as well as parsing and formatting functionality.
@@ -55,146 +47,6 @@ The APIs in this project allows you to generate PHP source code.
 
 Examples
 --------
-#### CEL4J Java Binary
-Below follows a few examples that demonstrates various features in CEL4J Java Binary.
-
-###### Read and Write ClassFile Example
-The following example demonstrates how a `ClassFileReader` can be used to read a `ClassFile` given a `Class`. Then the `ClassFile` is written to a file.
-
-```java
-import java.io.File;
-
-import org.macroing.cel4j.java.binary.classfile.ClassFile;
-import org.macroing.cel4j.java.binary.reader.ClassFileReader;
-
-public class ReadAndWriteClassFileExample {
-    public static void main(String[] args) {
-//      Create a ClassFileReader to read a ClassFile instance:
-        ClassFileReader classFileReader = new ClassFileReader();
-        
-//      Read the ClassFile instance for the String class using the ClassFileReader instance:
-        ClassFile classFile = classFileReader.read(String.class);
-        
-//      Write the ClassFile instance to a file:
-        classFile.write(new File("bin/java/lang/String.class"));
-    }
-}
-```
-
-###### Print Instructions Example
-The following example demonstrates how a `ClassFile`, or any other `Node`, can be traversed in various ways and operated on.
-
-```java
-import org.macroing.cel4j.java.binary.classfile.ClassFile;
-import org.macroing.cel4j.java.binary.classfile.attributeinfo.CodeAttribute;
-import org.macroing.cel4j.java.binary.reader.ClassFileReader;
-import org.macroing.cel4j.node.NodeFilter;
-
-public class PrintInstructionsExample {
-    public static void main(String[] args) {
-//      Create a ClassFileReader to read a ClassFile instance:
-        ClassFileReader classFileReader = new ClassFileReader();
-        
-//      Read the ClassFile instance for the String class using the ClassFileReader instance:
-        ClassFile classFile = classFileReader.read(String.class);
-        
-//      Example #1 - Using Java 8 Stream APIs:
-        classFile.getMethodInfos().forEach(methodInfo -> methodInfo.getAttributeInfos().stream().filter(node -> node instanceof CodeAttribute).map(node -> CodeAttribute.class.cast(node)).forEach(codeAttribute -> {
-            System.out.println();
-            
-            codeAttribute.getInstructions().forEach(instruction -> System.out.println(instruction));
-        }));
-        
-//      Example #2 - Using the default NodeFilter.filter(Node) method and Java 8 Stream APIs:
-        NodeFilter.filter(classFile).stream().filter(node -> node instanceof CodeAttribute).map(node -> CodeAttribute.class.cast(node)).forEach(codeAttribute -> {
-            System.out.println();
-            
-            codeAttribute.getInstructions().forEach(instruction -> System.out.println(instruction));
-        });
-        
-//      Example #3 - Using the more advanced NodeFilter.filter(Node, NodeFilter, Class) method:
-        NodeFilter.filter(classFile, NodeFilter.any(), CodeAttribute.class).forEach(codeAttribute -> {
-            System.out.println();
-            
-            codeAttribute.getInstructions().forEach(instruction -> System.out.println(instruction));
-        });
-        
-//      Example #4 - Using the CodeAttribute.filter(Node) method:
-        CodeAttribute.filter(classFile).forEach(codeAttribute -> {
-            System.out.println();
-            
-            codeAttribute.getInstructions().forEach(instruction -> System.out.println(instruction));
-        });
-    }
-}
-```
-
-###### Descriptor and Signature Example
-The following example demonstrates how some of the descriptors and signatures in a `ClassFile` instance can be parsed.
-
-```java
-import org.macroing.cel4j.java.binary.classfile.ClassFile;
-import org.macroing.cel4j.java.binary.classfile.string.ClassSignature;
-import org.macroing.cel4j.java.binary.classfile.string.FieldDescriptor;
-import org.macroing.cel4j.java.binary.classfile.string.MethodDescriptor;
-import org.macroing.cel4j.java.binary.classfile.string.Signature;
-import org.macroing.cel4j.java.binary.reader.ClassFileReader;
-
-public class DescriptorAndSignatureExample {
-    public static void main(String[] args) {
-//      Create a ClassFileReader to read a ClassFile instance:
-        ClassFileReader classFileReader = new ClassFileReader();
-        
-//      Read the ClassFile instance for the ArrayList class using the ClassFileReader instance:
-        ClassFile classFile = classFileReader.read(java.util.ArrayList.class);
-        
-//      Parse the optional ClassSignature instance in the ClassFile and, if present, print it in external form to standard output:
-        ClassSignature.parseClassSignatureOptionally(classFile).ifPresent(classSignature -> System.out.printf("%-17s %s%n", "ClassSignature:", classSignature.toExternalForm()));
-        
-//      Parse the FieldDescriptor instances in the ClassFile and print them in external form to standard output:
-        FieldDescriptor.parseFieldDescriptors(classFile).forEach(fieldDescriptor -> System.out.printf("%-17s %s%n", "FieldDescriptor:", fieldDescriptor.toExternalForm()));
-        
-//      Parse the MethodDescriptor instances in the ClassFile and print them in external form to standard output:
-        MethodDescriptor.parseMethodDescriptors(classFile).forEach(methodDescriptor -> System.out.printf("%-17s %s%n", "MethodDescriptor:", methodDescriptor.toExternalForm()));
-        
-//      Parse the Signature instances in the ClassFile and print them in external form to standard output:
-        Signature.parseSignatures(classFile).forEach(signature -> System.out.printf("%-17s %s%n", "Signature:", signature.toExternalForm()));
-    }
-}
-```
-
-#### CEL4J Java Source
-Below follows a few examples that demonstrates various features in CEL4J Java Source.
-
-###### Parse Input Example
-The following example demonstrates how an `Input` can be parsed from a `String`, as well as how to iterate through its `InputElement` instances.
-```java
-import org.macroing.cel4j.java.source.lexical.Input;
-import org.macroing.cel4j.java.source.lexical.InputElement;
-
-public class ParseInputExample {
-    public static void main(String[] args) {
-//      Create a StringBuilder with content representing a CompilationUnit:
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("package com.example.helloworld;\n");
-        stringBuilder.append("\n");
-        stringBuilder.append("public class HelloWorld {\n");
-        stringBuilder.append("    public static void main(String[] args) {\n");
-        stringBuilder.append("        System.out.println(\"Hello, World!\");\n");
-        stringBuilder.append("    }\n");
-        stringBuilder.append("}");
-        
-//      Create an Input given the String-representation of the StringBuilder:
-        Input input = Input.parseInput(stringBuilder.toString());
-        
-//      Iterate through all InputElements contained in the Input instance and print their source code to standard output:
-        for(InputElement inputElement : input) {
-            System.out.print(inputElement.getSourceCode());
-        }
-    }
-}
-```
-
 #### CEL4J JSON
 Below follows a few examples that demonstrates various features in CEL4J JSON.
 

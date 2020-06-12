@@ -9,7 +9,7 @@ Supported Features
 
 Packages
 --------
-* `org.macroing.cel4j.java.decompiler` - Provides the general contract for a Java decompiler and a simple implementation.
+* `org.macroing.cel4j.java.decompiler` - The Java Decompiler API.
 
 Examples
 --------

@@ -20,7 +20,7 @@ Supported Features
 
 Packages
 --------
-* `org.macroing.cel4j.artifact` - Provides the `ScriptEngine` implementation and the interactive scripting tool.
+* `org.macroing.cel4j.artifact` - The Artifact API.
 
 Examples
 --------
