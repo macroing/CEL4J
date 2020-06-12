@@ -1,28 +1,33 @@
 CEL4J Artifact
 ==============
-CEL4J Artifact provides a ScriptEngine implementation called Artifact, that evaluates a super-set of Java source code.
+CEL4J Artifact provides a `ScriptEngine` implementation that evaluates Java source code.
 
 Supported Features
 ------------------
-* Full Java-compatibility. You can use any Java source code that can be executed from within a Java method.
+* Full Java-compatibility. Supports any Java source code that can be executed from within a Java method.
 * Some of the more common packages from the standard Java library are imported by default.
-* You may override most of the imported packages by specifying the system property ``-Dorg.macroing.cel4j.artifact.import="file.txt"``, which points to a file with one import statement per line.
-* You don't have to catch any `Exception`s thrown by a method. A default catch-clause will take care of that for you.
-* You can return anything you want from the script, but are not required to.
-* You can evaluate Java source code as part of the script itself, using the `eval(String)` method.
-* To import packages you can use import statements like `import javax.swing.*;`.
-* To change package you can use package statements like `package com.company;`.
-* You can set a variable to the `ScriptContext` using the `set(String, Object)` method.
-* You can get a variable from the `ScriptContext` using the `get(String)` method.
-* Variables starting with `$` are treated in a special way. They are substituted with a cast to their type, as they are stored in the `ScriptContext`.
+* Catching an `Exception` in a catch-clause is possible but not necessary. A default catch-clause exists.
+* It is possible to use return statements but not necessary. By default `null` is returned.
+* The `eval(String)` method allows the script to evaluate Java source code on its own.
+* Import statements in the script will be pre-processed and added to the compilation unit.
+* Package statements in the script will be pre-processed and added to the compilation unit.
+* The `set(String, Object)` method can be used to set a variable in the `ScriptContext`.
+* The `get(String)` method can be used to get a variable from the `ScriptContext`.
+* Variables starting with `$` are cast to their type, as they are stored in the `ScriptContext`.
 * A script has access to the `ScriptContext` using the variable `scriptContext`.
-* It's possible to dump the generated source code to system out by using the system property `-Dorg.macroing.cel4j.artifact.dump=true`.
-* You can use the ``Artifact`` class to configure parts of Artifact programmatically on a global level.
-* Artifact comes with an interactive scripting tool that can be run in CLI- or GUI mode.
+* The `Artifact` class can be used for programmatic configuration on a global level.
+* Bundled with an interactive scripting tool that can be run in CLI- or GUI mode.
+
+Packages
+--------
+* `org.macroing.cel4j.artifact` - Provides the `ScriptEngine` implementation and the interactive scripting tool.
 
 Examples
 --------
-The following example demonstrates how you can use Artifact:
+Below follows a few examples that demonstrates various features in CEL4J Artifact.
+
+#### HelloWorld Example
+The following example demonstrates how CEL4J Artifact can be used in Java:
 
 ```java
 import javax.script.ScriptEngine;
@@ -45,7 +50,8 @@ public class HelloWorld {
 }
 ```
 
-The following example demonstrates some of the features provided by Artifact:
+#### Script Example
+The following example demonstrates how CEL4J Artifact scripts can be written:
 
 ```java
 //Changes the package:
@@ -82,20 +88,20 @@ return result;
 
 Import Statements
 -----------------
-Artifact has four types of import statement configurations. These are the required import statements that always will be present, the default import statements that may be overridden, the global import statements that can be added via an API and the local import statements that can be added from within a script.
+CEL4J Artifact has four types of import statement configurations. These are the required import statements that always will be present, the default import statements that may be overridden, the global import statements that can be added via an API and the local import statements that can be added from within a script.
 
-### Required Import Statements
+#### Required Import Statements
 These import statements are required.
 
 * `import javax.script.*;`
 * `import org.macroing.cel4j.artifact.*;`
 
-### Default Import Statements
+#### Default Import Statements
 The default import statements can be separated into two groups; the internally defined and the externally defined.
 
 The internally defined default import statements are subject to change. It may turn out that too many ambiguous classes and interfaces are imported.
 
-The externally defined default import statements overrides the internally defined. To override them, use a system property called ``org.macroing.cel4j.artifact.import``. The value supplied should be a filename pointing to a file with one import statement per line.
+The externally defined default import statements overrides the internally defined. To override them, use a system property called `org.macroing.cel4j.artifact.import`. The value supplied should be a filename pointing to a file with one import statement per line.
 
 The internally defined default import statements are currently the following:
 * `import static java.lang.Math.*;`
@@ -135,38 +141,25 @@ The internally defined default import statements are currently the following:
 * `import javax.swing.undo.*;`
 * `import javax.tools.*;`
 
-### Global Import Statements
+#### Global Import Statements
 These import statements can be added from the `Artifact` class.
 
-### Local Import Statements
+#### Local Import Statements
 These import statements can be added from within a script.
-
-Getting Started
----------------
-### Apache Ant
-To clone the CEL4J repository, build the project and run Artifact in GUI-mode, you can type the following in Git Bash.
-```bash
-git clone https://github.com/macroing/CEL4J.git
-cd CEL4J
-ant
-cd distribution/org.macroing.cel4j
-java -cp org.macroing.cel4j.jar org.macroing.cel4j.artifact.Main -g
-```
 
 Interactive Scripting Tool
 --------------------------
-The interactive scripting tool can be configured to run as either a CLI- or a GUI-program. By default it runs as a CLI-program.
+The interactive scripting tool can be configured to run as a CLI- or a GUI-program. By default it runs as a CLI-program with Artifact as the scripting language.
 
-The program uses a set of flags to configure itself. So you can change them to fit your needs. The currently supported flags are the following.
+The program uses a set of flags for configuration:
+* `-e [extension]` - This flag sets the filename extension for the scripting language to use. By default `java` is used.
+* `-g` - This flag starts the GUI-program, which has support for some syntax highlighting.
 
- - The `-e [extension]` flag sets the filename extension for the scripting language to use.
- - The `-g` flag starts the GUI-program.
-
-When you omit the `-e [extension]` flag, Artifact will automatically be used as scripting language. This is just like using `-e java` or `-e .java`.
-
-When you omit the `-g` flag, the CLI-program will automatically be used.
-
-The GUI-program has support for some syntax highlighting.
+Below follows two examples for running the interactive scripting tool:
+```bash
+java -cp org.macroing.cel4j.jar org.macroing.cel4j.artifact.Main
+java -cp org.macroing.cel4j.jar org.macroing.cel4j.artifact.Main -e java -g
+```
 
 Dependencies
 ------------

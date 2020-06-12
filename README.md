@@ -16,11 +16,7 @@ Supported Features
 This library consists of several projects. They are presented below.
 
 #### CEL4J Artifact
-The APIs in this project adds support for Java as a scripting language using the Java Scripting API.
-
-* `org.macroing.cel4j.artifact` - An API that implements a `ScriptEngine` for Java and adds configurations and tools for it.
-
-For more information about CEL4J Artifact, visit the [documentation](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Artifact).
+[CEL4J Artifact](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Artifact) provides a `ScriptEngine` implementation that evaluates Java source code.
 
 #### CEL4J Java Binary
 The APIs in this project allows you to read, manipulate and write Java bytecode.
@@ -32,7 +28,7 @@ The APIs in this project allows you to read, manipulate and write Java bytecode.
 * `org.macroing.cel4j.java.binary.reader` - An API that provides capabilities to read the `ClassFile` models from streams of bytes.
 
 #### CEL4J Java Decompiler
-* `org.macroing.cel4j.java.decompiler` - An API that provides the general contract for a Java decompiler and a simple implementation.
+[CEL4J Java Decompiler](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Java-Decompiler) provides a decompiler that can decompile Java bytecode into Java source code.
 
 #### CEL4J Java Source
 The APIs in this project allows you to parse, manipulate and format Java source code.
@@ -163,35 +159,6 @@ public class DescriptorAndSignatureExample {
         
 //      Parse the Signature instances in the ClassFile and print them in external form to standard output:
         Signature.parseSignatures(classFile).forEach(signature -> System.out.printf("%-17s %s%n", "Signature:", signature.toExternalForm()));
-    }
-}
-```
-
-#### CEL4J Java Decompiler
-Below follows a few examples that demonstrates various features in CEL4J Java Decompiler.
-
-###### Decompilation Example
-The following example demonstrates how a `Decompiler` can be used to decompile a `Class` to a file.
-
-```java
-import org.macroing.cel4j.java.decompiler.Consumers;
-import org.macroing.cel4j.java.decompiler.DecompilationException;
-import org.macroing.cel4j.java.decompiler.Decompiler;
-import org.macroing.cel4j.java.decompiler.DecompilerObserver;
-
-public class DecompilationExample {
-    public static void main(String[] args) {
-        try {
-            Class<?> clazz = Integer.class;
-            
-            Decompiler decompiler = Decompiler.newInstance();
-            decompiler.addClass(clazz, Consumers.file("generated", clazz));
-            decompiler.addDecompilerObserver(DecompilerObserver.print());
-            decompiler.getDecompilerConfiguration().setDisplayingInstructions(true);
-            decompiler.decompile();
-        } catch(DecompilationException e) {
-            e.printStackTrace();
-        }
     }
 }
 ```
