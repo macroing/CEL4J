@@ -27,6 +27,7 @@ import java.util.Objects;
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
+import org.macroing.cel4j.scanner.TextScanner;
 import org.macroing.cel4j.util.ParameterArguments;
 
 //TODO: Add Javadocs!
@@ -132,7 +133,7 @@ public final class TypeParameter implements Node {
 	
 //	TODO: Add Javadocs!
 	public static TypeParameter parseTypeParameter(final String string) {
-		return Parsers.parseTypeParameter(TextScanner.newInstance(string));
+		return Parsers.parseTypeParameter(new TextScanner(string));
 	}
 	
 //	TODO: Add Javadocs!

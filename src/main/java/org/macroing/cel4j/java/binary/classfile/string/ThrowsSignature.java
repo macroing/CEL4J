@@ -24,6 +24,7 @@ import java.util.Objects;
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
+import org.macroing.cel4j.scanner.TextScanner;
 
 //TODO: Add Javadocs!
 public final class ThrowsSignature implements Node {
@@ -100,7 +101,7 @@ public final class ThrowsSignature implements Node {
 	
 //	TODO: Add Javadocs!
 	public static ThrowsSignature parseThrowsSignature(final String string) {
-		return Parsers.parseThrowsSignature(TextScanner.newInstance(string));
+		return Parsers.parseThrowsSignature(new TextScanner(string));
 	}
 	
 //	TODO: Add Javadocs!

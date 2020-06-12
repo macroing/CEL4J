@@ -31,6 +31,7 @@ import org.macroing.cel4j.java.binary.classfile.attributeinfo.SignatureAttribute
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
+import org.macroing.cel4j.scanner.TextScanner;
 
 //TODO: Add Javadocs!
 public final class MethodSignature implements Signature {
@@ -179,7 +180,7 @@ public final class MethodSignature implements Signature {
 	
 //	TODO: Add Javadocs!
 	public static MethodSignature parseMethodSignature(final String string) {
-		return Parsers.parseMethodSignature(TextScanner.newInstance(string));
+		return Parsers.parseMethodSignature(new TextScanner(string));
 	}
 	
 //	TODO: Add Javadocs!

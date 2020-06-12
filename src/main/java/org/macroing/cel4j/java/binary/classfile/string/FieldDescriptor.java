@@ -27,6 +27,7 @@ import org.macroing.cel4j.java.binary.classfile.FieldInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.LocalVariable;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.node.Node;
+import org.macroing.cel4j.scanner.TextScanner;
 
 //TODO: Add Javadocs!
 public interface FieldDescriptor extends Node {
@@ -50,7 +51,7 @@ public interface FieldDescriptor extends Node {
 	
 //	TODO: Add Javadocs!
 	static FieldDescriptor parseFieldDescriptor(final String string) {
-		return Parsers.parseFieldDescriptor(TextScanner.newInstance(string));
+		return Parsers.parseFieldDescriptor(new TextScanner(string));
 	}
 	
 //	TODO: Add Javadocs!

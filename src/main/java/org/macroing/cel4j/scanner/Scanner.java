@@ -181,36 +181,6 @@ public abstract class Scanner<T, U> {
 	public abstract boolean next();
 	
 	/**
-	 * Loads the state associated with {@code key} into this {@code Scanner} instance.
-	 * <p>
-	 * Returns {@code true} if, and only if, the state was loaded into this {@code Scanner} instance, {@code false} otherwise.
-	 * <p>
-	 * If {@code key} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * <p>
-	 * This method will not delete the state associated with {@code key}. That requires a call to {@link #stateDelete(Key)}.
-	 * 
-	 * @param key the {@link Key} associated with the state to load
-	 * @return {@code true} if, and only if, the state was loaded into this {@code Scanner} instance, {@code false} otherwise
-	 * @throws NullPointerException thrown if, and only if, {@code key} is {@code null}
-	 */
-	public final boolean stateLoad(final Key key) {
-		final Map<Key, State> states = this.states;
-		
-		final State state = states.get(Objects.requireNonNull(key, "key == null"));
-		
-		if(state != null) {
-			int indexAtBeginningInclusive = state.getIndexAtBeginningInclusive();
-			int indexAtEndExclusive = state.getIndexAtEndExclusive();
-			
-			setIndexAtBeginningInclusiveAndIndexAtEndExclusive(indexAtBeginningInclusive, indexAtEndExclusive);
-			
-			return true;
-		}
-		
-		return false;
-	}
-	
-	/**
 	 * Skips the data between the indices representing the beginning and the end of the current consumption.
 	 * <p>
 	 * Returns {@code true} if, and only if, data was skipped, {@code false} otherwise.
@@ -245,6 +215,64 @@ public abstract class Scanner<T, U> {
 	 */
 	public final boolean stateDelete(final Key key) {
 		return this.states.remove(Objects.requireNonNull(key, "key == null")) != null;
+	}
+	
+	/**
+	 * Loads the state associated with {@code key} into this {@code Scanner} instance.
+	 * <p>
+	 * Returns {@code true} if, and only if, the state was loaded into this {@code Scanner} instance, {@code false} otherwise.
+	 * <p>
+	 * If {@code key} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * This method will not delete the state associated with {@code key}. That requires a call to {@link #stateDelete(Key)}.
+	 * 
+	 * @param key the {@link Key} associated with the state to load
+	 * @return {@code true} if, and only if, the state was loaded into this {@code Scanner} instance, {@code false} otherwise
+	 * @throws NullPointerException thrown if, and only if, {@code key} is {@code null}
+	 */
+	public final boolean stateLoad(final Key key) {
+		final Map<Key, State> states = this.states;
+		
+		final State state = states.get(Objects.requireNonNull(key, "key == null"));
+		
+		if(state != null) {
+			int indexAtBeginningInclusive = state.getIndexAtBeginningInclusive();
+			int indexAtEndExclusive = state.getIndexAtEndExclusive();
+			
+			setIndexAtBeginningInclusiveAndIndexAtEndExclusive(indexAtBeginningInclusive, indexAtEndExclusive);
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Loads the state associated with {@code key} into this {@code Scanner} instance and deletes it.
+	 * <p>
+	 * Returns {@code true} if, and only if, the state was loaded into this {@code Scanner} instance and deleted, {@code false} otherwise.
+	 * <p>
+	 * If {@code key} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param key the {@link Key} associated with the state to load and delete
+	 * @return {@code true} if, and only if, the state was loaded into this {@code Scanner} instance and deleted, {@code false} otherwise
+	 * @throws NullPointerException thrown if, and only if, {@code key} is {@code null}
+	 */
+	public final boolean stateLoadAndDelete(final Key key) {
+		final Map<Key, State> states = this.states;
+		
+		final State state = states.remove(Objects.requireNonNull(key, "key == null"));
+		
+		if(state != null) {
+			int indexAtBeginningInclusive = state.getIndexAtBeginningInclusive();
+			int indexAtEndExclusive = state.getIndexAtEndExclusive();
+			
+			setIndexAtBeginningInclusiveAndIndexAtEndExclusive(indexAtBeginningInclusive, indexAtEndExclusive);
+			
+			return true;
+		}
+		
+		return false;
 	}
 	
 	/**

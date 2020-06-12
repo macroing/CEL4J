@@ -21,6 +21,7 @@ package org.macroing.cel4j.java.binary.classfile.string;
 import java.lang.reflect.Field;//TODO: Add Javadocs!
 
 import org.macroing.cel4j.node.Node;
+import org.macroing.cel4j.scanner.TextScanner;
 
 //TODO: Add Javadocs!
 public enum WildcardIndicator implements Node {
@@ -72,6 +73,6 @@ public enum WildcardIndicator implements Node {
 	
 //	TODO: Add Javadocs!
 	public static WildcardIndicator parseWildcardIndicator(final String string) {
-		return Parsers.parseWildcardIndicator(TextScanner.newInstance(string));
+		return Parsers.parseWildcardIndicator(new TextScanner(string));
 	}
 }

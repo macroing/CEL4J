@@ -25,6 +25,7 @@ import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.FieldInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.SignatureAttribute;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
+import org.macroing.cel4j.scanner.TextScanner;
 
 //TODO: Add Javadocs!
 public interface FieldSignature extends Signature {
@@ -35,7 +36,7 @@ public interface FieldSignature extends Signature {
 	
 //	TODO: Add Javadocs!
 	static FieldSignature parseFieldSignature(final String string) {
-		return Parsers.parseFieldSignature(TextScanner.newInstance(string));
+		return Parsers.parseFieldSignature(new TextScanner(string));
 	}
 	
 //	TODO: Add Javadocs!

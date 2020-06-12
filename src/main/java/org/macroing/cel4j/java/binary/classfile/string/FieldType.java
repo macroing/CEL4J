@@ -20,10 +20,12 @@ package org.macroing.cel4j.java.binary.classfile.string;
 
 import java.lang.reflect.Field;//TODO: Add Javadocs!
 
+import org.macroing.cel4j.scanner.TextScanner;
+
 //TODO: Add Javadocs!
 public interface FieldType extends ComponentType, FieldDescriptor, ParameterDescriptor, ReturnDescriptor {
 //	TODO: Add Javadocs!
 	static FieldType parseFieldType(final String string) {
-		return Parsers.parseFieldType(TextScanner.newInstance(string));
+		return Parsers.parseFieldType(new TextScanner(string));
 	}
 }

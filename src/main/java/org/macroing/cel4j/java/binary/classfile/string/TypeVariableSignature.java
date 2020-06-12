@@ -23,6 +23,7 @@ import java.util.Objects;
 
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
+import org.macroing.cel4j.scanner.TextScanner;
 
 //TODO: Add Javadocs!
 public final class TypeVariableSignature implements ReferenceTypeSignature {
@@ -99,7 +100,7 @@ public final class TypeVariableSignature implements ReferenceTypeSignature {
 	
 //	TODO: Add Javadocs!
 	public static TypeVariableSignature parseTypeVariableSignature(final String string) {
-		return Parsers.parseTypeVariableSignature(TextScanner.newInstance(string));
+		return Parsers.parseTypeVariableSignature(new TextScanner(string));
 	}
 	
 //	TODO: Add Javadocs!

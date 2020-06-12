@@ -31,6 +31,7 @@ import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
+import org.macroing.cel4j.scanner.TextScanner;
 import org.macroing.cel4j.util.ParameterArguments;
 
 //TODO: Add Javadocs!
@@ -137,7 +138,7 @@ public final class MethodDescriptor implements Node {
 	
 //	TODO: Add Javadocs!
 	public static MethodDescriptor parseMethodDescriptor(final String string) {
-		return Parsers.parseMethodDescriptor(TextScanner.newInstance(string));
+		return Parsers.parseMethodDescriptor(new TextScanner(string));
 	}
 	
 //	TODO: Add Javadocs!

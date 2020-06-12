@@ -20,6 +20,8 @@ package org.macroing.cel4j.java.binary.classfile.string;
 
 import java.lang.reflect.Field;//TODO: Add Javadocs!
 
+import org.macroing.cel4j.scanner.TextScanner;
+
 //TODO: Add Javadocs!
 public enum VoidDescriptor implements Result, ReturnDescriptor {
 //	TODO: Add Javadocs!
@@ -73,6 +75,6 @@ public enum VoidDescriptor implements Result, ReturnDescriptor {
 	
 //	TODO: Add Javadocs!
 	public static VoidDescriptor parseVoidDescriptor(final String string) {
-		return Parsers.parseVoidDescriptor(TextScanner.newInstance(string));
+		return Parsers.parseVoidDescriptor(new TextScanner(string));
 	}
 }

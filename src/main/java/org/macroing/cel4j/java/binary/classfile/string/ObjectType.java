@@ -23,6 +23,7 @@ import java.util.Objects;
 
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
+import org.macroing.cel4j.scanner.TextScanner;
 
 //TODO: Add Javadocs!
 public final class ObjectType implements FieldType {
@@ -111,7 +112,7 @@ public final class ObjectType implements FieldType {
 	
 //	TODO: Add Javadocs!
 	public static ObjectType parseObjectType(final String string) {
-		return Parsers.parseObjectType(TextScanner.newInstance(string));
+		return Parsers.parseObjectType(new TextScanner(string));
 	}
 	
 //	TODO: Add Javadocs!

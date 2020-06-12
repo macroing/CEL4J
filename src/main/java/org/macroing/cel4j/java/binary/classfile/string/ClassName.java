@@ -26,6 +26,7 @@ import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantClassInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.node.Node;
+import org.macroing.cel4j.scanner.TextScanner;
 
 //TODO: Add Javadocs!
 public final class ClassName implements Node {
@@ -84,7 +85,7 @@ public final class ClassName implements Node {
 	
 //	TODO: Add Javadocs!
 	public static ClassName parseClassName(final String string) {
-		return Parsers.parseClassName(TextScanner.newInstance(string));
+		return Parsers.parseClassName(new TextScanner(string));
 	}
 	
 	/**

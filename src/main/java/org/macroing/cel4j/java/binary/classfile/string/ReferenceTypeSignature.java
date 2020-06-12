@@ -20,10 +20,12 @@ package org.macroing.cel4j.java.binary.classfile.string;
 
 import java.lang.reflect.Field;//TODO: Add Javadocs!
 
+import org.macroing.cel4j.scanner.TextScanner;
+
 //TODO: Add Javadocs!
 public interface ReferenceTypeSignature extends FieldSignature, JavaTypeSignature {
 //	TODO: Add Javadocs!
 	static ReferenceTypeSignature parseReferenceTypeSignature(final String string) {
-		return Parsers.parseReferenceTypeSignature(TextScanner.newInstance(string));
+		return Parsers.parseReferenceTypeSignature(new TextScanner(string));
 	}
 }

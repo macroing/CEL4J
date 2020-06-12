@@ -25,6 +25,7 @@ import java.util.Optional;
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
+import org.macroing.cel4j.scanner.TextScanner;
 
 //TODO: Add Javadocs!
 public final class SimpleClassTypeSignature implements Node {
@@ -114,7 +115,7 @@ public final class SimpleClassTypeSignature implements Node {
 	
 //	TODO: Add Javadocs!
 	public static SimpleClassTypeSignature parseSimpleClassTypeSignature(final String string) {
-		return Parsers.parseSimpleClassTypeSignature(TextScanner.newInstance(string));
+		return Parsers.parseSimpleClassTypeSignature(new TextScanner(string));
 	}
 	
 //	TODO: Add Javadocs!

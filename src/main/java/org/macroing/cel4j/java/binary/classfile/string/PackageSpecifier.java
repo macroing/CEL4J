@@ -26,6 +26,7 @@ import java.util.Objects;
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
+import org.macroing.cel4j.scanner.TextScanner;
 import org.macroing.cel4j.util.Lists;
 import org.macroing.cel4j.util.ParameterArguments;
 
@@ -120,7 +121,7 @@ public final class PackageSpecifier implements Node {
 	
 //	TODO: Add Javadocs!
 	public static PackageSpecifier parsePackageSpecifier(final String string) {
-		return Parsers.parsePackageSpecifier(TextScanner.newInstance(string));
+		return Parsers.parsePackageSpecifier(new TextScanner(string));
 	}
 	
 //	TODO: Add Javadocs!

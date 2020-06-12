@@ -27,6 +27,7 @@ import org.macroing.cel4j.java.binary.classfile.attributeinfo.SignatureAttribute
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeFilter;
+import org.macroing.cel4j.scanner.TextScanner;
 
 //TODO: Add Javadocs!
 public interface Signature extends Node {
@@ -50,6 +51,6 @@ public interface Signature extends Node {
 	
 //	TODO: Add Javadocs!
 	public static Signature parseSignature(final String string) {
-		return Parsers.parseSignature(TextScanner.newInstance(string));
+		return Parsers.parseSignature(new TextScanner(string));
 	}
 }

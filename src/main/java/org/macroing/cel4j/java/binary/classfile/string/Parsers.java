@@ -24,6 +24,8 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.macroing.cel4j.java.binary.classfile.string.MethodSignature.Builder;
+import org.macroing.cel4j.scanner.Key;
+import org.macroing.cel4j.scanner.TextScanner;
 
 final class Parsers {
 	private static final Pattern ARRAY_TYPE_PATTERN = Pattern.compile("\\[+([BCDFIJSZ]|L\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*(/\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)*;)");
@@ -242,14 +244,14 @@ final class Parsers {
 	}
 	
 	public static MethodDescriptor parseMethodDescriptor(final TextScanner textScanner) {
-		if(canParseMethodDescriptor(textScanner) && textScanner.next() && textScanner.consume()) {
+		if(canParseMethodDescriptor(textScanner) && textScanner.nextCharacter() && textScanner.consume()) {
 			final List<ParameterDescriptor> parameterDescriptors = new ArrayList<>();
 			
 			while(canParseParameterDescriptor(textScanner)) {
 				parameterDescriptors.add(parseParameterDescriptor(textScanner));
 			}
 			
-			textScanner.next();
+			textScanner.nextCharacter();
 			textScanner.consume();
 			
 			if(canParseReturnDescriptor(textScanner)) {
@@ -498,7 +500,7 @@ final class Parsers {
 			try {
 				return new TypeVariableSignature(parseIdentifier(textScanner));
 			} finally {
-				textScanner.next();
+				textScanner.nextCharacter();
 				textScanner.consume();
 			}
 		}
@@ -538,12 +540,12 @@ final class Parsers {
 	}
 	
 	public static boolean canParseArrayTypeSignature(final TextScanner textScanner) {
-		final int key = textScanner.mark();
+		final Key key = textScanner.stateSave();
 		
 		try {
 			return textScanner.nextCharacter('[') && textScanner.consume() && canParseJavaTypeSignature(textScanner);
 		} finally {
-			textScanner.rewind(key);
+			textScanner.stateLoadAndDelete(key);
 		}
 	}
 	
@@ -552,12 +554,12 @@ final class Parsers {
 	}
 	
 	public static boolean canParseClassBound(final TextScanner textScanner) {
-		final int key = textScanner.mark();
+		final Key key = textScanner.stateSave();
 		
 		try {
 			return textScanner.nextCharacter(':');
 		} finally {
-			textScanner.rewind(key);
+			textScanner.stateLoadAndDelete(key);
 		}
 	}
 	
@@ -566,7 +568,7 @@ final class Parsers {
 	}
 	
 	public static boolean canParseClassSignature(final TextScanner textScanner) {
-		final int key = textScanner.mark();
+		final Key key = textScanner.stateSave();
 		
 		try {
 			if(canParseTypeParameters(textScanner)) {
@@ -575,12 +577,12 @@ final class Parsers {
 			
 			return canParseSuperClassSignature(textScanner);
 		} finally {
-			textScanner.rewind(key);
+			textScanner.stateLoadAndDelete(key);
 		}
 	}
 	
 	public static boolean canParseClassTypeSignature(final TextScanner textScanner) {
-		final int key = textScanner.mark();
+		final Key key = textScanner.stateSave();
 		
 		try {
 			if(textScanner.nextCharacter('L') && textScanner.consume()) {
@@ -601,17 +603,17 @@ final class Parsers {
 			
 			return false;
 		} finally {
-			textScanner.rewind(key);
+			textScanner.stateLoadAndDelete(key);
 		}
 	}
 	
 	public static boolean canParseClassTypeSignatureSuffix(final TextScanner textScanner) {
-		final int key = textScanner.mark();
+		final Key key = textScanner.stateSave();
 		
 		try {
 			return textScanner.nextCharacter('.') && textScanner.consume() && canParseSimpleClassTypeSignature(textScanner);
 		} finally {
-			textScanner.rewind(key);
+			textScanner.stateLoadAndDelete(key);
 		}
 	}
 	
@@ -636,12 +638,12 @@ final class Parsers {
 	}
 	
 	public static boolean canParseInterfaceBound(final TextScanner textScanner) {
-		final int key = textScanner.mark();
+		final Key key = textScanner.stateSave();
 		
 		try {
 			return textScanner.nextCharacter(':') && textScanner.consume() && canParseReferenceTypeSignature(textScanner);
 		} finally {
-			textScanner.rewind(key);
+			textScanner.stateLoadAndDelete(key);
 		}
 	}
 	
@@ -654,7 +656,7 @@ final class Parsers {
 	}
 	
 	public static boolean canParseMethodSignature(final TextScanner textScanner) {
-		final int key = textScanner.mark();
+		final Key key = textScanner.stateSave();
 		
 		try {
 			if(canParseTypeParameters(textScanner)) {
@@ -673,7 +675,7 @@ final class Parsers {
 			
 			return false;
 		} finally {
-			textScanner.rewind(key);
+			textScanner.stateLoadAndDelete(key);
 		}
 	}
 	
@@ -718,27 +720,27 @@ final class Parsers {
 	}
 	
 	public static boolean canParseThrowsSignature(final TextScanner textScanner) {
-		final int key = textScanner.mark();
+		final Key key = textScanner.stateSave();
 		
 		try {
 			return textScanner.nextCharacter('^') && textScanner.consume() && (canParseClassTypeSignature(textScanner) || canParseTypeVariableSignature(textScanner));
 		} finally {
-			textScanner.rewind(key);
+			textScanner.stateLoadAndDelete(key);
 		}
 	}
 	
 	public static boolean canParseTypeArgument(final TextScanner textScanner) {
-		final int key = textScanner.mark();
+		final Key key = textScanner.stateSave();
 		
 		try {
 			return textScanner.testNextString(Constants.TYPE_ARGUMENT_UNKNOWN) || canParseReferenceTypeSignature(textScanner) || textScanner.testNextStringAlternation("+", "-") && textScanner.nextStringAlternation("+", "-") && textScanner.consume() && canParseReferenceTypeSignature(textScanner);
 		} finally {
-			textScanner.rewind(key);
+			textScanner.stateLoadAndDelete(key);
 		}
 	}
 	
 	public static boolean canParseTypeArguments(final TextScanner textScanner) {
-		final int key = textScanner.mark();
+		final Key key = textScanner.stateSave();
 		
 		try {
 			if(textScanner.nextCharacter('<') && textScanner.consume()) {
@@ -757,12 +759,12 @@ final class Parsers {
 			
 			return false;
 		} finally {
-			textScanner.rewind(key);
+			textScanner.stateLoadAndDelete(key);
 		}
 	}
 	
 	public static boolean canParseTypeParameter(final TextScanner textScanner) {
-		final int key = textScanner.mark();
+		final Key key = textScanner.stateSave();
 		
 		try {
 			if(canParseIdentifier(textScanner)) {
@@ -777,12 +779,12 @@ final class Parsers {
 			
 			return false;
 		} finally {
-			textScanner.rewind(key);
+			textScanner.stateLoadAndDelete(key);
 		}
 	}
 	
 	public static boolean canParseTypeParameters(final TextScanner textScanner) {
-		final int key = textScanner.mark();
+		final Key key = textScanner.stateSave();
 		
 		try {
 			if(textScanner.nextCharacter('<') && textScanner.consume()) {
@@ -801,7 +803,7 @@ final class Parsers {
 			
 			return false;
 		} finally {
-			textScanner.rewind(key);
+			textScanner.stateLoadAndDelete(key);
 		}
 	}
 	

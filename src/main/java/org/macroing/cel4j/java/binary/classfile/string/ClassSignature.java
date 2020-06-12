@@ -29,6 +29,7 @@ import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.SignatureAttribute;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
+import org.macroing.cel4j.scanner.TextScanner;
 import org.macroing.cel4j.util.ParameterArguments;
 
 //TODO: Add Javadocs!
@@ -134,7 +135,7 @@ public final class ClassSignature implements Signature {
 	
 //	TODO: Add Javadocs!
 	public static ClassSignature parseClassSignature(final String string) {
-		return Parsers.parseClassSignature(TextScanner.newInstance(string));
+		return Parsers.parseClassSignature(new TextScanner(string));
 	}
 	
 //	TODO: Add Javadocs!

@@ -21,6 +21,7 @@ package org.macroing.cel4j.java.binary.classfile.string;
 import java.lang.reflect.Field;//TODO: Add Javadocs!
 
 import org.macroing.cel4j.node.Node;
+import org.macroing.cel4j.scanner.TextScanner;
 
 //TODO: Add Javadocs!
 public interface Result extends Node {
@@ -34,6 +35,6 @@ public interface Result extends Node {
 	
 //	TODO: Add Javadocs!
 	static Result parseResult(final String string) {
-		return Parsers.parseResult(TextScanner.newInstance(string));
+		return Parsers.parseResult(new TextScanner(string));
 	}
 }

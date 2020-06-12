@@ -24,6 +24,7 @@ import java.util.Objects;
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
+import org.macroing.cel4j.scanner.TextScanner;
 
 //TODO: Add Javadocs!
 public final class InterfaceBound implements Node {
@@ -98,7 +99,7 @@ public final class InterfaceBound implements Node {
 	
 //	TODO: Add Javadocs!
 	public static InterfaceBound parseInterfaceBound(final String string) {
-		return Parsers.parseInterfaceBound(TextScanner.newInstance(string));
+		return Parsers.parseInterfaceBound(new TextScanner(string));
 	}
 	
 //	TODO: Add Javadocs!

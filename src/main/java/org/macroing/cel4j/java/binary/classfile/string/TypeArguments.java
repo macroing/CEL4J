@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
+import org.macroing.cel4j.scanner.TextScanner;
 import org.macroing.cel4j.util.Lists;
 import org.macroing.cel4j.util.ParameterArguments;
 
@@ -107,7 +108,7 @@ public final class TypeArguments implements Node {
 	
 //	TODO: Add Javadocs!
 	public static TypeArguments parseTypeArguments(final String string) {
-		return Parsers.parseTypeArguments(TextScanner.newInstance(string));
+		return Parsers.parseTypeArguments(new TextScanner(string));
 	}
 	
 //	TODO: Add Javadocs!

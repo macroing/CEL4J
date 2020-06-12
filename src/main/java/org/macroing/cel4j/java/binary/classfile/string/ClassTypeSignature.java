@@ -27,6 +27,7 @@ import java.util.Optional;
 
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
+import org.macroing.cel4j.scanner.TextScanner;
 import org.macroing.cel4j.util.ParameterArguments;
 
 //TODO: Add Javadocs!
@@ -138,7 +139,7 @@ public final class ClassTypeSignature implements ReferenceTypeSignature, SuperCl
 	
 //	TODO: Add Javadocs!
 	public static ClassTypeSignature parseClassTypeSignature(final String string) {
-		return Parsers.parseClassTypeSignature(TextScanner.newInstance(string));
+		return Parsers.parseClassTypeSignature(new TextScanner(string));
 	}
 	
 //	TODO: Add Javadocs!

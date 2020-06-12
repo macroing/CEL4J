@@ -23,6 +23,7 @@ import java.util.Objects;
 
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
+import org.macroing.cel4j.scanner.TextScanner;
 
 //TODO: Add Javadocs!
 public final class ArrayType implements FieldType {
@@ -116,7 +117,7 @@ public final class ArrayType implements FieldType {
 	
 //	TODO: Add Javadocs!
 	public static ArrayType parseArrayType(final String string) {
-		return Parsers.parseArrayType(TextScanner.newInstance(string));
+		return Parsers.parseArrayType(new TextScanner(string));
 	}
 	
 //	TODO: Add Javadocs!

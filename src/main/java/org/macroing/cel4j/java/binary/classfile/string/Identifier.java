@@ -22,6 +22,7 @@ import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.node.Node;
+import org.macroing.cel4j.scanner.TextScanner;
 
 //TODO: Add Javadocs!
 public final class Identifier implements Node {
@@ -75,6 +76,6 @@ public final class Identifier implements Node {
 	
 //	TODO: Add Javadocs!
 	public static Identifier parseIdentifier(final String string) {
-		return Parsers.parseIdentifier(TextScanner.newInstance(string));
+		return Parsers.parseIdentifier(new TextScanner(string));
 	}
 }

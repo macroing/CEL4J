@@ -20,6 +20,8 @@ package org.macroing.cel4j.java.binary.classfile.string;
 
 import java.lang.reflect.Field;//TODO: Add Javadocs!
 
+import org.macroing.cel4j.scanner.TextScanner;
+
 //TODO: Add Javadocs!
 public enum BaseType implements FieldType, JavaTypeSignature {
 //	TODO: Add Javadocs!
@@ -94,6 +96,6 @@ public enum BaseType implements FieldType, JavaTypeSignature {
 	
 //	TODO: Add Javadocs!
 	public static BaseType parseBaseType(final String string) {
-		return Parsers.parseBaseType(TextScanner.newInstance(string));
+		return Parsers.parseBaseType(new TextScanner(string));
 	}
 }
