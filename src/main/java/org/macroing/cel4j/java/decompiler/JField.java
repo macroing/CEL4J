@@ -33,8 +33,8 @@ import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantIntegerInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantLongInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantStringInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
-import org.macroing.cel4j.java.binary.classfile.string.FieldDescriptor;
-import org.macroing.cel4j.java.binary.classfile.string.FieldSignature;
+import org.macroing.cel4j.java.binary.classfile.descriptor.FieldDescriptor;
+import org.macroing.cel4j.java.binary.classfile.signature.FieldSignature;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 

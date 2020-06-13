@@ -27,10 +27,10 @@ import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.InnerClass;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantClassInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
-import org.macroing.cel4j.java.binary.classfile.string.ClassName;
-import org.macroing.cel4j.java.binary.classfile.string.ClassSignature;
-import org.macroing.cel4j.java.binary.classfile.string.SuperInterfaceSignature;
-import org.macroing.cel4j.java.binary.classfile.string.TypeParameters;
+import org.macroing.cel4j.java.binary.classfile.descriptor.ClassName;
+import org.macroing.cel4j.java.binary.classfile.signature.ClassSignature;
+import org.macroing.cel4j.java.binary.classfile.signature.SuperInterfaceSignature;
+import org.macroing.cel4j.java.binary.classfile.signature.TypeParameters;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 

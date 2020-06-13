@@ -35,11 +35,11 @@ import org.macroing.cel4j.java.binary.classfile.attributeinfo.Instruction;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.MethodParametersAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.DeprecatedAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.Parameter;
-import org.macroing.cel4j.java.binary.classfile.string.JavaTypeSignature;
-import org.macroing.cel4j.java.binary.classfile.string.MethodDescriptor;
-import org.macroing.cel4j.java.binary.classfile.string.MethodSignature;
-import org.macroing.cel4j.java.binary.classfile.string.ParameterDescriptor;
-import org.macroing.cel4j.java.binary.classfile.string.TypeParameters;
+import org.macroing.cel4j.java.binary.classfile.descriptor.MethodDescriptor;
+import org.macroing.cel4j.java.binary.classfile.descriptor.ParameterDescriptor;
+import org.macroing.cel4j.java.binary.classfile.signature.JavaTypeSignature;
+import org.macroing.cel4j.java.binary.classfile.signature.MethodSignature;
+import org.macroing.cel4j.java.binary.classfile.signature.TypeParameters;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 

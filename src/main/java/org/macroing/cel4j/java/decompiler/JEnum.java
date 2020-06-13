@@ -26,7 +26,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
-import org.macroing.cel4j.java.binary.classfile.string.ClassName;
+import org.macroing.cel4j.java.binary.classfile.descriptor.ClassName;
 import org.macroing.cel4j.java.binary.reader.ClassFileReader;
 import org.macroing.cel4j.node.NodeFormatException;
 import org.macroing.cel4j.util.Document;

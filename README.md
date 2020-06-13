@@ -1,4 +1,4 @@
-CEL4J - Version 0.5.5
+CEL4J - Version 0.6.0
 =====================
 CEL4J is a Code Engineering Library for Java. It provides functionality for Java, JSON and PHP.
 

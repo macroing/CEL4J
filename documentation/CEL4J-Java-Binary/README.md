@@ -7,7 +7,8 @@ Supported Features
 * An API that models the general parts of a `ClassFile` structure.
 * An API that models specific `attribute_info` structures.
 * An API that models specific `cp_info` structures.
-* An API that models descriptors and signatures.
+* An API that models descriptors.
+* An API that models signatures.
 * An API that provides capabilities to read the `ClassFile` models from byte sequences.
 
 Packages
@@ -15,7 +16,8 @@ Packages
 * `org.macroing.cel4j.java.binary.classfile` - The Java Binary ClassFile API.
 * `org.macroing.cel4j.java.binary.classfile.attributeinfo` - The Java Binary ClassFile AttributeInfo API.
 * `org.macroing.cel4j.java.binary.classfile.cpinfo` - The Java Binary ClassFile CPInfo API.
-* `org.macroing.cel4j.java.binary.classfile.string` - The Java Binary ClassFile String API.
+* `org.macroing.cel4j.java.binary.classfile.descriptor` - The Java Binary ClassFile Descriptor API.
+* `org.macroing.cel4j.java.binary.classfile.signature` - The Java Binary ClassFile Signature API.
 * `org.macroing.cel4j.java.binary.reader` - The Java Binary Reader API.
 
 Examples
@@ -98,10 +100,10 @@ The following example demonstrates how some of the descriptors and signatures in
 
 ```java
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
-import org.macroing.cel4j.java.binary.classfile.string.ClassSignature;
-import org.macroing.cel4j.java.binary.classfile.string.FieldDescriptor;
-import org.macroing.cel4j.java.binary.classfile.string.MethodDescriptor;
-import org.macroing.cel4j.java.binary.classfile.string.Signature;
+import org.macroing.cel4j.java.binary.classfile.descriptor.FieldDescriptor;
+import org.macroing.cel4j.java.binary.classfile.descriptor.MethodDescriptor;
+import org.macroing.cel4j.java.binary.classfile.signature.ClassSignature;
+import org.macroing.cel4j.java.binary.classfile.signature.Signature;
 import org.macroing.cel4j.java.binary.reader.ClassFileReader;
 
 public class DescriptorAndSignatureExample {

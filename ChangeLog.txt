@@ -1,3 +1,15 @@
+2020-06-13  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Binary:
+
+		* CHANGE:	Move all classes and interfaces that models descriptors from org.macroing.cel4j.java.binary.classfile.string to org.macroing.cel4j.java.binary.classfile.descriptor.
+		* CHANGE:	Move all classes and interfaces that models signatures from org.macroing.cel4j.java.binary.classfile.string to org.macroing.cel4j.java.binary.classfile.signature.
+		* REMOVE:	Remove all classes and interfaces in the package org.macroing.cel4j.java.binary.classfile.string, as well as the package itself.
+
+	CEL4J Java Decompiler:
+
+		* CHANGE:	Update the code that used the Java Binary ClassFile String API. The code now uses the Java Binary ClassFile Descriptor API and the Java Binary ClassFile Signature API.
+
 2020-06-12  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:

@@ -40,9 +40,9 @@ import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantNameAndTypeInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantPackageInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantStringInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
-import org.macroing.cel4j.java.binary.classfile.string.ClassName;
-import org.macroing.cel4j.java.binary.classfile.string.FieldDescriptor;
-import org.macroing.cel4j.java.binary.classfile.string.MethodDescriptor;
+import org.macroing.cel4j.java.binary.classfile.descriptor.ClassName;
+import org.macroing.cel4j.java.binary.classfile.descriptor.FieldDescriptor;
+import org.macroing.cel4j.java.binary.classfile.descriptor.MethodDescriptor;
 import org.macroing.cel4j.util.Strings;
 
 final class Instructions {
