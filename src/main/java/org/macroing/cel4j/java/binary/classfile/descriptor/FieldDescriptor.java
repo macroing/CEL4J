@@ -21,6 +21,7 @@ package org.macroing.cel4j.java.binary.classfile.descriptor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.FieldInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.LocalVariable;

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.MethodInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
