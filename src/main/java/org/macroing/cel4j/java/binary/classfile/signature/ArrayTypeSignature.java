@@ -103,7 +103,20 @@ public final class ArrayTypeSignature implements ReferenceTypeSignature {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into an {@code ArrayTypeSignature} instance.
+	 * <p>
+	 * Returns an {@code ArrayTypeSignature} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return an {@code ArrayTypeSignature} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	public static ArrayTypeSignature parseArrayTypeSignature(final String string) {
 		return Parsers.parseArrayTypeSignature(new TextScanner(string));
 	}

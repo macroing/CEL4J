@@ -101,7 +101,20 @@ public final class ClassTypeSignatureSuffix implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into a {@code ClassTypeSignatureSuffix} instance.
+	 * <p>
+	 * Returns a {@code ClassTypeSignatureSuffix} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return a {@code ClassTypeSignatureSuffix} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	public static ClassTypeSignatureSuffix parseClassTypeSignatureSuffix(final String string) {
 		if(string.charAt(0) == '.') {
 			return valueOf(SimpleClassTypeSignature.parseSimpleClassTypeSignature(string.substring(1)));

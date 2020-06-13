@@ -142,7 +142,20 @@ public final class ClassTypeSignature implements ReferenceTypeSignature, SuperCl
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into a {@code ClassTypeSignature} instance.
+	 * <p>
+	 * Returns a {@code ClassTypeSignature} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return a {@code ClassTypeSignature} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	public static ClassTypeSignature parseClassTypeSignature(final String string) {
 		return Parsers.parseClassTypeSignature(new TextScanner(string));
 	}

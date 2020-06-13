@@ -39,7 +39,20 @@ public interface FieldSignature extends Signature {
 		return parseFieldSignature(classFile.getCPInfo(signatureAttribute.getSignatureIndex(), ConstantUTF8Info.class).getString());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into a {@code FieldSignature} instance.
+	 * <p>
+	 * Returns a {@code FieldSignature} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return a {@code FieldSignature} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	static FieldSignature parseFieldSignature(final String string) {
 		return Parsers.parseFieldSignature(new TextScanner(string));
 	}

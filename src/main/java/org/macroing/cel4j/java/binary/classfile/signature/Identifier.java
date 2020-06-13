@@ -18,7 +18,6 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.node.Node;
@@ -41,23 +40,42 @@ public final class Identifier implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code Identifier} instance in external form.
+	 * 
+	 * @return a {@code String} representation of this {@code Identifier} instance in external form
+	 */
 	public String toExternalForm() {
 		return this.internalForm.replace('/', '.');
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code Identifier} instance in internal form.
+	 * 
+	 * @return a {@code String} representation of this {@code Identifier} instance in internal form
+	 */
 	public String toInternalForm() {
 		return this.internalForm;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code Identifier} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code Identifier} instance
+	 */
 	@Override
 	public String toString() {
 		return String.format("Identifier: [InternalForm=%s]", toInternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Compares {@code object} to this {@code Identifier} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code Identifier}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code Identifier} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code Identifier}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -71,7 +89,11 @@ public final class Identifier implements Node {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code Identifier} instance.
+	 * 
+	 * @return a hash code for this {@code Identifier} instance
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.internalForm);
@@ -79,7 +101,20 @@ public final class Identifier implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into an {@code Identifier} instance.
+	 * <p>
+	 * Returns an {@code Identifier} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return an {@code Identifier} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	public static Identifier parseIdentifier(final String string) {
 		return Parsers.parseIdentifier(new TextScanner(string));
 	}
