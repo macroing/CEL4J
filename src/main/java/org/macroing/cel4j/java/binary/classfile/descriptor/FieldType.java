@@ -18,13 +18,29 @@
  */
 package org.macroing.cel4j.java.binary.classfile.descriptor;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
-
 import org.macroing.cel4j.scanner.TextScanner;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code FieldType} denotes a FieldType as defined by the Java Virtual Machine Specifications.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public interface FieldType extends ComponentType, FieldDescriptor, ParameterDescriptor, ReturnDescriptor {
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into a {@code FieldType} instance.
+	 * <p>
+	 * Returns a {@code FieldType} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return a {@code FieldType} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	static FieldType parseFieldType(final String string) {
 		return Parsers.parseFieldType(new TextScanner(string));
 	}

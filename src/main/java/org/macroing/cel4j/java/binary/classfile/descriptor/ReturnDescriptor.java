@@ -18,28 +18,60 @@
  */
 package org.macroing.cel4j.java.binary.classfile.descriptor;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
-
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.scanner.TextScanner;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code ReturnDescriptor} denotes a ReturnDescriptor as defined by the Java Virtual Machine Specifications.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public interface ReturnDescriptor extends Node {
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} with the term associated with this {@code ReturnDescriptor} instance.
+	 * 
+	 * @return a {@code String} with the term associated with this {@code ReturnDescriptor} instance
+	 */
 	String getTerm();
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} with the type associated with this {@code ReturnDescriptor} instance.
+	 * 
+	 * @return a {@code String} with the type associated with this {@code ReturnDescriptor} instance
+	 */
 	String getType();
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ReturnDescriptor} instance in external form.
+	 * 
+	 * @return a {@code String} representation of this {@code ReturnDescriptor} instance in external form
+	 */
 	String toExternalForm();
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ReturnDescriptor} instance in internal form.
+	 * 
+	 * @return a {@code String} representation of this {@code ReturnDescriptor} instance in internal form
+	 */
 	String toInternalForm();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into a {@code ReturnDescriptor} instance.
+	 * <p>
+	 * Returns a {@code ReturnDescriptor} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return a {@code ReturnDescriptor} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	static ReturnDescriptor parseReturnDescriptor(final String string) {
 		return Parsers.parseReturnDescriptor(new TextScanner(string));
 	}

@@ -66,7 +66,11 @@ public final class ObjectType implements FieldType {
 		return getTerm();
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ObjectType} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code ObjectType} instance
+	 */
 	@Override
 	public String toString() {
 		return String.format("ObjectType: [Term=%s], [Type=%s], [ExternalForm=%s], [InternalForm=%s]", getTerm(), getType(), toExternalForm(), toInternalForm());
@@ -88,7 +92,14 @@ public final class ObjectType implements FieldType {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Compares {@code object} to this {@code ObjectType} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ObjectType}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code ObjectType} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ObjectType}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -102,7 +113,11 @@ public final class ObjectType implements FieldType {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code ObjectType} instance.
+	 * 
+	 * @return a hash code for this {@code ObjectType} instance
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.className);

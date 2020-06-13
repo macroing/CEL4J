@@ -86,7 +86,11 @@ public enum BaseType implements FieldType {
 		return this.term;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code BaseType} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code BaseType} instance
+	 */
 	@Override
 	public String toString() {
 		return String.format("BaseType: [Term=%s], [Type=%s], [ExternalForm=%s], [InternalForm=%s]", getTerm(), getType(), toExternalForm(), toInternalForm());

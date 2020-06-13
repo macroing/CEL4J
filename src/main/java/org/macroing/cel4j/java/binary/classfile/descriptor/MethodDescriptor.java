@@ -72,7 +72,11 @@ public final class MethodDescriptor implements Node {
 		return String.format("(%s)%s", this.parameterDescriptors.stream().map(parameterDescriptor -> parameterDescriptor.toInternalForm()).collect(StringBuilder::new, StringBuilder::append, StringBuilder::append), this.returnDescriptor.toInternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code MethodDescriptor} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code MethodDescriptor} instance
+	 */
 	@Override
 	public String toString() {
 		return String.format("MethodDescriptor: [ReturnDescriptor=%s], [ParameterDescriptors=%s], [InternalForm=%s]", getReturnDescriptor(), getParameterDescriptors(), toInternalForm());
@@ -102,7 +106,14 @@ public final class MethodDescriptor implements Node {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Compares {@code object} to this {@code MethodDescriptor} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code MethodDescriptor}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code MethodDescriptor} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code MethodDescriptor}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -118,7 +129,11 @@ public final class MethodDescriptor implements Node {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code MethodDescriptor} instance.
+	 * 
+	 * @return a hash code for this {@code MethodDescriptor} instance
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.returnDescriptor, this.parameterDescriptors);

@@ -18,14 +18,18 @@
  */
 package org.macroing.cel4j.java.binary.classfile.descriptor;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 import org.macroing.cel4j.scanner.TextScanner;
 
-//TODO: Add Javadocs!
+/**
+ * An {@code ArrayType} denotes an ArrayType as defined by the Java Virtual Machine Specifications.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class ArrayType implements FieldType {
 	private final ComponentType componentType;
 	
@@ -37,42 +41,86 @@ public final class ArrayType implements FieldType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the {@link ComponentType} associated with this {@code ArrayType} instance.
+	 * 
+	 * @return the {@code ComponentType} associated with this {@code ArrayType} instance
+	 */
 	public ComponentType getComponentType() {
 		return this.componentType;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} with the term associated with this {@code ArrayType} instance.
+	 * 
+	 * @return a {@code String} with the term associated with this {@code ArrayType} instance
+	 */
 	@Override
 	public String getTerm() {
 		return "[";
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} with the type associated with this {@code ArrayType} instance.
+	 * 
+	 * @return a {@code String} with the type associated with this {@code ArrayType} instance
+	 */
 	@Override
 	public String getType() {
 		return Constants.REFERENCE_TYPE;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ArrayType} instance in external form.
+	 * 
+	 * @return a {@code String} representation of this {@code ArrayType} instance in external form
+	 */
 	@Override
 	public String toExternalForm() {
 		return String.format("%s[]", getComponentType().toExternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ArrayType} instance in internal form.
+	 * 
+	 * @return a {@code String} representation of this {@code ArrayType} instance in internal form
+	 */
 	@Override
 	public String toInternalForm() {
 		return String.format("%s%s", getTerm(), getComponentType().toInternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ArrayType} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code ArrayType} instance
+	 */
 	@Override
 	public String toString() {
 		return String.format("ArrayType: [Term=%s], [Type=%s], [ComponentType=%s], [ExternalForm=%s], [InternalForm=%s]", getTerm(), getType(), getComponentType(), toExternalForm(), toInternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Accepts a {@link NodeHierarchicalVisitor}.
+	 * <p>
+	 * Returns the result of {@code nodeHierarchicalVisitor.visitLeave(this)}.
+	 * <p>
+	 * If {@code nodeHierarchicalVisitor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}, a {@code NodeTraversalException} will be thrown with the {@code RuntimeException} wrapped.
+	 * <p>
+	 * This implementation will:
+	 * <ul>
+	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
+	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
+	 * <li>traverse its only child {@code Node}, a {@link ComponentType}.</li>
+	 * </ul>
+	 * 
+	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
+	 * @return the result of {@code nodeHierarchicalVisitor.visitLeave(this)}
+	 * @throws NodeTraversalException thrown if, and only if, a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}
+	 * @throws NullPointerException thrown if, and only if, {@code nodeHierarchicalVisitor} is {@code null}
+	 */
 	@Override
 	public boolean accept(final NodeHierarchicalVisitor nodeHierarchicalVisitor) {
 		Objects.requireNonNull(nodeHierarchicalVisitor, "nodeHierarchicalVisitor == null");
@@ -88,7 +136,14 @@ public final class ArrayType implements FieldType {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Compares {@code object} to this {@code ArrayType} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ArrayType}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code ArrayType} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ArrayType}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -102,12 +157,20 @@ public final class ArrayType implements FieldType {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the array dimensions of this {@code ArrayType} instance.
+	 * 
+	 * @return the array dimensions of this {@code ArrayType} instance
+	 */
 	public int getDimensions() {
 		return 1 + (this.componentType instanceof ArrayType ? ArrayType.class.cast(this.componentType).getDimensions() : 0);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code ArrayType} instance.
+	 * 
+	 * @return a hash code for this {@code ArrayType} instance
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.componentType);
@@ -115,12 +178,33 @@ public final class ArrayType implements FieldType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into an {@code ArrayType} instance.
+	 * <p>
+	 * Returns an {@code ArrayType} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return an {@code ArrayType} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	public static ArrayType parseArrayType(final String string) {
 		return Parsers.parseArrayType(new TextScanner(string));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns an {@code ArrayType} instance with {@code componentType} as its associated {@link ComponentType}.
+	 * <p>
+	 * If {@code componentType} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param componentType the associated {@code ComponentType}
+	 * @return an {@code ArrayType} instance with {@code componentType} as its associated {@code ComponentType}
+	 * @throws NullPointerException thrown if, and only if, {@code componentType} is {@code null}
+	 */
 	public static ArrayType valueOf(final ComponentType componentType) {
 		return new ArrayType(Objects.requireNonNull(componentType, "componentType == null"));
 	}

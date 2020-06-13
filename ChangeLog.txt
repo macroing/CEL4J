@@ -2,6 +2,7 @@
 
 	CEL4J Java Binary:
 
+		* ADD:		Add Javadocs to the Java Binary ClassFile Descriptor API.
 		* CHANGE:	Move all classes and interfaces that models descriptors from org.macroing.cel4j.java.binary.classfile.string to org.macroing.cel4j.java.binary.classfile.descriptor.
 		* CHANGE:	Move all classes and interfaces that models signatures from org.macroing.cel4j.java.binary.classfile.string to org.macroing.cel4j.java.binary.classfile.signature.
 		* REMOVE:	Remove all classes and interfaces in the package org.macroing.cel4j.java.binary.classfile.string, as well as the package itself.

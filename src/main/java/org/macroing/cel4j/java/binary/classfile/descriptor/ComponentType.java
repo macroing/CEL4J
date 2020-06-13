@@ -18,21 +18,46 @@
  */
 package org.macroing.cel4j.java.binary.classfile.descriptor;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
-
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.scanner.TextScanner;
 
+/**
+ * A {@code ComponentType} denotes a ComponentType as defined by the Java Virtual Machine Specifications.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public interface ComponentType extends Node {
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ComponentType} instance in external form.
+	 * 
+	 * @return a {@code String} representation of this {@code ComponentType} instance in external form
+	 */
 	String toExternalForm();
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ComponentType} instance in internal form.
+	 * 
+	 * @return a {@code String} representation of this {@code ComponentType} instance in internal form
+	 */
 	String toInternalForm();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into a {@code ComponentType} instance.
+	 * <p>
+	 * Returns a {@code ComponentType} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return a {@code ComponentType} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	static ComponentType parseComponentType(final String string) {
 		return Parsers.parseComponentType(new TextScanner(string));
 	}

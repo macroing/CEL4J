@@ -65,7 +65,11 @@ public enum VoidDescriptor implements ReturnDescriptor {
 		return getTerm();
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code VoidDescriptor} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code VoidDescriptor} instance
+	 */
 	@Override
 	public String toString() {
 		return String.format("VoidDescriptor: [Term=%s], [Type=%s], [ExternalForm=%s], [InternalForm=%s]", getTerm(), getType(), toExternalForm(), toInternalForm());

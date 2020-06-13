@@ -18,7 +18,6 @@
  */
 package org.macroing.cel4j.java.binary.classfile.descriptor;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
@@ -28,7 +27,12 @@ import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.scanner.TextScanner;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code ClassName} denotes a ClassName as defined by the Java Virtual Machine Specifications.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class ClassName implements Node {
 	private final String internalForm;
 	
@@ -40,28 +44,54 @@ public final class ClassName implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code Class} representation of this {@code ClassName} instance.
+	 * <p>
+	 * If the {@code Class} cannot be found, a {@code ClassNotFoundException} will be thrown.
+	 * 
+	 * @return a {@code Class} representation of this {@code ClassName} instance
+	 * @throws ClassNotFoundException thrown if, and only if, the {@code Class} cannot be found
+	 */
 	public Class<?> toClass() throws ClassNotFoundException {
 		return Class.forName(toExternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ClassName} instance in external form.
+	 * 
+	 * @return a {@code String} representation of this {@code ClassName} instance in external form
+	 */
 	public String toExternalForm() {
 		return toInternalForm().replace("/", ".");
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ClassName} instance in internal form.
+	 * 
+	 * @return a {@code String} representation of this {@code ClassName} instance in internal form
+	 */
 	public String toInternalForm() {
 		return this.internalForm;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ClassName} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code ClassName} instance
+	 */
 	@Override
 	public String toString() {
 		return String.format("ClassName: [ExternalForm=%s], [InternalForm=%s]", toExternalForm(), toInternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Compares {@code object} to this {@code ClassName} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ClassName}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code ClassName} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ClassName}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -75,7 +105,11 @@ public final class ClassName implements Node {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code ClassName} instance.
+	 * 
+	 * @return a hash code for this {@code ClassName} instance
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.internalForm);
@@ -83,7 +117,20 @@ public final class ClassName implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into a {@code ClassName} instance.
+	 * <p>
+	 * Returns a {@code ClassName} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return a {@code ClassName} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	public static ClassName parseClassName(final String string) {
 		return Parsers.parseClassName(new TextScanner(string));
 	}
