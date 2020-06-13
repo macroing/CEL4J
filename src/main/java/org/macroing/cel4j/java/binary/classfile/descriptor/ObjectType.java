@@ -18,14 +18,18 @@
  */
 package org.macroing.cel4j.java.binary.classfile.descriptor;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 import org.macroing.cel4j.scanner.TextScanner;
 
-//TODO: Add Javadocs!
+/**
+ * An {@code ObjectType} denotes an ObjectType as defined by the Java Virtual Machine Specifications.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class ObjectType implements FieldType {
 	private final ClassName className;
 	
@@ -37,30 +41,50 @@ public final class ObjectType implements FieldType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the {@link ClassName} associated with this {@code ObjectType} instance.
+	 * 
+	 * @return the {@code ClassName} associated with this {@code ObjectType} instance
+	 */
 	public ClassName getClassName() {
 		return this.className;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} with the term associated with this {@code ObjectType} instance.
+	 * 
+	 * @return a {@code String} with the term associated with this {@code ObjectType} instance
+	 */
 	@Override
 	public String getTerm() {
 		return String.format("L%s;", this.className.toInternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} with the type associated with this {@code ObjectType} instance.
+	 * 
+	 * @return a {@code String} with the type associated with this {@code ObjectType} instance
+	 */
 	@Override
 	public String getType() {
 		return Constants.REFERENCE_TYPE;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ObjectType} instance in external form.
+	 * 
+	 * @return a {@code String} representation of this {@code ObjectType} instance in external form
+	 */
 	@Override
 	public String toExternalForm() {
 		return this.className.toExternalForm();
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ObjectType} instance in internal form.
+	 * 
+	 * @return a {@code String} representation of this {@code ObjectType} instance in internal form
+	 */
 	@Override
 	public String toInternalForm() {
 		return getTerm();
@@ -76,7 +100,27 @@ public final class ObjectType implements FieldType {
 		return String.format("ObjectType: [Term=%s], [Type=%s], [ExternalForm=%s], [InternalForm=%s]", getTerm(), getType(), toExternalForm(), toInternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Accepts a {@link NodeHierarchicalVisitor}.
+	 * <p>
+	 * Returns the result of {@code nodeHierarchicalVisitor.visitLeave(this)}.
+	 * <p>
+	 * If {@code nodeHierarchicalVisitor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}, a {@code NodeTraversalException} will be thrown with the {@code RuntimeException} wrapped.
+	 * <p>
+	 * This implementation will:
+	 * <ul>
+	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
+	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
+	 * <li>traverse its only child {@code Node}, a {@link ClassName}.</li>
+	 * </ul>
+	 * 
+	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
+	 * @return the result of {@code nodeHierarchicalVisitor.visitLeave(this)}
+	 * @throws NodeTraversalException thrown if, and only if, a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}
+	 * @throws NullPointerException thrown if, and only if, {@code nodeHierarchicalVisitor} is {@code null}
+	 */
 	@Override
 	public boolean accept(final NodeHierarchicalVisitor nodeHierarchicalVisitor) {
 		Objects.requireNonNull(nodeHierarchicalVisitor, "nodeHierarchicalVisitor == null");
@@ -125,12 +169,33 @@ public final class ObjectType implements FieldType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into an {@code ObjectType} instance.
+	 * <p>
+	 * Returns an {@code ObjectType} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return an {@code ObjectType} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	public static ObjectType parseObjectType(final String string) {
 		return Parsers.parseObjectType(new TextScanner(string));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns an {@code ObjectType} instance with {@code className} as its associated {@link ClassName}.
+	 * <p>
+	 * If {@code className} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param className the associated {@code ClassName}
+	 * @return an {@code ObjectType} instance with {@code className} as its associated {@code ClassName}
+	 * @throws NullPointerException thrown if, and only if, {@code className} is {@code null}
+	 */
 	public static ObjectType valueOf(final ClassName className) {
 		return new ObjectType(Objects.requireNonNull(className, "className == null"));
 	}

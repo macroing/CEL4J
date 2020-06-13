@@ -18,13 +18,18 @@
  */
 package org.macroing.cel4j.java.binary.classfile.descriptor;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
-
 import org.macroing.cel4j.scanner.TextScanner;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code VoidDescriptor} denotes a VoidDescriptor as defined by the Java Virtual Machine Specifications.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public enum VoidDescriptor implements ReturnDescriptor {
-//	TODO: Add Javadocs!
+	/**
+	 * The {@code VoidDescriptor} instance.
+	 */
 	VOID(Constants.VOID_TERM, Constants.VOID_TYPE);
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,25 +46,41 @@ public enum VoidDescriptor implements ReturnDescriptor {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} with the term associated with this {@code VoidDescriptor} instance.
+	 * 
+	 * @return a {@code String} with the term associated with this {@code VoidDescriptor} instance
+	 */
 	@Override
 	public String getTerm() {
 		return this.term;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} with the type associated with this {@code VoidDescriptor} instance.
+	 * 
+	 * @return a {@code String} with the type associated with this {@code VoidDescriptor} instance
+	 */
 	@Override
 	public String getType() {
 		return this.type;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code VoidDescriptor} instance in external form.
+	 * 
+	 * @return a {@code String} representation of this {@code VoidDescriptor} instance in external form
+	 */
 	@Override
 	public String toExternalForm() {
 		return this.type;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code VoidDescriptor} instance in internal form.
+	 * 
+	 * @return a {@code String} representation of this {@code VoidDescriptor} instance in internal form
+	 */
 	@Override
 	public String toInternalForm() {
 		return getTerm();
@@ -77,7 +98,20 @@ public enum VoidDescriptor implements ReturnDescriptor {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into a {@code VoidDescriptor} instance.
+	 * <p>
+	 * Returns a {@code VoidDescriptor} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return a {@code VoidDescriptor} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	public static VoidDescriptor parseVoidDescriptor(final String string) {
 		return Parsers.parseVoidDescriptor(new TextScanner(string));
 	}
