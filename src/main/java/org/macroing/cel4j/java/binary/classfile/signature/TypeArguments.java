@@ -31,7 +31,12 @@ import org.macroing.cel4j.scanner.TextScanner;
 import org.macroing.cel4j.util.Lists;
 import org.macroing.cel4j.util.ParameterArguments;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code TypeArguments} denotes a TypeArguments as defined by the Java Virtual Machine Specifications.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class TypeArguments implements Node {
 	private final List<TypeArgument> typeArguments;
 	

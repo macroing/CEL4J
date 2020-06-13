@@ -23,7 +23,12 @@ import java.lang.reflect.Field;//TODO: Add Javadocs!
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.scanner.TextScanner;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code WildcardIndicator} denotes a WildcardIndicator as defined by the Java Virtual Machine Specifications.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public enum WildcardIndicator implements Node {
 //	TODO: Add Javadocs!
 	LOWER_BOUND(Constants.WILDCARD_INDICATOR_LOWER_BOUND),

@@ -27,7 +27,12 @@ import org.macroing.cel4j.java.binary.classfile.attributeinfo.SignatureAttribute
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.scanner.TextScanner;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code FieldSignature} denotes a FieldSignature as defined by the Java Virtual Machine Specifications.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public interface FieldSignature extends Signature {
 //	TODO: Add Javadocs!
 	static FieldSignature parseFieldSignature(final ClassFile classFile, final SignatureAttribute signatureAttribute) {

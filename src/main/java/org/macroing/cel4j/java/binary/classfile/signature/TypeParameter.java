@@ -30,7 +30,12 @@ import org.macroing.cel4j.node.NodeTraversalException;
 import org.macroing.cel4j.scanner.TextScanner;
 import org.macroing.cel4j.util.ParameterArguments;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code TypeParameter} denotes a TypeParameter as defined by the Java Virtual Machine Specifications.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class TypeParameter implements Node {
 	private final ClassBound classBound;
 	private final Identifier identifier;

@@ -30,7 +30,12 @@ import org.macroing.cel4j.node.NodeTraversalException;
 import org.macroing.cel4j.scanner.TextScanner;
 import org.macroing.cel4j.util.ParameterArguments;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code ClassTypeSignature} denotes a ClassTypeSignature as defined by the Java Virtual Machine Specifications.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class ClassTypeSignature implements ReferenceTypeSignature, SuperClassSignature, SuperInterfaceSignature {
 	private final List<ClassTypeSignatureSuffix> classTypeSignatureSuffixes;
 	private final Optional<PackageSpecifier> packageSpecifier;

@@ -25,7 +25,12 @@ import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code ClassTypeSignatureSuffix} denotes a ClassTypeSignatureSuffix as defined by the Java Virtual Machine Specifications.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class ClassTypeSignatureSuffix implements Node {
 	private final SimpleClassTypeSignature simpleClassTypeSignature;
 	

@@ -27,7 +27,12 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 import org.macroing.cel4j.scanner.TextScanner;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code TypeArgument} denotes a TypeArgument as defined by the Java Virtual Machine Specifications.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class TypeArgument implements Node {
 //	TODO: Add Javadocs!
 	public static final TypeArgument UNKNOWN = new TypeArgument(Optional.empty(), Optional.empty());

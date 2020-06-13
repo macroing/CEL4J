@@ -33,7 +33,12 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 import org.macroing.cel4j.scanner.TextScanner;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code MethodSignature} denotes a MethodSignature as defined by the Java Virtual Machine Specifications.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class MethodSignature implements Signature {
 	private final List<JavaTypeSignature> javaTypeSignatures;
 	private final List<ThrowsSignature> throwsSignatures;

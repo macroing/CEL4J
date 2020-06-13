@@ -18,34 +18,53 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
-
 import org.macroing.cel4j.scanner.TextScanner;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code BaseType} denotes a BaseType as defined by the Java Virtual Machine Specifications.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public enum BaseType implements JavaTypeSignature {
-//	TODO: Add Javadocs!
+	/**
+	 * The {@code BaseType} instance that represents the {@code boolean} type.
+	 */
 	BOOLEAN(Constants.BOOLEAN_TERM, Constants.BOOLEAN_TYPE),
 	
-//	TODO: Add Javadocs!
+	/**
+	 * The {@code BaseType} instance that represents the {@code byte} type.
+	 */
 	BYTE(Constants.BYTE_TERM, Constants.BYTE_TYPE),
 	
-//	TODO: Add Javadocs!
+	/**
+	 * The {@code BaseType} instance that represents the {@code char} type.
+	 */
 	CHAR(Constants.CHAR_TERM, Constants.CHAR_TYPE),
 	
-//	TODO: Add Javadocs!
+	/**
+	 * The {@code BaseType} instance that represents the {@code double} type.
+	 */
 	DOUBLE(Constants.DOUBLE_TERM, Constants.DOUBLE_TYPE),
 	
-//	TODO: Add Javadocs!
+	/**
+	 * The {@code BaseType} instance that represents the {@code float} type.
+	 */
 	FLOAT(Constants.FLOAT_TERM, Constants.FLOAT_TYPE),
 	
-//	TODO: Add Javadocs!
+	/**
+	 * The {@code BaseType} instance that represents the {@code int} type.
+	 */
 	INT(Constants.INT_TERM, Constants.INT_TYPE),
 	
-//	TODO: Add Javadocs!
+	/**
+	 * The {@code BaseType} instance that represents the {@code long} type.
+	 */
 	LONG(Constants.LONG_TERM, Constants.LONG_TYPE),
 	
-//	TODO: Add Javadocs!
+	/**
+	 * The {@code BaseType} instance that represents the {@code short} type.
+	 */
 	SHORT(Constants.SHORT_TERM, Constants.SHORT_TYPE);
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,29 +81,49 @@ public enum BaseType implements JavaTypeSignature {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} with the term associated with this {@code BaseType} instance.
+	 * 
+	 * @return a {@code String} with the term associated with this {@code BaseType} instance
+	 */
 	public String getTerm() {
 		return this.term;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} with the type associated with this {@code BaseType} instance.
+	 * 
+	 * @return a {@code String} with the type associated with this {@code BaseType} instance
+	 */
 	public String getType() {
 		return this.type;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code BaseType} instance in external form.
+	 * 
+	 * @return a {@code String} representation of this {@code BaseType} instance in external form
+	 */
 	@Override
 	public String toExternalForm() {
 		return this.type;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code BaseType} instance in internal form.
+	 * 
+	 * @return a {@code String} representation of this {@code BaseType} instance in internal form
+	 */
 	@Override
 	public String toInternalForm() {
 		return this.term;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code BaseType} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code BaseType} instance
+	 */
 	@Override
 	public String toString() {
 		return String.format("BaseType: [Term=%s], [Type=%s], [ExternalForm=%s], [InternalForm=%s]", getTerm(), getType(), toExternalForm(), toInternalForm());
@@ -92,7 +131,20 @@ public enum BaseType implements JavaTypeSignature {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into a {@code BaseType} instance.
+	 * <p>
+	 * Returns a {@code BaseType} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return a {@code BaseType} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	public static BaseType parseBaseType(final String string) {
 		return Parsers.parseBaseType(new TextScanner(string));
 	}

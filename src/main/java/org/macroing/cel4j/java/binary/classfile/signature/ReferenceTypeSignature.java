@@ -18,13 +18,29 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
-
 import org.macroing.cel4j.scanner.TextScanner;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code ReferenceTypeSignature} denotes a ReferenceTypeSignature as defined by the Java Virtual Machine Specifications.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public interface ReferenceTypeSignature extends FieldSignature, JavaTypeSignature {
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into a {@code ReferenceTypeSignature} instance.
+	 * <p>
+	 * Returns a {@code ReferenceTypeSignature} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return a {@code ReferenceTypeSignature} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	static ReferenceTypeSignature parseReferenceTypeSignature(final String string) {
 		return Parsers.parseReferenceTypeSignature(new TextScanner(string));
 	}
