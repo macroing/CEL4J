@@ -56,12 +56,24 @@ public final class MethodSignature implements Signature {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} with all {@link JavaTypeSignature} instances associated with this {@code MethodSignature} instance.
+	 * <p>
+	 * Modifying the returned {@code List} will not affect this {@code MethodSignature} instance.
+	 * 
+	 * @return a {@code List} with all {@code JavaTypeSignature} instances associated with this {@code MethodSignature} instance
+	 */
 	public List<JavaTypeSignature> getJavaTypeSignatures() {
 		return new ArrayList<>(this.javaTypeSignatures);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} with all {@link ThrowsSignature} instances associated with this {@code MethodSignature} instance.
+	 * <p>
+	 * Modifying the returned {@code List} will not affect this {@code MethodSignature} instance.
+	 * 
+	 * @return a {@code List} with all {@code ThrowsSignature} instances associated with this {@code MethodSignature} instance
+	 */
 	public List<ThrowsSignature> getThrowsSignatures() {
 		return new ArrayList<>(this.throwsSignatures);
 	}
@@ -234,7 +246,20 @@ public final class MethodSignature implements Signature {
 		return parseMethodSignature(classFile.getCPInfo(signatureAttribute.getSignatureIndex(), ConstantUTF8Info.class).getString());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into a {@code MethodSignature} instance.
+	 * <p>
+	 * Returns a {@code MethodSignature} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return a {@code MethodSignature} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	public static MethodSignature parseMethodSignature(final String string) {
 		return Parsers.parseMethodSignature(new TextScanner(string));
 	}

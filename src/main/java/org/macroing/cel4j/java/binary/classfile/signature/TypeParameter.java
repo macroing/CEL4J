@@ -18,7 +18,6 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -51,38 +50,84 @@ public final class TypeParameter implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the {@link ClassBound} associated with this {@code TypeParameter} instance.
+	 * 
+	 * @return the {@code ClassBound} associated with this {@code TypeParameter} instance
+	 */
 	public ClassBound getClassBound() {
 		return this.classBound;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the {@link Identifier} associated with this {@code TypeParameter} instance.
+	 * 
+	 * @return the {@code Identifier} associated with this {@code TypeParameter} instance
+	 */
 	public Identifier getIdentifier() {
 		return this.identifier;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} with all {@link InterfaceBound} instances associated with this {@code TypeParameter} instance.
+	 * <p>
+	 * Modifying the returned {@code List} will not affect this {@code TypeParameter} instance.
+	 * 
+	 * @return a {@code List} with all {@code InterfaceBound} instances associated with this {@code TypeParameter} instance
+	 */
 	public List<InterfaceBound> getInterfaceBounds() {
 		return new ArrayList<>(this.interfaceBounds);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code TypeParameter} instance in external form.
+	 * 
+	 * @return a {@code String} representation of this {@code TypeParameter} instance in external form
+	 */
 	public String toExternalForm() {
 		return String.format("%s extends %s%s", this.identifier.toExternalForm(), this.classBound.toExternalForm(), doGenerateInterfaceBoundsStringInExternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code TypeParameter} instance in internal form.
+	 * 
+	 * @return a {@code String} representation of this {@code TypeParameter} instance in internal form
+	 */
 	public String toInternalForm() {
 		return String.format("%s%s%s", this.identifier.toInternalForm(), this.classBound.toInternalForm(), this.interfaceBounds.stream().map(interfaceBound -> interfaceBound.toInternalForm()).collect(StringBuilder::new, StringBuilder::append, StringBuilder::append));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code TypeParameter} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code TypeParameter} instance
+	 */
 	@Override
 	public String toString() {
 		return String.format("TypeParameter: [Identifier=%s], [ClassBound=%s], [InterfaceBounds=%s], [InternalForm=%s]", getIdentifier(), getClassBound(), getInterfaceBounds(), toInternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Accepts a {@link NodeHierarchicalVisitor}.
+	 * <p>
+	 * Returns the result of {@code nodeHierarchicalVisitor.visitLeave(this)}.
+	 * <p>
+	 * If {@code nodeHierarchicalVisitor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}, a {@code NodeTraversalException} will be thrown with the {@code RuntimeException} wrapped.
+	 * <p>
+	 * This implementation will:
+	 * <ul>
+	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
+	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
+	 * <li>traverse its child {@code Node} instances.</li>
+	 * </ul>
+	 * 
+	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
+	 * @return the result of {@code nodeHierarchicalVisitor.visitLeave(this)}
+	 * @throws NodeTraversalException thrown if, and only if, a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}
+	 * @throws NullPointerException thrown if, and only if, {@code nodeHierarchicalVisitor} is {@code null}
+	 */
 	@Override
 	public boolean accept(final NodeHierarchicalVisitor nodeHierarchicalVisitor) {
 		Objects.requireNonNull(nodeHierarchicalVisitor, "nodeHierarchicalVisitor == null");
@@ -110,7 +155,14 @@ public final class TypeParameter implements Node {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Compares {@code object} to this {@code TypeParameter} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code TypeParameter}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code TypeParameter} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code TypeParameter}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -128,7 +180,11 @@ public final class TypeParameter implements Node {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code TypeParameter} instance.
+	 * 
+	 * @return a hash code for this {@code TypeParameter} instance
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.identifier, this.classBound, this.interfaceBounds);
@@ -136,12 +192,37 @@ public final class TypeParameter implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into a {@code TypeParameter} instance.
+	 * <p>
+	 * Returns a {@code TypeParameter} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return a {@code TypeParameter} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	public static TypeParameter parseTypeParameter(final String string) {
 		return Parsers.parseTypeParameter(new TextScanner(string));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code TypeParameter} with {@code identifier}, {@code classBound} and all {@link InterfaceBound} instances in {@code interfaceBounds} as its associated {@link Identifier}, {@link ClassBound} and {@code InterfaceBound} instances,
+	 * respectively.
+	 * <p>
+	 * If either {@code identifier}, {@code classBound}, {@code interfaceBounds} or any of its elements are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param identifier the associated {@code Identifier}
+	 * @param classBound the associated {@code ClassBound}
+	 * @param interfaceBounds the associated {@code InterfaceBound} instances
+	 * @return a {@code TypeParameter} with {@code identifier}, {@code classBound} and all {@code InterfaceBound} instances in {@code interfaceBounds} as its associated {@code Identifier}, {@code ClassBound} and {@code InterfaceBound} instances,
+	 *         respectively
+	 * @throws NullPointerException thrown if, and only if, either {@code identifier}, {@code classBound}, {@code interfaceBounds} or any of its elements are {@code null}
+	 */
 	public static TypeParameter valueOf(final Identifier identifier, final ClassBound classBound, final InterfaceBound... interfaceBounds) {
 		return new TypeParameter(Objects.requireNonNull(identifier, "identifier == null"), Objects.requireNonNull(classBound, "classBound == null"), ParameterArguments.requireNonNullList(Arrays.asList(interfaceBounds.clone()), "interfaceBounds"));
 	}

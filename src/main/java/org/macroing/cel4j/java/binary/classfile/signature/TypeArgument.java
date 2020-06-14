@@ -18,7 +18,6 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 import java.util.Optional;
 
@@ -34,7 +33,9 @@ import org.macroing.cel4j.scanner.TextScanner;
  * @author J&#246;rgen Lundgren
  */
 public final class TypeArgument implements Node {
-//	TODO: Add Javadocs!
+	/**
+	 * An unknown {@code TypeArgument} instance.
+	 */
 	public static final TypeArgument UNKNOWN = new TypeArgument(Optional.empty(), Optional.empty());
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,17 +52,29 @@ public final class TypeArgument implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns an {@code Optional} of type {@link ReferenceTypeSignature} with the optional {@code ReferenceTypeSignature} instance associated with this {@code TypeArgument} instance.
+	 * 
+	 * @return an {@code Optional} of type {@code ReferenceTypeSignature} with the optional {@code ReferenceTypeSignature} instance associated with this {@code TypeArgument} instance.
+	 */
 	public Optional<ReferenceTypeSignature> getReferenceTypeSignature() {
 		return this.referenceTypeSignature;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns an {@code Optional} of type {@link WildcardIndicator} with the optional {@code WildcardIndicator} instance associated with this {@code TypeArgument} instance.
+	 * 
+	 * @return an {@code Optional} of type {@code WildcardIndicator} with the optional {@code WildcardIndicator} instance associated with this {@code TypeArgument} instance.
+	 */
 	public Optional<WildcardIndicator> getWildcardIndicator() {
 		return this.wildcardIndicator;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code TypeArgument} instance in external form.
+	 * 
+	 * @return a {@code String} representation of this {@code TypeArgument} instance in external form
+	 */
 	public String toExternalForm() {
 		final StringBuilder stringBuilder = new StringBuilder();
 		
@@ -79,7 +92,11 @@ public final class TypeArgument implements Node {
 		return stringBuilder.toString();
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code TypeArgument} instance in internal form.
+	 * 
+	 * @return a {@code String} representation of this {@code TypeArgument} instance in internal form
+	 */
 	public String toInternalForm() {
 		final StringBuilder stringBuilder = new StringBuilder();
 		
@@ -96,13 +113,37 @@ public final class TypeArgument implements Node {
 		return stringBuilder.toString();
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code TypeArgument} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code TypeArgument} instance
+	 */
 	@Override
 	public String toString() {
 		return String.format("TypeArgument: [WildcardIndicator=%s], [ReferenceTypeSignature=%s], [InternalForm=%s]", getWildcardIndicator(), getReferenceTypeSignature(), toInternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Accepts a {@link NodeHierarchicalVisitor}.
+	 * <p>
+	 * Returns the result of {@code nodeHierarchicalVisitor.visitLeave(this)}.
+	 * <p>
+	 * If {@code nodeHierarchicalVisitor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}, a {@code NodeTraversalException} will be thrown with the {@code RuntimeException} wrapped.
+	 * <p>
+	 * This implementation will:
+	 * <ul>
+	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
+	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
+	 * <li>traverse its child {@code Node} instances.</li>
+	 * </ul>
+	 * 
+	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
+	 * @return the result of {@code nodeHierarchicalVisitor.visitLeave(this)}
+	 * @throws NodeTraversalException thrown if, and only if, a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}
+	 * @throws NullPointerException thrown if, and only if, {@code nodeHierarchicalVisitor} is {@code null}
+	 */
 	@Override
 	public boolean accept(final NodeHierarchicalVisitor nodeHierarchicalVisitor) {
 		Objects.requireNonNull(nodeHierarchicalVisitor, "nodeHierarchicalVisitor == null");
@@ -126,7 +167,14 @@ public final class TypeArgument implements Node {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Compares {@code object} to this {@code TypeArgument} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code TypeArgument}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code TypeArgument} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code TypeArgument}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -142,7 +190,11 @@ public final class TypeArgument implements Node {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code TypeArgument} instance.
+	 * 
+	 * @return a hash code for this {@code TypeArgument} instance
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.referenceTypeSignature, this.wildcardIndicator);
@@ -150,17 +202,47 @@ public final class TypeArgument implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into a {@code TypeArgument} instance.
+	 * <p>
+	 * Returns a {@code TypeArgument} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return a {@code TypeArgument} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	public static TypeArgument parseTypeArgument(final String string) {
 		return Parsers.parseTypeArgument(new TextScanner(string));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code TypeArgument} instance with {@code referenceTypeSignature} as its associated {@link ReferenceTypeSignature}.
+	 * <p>
+	 * If {@code referenceTypeSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param referenceTypeSignature the associated {@code ReferenceTypeSignature}
+	 * @return a {@code TypeArgument} instance with {@code referenceTypeSignature} as its associated {@code ReferenceTypeSignature}
+	 * @throws NullPointerException thrown if, and only if, {@code referenceTypeSignature} is {@code null}
+	 */
 	public static TypeArgument valueOf(final ReferenceTypeSignature referenceTypeSignature) {
 		return new TypeArgument(Optional.of(referenceTypeSignature), Optional.empty());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code TypeArgument} with {@code referenceTypeSignature} and {@code wildcardIndicator} as its associated {@link ReferenceTypeSignature} and {@link WildcardIndicator}, respectively.
+	 * <p>
+	 * If either {@code referenceTypeSignature} or {@code wildcardIndicator} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param referenceTypeSignature the associated {@code ReferenceTypeSignature}
+	 * @param wildcardIndicator the associated {@code WildcardIndicator}
+	 * @return a {@code TypeArgument} with {@code referenceTypeSignature} and {@code wildcardIndicator} as its associated {@code ReferenceTypeSignature} and {@code WildcardIndicator}, respectively
+	 * @throws NullPointerException thrown if, and only if, either {@code referenceTypeSignature} or {@code wildcardIndicator} are {@code null}
+	 */
 	public static TypeArgument valueOf(final ReferenceTypeSignature referenceTypeSignature, final WildcardIndicator wildcardIndicator) {
 		return new TypeArgument(Optional.of(referenceTypeSignature), Optional.of(wildcardIndicator));
 	}

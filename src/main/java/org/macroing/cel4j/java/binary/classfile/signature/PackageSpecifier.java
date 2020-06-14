@@ -18,7 +18,6 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -47,7 +46,13 @@ public final class PackageSpecifier implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} with all {@link Identifier} instances associated with this {@code PackageSpecifier} instance.
+	 * <p>
+	 * Modifying the returned {@code List} will not affect this {@code PackageSpecifier} instance.
+	 * 
+	 * @return a {@code List} with all {@code Identifier} instances associated with this {@code PackageSpecifier} instance
+	 */
 	public List<Identifier> getIdentifiers() {
 		return new ArrayList<>(this.identifiers);
 	}
@@ -167,12 +172,34 @@ public final class PackageSpecifier implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into a {@code PackageSpecifier} instance.
+	 * <p>
+	 * Returns a {@code PackageSpecifier} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return a {@code PackageSpecifier} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	public static PackageSpecifier parsePackageSpecifier(final String string) {
 		return Parsers.parsePackageSpecifier(new TextScanner(string));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code PackageSpecifier} with {@code identifier} and all {@link Identifier} instances in {@code identifiers} as its associated {@code Identifier} instances.
+	 * <p>
+	 * If either {@code identifier}, {@code identifiers} or any of its elements are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param identifier the associated {@code Identifier}
+	 * @param identifiers the associated {@code Identifier} instances
+	 * @return a {@code PackageSpecifier} with {@code identifier} and all {@code Identifier} instances in {@code identifiers} as its associated {@code Identifier} instances
+	 * @throws NullPointerException thrown if, and only if, either {@code identifier}, {@code identifiers} or any of its elements are {@code null}
+	 */
 	public static PackageSpecifier valueOf(final Identifier identifier, final Identifier... identifiers) {
 		return new PackageSpecifier(ParameterArguments.requireNonNullList(Lists.toList(identifier, identifiers), "identifiers"));
 	}

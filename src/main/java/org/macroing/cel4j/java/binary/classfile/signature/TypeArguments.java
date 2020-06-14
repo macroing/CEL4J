@@ -18,7 +18,6 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -48,28 +47,66 @@ public final class TypeArguments implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} with all {@link TypeArgument} instances associated with this {@code TypeArguments} instance.
+	 * <p>
+	 * Modifying the returned {@code List} will not affect this {@code TypeArguments} instance.
+	 * 
+	 * @return a {@code List} with all {@code TypeArgument} instances associated with this {@code TypeArguments} instance
+	 */
 	public List<TypeArgument> getTypeArguments() {
 		return new ArrayList<>(this.typeArguments);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code TypeArguments} instance in external form.
+	 * 
+	 * @return a {@code String} representation of this {@code TypeArguments} instance in external form
+	 */
 	public String toExternalForm() {
 		return String.format("<%s>", this.typeArguments.stream().map(typeArgument -> typeArgument.toExternalForm()).collect(Collectors.joining(", ")));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code TypeArguments} instance in internal form.
+	 * 
+	 * @return a {@code String} representation of this {@code TypeArguments} instance in internal form
+	 */
 	public String toInternalForm() {
 		return String.format("<%s>", this.typeArguments.stream().map(typeArgument -> typeArgument.toInternalForm()).<StringBuilder>collect(StringBuilder::new, StringBuilder::append, StringBuilder::append));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code TypeArguments} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code TypeArguments} instance
+	 */
 	@Override
 	public String toString() {
 		return String.format("TypeArguments: [TypeArguments=%s], [InternalForm=%s]", getTypeArguments(), toInternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Accepts a {@link NodeHierarchicalVisitor}.
+	 * <p>
+	 * Returns the result of {@code nodeHierarchicalVisitor.visitLeave(this)}.
+	 * <p>
+	 * If {@code nodeHierarchicalVisitor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}, a {@code NodeTraversalException} will be thrown with the {@code RuntimeException} wrapped.
+	 * <p>
+	 * This implementation will:
+	 * <ul>
+	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
+	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
+	 * <li>traverse its child {@code Node} instances.</li>
+	 * </ul>
+	 * 
+	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
+	 * @return the result of {@code nodeHierarchicalVisitor.visitLeave(this)}
+	 * @throws NodeTraversalException thrown if, and only if, a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}
+	 * @throws NullPointerException thrown if, and only if, {@code nodeHierarchicalVisitor} is {@code null}
+	 */
 	@Override
 	public boolean accept(final NodeHierarchicalVisitor nodeHierarchicalVisitor) {
 		Objects.requireNonNull(nodeHierarchicalVisitor, "nodeHierarchicalVisitor == null");
@@ -89,7 +126,14 @@ public final class TypeArguments implements Node {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Compares {@code object} to this {@code TypeArguments} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code TypeArguments}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code TypeArguments} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code TypeArguments}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -103,7 +147,11 @@ public final class TypeArguments implements Node {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code TypeArguments} instance.
+	 * 
+	 * @return a hash code for this {@code TypeArguments} instance
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.typeArguments);
@@ -111,12 +159,34 @@ public final class TypeArguments implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into a {@code TypeArguments} instance.
+	 * <p>
+	 * Returns a {@code TypeArguments} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return a {@code TypeArguments} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	public static TypeArguments parseTypeArguments(final String string) {
 		return Parsers.parseTypeArguments(new TextScanner(string));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code TypeArguments} with {@code typeArgument} and all {@link TypeArgument} instances in {@code typeArguments} as its associated {@code TypeArgument} instances.
+	 * <p>
+	 * If either {@code typeArgument}, {@code typeArguments} or any of its elements are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param typeArgument the associated {@code TypeArgument}
+	 * @param typeArguments the associated {@code TypeArgument} instances
+	 * @return a {@code TypeArguments} with {@code typeArgument} and all {@code TypeArgument} instances in {@code typeArguments} as its associated {@code TypeArgument} instances
+	 * @throws NullPointerException thrown if, and only if, either {@code typeArgument}, {@code typeArguments} or any of its elements are {@code null}
+	 */
 	public static TypeArguments valueOf(final TypeArgument typeArgument, final TypeArgument... typeArguments) {
 		return new TypeArguments(ParameterArguments.requireNonNullList(Lists.toList(typeArgument, typeArguments), "typeArguments"));
 	}
