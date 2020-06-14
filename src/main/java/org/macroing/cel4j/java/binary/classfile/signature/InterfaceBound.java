@@ -18,7 +18,6 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.node.Node;
@@ -43,28 +42,64 @@ public final class InterfaceBound implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the {@link ReferenceTypeSignature} associated with this {@code InterfaceBound} instance.
+	 * 
+	 * @return the {@code ReferenceTypeSignature} associated with this {@code InterfaceBound} instance
+	 */
 	public ReferenceTypeSignature getReferenceTypeSignature() {
 		return this.referenceTypeSignature;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code InterfaceBound} instance in external form.
+	 * 
+	 * @return a {@code String} representation of this {@code InterfaceBound} instance in external form
+	 */
 	public String toExternalForm() {
 		return this.referenceTypeSignature.toExternalForm();
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code InterfaceBound} instance in internal form.
+	 * 
+	 * @return a {@code String} representation of this {@code InterfaceBound} instance in internal form
+	 */
 	public String toInternalForm() {
 		return ":" + this.referenceTypeSignature.toInternalForm();
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code InterfaceBound} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code InterfaceBound} instance
+	 */
 	@Override
 	public String toString() {
 		return String.format("InterfaceBound: [ReferenceTypeSignature=%s], [InternalForm=%s]", getReferenceTypeSignature(), toInternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Accepts a {@link NodeHierarchicalVisitor}.
+	 * <p>
+	 * Returns the result of {@code nodeHierarchicalVisitor.visitLeave(this)}.
+	 * <p>
+	 * If {@code nodeHierarchicalVisitor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}, a {@code NodeTraversalException} will be thrown with the {@code RuntimeException} wrapped.
+	 * <p>
+	 * This implementation will:
+	 * <ul>
+	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
+	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
+	 * <li>traverse its only child {@code Node}, a {@link ReferenceTypeSignature}.</li>
+	 * </ul>
+	 * 
+	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
+	 * @return the result of {@code nodeHierarchicalVisitor.visitLeave(this)}
+	 * @throws NodeTraversalException thrown if, and only if, a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}
+	 * @throws NullPointerException thrown if, and only if, {@code nodeHierarchicalVisitor} is {@code null}
+	 */
 	@Override
 	public boolean accept(final NodeHierarchicalVisitor nodeHierarchicalVisitor) {
 		Objects.requireNonNull(nodeHierarchicalVisitor, "nodeHierarchicalVisitor == null");
@@ -80,7 +115,14 @@ public final class InterfaceBound implements Node {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Compares {@code object} to this {@code InterfaceBound} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code InterfaceBound}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code InterfaceBound} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code InterfaceBound}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -94,7 +136,11 @@ public final class InterfaceBound implements Node {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code InterfaceBound} instance.
+	 * 
+	 * @return a hash code for this {@code InterfaceBound} instance
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.referenceTypeSignature);
@@ -102,12 +148,33 @@ public final class InterfaceBound implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into an {@code InterfaceBound} instance.
+	 * <p>
+	 * Returns an {@code InterfaceBound} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return an {@code InterfaceBound} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	public static InterfaceBound parseInterfaceBound(final String string) {
 		return Parsers.parseInterfaceBound(new TextScanner(string));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns an {@code InterfaceBound} instance with {@code referenceTypeSignature} as its associated {@link ReferenceTypeSignature}.
+	 * <p>
+	 * If {@code referenceTypeSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param referenceTypeSignature the associated {@code ReferenceTypeSignature}
+	 * @return an {@code InterfaceBound} instance with {@code referenceTypeSignature} as its associated {@code ReferenceTypeSignature}
+	 * @throws NullPointerException thrown if, and only if, {@code referenceTypeSignature} is {@code null}
+	 */
 	public static InterfaceBound valueOf(final ReferenceTypeSignature referenceTypeSignature) {
 		return new InterfaceBound(Objects.requireNonNull(referenceTypeSignature, "referenceTypeSignature == null"));
 	}

@@ -66,17 +66,29 @@ public final class MethodSignature implements Signature {
 		return new ArrayList<>(this.throwsSignatures);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns an {@code Optional} of type {@link TypeParameters} with the optional {@code TypeParameters} instance associated with this {@code MethodSignature} instance.
+	 * 
+	 * @return an {@code Optional} of type {@code TypeParameters} with the optional {@code TypeParameters} instance associated with this {@code MethodSignature} instance.
+	 */
 	public Optional<TypeParameters> getTypeParameters() {
 		return this.typeParameters;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the {@link Result} associated with this {@code MethodSignature} instance.
+	 * 
+	 * @return the {@code Result} associated with this {@code MethodSignature} instance
+	 */
 	public Result getResult() {
 		return this.result;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code MethodSignature} instance in external form.
+	 * 
+	 * @return a {@code String} representation of this {@code MethodSignature} instance in external form
+	 */
 	@Override
 	public String toExternalForm() {
 		final
@@ -91,7 +103,11 @@ public final class MethodSignature implements Signature {
 		return stringBuilder.toString();
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code MethodSignature} instance in internal form.
+	 * 
+	 * @return a {@code String} representation of this {@code MethodSignature} instance in internal form
+	 */
 	@Override
 	public String toInternalForm() {
 		final
@@ -106,13 +122,37 @@ public final class MethodSignature implements Signature {
 		return stringBuilder.toString();
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code MethodSignature} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code MethodSignature} instance
+	 */
 	@Override
 	public String toString() {
 		return String.format("MethodSignature: [TypeParameters=%s], [JavaTypeSignatures=%s], [Result=%s], [ThrowsSignatures=%s], [InternalForm=%s]", getTypeParameters(), getJavaTypeSignatures(), getResult(), getThrowsSignatures(), toInternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Accepts a {@link NodeHierarchicalVisitor}.
+	 * <p>
+	 * Returns the result of {@code nodeHierarchicalVisitor.visitLeave(this)}.
+	 * <p>
+	 * If {@code nodeHierarchicalVisitor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}, a {@code NodeTraversalException} will be thrown with the {@code RuntimeException} wrapped.
+	 * <p>
+	 * This implementation will:
+	 * <ul>
+	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
+	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
+	 * <li>traverse its child {@code Node} instances.</li>
+	 * </ul>
+	 * 
+	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
+	 * @return the result of {@code nodeHierarchicalVisitor.visitLeave(this)}
+	 * @throws NodeTraversalException thrown if, and only if, a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}
+	 * @throws NullPointerException thrown if, and only if, {@code nodeHierarchicalVisitor} is {@code null}
+	 */
 	@Override
 	public boolean accept(final NodeHierarchicalVisitor nodeHierarchicalVisitor) {
 		Objects.requireNonNull(nodeHierarchicalVisitor, "nodeHierarchicalVisitor == null");
@@ -150,7 +190,14 @@ public final class MethodSignature implements Signature {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Compares {@code object} to this {@code MethodSignature} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code MethodSignature}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code MethodSignature} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code MethodSignature}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -170,7 +217,11 @@ public final class MethodSignature implements Signature {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code MethodSignature} instance.
+	 * 
+	 * @return a hash code for this {@code MethodSignature} instance
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.typeParameters, this.javaTypeSignatures, this.result, this.throwsSignatures);

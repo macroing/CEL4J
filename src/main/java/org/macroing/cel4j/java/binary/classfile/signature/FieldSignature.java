@@ -18,9 +18,10 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Optional;
 
+import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
+import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.FieldInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.SignatureAttribute;
@@ -34,9 +35,28 @@ import org.macroing.cel4j.scanner.TextScanner;
  * @author J&#246;rgen Lundgren
  */
 public interface FieldSignature extends Signature {
-//	TODO: Add Javadocs!
+	/**
+	 * Parses the {@code FieldSignature} of {@code signatureAttribute} in {@code classFile}.
+	 * <p>
+	 * Returns a {@code FieldSignature} instance.
+	 * <p>
+	 * If either {@code classFile} or {@code signatureAttribute} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code classFile} does not contain an {@link AttributeInfo} instance that is equal to {@code signatureAttribute}, the {@link CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@link ConstantUTF8Info} instance, or
+	 * the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * <p>
+	 * If {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
+	 * 
+	 * @param classFile a {@link ClassFile} instance
+	 * @param signatureAttribute a {@code SignatureAttribute} instance
+	 * @return a {@code FieldSignature} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain an {@code AttributeInfo} instance that is equal to {@code signatureAttribute}, the {@code CPInfo} on the index
+	 *                                  {@code signatureAttribute.getSignatureIndex()} is not a {@code ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
+	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
+	 * @throws NullPointerException thrown if, and only if, either {@code classFile} or {@code signatureAttribute} are {@code null}
+	 */
 	static FieldSignature parseFieldSignature(final ClassFile classFile, final SignatureAttribute signatureAttribute) {
-		return parseFieldSignature(classFile.getCPInfo(signatureAttribute.getSignatureIndex(), ConstantUTF8Info.class).getString());
+		return parseFieldSignature(classFile.getCPInfo(classFile.getAttributeInfo(signatureAttribute, SignatureAttribute.class).getSignatureIndex(), ConstantUTF8Info.class).getString());
 	}
 	
 	/**
@@ -57,7 +77,30 @@ public interface FieldSignature extends Signature {
 		return Parsers.parseFieldSignature(new TextScanner(string));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses the {@code FieldSignature} of {@code fieldInfo} in {@code classFile}, if present.
+	 * <p>
+	 * Returns an {@code Optional} of type {@code FieldSignature}.
+	 * <p>
+	 * If either {@code classFile} or {@code fieldInfo} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code classFile} does not contain a {@link FieldInfo} instance that is equal to {@code fieldInfo}, {@code fieldInfo} contains a {@link SignatureAttribute} {@code signatureAttribute} but the {@link CPInfo} on the index
+	 * {@code signatureAttribute.getSignatureIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException}
+	 * will be thrown.
+	 * <p>
+	 * If, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code fieldInfo}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an
+	 * {@code IndexOutOfBoundsException} will be thrown.
+	 * 
+	 * @param classFile a {@link ClassFile} instance
+	 * @param fieldInfo a {@code FieldInfo} instance
+	 * @return an {@code Optional} of type {@code FieldSignature}
+	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain a {@code FieldInfo} instance that is equal to {@code fieldInfo}, {@code fieldInfo} contains a {@code SignatureAttribute} {@code signatureAttribute} but
+	 *                                  the  {@code CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@code ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a
+	 *                                  {@code String} that is malformed
+	 * @throws IndexOutOfBoundsException thrown if, and only if, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code fieldInfo}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to
+	 *                                   {@code classFile.getCPInfoCount()}
+	 * @throws NullPointerException thrown if, and only if, either {@code classFile} or {@code fieldInfo} are {@code null}
+	 */
 	static Optional<FieldSignature> parseFieldSignatureOptionally(final ClassFile classFile, final FieldInfo fieldInfo) {
 		return SignatureAttribute.find(classFile.getFieldInfo(fieldInfo)).map(signatureAttribute -> parseFieldSignature(classFile, signatureAttribute));
 	}

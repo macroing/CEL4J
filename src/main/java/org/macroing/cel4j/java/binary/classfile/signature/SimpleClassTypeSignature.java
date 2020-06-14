@@ -46,27 +46,47 @@ public final class SimpleClassTypeSignature implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the {@link Identifier} associated with this {@code SimpleClassTypeSignature} instance.
+	 * 
+	 * @return the {@code Identifier} associated with this {@code SimpleClassTypeSignature} instance
+	 */
 	public Identifier getIdentifier() {
 		return this.identifier;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns an {@code Optional} of type {@link TypeArguments} with the optional {@code TypeArguments} instance associated with this {@code SimpleClassTypeSignature} instance.
+	 * 
+	 * @return an {@code Optional} of type {@code TypeArguments} with the optional {@code TypeArguments} instance associated with this {@code SimpleClassTypeSignature} instance.
+	 */
 	public Optional<TypeArguments> getTypeArguments() {
 		return this.typeArguments;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code SimpleClassTypeSignature} instance in external form.
+	 * 
+	 * @return a {@code String} representation of this {@code SimpleClassTypeSignature} instance in external form
+	 */
 	public String toExternalForm() {
 		return String.format("%s%s", this.identifier.toExternalForm(), this.typeArguments.isPresent() ? this.typeArguments.get().toExternalForm() : "");
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code SimpleClassTypeSignature} instance in internal form.
+	 * 
+	 * @return a {@code String} representation of this {@code SimpleClassTypeSignature} instance in internal form
+	 */
 	public String toInternalForm() {
 		return String.format("%s%s", this.identifier.toInternalForm(), this.typeArguments.isPresent() ? this.typeArguments.get().toInternalForm() : "");
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code SimpleClassTypeSignature} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code SimpleClassTypeSignature} instance
+	 */
 	@Override
 	public String toString() {
 		return String.format("SimpleClassTypeSignature: [Identifier=%s], [TypeArguments=%s], [InternalForm=%s]", getIdentifier(), getTypeArguments(), toInternalForm());
@@ -94,7 +114,14 @@ public final class SimpleClassTypeSignature implements Node {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Compares {@code object} to this {@code SimpleClassTypeSignature} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code SimpleClassTypeSignature}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code SimpleClassTypeSignature} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code SimpleClassTypeSignature}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -110,7 +137,11 @@ public final class SimpleClassTypeSignature implements Node {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code SimpleClassTypeSignature} instance.
+	 * 
+	 * @return a hash code for this {@code SimpleClassTypeSignature} instance
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.identifier, this.typeArguments);
