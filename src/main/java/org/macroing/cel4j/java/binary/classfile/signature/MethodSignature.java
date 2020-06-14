@@ -18,13 +18,13 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.MethodInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.SignatureAttribute;
@@ -241,7 +241,26 @@ public final class MethodSignature implements Signature {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses the {@code MethodSignature} of {@code signatureAttribute} in {@code classFile}.
+	 * <p>
+	 * Returns a {@code MethodSignature} instance.
+	 * <p>
+	 * If either {@code classFile} or {@code signatureAttribute} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If the {@link CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed,
+	 * an {@code IllegalArgumentException} will be thrown.
+	 * <p>
+	 * If {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
+	 * 
+	 * @param classFile a {@link ClassFile} instance
+	 * @param signatureAttribute a {@link SignatureAttribute} instance
+	 * @return a {@code MethodSignature} instance
+	 * @throws IllegalArgumentException thrown if, and only if, the {@code CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@code ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info}
+	 *                                  instance returns a {@code String} that is malformed
+	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
+	 * @throws NullPointerException thrown if, and only if, either {@code classFile} or {@code signatureAttribute} are {@code null}
+	 */
 	public static MethodSignature parseMethodSignature(final ClassFile classFile, final SignatureAttribute signatureAttribute) {
 		return parseMethodSignature(classFile.getCPInfo(signatureAttribute.getSignatureIndex(), ConstantUTF8Info.class).getString());
 	}
@@ -264,14 +283,42 @@ public final class MethodSignature implements Signature {
 		return Parsers.parseMethodSignature(new TextScanner(string));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses the {@code MethodSignature} of {@code methodInfo} in {@code classFile}, if present.
+	 * <p>
+	 * Returns an {@code Optional} of type {@code MethodSignature}.
+	 * <p>
+	 * If either {@code classFile} or {@code methodInfo} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code classFile} does not contain a {@link MethodInfo} instance that is equal to {@code methodInfo}, {@code methodInfo} contains a {@link SignatureAttribute} {@code signatureAttribute} but the {@link CPInfo} on the index
+	 * {@code signatureAttribute.getSignatureIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException}
+	 * will be thrown.
+	 * <p>
+	 * If, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code methodInfo}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an
+	 * {@code IndexOutOfBoundsException} will be thrown.
+	 * 
+	 * @param classFile a {@link ClassFile} instance
+	 * @param methodInfo a {@code MethodInfo} instance
+	 * @return an {@code Optional} of type {@code MethodSignature}
+	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain a {@code MethodInfo} instance that is equal to {@code methodInfo}, {@code methodInfo} contains a {@code SignatureAttribute} {@code signatureAttribute}
+	 *                                  but the  {@code CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@code ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a
+	 *                                  {@code String} that is malformed
+	 * @throws IndexOutOfBoundsException thrown if, and only if, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code methodInfo}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to
+	 *                                   {@code classFile.getCPInfoCount()}
+	 * @throws NullPointerException thrown if, and only if, either {@code classFile} or {@code methodInfo} are {@code null}
+	 */
 	public static Optional<MethodSignature> parseMethodSignatureOptionally(final ClassFile classFile, final MethodInfo methodInfo) {
 		return SignatureAttribute.find(classFile.getMethodInfo(methodInfo)).map(signatureAttribute -> MethodSignature.parseMethodSignature(classFile, signatureAttribute));
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * This {@code Builder} class is used for building {@link MethodSignature} instances.
+	 * 
+	 * @since 1.0.0
+	 * @author J&#246;rgen Lundgren
+	 */
 	public static final class Builder {
 		final List<JavaTypeSignature> javaTypeSignatures = new ArrayList<>();
 		final List<ThrowsSignature> throwsSignatures = new ArrayList<>();
@@ -287,47 +334,110 @@ public final class MethodSignature implements Signature {
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-//		TODO: Add Javadocs!
+		/**
+		 * Adds {@code javaTypeSignature} to this {@code Builder} instance.
+		 * <p>
+		 * Returns the {@code Builder} instance itself.
+		 * <p>
+		 * If {@code javaTypeSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+		 * 
+		 * @param javaTypeSignature the {@link JavaTypeSignature} instance to add
+		 * @return the {@code Builder} instance itself
+		 * @throws NullPointerException thrown if, and only if, {@code javaTypeSignature} is {@code null}
+		 */
 		public Builder addJavaTypeSignature(final JavaTypeSignature javaTypeSignature) {
 			this.javaTypeSignatures.add(Objects.requireNonNull(javaTypeSignature, "javaTypeSignature == null"));
 			
 			return this;
 		}
 		
-//		TODO: Add Javadocs!
+		/**
+		 * Adds {@code throwsSignature} to this {@code Builder} instance.
+		 * <p>
+		 * Returns the {@code Builder} instance itself.
+		 * <p>
+		 * If {@code throwsSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+		 * 
+		 * @param throwsSignature the {@link ThrowsSignature} instance to add
+		 * @return the {@code Builder} instance itself
+		 * @throws NullPointerException thrown if, and only if, {@code throwsSignature} is {@code null}
+		 */
 		public Builder addThrowsSignature(final ThrowsSignature throwsSignature) {
 			this.throwsSignatures.add(Objects.requireNonNull(throwsSignature, "throwsSignature == null"));
 			
 			return this;
 		}
 		
-//		TODO: Add Javadocs!
+		/**
+		 * Removes {@code javaTypeSignature} from this {@code Builder} instance.
+		 * <p>
+		 * Returns the {@code Builder} instance itself.
+		 * <p>
+		 * If {@code javaTypeSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+		 * 
+		 * @param javaTypeSignature the {@link JavaTypeSignature} instance to remove
+		 * @return the {@code Builder} instance itself
+		 * @throws NullPointerException thrown if, and only if, {@code javaTypeSignature} is {@code null}
+		 */
 		public Builder removeJavaTypeSignature(final JavaTypeSignature javaTypeSignature) {
 			this.javaTypeSignatures.remove(Objects.requireNonNull(javaTypeSignature, "javaTypeSignature == null"));
 			
 			return this;
 		}
 		
-//		TODO: Add Javadocs!
+		/**
+		 * Removes {@code throwsSignature} from this {@code Builder} instance.
+		 * <p>
+		 * Returns the {@code Builder} instance itself.
+		 * <p>
+		 * If {@code throwsSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+		 * 
+		 * @param throwsSignature the {@link ThrowsSignature} instance to remove
+		 * @return the {@code Builder} instance itself
+		 * @throws NullPointerException thrown if, and only if, {@code throwsSignature} is {@code null}
+		 */
 		public Builder removeThrowsSignature(final ThrowsSignature throwsSignature) {
 			this.throwsSignatures.remove(Objects.requireNonNull(throwsSignature, "throwsSignature == null"));
 			
 			return this;
 		}
 		
-//		TODO: Add Javadocs!
+		/**
+		 * Builds the {@link MethodSignature} instance.
+		 * <p>
+		 * Returns a {@code MethodSignature} instance.
+		 * 
+		 * @return a {@code MethodSignature} instance
+		 */
 		public MethodSignature build() {
 			return new MethodSignature(this);
 		}
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-//		TODO: Add Javadocs!
+		/**
+		 * Returns a new {@code Builder} instance with {@code result} as its associated {@link Result}.
+		 * <p>
+		 * If {@code result} is {@code null}, a {@code NullPointerException} will be thrown.
+		 * 
+		 * @param result the associated {@code Result}
+		 * @return a new {@code Builder} instance with {@code result} as its associated {@code Result}
+		 * @throws NullPointerException thrown if, and only if, {@code result} is {@code null}
+		 */
 		public static Builder newInstance(final Result result) {
 			return new Builder(Objects.requireNonNull(result, "result == null"), Optional.empty());
 		}
 		
-//		TODO: Add Javadocs!
+		/**
+		 * Returns a new {@code Builder} instance with {@code result} and {@code typeParameters} as its associated {@link Result} and {@link TypeParameters}, respectively.
+		 * <p>
+		 * If either {@code result} or {@code typeParameters} are {@code null}, a {@code NullPointerException} will be thrown.
+		 * 
+		 * @param result the associated {@code Result}
+		 * @param typeParameters the associated {@code TypeParameters}
+		 * @return a new {@code Builder} instance with {@code result} and {@code typeParameters} as its associated {@code Result} and {@code TypeParameters}, respectively
+		 * @throws NullPointerException thrown if, and only if, either {@code result} or {@code typeParameters} are {@code null}
+		 */
 		public static Builder newInstance(final Result result, final TypeParameters typeParameters) {
 			return new Builder(Objects.requireNonNull(result, "result == null"), Optional.of(typeParameters));
 		}

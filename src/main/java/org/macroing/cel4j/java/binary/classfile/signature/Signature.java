@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.signature;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.SignatureAttribute;
@@ -85,21 +84,21 @@ public interface Signature extends Node {
 	 * <p>
 	 * If either {@code classFile} or {@code signatureAttribute} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code classFile} does not contain an {@link AttributeInfo} instance that is equal to {@code signatureAttribute}, the {@link CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@link ConstantUTF8Info} instance, or
-	 * the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * If the {@link CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed,
+	 * an {@code IllegalArgumentException} will be thrown.
 	 * <p>
 	 * If {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param classFile a {@link ClassFile} instance
-	 * @param signatureAttribute a {@code SignatureAttribute} instance
+	 * @param signatureAttribute a {@link SignatureAttribute} instance
 	 * @return a {@code Signature} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain an {@code AttributeInfo} instance that is equal to {@code signatureAttribute}, the {@code CPInfo} on the index
-	 *                                  {@code signatureAttribute.getSignatureIndex()} is not a {@code ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
+	 * @throws IllegalArgumentException thrown if, and only if, the {@code CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@code ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info}
+	 *                                  instance returns a {@code String} that is malformed
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
 	 * @throws NullPointerException thrown if, and only if, either {@code classFile} or {@code signatureAttribute} are {@code null}
 	 */
 	public static Signature parseSignature(final ClassFile classFile, final SignatureAttribute signatureAttribute) {
-		return parseSignature(classFile.getCPInfo(classFile.getAttributeInfo(signatureAttribute, SignatureAttribute.class).getSignatureIndex(), ConstantUTF8Info.class).getString());
+		return parseSignature(classFile.getCPInfo(signatureAttribute.getSignatureIndex(), ConstantUTF8Info.class).getString());
 	}
 	
 	/**
