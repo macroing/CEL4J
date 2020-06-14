@@ -1,3 +1,10 @@
+2020-06-14  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Binary:
+
+		* ADD:		Add a new method to retrieve an AttributeInfo from the ClassFile class.
+		* ADD:		Add Javadocs to the Java Binary ClassFile Signature API.
+
 2020-06-13  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:

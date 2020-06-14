@@ -112,7 +112,7 @@ final class Parsers {
 				superInterfaceSignatures.add(parseSuperInterfaceSignature(textScanner));
 			}
 			
-			return new ClassSignature(superClassSignature, Optional.ofNullable(typeParameters), superInterfaceSignatures);
+			return new ClassSignature(superClassSignature, superInterfaceSignatures, Optional.ofNullable(typeParameters));
 		}
 		
 		throw new IllegalArgumentException(String.format("Illegal ClassSignature: %s", textScanner));
@@ -133,7 +133,7 @@ final class Parsers {
 			textScanner.nextCharacter(';');
 			textScanner.consume();
 			
-			return new ClassTypeSignature(simpleClassTypeSignature, Optional.ofNullable(packageSpecifier), classTypeSignatureSuffixes);
+			return new ClassTypeSignature(simpleClassTypeSignature, classTypeSignatureSuffixes, Optional.ofNullable(packageSpecifier));
 		}
 		
 		throw new IllegalArgumentException(String.format("Illegal ClassTypeSignature: %s", textScanner));

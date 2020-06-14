@@ -18,10 +18,11 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 
+import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
+import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.SignatureAttribute;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
@@ -36,25 +37,85 @@ import org.macroing.cel4j.scanner.TextScanner;
  * @author J&#246;rgen Lundgren
  */
 public interface Signature extends Node {
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code Signature} instance in external form.
+	 * 
+	 * @return a {@code String} representation of this {@code Signature} instance in external form
+	 */
 	String toExternalForm();
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code Signature} instance in internal form.
+	 * 
+	 * @return a {@code String} representation of this {@code Signature} instance in internal form
+	 */
 	String toInternalForm();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses all {@code Signature} instances from all {@link SignatureAttribute} instances in {@code classFile}.
+	 * <p>
+	 * Returns a {@code List} with all {@code Signature} instances that were parsed from all {@code SignatureAttribute} instances in {@code classFile}.
+	 * <p>
+	 * If {@code classFile} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If, for any {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, the {@link CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getString()} method
+	 * of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * <p>
+	 * If, for any {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an
+	 * {@code IndexOutOfBoundsException} will be thrown.
+	 * 
+	 * @param classFile a {@link ClassFile} instance
+	 * @return a {@code List} with all {@code Signature} instances that were parsed from all {@code SignatureAttribute} instances in {@code classFile}
+	 * @throws IllegalArgumentException thrown if, and only if, for any {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, the {@code CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a
+	 *                                  {@code ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
+	 * @throws IndexOutOfBoundsException thrown if, and only if, for any {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to
+	 *                                   {@code classFile.getCPInfoCount()}
+	 * @throws NullPointerException thrown if, and only if, {@code classFile} is {@code null}
+	 */
 	public static List<Signature> parseSignatures(final ClassFile classFile) {
 		return NodeFilter.filter(classFile, node -> node instanceof SignatureAttribute, SignatureAttribute.class).stream().map(signatureAttribute -> parseSignature(classFile, signatureAttribute)).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses the {@code Signature} of {@code signatureAttribute} in {@code classFile}.
+	 * <p>
+	 * Returns a {@code Signature} instance.
+	 * <p>
+	 * If either {@code classFile} or {@code signatureAttribute} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code classFile} does not contain an {@link AttributeInfo} instance that is equal to {@code signatureAttribute}, the {@link CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@link ConstantUTF8Info} instance, or
+	 * the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * <p>
+	 * If {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
+	 * 
+	 * @param classFile a {@link ClassFile} instance
+	 * @param signatureAttribute a {@code SignatureAttribute} instance
+	 * @return a {@code Signature} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain an {@code AttributeInfo} instance that is equal to {@code signatureAttribute}, the {@code CPInfo} on the index
+	 *                                  {@code signatureAttribute.getSignatureIndex()} is not a {@code ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
+	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
+	 * @throws NullPointerException thrown if, and only if, either {@code classFile} or {@code signatureAttribute} are {@code null}
+	 */
 	public static Signature parseSignature(final ClassFile classFile, final SignatureAttribute signatureAttribute) {
-		return parseSignature(classFile.getCPInfo(signatureAttribute.getSignatureIndex(), ConstantUTF8Info.class).getString());
+		return parseSignature(classFile.getCPInfo(classFile.getAttributeInfo(signatureAttribute, SignatureAttribute.class).getSignatureIndex(), ConstantUTF8Info.class).getString());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into a {@code Signature} instance.
+	 * <p>
+	 * Returns a {@code Signature} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return a {@code Signature} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	public static Signature parseSignature(final String string) {
 		return Parsers.parseSignature(new TextScanner(string));
 	}

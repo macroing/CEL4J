@@ -659,6 +659,32 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
+	 * Returns the {@link AttributeInfo} instance of this {@code ClassFile} instance that is equal to {@code attributeInfo}.
+	 * <p>
+	 * If either {@code attributeInfo} or {@code clazz} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If this {@code ClassFile} instance does not contain an {@code AttributeInfo} instance that is equal to {@code attributeInfo}, or {@code clazz} is not assignable from the {@code AttributeInfo} instance, an {@code IllegalArgumentException} will
+	 * be thrown.
+	 * 
+	 * @param <T> the type of the {@code AttributeInfo} to return
+	 * @param attributeInfo the {@code AttributeInfo} instance to test for equality against
+	 * @param clazz the {@code Class} of the {@code AttributeInfo} to return
+	 * @return the {@code AttributeInfo} instance of this {@code ClassFile} instance that is equal to {@code attributeInfo}
+	 * @throws IllegalArgumentException thrown if, and only if, this {@code ClassFile} instance does not contain an {@code AttributeInfo} instance that is equal to {@code attributeInfo}, or {@code clazz} is not assignable from the
+	 *                                  {@code AttributeInfo} instance
+	 * @throws NullPointerException thrown if, and only if, either {@code attributeInfo} or {@code clazz} are {@code null}
+	 */
+	public <T extends AttributeInfo> T getAttributeInfo(final T attributeInfo, final Class<T> clazz) {
+		final AttributeInfo currentAttributeInfo = getAttributeInfo(attributeInfo);
+		
+		if(!clazz.isAssignableFrom(currentAttributeInfo.getClass())) {
+			throw new IllegalArgumentException("The attribute_info is of wrong type.");
+		}
+		
+		return clazz.cast(currentAttributeInfo);
+	}
+	
+	/**
 	 * Returns an {@link AttributeInfo} cast to {@code T} given its index.
 	 * <p>
 	 * If {@code index} is less than {@code 0}, or greater than or equal to {@link #getAttributeInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.

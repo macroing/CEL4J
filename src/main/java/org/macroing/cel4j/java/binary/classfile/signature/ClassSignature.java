@@ -18,15 +18,16 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.SignatureAttribute;
+import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 import org.macroing.cel4j.scanner.TextScanner;
@@ -45,42 +46,84 @@ public final class ClassSignature implements Signature {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	ClassSignature(final SuperClassSignature superClassSignature, final Optional<TypeParameters> typeParameters, final List<SuperInterfaceSignature> superInterfaceSignatures) {
-		this.superClassSignature = superClassSignature;
-		this.typeParameters = typeParameters;
+	ClassSignature(final SuperClassSignature superClassSignature, final List<SuperInterfaceSignature> superInterfaceSignatures, final Optional<TypeParameters> typeParameters) {
 		this.superInterfaceSignatures = superInterfaceSignatures;
+		this.typeParameters = typeParameters;
+		this.superClassSignature = superClassSignature;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} with all {@link SuperInterfaceSignature} instances associated with this {@code ClassSignature} instance.
+	 * <p>
+	 * Modifying the returned {@code List} will not affect this {@code ClassSignature} instance.
+	 * 
+	 * @return a {@code List} with all {@code SuperInterfaceSignature} instances associated with this {@code ClassSignature} instance
+	 */
 	public List<SuperInterfaceSignature> getSuperInterfaceSignatures() {
-		return this.superInterfaceSignatures;
+		return new ArrayList<>(this.superInterfaceSignatures);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns an {@code Optional} of type {@link TypeParameters} with the optional {@code TypeParameters} instance associated with this {@code ClassSignature} instance.
+	 * 
+	 * @return an {@code Optional} of type {@code TypeParameters} with the optional {@code TypeParameters} instance associated with this {@code ClassSignature} instance.
+	 */
 	public Optional<TypeParameters> getTypeParameters() {
 		return this.typeParameters;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ClassSignature} instance in external form.
+	 * 
+	 * @return a {@code String} representation of this {@code ClassSignature} instance in external form
+	 */
 	@Override
 	public String toExternalForm() {
 		return String.format("%s%s%s", this.typeParameters.isPresent() ? this.typeParameters.get().toExternalForm() + " " : "", "extends " + this.superClassSignature.toExternalForm(), " implements " + this.superInterfaceSignatures.stream().map(superInterfaceSignature -> superInterfaceSignature.toExternalForm()).collect(Collectors.joining(",")));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ClassSignature} instance in internal form.
+	 * 
+	 * @return a {@code String} representation of this {@code ClassSignature} instance in internal form
+	 */
 	@Override
 	public String toInternalForm() {
 		return String.format("%s%s%s", this.typeParameters.isPresent() ? this.typeParameters.get().toInternalForm() : "", this.superClassSignature.toInternalForm(), this.superInterfaceSignatures.stream().map(superInterfaceSignature -> superInterfaceSignature.toInternalForm()).collect(StringBuilder::new, StringBuilder::append, StringBuilder::append));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the {@link SuperClassSignature} associated with this {@code ClassSignature} instance.
+	 * 
+	 * @return the {@code SuperClassSignature} associated with this {@code ClassSignature} instance
+	 */
 	public SuperClassSignature getSuperClassSignature() {
 		return this.superClassSignature;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Accepts a {@link NodeHierarchicalVisitor}.
+	 * <p>
+	 * Returns the result of {@code nodeHierarchicalVisitor.visitLeave(this)}.
+	 * <p>
+	 * If {@code nodeHierarchicalVisitor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}, a {@code NodeTraversalException} will be thrown with the {@code RuntimeException} wrapped.
+	 * <p>
+	 * This implementation will:
+	 * <ul>
+	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
+	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
+	 * <li>traverse its child {@code Node}s.</li>
+	 * </ul>
+	 * 
+	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
+	 * @return the result of {@code nodeHierarchicalVisitor.visitLeave(this)}
+	 * @throws NodeTraversalException thrown if, and only if, a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}
+	 * @throws NullPointerException thrown if, and only if, {@code nodeHierarchicalVisitor} is {@code null}
+	 */
 	@Override
 	public boolean accept(final NodeHierarchicalVisitor nodeHierarchicalVisitor) {
 		Objects.requireNonNull(nodeHierarchicalVisitor, "nodeHierarchicalVisitor == null");
@@ -112,7 +155,14 @@ public final class ClassSignature implements Signature {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Compares {@code object} to this {@code ClassSignature} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ClassSignature}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code ClassSignature} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ClassSignature}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -130,7 +180,11 @@ public final class ClassSignature implements Signature {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code ClassSignature} instance.
+	 * 
+	 * @return a hash code for this {@code ClassSignature} instance
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.superClassSignature, this.typeParameters, this.superInterfaceSignatures);
@@ -156,17 +210,58 @@ public final class ClassSignature implements Signature {
 		return Parsers.parseClassSignature(new TextScanner(string));
 	}
 	
-//	TODO: Add Javadocs!
-	public static ClassSignature valueOf(final SuperClassSignature superClassSignature, final SuperInterfaceSignature... superInterfaceSignatures) {
-		return new ClassSignature(Objects.requireNonNull(superClassSignature, "superClassSignature == null"), Optional.empty(), ParameterArguments.requireNonNullList(Arrays.asList(superInterfaceSignatures.clone()), "superInterfaceSignatures"));
+	/**
+	 * Returns a {@code ClassSignature} with {@code superClassSignature} and {@code superInterfaceSignatures} as its associated {@link SuperClassSignature} and {@link SuperInterfaceSignature} instances, respectively.
+	 * <p>
+	 * If either {@code superClassSignature}, {@code superInterfaceSignatures} or any of its elements are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param superClassSignature the associated {@code SuperClassSignature}
+	 * @param superInterfaceSignatures the associated {@code SuperInterfaceSignature} instances
+	 * @return a {@code ClassSignature} with {@code superClassSignature} and {@code superInterfaceSignatures} as its associated {@code SuperClassSignature} and {@code SuperInterfaceSignature} instances, respectively
+	 * @throws NullPointerException thrown if, and only if, either {@code superClassSignature}, {@code superInterfaceSignatures} or any of its elements are {@code null}
+	 */
+	public static ClassSignature valueOf(final SuperClassSignature superClassSignature, final List<SuperInterfaceSignature> superInterfaceSignatures) {
+		return new ClassSignature(Objects.requireNonNull(superClassSignature, "superClassSignature == null"), new ArrayList<>(ParameterArguments.requireNonNullList(superInterfaceSignatures, "superInterfaceSignatures")), Optional.empty());
 	}
 	
-//	TODO: Add Javadocs!
-	public static ClassSignature valueOf(final SuperClassSignature superClassSignature, final TypeParameters typeParameters, final SuperInterfaceSignature... superInterfaceSignatures) {
-		return new ClassSignature(Objects.requireNonNull(superClassSignature, "superClassSignature == null"), Optional.of(typeParameters), ParameterArguments.requireNonNullList(Arrays.asList(superInterfaceSignatures.clone()), "superInterfaceSignatures"));
+	/**
+	 * Returns a {@code ClassSignature} with {@code superClassSignature}, {@code superInterfaceSignatures} and {@code typeParameters} as its associated {@link SuperClassSignature}, {@link SuperInterfaceSignature} instances and {@link TypeParameters},
+	 * respectively.
+	 * <p>
+	 * If either {@code superClassSignature}, {@code superInterfaceSignatures}, any of its elements or {@code typeParameters} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param superClassSignature the associated {@code SuperClassSignature}
+	 * @param superInterfaceSignatures the associated {@code SuperInterfaceSignature} instances
+	 * @param typeParameters the associated {@code TypeParameters}
+	 * @return a {@code ClassSignature} with {@code superClassSignature}, {@code superInterfaceSignatures} and {@code typeParameters} as its associated {@code SuperClassSignature}, {@code SuperInterfaceSignature} instances and {@code TypeParameters},
+	 *         respectively
+	 * @throws NullPointerException thrown if, and only if, either {@code superClassSignature}, {@code superInterfaceSignatures}, any of its elements or {@code typeParameters} are {@code null}
+	 */
+	public static ClassSignature valueOf(final SuperClassSignature superClassSignature, final List<SuperInterfaceSignature> superInterfaceSignatures, final TypeParameters typeParameters) {
+		return new ClassSignature(Objects.requireNonNull(superClassSignature, "superClassSignature == null"), new ArrayList<>(ParameterArguments.requireNonNullList(superInterfaceSignatures, "superInterfaceSignatures")), Optional.of(typeParameters));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses the {@code ClassSignature} of {@code classFile}, if present.
+	 * <p>
+	 * Returns an {@code Optional} of type {@code ClassSignature}.
+	 * <p>
+	 * If {@code classFile} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, the {@link CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getString()} method
+	 * of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * <p>
+	 * If, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an
+	 * {@code IndexOutOfBoundsException} will be thrown.
+	 * 
+	 * @param classFile a {@link ClassFile} instance
+	 * @return an {@code Optional} of type {@code ClassSignature}
+	 * @throws IllegalArgumentException thrown if, and only if, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, the {@code CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a
+	 *                                  {@code ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
+	 * @throws IndexOutOfBoundsException thrown if, and only if, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to
+	 *                                   {@code classFile.getCPInfoCount()}
+	 * @throws NullPointerException thrown if, and only if, {@code classFile} is {@code null}
+	 */
 	public static Optional<ClassSignature> parseClassSignatureOptionally(final ClassFile classFile) {
 		return SignatureAttribute.find(classFile).map(signatureAttribute -> Signature.parseSignature(classFile, signatureAttribute)).filter(signature -> signature instanceof ClassSignature).map(signature -> ClassSignature.class.cast(signature));
 	}

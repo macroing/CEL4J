@@ -18,7 +18,6 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
@@ -42,30 +41,66 @@ public final class ArrayTypeSignature implements ReferenceTypeSignature {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the {@link JavaTypeSignature} associated with this {@code ArrayTypeSignature} instance.
+	 * 
+	 * @return the {@code JavaTypeSignature} associated with this {@code ArrayTypeSignature} instance
+	 */
 	public JavaTypeSignature getJavaTypeSignature() {
 		return this.javaTypeSignature;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ArrayTypeSignature} instance in external form.
+	 * 
+	 * @return a {@code String} representation of this {@code ArrayTypeSignature} instance in external form
+	 */
 	@Override
 	public String toExternalForm() {
 		return String.format("%s[]", this.javaTypeSignature.toExternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ArrayTypeSignature} instance in internal form.
+	 * 
+	 * @return a {@code String} representation of this {@code ArrayTypeSignature} instance in internal form
+	 */
 	@Override
 	public String toInternalForm() {
 		return String.format("[%s", this.javaTypeSignature.toInternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ArrayTypeSignature} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code ArrayTypeSignature} instance
+	 */
 	@Override
 	public String toString() {
 		return String.format("ArrayTypeSignature: [JavaTypeSignature=%s], [InternalForm=%s]", getJavaTypeSignature(), toInternalForm());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Accepts a {@link NodeHierarchicalVisitor}.
+	 * <p>
+	 * Returns the result of {@code nodeHierarchicalVisitor.visitLeave(this)}.
+	 * <p>
+	 * If {@code nodeHierarchicalVisitor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}, a {@code NodeTraversalException} will be thrown with the {@code RuntimeException} wrapped.
+	 * <p>
+	 * This implementation will:
+	 * <ul>
+	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
+	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
+	 * <li>traverse its only child {@code Node}, a {@link JavaTypeSignature}.</li>
+	 * </ul>
+	 * 
+	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
+	 * @return the result of {@code nodeHierarchicalVisitor.visitLeave(this)}
+	 * @throws NodeTraversalException thrown if, and only if, a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}
+	 * @throws NullPointerException thrown if, and only if, {@code nodeHierarchicalVisitor} is {@code null}
+	 */
 	@Override
 	public boolean accept(final NodeHierarchicalVisitor nodeHierarchicalVisitor) {
 		Objects.requireNonNull(nodeHierarchicalVisitor, "nodeHierarchicalVisitor == null");
@@ -81,7 +116,14 @@ public final class ArrayTypeSignature implements ReferenceTypeSignature {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Compares {@code object} to this {@code ArrayTypeSignature} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code ArrayTypeSignature} is an instance of {@code ArrayType}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code ArrayTypeSignature} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ArrayTypeSignature}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -95,7 +137,11 @@ public final class ArrayTypeSignature implements ReferenceTypeSignature {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code ArrayTypeSignature} instance.
+	 * 
+	 * @return a hash code for this {@code ArrayTypeSignature} instance
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.javaTypeSignature);
@@ -121,7 +167,15 @@ public final class ArrayTypeSignature implements ReferenceTypeSignature {
 		return Parsers.parseArrayTypeSignature(new TextScanner(string));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns an {@code ArrayTypeSignature} instance with {@code javaTypeSignature} as its associated {@link JavaTypeSignature}.
+	 * <p>
+	 * If {@code javaTypeSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param javaTypeSignature the associated {@code JavaTypeSignature}
+	 * @return an {@code ArrayTypeSignature} instance with {@code javaTypeSignature} as its associated {@code JavaTypeSignature}
+	 * @throws NullPointerException thrown if, and only if, {@code javaTypeSignature} is {@code null}
+	 */
 	public static ArrayTypeSignature valueOf(final JavaTypeSignature javaTypeSignature) {
 		return new ArrayTypeSignature(Objects.requireNonNull(javaTypeSignature, "javaTypeSignature == null"));
 	}
