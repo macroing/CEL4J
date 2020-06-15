@@ -39,16 +39,14 @@ final class LocalVariableTableAttributeReader implements AttributeInfoReader {
 		try {
 			final LocalVariableTableAttribute localVariableTableAttribute = new LocalVariableTableAttribute(attributeNameIndex);
 			
-			final int localVariableTableLength = doReadU2(dataInput);
+			final int localVariableTableLength = dataInput.readUnsignedShort();
 			
 			for(int i = 0; i < localVariableTableLength; i++) {
-				final LocalVariable localVariable = new LocalVariable(doReadU2(dataInput), doReadU2(dataInput), doReadU2(dataInput), doReadU2(dataInput), doReadU2(dataInput));
-				
-				localVariableTableAttribute.addLocalVariable(localVariable);
+				localVariableTableAttribute.addLocalVariable(new LocalVariable(dataInput.readUnsignedShort(), dataInput.readUnsignedShort(), dataInput.readUnsignedShort(), dataInput.readUnsignedShort(), dataInput.readUnsignedShort()));
 			}
 			
 			return localVariableTableAttribute;
-		} catch(final IllegalArgumentException e) {
+		} catch(final IOException | IllegalArgumentException e) {
 			throw new AttributeInfoReaderException(e);
 		}
 	}
@@ -56,15 +54,5 @@ final class LocalVariableTableAttributeReader implements AttributeInfoReader {
 	@Override
 	public boolean isSupported(final String name) {
 		return name.equals(LocalVariableTableAttribute.NAME);
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	private static int doReadU2(final DataInput dataInput) {
-		try {
-			return dataInput.readUnsignedShort();
-		} catch(final IOException e) {
-			throw new AttributeInfoReaderException(e);
-		}
 	}
 }

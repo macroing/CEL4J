@@ -36,11 +36,7 @@ final class SourceDebugExtensionAttributeReader implements AttributeInfoReader {
 	@Override
 	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
-			final String debugExtension = dataInput.readUTF();
-			
-			final AttributeInfo attributeInfo = new SourceDebugExtensionAttribute(attributeNameIndex, debugExtension);
-			
-			return attributeInfo;
+			return new SourceDebugExtensionAttribute(attributeNameIndex, dataInput.readUTF());
 		} catch(final IOException | IllegalArgumentException e) {
 			throw new AttributeInfoReaderException("Unable to read SourceDebugExtension_attribute", e);
 		}

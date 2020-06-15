@@ -36,11 +36,7 @@ final class ConstantValueAttributeReader implements AttributeInfoReader {
 	@Override
 	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
-			final int constantValueIndex = dataInput.readUnsignedShort();
-			
-			final AttributeInfo attributeInfo = new ConstantValueAttribute(attributeNameIndex, constantValueIndex);
-			
-			return attributeInfo;
+			return new ConstantValueAttribute(attributeNameIndex, dataInput.readUnsignedShort());
 		} catch(final IOException | IllegalArgumentException e) {
 			throw new AttributeInfoReaderException("Unable to read ConstantValue_attribute", e);
 		}

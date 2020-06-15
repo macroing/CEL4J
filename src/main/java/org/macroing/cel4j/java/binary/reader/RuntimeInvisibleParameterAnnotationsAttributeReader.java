@@ -68,8 +68,8 @@ final class RuntimeInvisibleParameterAnnotationsAttributeReader  implements Attr
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private static Annotation doReadAnnotation(final DataInput dataInput) throws IOException {
-		final int typeIndex = dataInput.readShort();
-		final int numElementValuePairs = dataInput.readShort();
+		final int typeIndex = dataInput.readUnsignedShort();
+		final int numElementValuePairs = dataInput.readUnsignedShort();
 		
 		final Annotation annotation = Annotation.newInstance(typeIndex);
 		
@@ -89,13 +89,13 @@ final class RuntimeInvisibleParameterAnnotationsAttributeReader  implements Attr
 	}
 	
 	private static ElementValuePair doReadElementValuePair(final DataInput dataInput) throws IOException {
-		return ElementValuePair.newInstance(dataInput.readShort(), doReadElementValue(dataInput));
+		return ElementValuePair.newInstance(dataInput.readUnsignedShort(), doReadElementValue(dataInput));
 	}
 	
 	private static ParameterAnnotation doReadParameterAnnotation(final DataInput dataInput) throws IOException {
 		final ParameterAnnotation parameterAnnotation = new ParameterAnnotation();
 		
-		final int numAnnotations = dataInput.readShort();
+		final int numAnnotations = dataInput.readUnsignedShort();
 		
 		for(int i = 0; i < numAnnotations; i++) {
 			parameterAnnotation.addAnnotation(doReadAnnotation(dataInput));
@@ -109,7 +109,7 @@ final class RuntimeInvisibleParameterAnnotationsAttributeReader  implements Attr
 			case ElementValue.ANNOTATION_TYPE_TAG:
 				return AnnotationValueUnion.newInstance(doReadAnnotation(dataInput));
 			case ElementValue.ARRAY_TAG:
-				final int numValues = dataInput.readShort();
+				final int numValues = dataInput.readUnsignedShort();
 				
 				final ArrayValueUnion arrayValueUnion = new ArrayValueUnion();
 				
@@ -119,27 +119,27 @@ final class RuntimeInvisibleParameterAnnotationsAttributeReader  implements Attr
 				
 				return arrayValueUnion;
 			case ElementValue.BOOLEAN_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readShort());
+				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
 			case ElementValue.BYTE_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readShort());
+				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
 			case ElementValue.CHAR_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readShort());
+				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
 			case ElementValue.CLASS_TAG:
-				return ClassInfoIndexUnion.newInstance(dataInput.readShort());
+				return ClassInfoIndexUnion.newInstance(dataInput.readUnsignedShort());
 			case ElementValue.DOUBLE_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readShort());
+				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
 			case ElementValue.ENUM_CONSTANT_TAG:
-				return EnumConstValueUnion.newInstance(dataInput.readShort(), dataInput.readShort());
+				return EnumConstValueUnion.newInstance(dataInput.readUnsignedShort(), dataInput.readUnsignedShort());
 			case ElementValue.FLOAT_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readShort());
+				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
 			case ElementValue.INT_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readShort());
+				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
 			case ElementValue.LONG_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readShort());
+				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
 			case ElementValue.SHORT_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readShort());
+				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
 			case ElementValue.STRING_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readShort());
+				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
 			default:
 				throw new IOException(String.format("Malformed tag: %s", Integer.valueOf(tag)));
 		}

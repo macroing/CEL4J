@@ -36,11 +36,7 @@ final class SourceFileAttributeReader implements AttributeInfoReader {
 	@Override
 	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
-			final int sourceFileIndex = dataInput.readUnsignedShort();
-			
-			final AttributeInfo attributeInfo = new SourceFileAttribute(attributeNameIndex, sourceFileIndex);
-			
-			return attributeInfo;
+			return new SourceFileAttribute(attributeNameIndex, dataInput.readUnsignedShort());
 		} catch(final IOException | IllegalArgumentException e) {
 			throw new AttributeInfoReaderException("Unable to read SourceFile_attribute", e);
 		}

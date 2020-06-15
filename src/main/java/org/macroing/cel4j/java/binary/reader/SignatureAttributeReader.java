@@ -36,11 +36,7 @@ final class SignatureAttributeReader implements AttributeInfoReader {
 	@Override
 	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
-			final int signatureIndex = dataInput.readUnsignedShort();
-			
-			final AttributeInfo attributeInfo = new SignatureAttribute(attributeNameIndex, signatureIndex);
-			
-			return attributeInfo;
+			return new SignatureAttribute(attributeNameIndex, dataInput.readUnsignedShort());
 		} catch(final IOException | IllegalArgumentException e) {
 			throw new AttributeInfoReaderException("Unable to read Signature_attribute", e);
 		}

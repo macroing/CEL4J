@@ -39,16 +39,16 @@ final class LineNumberTableAttributeReader implements AttributeInfoReader {
 		try {
 			final LineNumberTableAttribute lineNumberTableAttribute = new LineNumberTableAttribute(attributeNameIndex);
 			
-			final int lineNumberTableLength = doReadU2(dataInput);
+			final int lineNumberTableLength = dataInput.readUnsignedShort();
 			
 			for(int i = 0; i < lineNumberTableLength; i++) {
-				final LineNumber lineNumber = new LineNumber(doReadU2(dataInput), doReadU2(dataInput));
+				final LineNumber lineNumber = new LineNumber(dataInput.readUnsignedShort(), dataInput.readUnsignedShort());
 				
 				lineNumberTableAttribute.addLineNumber(lineNumber);
 			}
 			
 			return lineNumberTableAttribute;
-		} catch(final IllegalArgumentException e) {
+		} catch(final IOException | IllegalArgumentException e) {
 			throw new AttributeInfoReaderException(e);
 		}
 	}
@@ -56,15 +56,5 @@ final class LineNumberTableAttributeReader implements AttributeInfoReader {
 	@Override
 	public boolean isSupported(final String name) {
 		return name.equals(LineNumberTableAttribute.NAME);
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	private static int doReadU2(final DataInput dataInput) {
-		try {
-			return dataInput.readUnsignedShort();
-		} catch(final IOException e) {
-			throw new AttributeInfoReaderException(e);
-		}
 	}
 }

@@ -36,12 +36,7 @@ final class EnclosingMethodAttributeReader implements AttributeInfoReader {
 	@Override
 	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
-			final int classIndex = dataInput.readUnsignedShort();
-			final int methodIndex = dataInput.readUnsignedShort();
-			
-			final AttributeInfo attributeInfo = new EnclosingMethodAttribute(attributeNameIndex, classIndex, methodIndex);
-			
-			return attributeInfo;
+			return new EnclosingMethodAttribute(attributeNameIndex, dataInput.readUnsignedShort(), dataInput.readUnsignedShort());
 		} catch(final IOException | IllegalArgumentException e) {
 			throw new AttributeInfoReaderException("Unable to read EnclosingMethod_attribute", e);
 		}

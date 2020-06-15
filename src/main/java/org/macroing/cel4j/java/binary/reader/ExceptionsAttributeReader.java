@@ -38,16 +38,14 @@ final class ExceptionsAttributeReader implements AttributeInfoReader {
 		try {
 			final ExceptionsAttribute exceptionsAttribute = new ExceptionsAttribute(attributeNameIndex);
 			
-			final int numberOfExceptions = doReadU2(dataInput);
+			final int numberOfExceptions = dataInput.readUnsignedShort();
 			
 			for(int i = 0; i < numberOfExceptions; i++) {
-				final int exceptionIndex = doReadU2(dataInput);
-				
-				exceptionsAttribute.addExceptionIndex(exceptionIndex);
+				exceptionsAttribute.addExceptionIndex(dataInput.readUnsignedShort());
 			}
 			
 			return exceptionsAttribute;
-		} catch(final IllegalArgumentException e) {
+		} catch(final IOException | IllegalArgumentException e) {
 			throw new AttributeInfoReaderException(e);
 		}
 	}
@@ -55,15 +53,5 @@ final class ExceptionsAttributeReader implements AttributeInfoReader {
 	@Override
 	public boolean isSupported(final String name) {
 		return name.equals(ExceptionsAttribute.NAME);
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	private static int doReadU2(final DataInput dataInput) {
-		try {
-			return dataInput.readUnsignedShort();
-		} catch(final IOException e) {
-			throw new AttributeInfoReaderException(e);
-		}
 	}
 }
