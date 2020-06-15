@@ -30,7 +30,6 @@ import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
-import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * A {@code RuntimeInvisibleParameterAnnotationsAttribute} denotes a RuntimeInvisibleParameterAnnotations_attribute structure somewhere in a ClassFile structure.
@@ -52,7 +51,15 @@ public final class RuntimeInvisibleParameterAnnotationsAttribute extends Attribu
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private RuntimeInvisibleParameterAnnotationsAttribute(final int attributeNameIndex) {
+	/**
+	 * Constructs a new {@code RuntimeInvisibleParameterAnnotationsAttribute} instance.
+	 * <p>
+	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param attributeNameIndex the attribute_name_index of the new {@code RuntimeInvisibleParameterAnnotationsAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 */
+	public RuntimeInvisibleParameterAnnotationsAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
 	}
 	
@@ -279,18 +286,5 @@ public final class RuntimeInvisibleParameterAnnotationsAttribute extends Attribu
 	 */
 	public static List<RuntimeInvisibleParameterAnnotationsAttribute> filter(final Node node) {
 		return NodeFilter.filter(node, NodeFilter.any(), RuntimeInvisibleParameterAnnotationsAttribute.class);
-	}
-	
-	/**
-	 * Returns a new {@code RuntimeInvisibleParameterAnnotationsAttribute} instance.
-	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code RuntimeInvisibleParameterAnnotationsAttribute} instance
-	 * @return a new {@code RuntimeInvisibleParameterAnnotationsAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
-	 */
-	public static RuntimeInvisibleParameterAnnotationsAttribute newInstance(final int attributeNameIndex) {
-		return new RuntimeInvisibleParameterAnnotationsAttribute(ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE));
 	}
 }

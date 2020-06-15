@@ -40,9 +40,18 @@ public final class LineNumber implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private LineNumber(final int startPC, final int lineNumber) {
+	/**
+	 * Constructs a new {@code LineNumber} instance.
+	 * <p>
+	 * If {@code lineNumber} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param startPC the start_pc
+	 * @param lineNumber the line_number
+	 * @throws IllegalArgumentException thrown if, and only if, {@code lineNumber} is less than {@code 0}
+	 */
+	public LineNumber(final int startPC, final int lineNumber) {
 		this.startPC = startPC;
-		this.lineNumber = lineNumber;
+		this.lineNumber = ParameterArguments.requireRange(lineNumber, 0, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -167,21 +176,5 @@ public final class LineNumber implements Node {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code LineNumber} instance.
-	 * <p>
-	 * If {@code lineNumber} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param startPC the start_pc
-	 * @param lineNumber the line_number
-	 * @return a new {@code LineNumber} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code lineNumber} is less than {@code 0}
-	 */
-	public static LineNumber newInstance(final int startPC, final int lineNumber) {
-		return new LineNumber(startPC, ParameterArguments.requireRange(lineNumber, 0, Integer.MAX_VALUE));
 	}
 }

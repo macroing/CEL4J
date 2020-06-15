@@ -183,7 +183,7 @@ public final class ClassFileReader {
 			
 			dataInput.readFully(info);
 			
-			return UnimplementedAttribute.newInstance(name, attributeNameIndex, info);
+			return new UnimplementedAttribute(name, attributeNameIndex, info);
 		} catch(final IOException e) {
 			throw new ClassFileReaderException("Unable to read attribute_info: name = " + name);
 		}
@@ -213,7 +213,7 @@ public final class ClassFileReader {
 	
 	private ClassFile doReadClassFile(final DataInput dataInput, final String string) {
 		try {
-			final ClassFile classFile = ClassFile.newInstance();
+			final ClassFile classFile = new ClassFile();
 			
 			doReadMagic(dataInput);
 			doReadMinorVersion(dataInput, classFile);

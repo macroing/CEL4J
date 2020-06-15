@@ -37,12 +37,12 @@ final class LineNumberTableAttributeReader implements AttributeInfoReader {
 	@Override
 	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
-			final LineNumberTableAttribute lineNumberTableAttribute = LineNumberTableAttribute.newInstance(attributeNameIndex);
+			final LineNumberTableAttribute lineNumberTableAttribute = new LineNumberTableAttribute(attributeNameIndex);
 			
 			final int lineNumberTableLength = doReadU2(dataInput);
 			
 			for(int i = 0; i < lineNumberTableLength; i++) {
-				final LineNumber lineNumber = LineNumber.newInstance(doReadU2(dataInput), doReadU2(dataInput));
+				final LineNumber lineNumber = new LineNumber(doReadU2(dataInput), doReadU2(dataInput));
 				
 				lineNumberTableAttribute.addLineNumber(lineNumber);
 			}

@@ -45,7 +45,7 @@ final class RuntimeInvisibleAnnotationsAttributeReader implements AttributeInfoR
 	@Override
 	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
-			final RuntimeInvisibleAnnotationsAttribute runtimeInvisibleAnnotationsAttribute = RuntimeInvisibleAnnotationsAttribute.newInstance(attributeNameIndex);
+			final RuntimeInvisibleAnnotationsAttribute runtimeInvisibleAnnotationsAttribute = new RuntimeInvisibleAnnotationsAttribute(attributeNameIndex);
 			
 			final int numAnnotations = dataInput.readShort();
 			

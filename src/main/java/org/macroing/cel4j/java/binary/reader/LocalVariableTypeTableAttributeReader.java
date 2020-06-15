@@ -37,12 +37,12 @@ final class LocalVariableTypeTableAttributeReader  implements AttributeInfoReade
 	@Override
 	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
-			final LocalVariableTypeTableAttribute localVariableTypeTableAttribute = LocalVariableTypeTableAttribute.newInstance(attributeNameIndex);
+			final LocalVariableTypeTableAttribute localVariableTypeTableAttribute = new LocalVariableTypeTableAttribute(attributeNameIndex);
 			
 			final int localVariableTypeTableLength = doReadU2(dataInput);
 			
 			for(int i = 0; i < localVariableTypeTableLength; i++) {
-				final LocalVariableType localVariableType = LocalVariableType.newInstance(doReadU2(dataInput), doReadU2(dataInput), doReadU2(dataInput), doReadU2(dataInput), doReadU2(dataInput));
+				final LocalVariableType localVariableType = new LocalVariableType(doReadU2(dataInput), doReadU2(dataInput), doReadU2(dataInput), doReadU2(dataInput), doReadU2(dataInput));
 				
 				localVariableTypeTableAttribute.addLocalVariableType(localVariableType);
 			}

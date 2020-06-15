@@ -35,7 +35,7 @@ final class DeprecatedAttributeReader implements AttributeInfoReader {
 	@Override
 	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
-			return DeprecatedAttribute.newInstance(attributeNameIndex);
+			return new DeprecatedAttribute(attributeNameIndex);
 		} catch(final IllegalArgumentException e) {
 			throw new AttributeInfoReaderException(e);
 		}

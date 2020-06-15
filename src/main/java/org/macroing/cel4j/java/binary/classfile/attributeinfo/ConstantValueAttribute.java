@@ -52,10 +52,19 @@ public final class ConstantValueAttribute extends AttributeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ConstantValueAttribute(final int attributeNameIndex, final int constantValueIndex) {
+	/**
+	 * Constructs a new {@code ConstantValueAttribute} instance.
+	 * <p>
+	 * If either {@code attributeNameIndex} or {@code constantValueIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param attributeNameIndex the attribute_name_index of the new {@code ConstantValueAttribute} instance
+	 * @param constantValueIndex the constantvalue_index of the new {@code ConstantValueAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code attributeNameIndex} or {@code constantValueIndex} are less than or equal to {@code 0}
+	 */
+	public ConstantValueAttribute(final int attributeNameIndex, final int constantValueIndex) {
 		super(NAME, attributeNameIndex);
 		
-		this.constantValueIndex = constantValueIndex;
+		this.constantValueIndex = ParameterArguments.requireRange(constantValueIndex, 1, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -188,20 +197,6 @@ public final class ConstantValueAttribute extends AttributeInfo {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code ConstantValueAttribute} instance.
-	 * <p>
-	 * If either {@code attributeNameIndex} or {@code constantValueIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code ConstantValueAttribute} instance
-	 * @param constantValueIndex the constantvalue_index of the new {@code ConstantValueAttribute} instance
-	 * @return a new {@code ConstantValueAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code attributeNameIndex} or {@code constantValueIndex} are less than or equal to {@code 0}
-	 */
-	public static ConstantValueAttribute newInstance(final int attributeNameIndex, final int constantValueIndex) {
-		return new ConstantValueAttribute(ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE), ParameterArguments.requireRange(constantValueIndex, 1, Integer.MAX_VALUE));
-	}
 	
 	/**
 	 * Returns a {@code List} with all {@code ConstantValueAttribute}s.

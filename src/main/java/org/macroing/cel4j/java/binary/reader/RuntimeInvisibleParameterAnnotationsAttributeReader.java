@@ -46,7 +46,7 @@ final class RuntimeInvisibleParameterAnnotationsAttributeReader  implements Attr
 	@Override
 	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
-			final RuntimeInvisibleParameterAnnotationsAttribute runtimeInvisibleParameterAnnotationsAttribute = RuntimeInvisibleParameterAnnotationsAttribute.newInstance(attributeNameIndex);
+			final RuntimeInvisibleParameterAnnotationsAttribute runtimeInvisibleParameterAnnotationsAttribute = new RuntimeInvisibleParameterAnnotationsAttribute(attributeNameIndex);
 			
 			final int numParameters = dataInput.readUnsignedByte();
 			

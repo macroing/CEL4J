@@ -43,11 +43,23 @@ public final class LocalVariableType implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private LocalVariableType(final int startPC, final int length, final int nameIndex, final int signatureIndex, final int index) {
+	/**
+	 * Constructs a new {@code LocalVariableType} instance.
+	 * <p>
+	 * If either {@code nameIndex} or {@code signatureIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param startPC the start_pc
+	 * @param length the length
+	 * @param nameIndex the name_index
+	 * @param signatureIndex the signature_index
+	 * @param index the index
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code nameIndex} or {@code signatureIndex} are less than or equal to {@code 0}
+	 */
+	public LocalVariableType(final int startPC, final int length, final int nameIndex, final int signatureIndex, final int index) {
 		this.startPC = startPC;
 		this.length = length;
-		this.nameIndex = nameIndex;
-		this.signatureIndex = signatureIndex;
+		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE);
+		this.signatureIndex = ParameterArguments.requireRange(signatureIndex, 1, Integer.MAX_VALUE);
 		this.index = index;
 	}
 	
@@ -247,24 +259,5 @@ public final class LocalVariableType implements Node {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code LocalVariableType} instance.
-	 * <p>
-	 * If either {@code nameIndex} or {@code signatureIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param startPC the start_pc
-	 * @param length the length
-	 * @param nameIndex the name_index
-	 * @param signatureIndex the signature_index
-	 * @param index the index
-	 * @return a new {@code LocalVariableType} instance
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code nameIndex} or {@code signatureIndex} are less than or equal to {@code 0}
-	 */
-	public static LocalVariableType newInstance(final int startPC, final int length, final int nameIndex, final int signatureIndex, final int index) {
-		return new LocalVariableType(startPC, length, ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE), ParameterArguments.requireRange(signatureIndex, 1, Integer.MAX_VALUE), index);
 	}
 }

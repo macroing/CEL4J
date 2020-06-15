@@ -30,7 +30,6 @@ import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
-import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * A {@code RuntimeInvisibleAnnotationsAttribute} denotes a RuntimeInvisibleAnnotations_attribute structure somewhere in a ClassFile structure.
@@ -52,7 +51,15 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private RuntimeInvisibleAnnotationsAttribute(final int attributeNameIndex) {
+	/**
+	 * Constructs a new {@code RuntimeInvisibleAnnotationsAttribute} instance.
+	 * <p>
+	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param attributeNameIndex the attribute_name_index of the new {@code RuntimeInvisibleAnnotationsAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 */
+	public RuntimeInvisibleAnnotationsAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
 	}
 	
@@ -279,18 +286,5 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	 */
 	public static List<RuntimeInvisibleAnnotationsAttribute> filter(final Node node) {
 		return NodeFilter.filter(node, NodeFilter.any(), RuntimeInvisibleAnnotationsAttribute.class);
-	}
-	
-	/**
-	 * Returns a new {@code RuntimeInvisibleAnnotationsAttribute} instance.
-	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code RuntimeInvisibleAnnotationsAttribute} instance
-	 * @return a new {@code RuntimeInvisibleAnnotationsAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
-	 */
-	public static RuntimeInvisibleAnnotationsAttribute newInstance(final int attributeNameIndex) {
-		return new RuntimeInvisibleAnnotationsAttribute(ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE));
 	}
 }

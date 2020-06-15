@@ -30,7 +30,6 @@ import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
-import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * A {@code LocalVariableTypeTableAttribute} denotes a LocalVariableTypeTable_attribute structure somewhere in a ClassFile structure.
@@ -52,7 +51,15 @@ public final class LocalVariableTypeTableAttribute extends AttributeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private LocalVariableTypeTableAttribute(final int attributeNameIndex) {
+	/**
+	 * Constructs a new {@code LocalVariableTypeTableAttribute} instance.
+	 * <p>
+	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param attributeNameIndex the attribute_name_index of the new {@code LocalVariableTypeTableAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 */
+	public LocalVariableTypeTableAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
 	}
 	
@@ -276,18 +283,5 @@ public final class LocalVariableTypeTableAttribute extends AttributeInfo {
 	 */
 	public static List<LocalVariableTypeTableAttribute> filter(final Node node) {
 		return NodeFilter.filter(node, NodeFilter.any(), LocalVariableTypeTableAttribute.class);
-	}
-	
-	/**
-	 * Returns a new {@code LocalVariableTypeTableAttribute} instance.
-	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code LocalVariableTypeTableAttribute} instance
-	 * @return a new {@code LocalVariableTypeTableAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
-	 */
-	public static LocalVariableTypeTableAttribute newInstance(final int attributeNameIndex) {
-		return new LocalVariableTypeTableAttribute(ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE));
 	}
 }

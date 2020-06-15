@@ -30,7 +30,6 @@ import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
-import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * A {@code LineNumberTableAttribute} denotes a LineNumberTable_attribute structure somewhere in a ClassFile structure.
@@ -52,7 +51,15 @@ public final class LineNumberTableAttribute extends AttributeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private LineNumberTableAttribute(final int attributeNameIndex) {
+	/**
+	 * Constructs a new {@code LineNumberTableAttribute} instance.
+	 * <p>
+	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param attributeNameIndex the attribute_name_index of the new {@code LineNumberTableAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 */
+	public LineNumberTableAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
 	}
 	
@@ -262,19 +269,6 @@ public final class LineNumberTableAttribute extends AttributeInfo {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code LineNumberTableAttribute} instance.
-	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code LineNumberTableAttribute} instance
-	 * @return a new {@code LineNumberTableAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
-	 */
-	public static LineNumberTableAttribute newInstance(final int attributeNameIndex) {
-		return new LineNumberTableAttribute(ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE));
-	}
 	
 	/**
 	 * Returns a {@code List} with all {@code LineNumberTableAttribute}s.

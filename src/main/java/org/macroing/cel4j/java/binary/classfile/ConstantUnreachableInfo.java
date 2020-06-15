@@ -135,15 +135,4 @@ public final class ConstantUnreachableInfo extends CPInfo {
 	public void write(final Document document) {
 		Objects.requireNonNull(document, "document == null");
 	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code ConstantUnreachableInfo}.
-	 * 
-	 * @return a new {@code ConstantUnreachableInfo}
-	 */
-	public static ConstantUnreachableInfo newInstance() {
-		return new ConstantUnreachableInfo();
-	}
 }

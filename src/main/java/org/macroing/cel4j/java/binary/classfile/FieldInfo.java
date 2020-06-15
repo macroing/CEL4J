@@ -717,15 +717,4 @@ public final class FieldInfo implements Node {
 			this.accessFlags &= ~ACC_VOLATILE;
 		}
 	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code FieldInfo} instance.
-	 * 
-	 * @return a new {@code FieldInfo} instance
-	 */
-	public static FieldInfo newInstance() {
-		return new FieldInfo();
-	}
 }

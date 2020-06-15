@@ -32,7 +32,6 @@ import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
-import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * A {@code MethodParametersAttribute} denotes a MethodParameters_attribute structure somewhere in a ClassFile structure.
@@ -54,7 +53,15 @@ public final class MethodParametersAttribute extends AttributeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private MethodParametersAttribute(final int attributeNameIndex) {
+	/**
+	 * Constructs a new {@code MethodParametersAttribute} instance.
+	 * <p>
+	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param attributeNameIndex the attribute_name_index of the new {@code MethodParametersAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 */
+	public MethodParametersAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
 	}
 	
@@ -271,19 +278,6 @@ public final class MethodParametersAttribute extends AttributeInfo {
 	 */
 	public static List<MethodParametersAttribute> filter(final Node node) {
 		return NodeFilter.filter(node, NodeFilter.any(), MethodParametersAttribute.class);
-	}
-	
-	/**
-	 * Returns a new {@code MethodParametersAttribute} instance.
-	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code MethodParametersAttribute} instance
-	 * @return a new {@code MethodParametersAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
-	 */
-	public static MethodParametersAttribute newInstance(final int attributeNameIndex) {
-		return new MethodParametersAttribute(ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE));
 	}
 	
 	/**

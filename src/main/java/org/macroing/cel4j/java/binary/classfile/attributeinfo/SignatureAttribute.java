@@ -35,7 +35,7 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code SyntheticAttribute} denotes a Synthetic_attribute structure somewhere in a ClassFile structure.
+ * A {@code SignatureAttribute} denotes a Signature_attribute structure somewhere in a ClassFile structure.
  * <p>
  * This class is not thread-safe.
  * 
@@ -54,10 +54,19 @@ public final class SignatureAttribute extends AttributeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private SignatureAttribute(final int attributeNameIndex, final int signatureIndex) {
+	/**
+	 * Constructs a new {@code SignatureAttribute} instance.
+	 * <p>
+	 * If either {@code attributeNameIndex} or {@code signatureIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param attributeNameIndex the attribute_name_index of the new {@code SignatureAttribute} instance
+	 * @param signatureIndex the signature_index of the new {@code SignatureAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code attributeNameIndex} or {@code signatureIndex} are less than or equal to {@code 0}
+	 */
+	public SignatureAttribute(final int attributeNameIndex, final int signatureIndex) {
 		super(NAME, attributeNameIndex);
 		
-		this.signatureIndex = signatureIndex;
+		this.signatureIndex = ParameterArguments.requireRange(signatureIndex, 1, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -166,7 +175,7 @@ public final class SignatureAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Writes this {@code SyntheticAttribute} to {@code dataOutput}.
+	 * Writes this {@code SignatureAttribute} to {@code dataOutput}.
 	 * <p>
 	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
 	 * <p>
@@ -249,19 +258,5 @@ public final class SignatureAttribute extends AttributeInfo {
 	 */
 	public static Optional<SignatureAttribute> find(final MethodInfo methodInfo) {
 		return methodInfo.getAttributeInfos().stream().filter(attributeInfo -> attributeInfo instanceof SignatureAttribute).map(attributeInfo -> SignatureAttribute.class.cast(attributeInfo)).findFirst();
-	}
-	
-	/**
-	 * Returns a new {@code SyntheticAttribute} instance.
-	 * <p>
-	 * If either {@code attributeNameIndex} or {@code signatureIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code SignatureAttribute} instance
-	 * @param signatureIndex the signature_index of the new {@code SignatureAttribute} instance
-	 * @return a new {@code SignatureAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code attributeNameIndex} or {@code signatureIndex} are less than or equal to {@code 0}
-	 */
-	public static SignatureAttribute newInstance(final int attributeNameIndex, final int signatureIndex) {
-		return new SignatureAttribute(ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE), ParameterArguments.requireRange(signatureIndex, 1, Integer.MAX_VALUE));
 	}
 }

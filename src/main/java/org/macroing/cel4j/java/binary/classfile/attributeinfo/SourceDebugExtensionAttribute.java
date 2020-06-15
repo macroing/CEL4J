@@ -28,7 +28,6 @@ import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
-import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * A {@code SourceDebugExtensionAttribute} denotes a SourceDebugExtension_attribute structure somewhere in a ClassFile structure.
@@ -50,10 +49,22 @@ public final class SourceDebugExtensionAttribute extends AttributeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private SourceDebugExtensionAttribute(final int attributeNameIndex, final String debugExtension) {
+	/**
+	 * Constructs a new {@code SourceDebugExtensionAttribute} instance.
+	 * <p>
+	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * <p>
+	 * If {@code debugExtension} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param attributeNameIndex the attribute_name_index of the new {@code SourceDebugExtensionAttribute} instance
+	 * @param debugExtension the debug_extension of the new {@code SourceDebugExtensionAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 * @throws NullPointerException thrown if, and only if, {@code debugExtension} is {@code null}
+	 */
+	public SourceDebugExtensionAttribute(final int attributeNameIndex, final String debugExtension) {
 		super(NAME, attributeNameIndex);
 		
-		this.debugExtension = debugExtension;
+		this.debugExtension = Objects.requireNonNull(debugExtension, "debugExtension == null");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -200,22 +211,5 @@ public final class SourceDebugExtensionAttribute extends AttributeInfo {
 	 */
 	public static List<SourceDebugExtensionAttribute> filter(final Node node) {
 		return NodeFilter.filter(node, NodeFilter.any(), SourceDebugExtensionAttribute.class);
-	}
-	
-	/**
-	 * Returns a new {@code SourceDebugExtensionAttribute} instance.
-	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * <p>
-	 * If {@code debugExtension} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code SourceDebugExtensionAttribute} instance
-	 * @param debugExtension the debug_extension of the new {@code SourceDebugExtensionAttribute} instance
-	 * @return a new {@code SourceDebugExtensionAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
-	 * @throws NullPointerException thrown if, and only if, {@code debugExtension} is {@code null}
-	 */
-	public static SourceDebugExtensionAttribute newInstance(final int attributeNameIndex, final String debugExtension) {
-		return new SourceDebugExtensionAttribute(ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE), Objects.requireNonNull(debugExtension, "debugExtension == null"));
 	}
 }

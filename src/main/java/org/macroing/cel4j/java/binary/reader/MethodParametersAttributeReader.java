@@ -37,7 +37,7 @@ final class MethodParametersAttributeReader implements AttributeInfoReader {
 	@Override
 	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
-			final MethodParametersAttribute methodParametersAttribute = MethodParametersAttribute.newInstance(attributeNameIndex);
+			final MethodParametersAttribute methodParametersAttribute = new MethodParametersAttribute(attributeNameIndex);
 			
 			final int parametersCount = dataInput.readUnsignedByte();
 			

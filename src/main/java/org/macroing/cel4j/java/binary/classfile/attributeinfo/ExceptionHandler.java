@@ -42,10 +42,20 @@ public final class ExceptionHandler implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ExceptionHandler(final int startPC, final int endPC, final int handlerPC) {
-		this.startPC = startPC;
-		this.endPC = endPC;
-		this.handlerPC = handlerPC;
+	/**
+	 * Constructs a new {@code ExceptionHandler} based on a start_pc, end_pc and handler_pc.
+	 * <p>
+	 * If {@code startPC} is less than {@code 0}, {@code endPC} is less than or equal to {@code startPC} or {@code handlerPC} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param startPC the start_pc to use
+	 * @param endPC the end_pc to use
+	 * @param handlerPC the handler_pc to use
+	 * @throws IllegalArgumentException thrown if, and only if, {@code startPC} is less than {@code 0}, {@code endPC} is less than or equal to {@code startPC} or {@code handlerPC} is less than {@code 0}
+	 */
+	public ExceptionHandler(final int startPC, final int endPC, final int handlerPC) {
+		this.startPC = ParameterArguments.requireRange(startPC, 0, endPC - 1);
+		this.endPC = ParameterArguments.requireRange(endPC, startPC + 1, 65535);
+		this.handlerPC = ParameterArguments.requireRange(handlerPC, 0, 65535);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -243,22 +253,5 @@ public final class ExceptionHandler implements Node {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code ExceptionHandler} based on a start_pc, end_pc and handler_pc.
-	 * <p>
-	 * If {@code startPC} is less than {@code 0}, {@code endPC} is less than or equal to {@code startPC} or {@code handlerPC} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param startPC the start_pc to use
-	 * @param endPC the end_pc to use
-	 * @param handlerPC the handler_pc to use
-	 * @return a new {@code ExceptionHandler} based on a start_pc, end_pc and handler_pc
-	 * @throws IllegalArgumentException thrown if, and only if, {@code startPC} is less than {@code 0}, {@code endPC} is less than or equal to {@code startPC} or {@code handlerPC} is less than {@code 0}
-	 */
-	public static ExceptionHandler newInstance(final int startPC, final int endPC, final int handlerPC) {
-		return new ExceptionHandler(ParameterArguments.requireRange(startPC, 0, endPC - 1), ParameterArguments.requireRange(endPC, startPC + 1, 65535), ParameterArguments.requireRange(handlerPC, 0, 65535));
 	}
 }

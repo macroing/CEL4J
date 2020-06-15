@@ -93,7 +93,10 @@ public final class InnerClass implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private InnerClass() {
+	/**
+	 * Constructs a new empty {@code InnerClass} instance.
+	 */
+	public InnerClass() {
 		
 	}
 	
@@ -352,16 +355,5 @@ public final class InnerClass implements Node {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new empty {@code InnerClass} instance.
-	 * 
-	 * @return a new empty {@code InnerClass} instance
-	 */
-	public static InnerClass newInstance() {
-		return new InnerClass();
 	}
 }

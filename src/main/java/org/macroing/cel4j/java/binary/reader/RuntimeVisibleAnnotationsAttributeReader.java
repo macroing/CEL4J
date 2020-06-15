@@ -45,7 +45,7 @@ final class RuntimeVisibleAnnotationsAttributeReader implements AttributeInfoRea
 	@Override
 	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
-			final RuntimeVisibleAnnotationsAttribute runtimeVisibleAnnotationsAttribute = RuntimeVisibleAnnotationsAttribute.newInstance(attributeNameIndex);
+			final RuntimeVisibleAnnotationsAttribute runtimeVisibleAnnotationsAttribute = new RuntimeVisibleAnnotationsAttribute(attributeNameIndex);
 			
 			final int numAnnotations = dataInput.readShort();
 			

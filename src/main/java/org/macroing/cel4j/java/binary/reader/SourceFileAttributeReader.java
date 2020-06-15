@@ -38,7 +38,7 @@ final class SourceFileAttributeReader implements AttributeInfoReader {
 		try {
 			final int sourceFileIndex = dataInput.readUnsignedShort();
 			
-			final AttributeInfo attributeInfo = SourceFileAttribute.newInstance(attributeNameIndex, sourceFileIndex);
+			final AttributeInfo attributeInfo = new SourceFileAttribute(attributeNameIndex, sourceFileIndex);
 			
 			return attributeInfo;
 		} catch(final IOException | IllegalArgumentException e) {

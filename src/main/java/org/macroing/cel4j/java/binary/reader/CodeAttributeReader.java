@@ -49,7 +49,7 @@ final class CodeAttributeReader implements AttributeInfoReader {
 			doReloadAttributeInfoReaders();
 			
 			final
-			CodeAttribute codeAttribute = CodeAttribute.newInstance(attributeNameIndex);
+			CodeAttribute codeAttribute = new CodeAttribute(attributeNameIndex);
 			codeAttribute.setMaxStack(doReadU2(dataInput));
 			codeAttribute.setMaxLocals(doReadU2(dataInput));
 			
@@ -70,7 +70,7 @@ final class CodeAttributeReader implements AttributeInfoReader {
 				final int catchType = doReadU2(dataInput);
 				
 				final
-				ExceptionHandler exceptionHandler = ExceptionHandler.newInstance(startPC, endPC, handlerPC);
+				ExceptionHandler exceptionHandler = new ExceptionHandler(startPC, endPC, handlerPC);
 				exceptionHandler.setCatchType(catchType);
 				
 				codeAttribute.addExceptionHandler(exceptionHandler);
@@ -116,7 +116,7 @@ final class CodeAttributeReader implements AttributeInfoReader {
 			
 			dataInput.readFully(info);
 			
-			return UnimplementedAttribute.newInstance(name, attributeNameIndex, info);
+			return new UnimplementedAttribute(name, attributeNameIndex, info);
 		} catch(final IOException e) {
 			throw new AttributeInfoReaderException("Unable to read attribute_info: name = " + name);
 		}

@@ -39,7 +39,7 @@ final class EnclosingMethodAttributeReader implements AttributeInfoReader {
 			final int classIndex = dataInput.readUnsignedShort();
 			final int methodIndex = dataInput.readUnsignedShort();
 			
-			final AttributeInfo attributeInfo = EnclosingMethodAttribute.newInstance(attributeNameIndex, classIndex, methodIndex);
+			final AttributeInfo attributeInfo = new EnclosingMethodAttribute(attributeNameIndex, classIndex, methodIndex);
 			
 			return attributeInfo;
 		} catch(final IOException | IllegalArgumentException e) {

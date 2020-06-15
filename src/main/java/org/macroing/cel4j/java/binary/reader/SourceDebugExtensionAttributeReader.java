@@ -38,7 +38,7 @@ final class SourceDebugExtensionAttributeReader implements AttributeInfoReader {
 		try {
 			final String debugExtension = dataInput.readUTF();
 			
-			final AttributeInfo attributeInfo = SourceDebugExtensionAttribute.newInstance(attributeNameIndex, debugExtension);
+			final AttributeInfo attributeInfo = new SourceDebugExtensionAttribute(attributeNameIndex, debugExtension);
 			
 			return attributeInfo;
 		} catch(final IOException | IllegalArgumentException e) {

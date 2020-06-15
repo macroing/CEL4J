@@ -73,7 +73,7 @@ final class FieldInfoReader {
 			
 			dataInput.readFully(info);
 			
-			return UnimplementedAttribute.newInstance(name, attributeNameIndex, info);
+			return new UnimplementedAttribute(name, attributeNameIndex, info);
 		} catch(final IOException e) {
 			throw new ClassFileReaderException("Unable to read attribute_info: name = " + name);
 		}
@@ -81,7 +81,7 @@ final class FieldInfoReader {
 	
 	private FieldInfo doReadFieldInfo(final DataInput dataInput, final ClassFile classFile) {
 		try {
-			final FieldInfo fieldInfo = FieldInfo.newInstance();
+			final FieldInfo fieldInfo = new FieldInfo();
 			
 			doReadAccessFlags(dataInput, fieldInfo);
 			doReadNameIndex(dataInput, fieldInfo);

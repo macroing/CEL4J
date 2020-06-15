@@ -73,7 +73,7 @@ final class MethodInfoReader {
 			
 			dataInput.readFully(info);
 			
-			return UnimplementedAttribute.newInstance(name, attributeNameIndex, info);
+			return new UnimplementedAttribute(name, attributeNameIndex, info);
 		} catch(final IOException e) {
 			throw new ClassFileReaderException("Unable to read attribute_info: name = " + name);
 		}
@@ -81,7 +81,7 @@ final class MethodInfoReader {
 	
 	private MethodInfo doReadMethodInfo(final DataInput dataInput, final ClassFile classFile) {
 		try {
-			final MethodInfo methodInfo = MethodInfo.newInstance();
+			final MethodInfo methodInfo = new MethodInfo();
 			
 			doReadAccessFlags(dataInput, methodInfo);
 			doReadNameIndex(dataInput, methodInfo);

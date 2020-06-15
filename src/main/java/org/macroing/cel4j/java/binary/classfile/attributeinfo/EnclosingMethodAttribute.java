@@ -51,11 +51,21 @@ public final class EnclosingMethodAttribute extends AttributeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private EnclosingMethodAttribute(final int attributeNameIndex, final int classIndex, final int methodIndex) {
+	/**
+	 * Constructs a new {@code EnclosingMethodAttribute} instance.
+	 * <p>
+	 * If either {@code attributeNameIndex} or {@code classIndex} are less than or equal to {@code 0}, or {@code methodIndex} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param attributeNameIndex the attribute_name_index for the new {@code EnclosingMethodAttribute} instance
+	 * @param classIndex the class_index for the new {@code EnclosingMethodAttribute} instance
+	 * @param methodIndex the method_index for the new {@code EnclosingMethodAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code attributeNameIndex} or {@code classIndex} are less than or equal to {@code 0}, or {@code methodIndex} is less than {@code 0}
+	 */
+	public EnclosingMethodAttribute(final int attributeNameIndex, final int classIndex, final int methodIndex) {
 		super(NAME, attributeNameIndex);
 		
-		this.classIndex = classIndex;
-		this.methodIndex = methodIndex;
+		this.classIndex = ParameterArguments.requireRange(classIndex, 1, Integer.MAX_VALUE);
+		this.methodIndex = ParameterArguments.requireRange(methodIndex, 0, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -187,21 +197,6 @@ public final class EnclosingMethodAttribute extends AttributeInfo {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code EnclosingMethodAttribute} instance.
-	 * <p>
-	 * If either {@code attributeNameIndex} or {@code classIndex} are less than or equal to {@code 0}, or {@code methodIndex} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param attributeNameIndex the attribute_name_index for the new {@code EnclosingMethodAttribute} instance
-	 * @param classIndex the class_index for the new {@code EnclosingMethodAttribute} instance
-	 * @param methodIndex the method_index for the new {@code EnclosingMethodAttribute} instance
-	 * @return a new {@code EnclosingMethodAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code attributeNameIndex} or {@code classIndex} are less than or equal to {@code 0}, or {@code methodIndex} is less than {@code 0}
-	 */
-	public static EnclosingMethodAttribute newInstance(final int attributeNameIndex, final int classIndex, final int methodIndex) {
-		return new EnclosingMethodAttribute(ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE), ParameterArguments.requireRange(classIndex, 1, Integer.MAX_VALUE), ParameterArguments.requireRange(methodIndex, 0, Integer.MAX_VALUE));
-	}
 	
 	/**
 	 * Returns a {@code List} with all {@code EnclosingMethodAttribute}s.

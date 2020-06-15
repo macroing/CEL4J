@@ -50,10 +50,19 @@ public final class SourceFileAttribute extends AttributeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private SourceFileAttribute(final int attributeNameIndex, final int sourceFileIndex) {
+	/**
+	 * Constructs a new {@code SourceFileAttribute} instance.
+	 * <p>
+	 * If either {@code attributeNameIndex} or {@code sourceFileIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param attributeNameIndex the attribute_name_index of the new {@code SourceFileAttribute} instance
+	 * @param sourceFileIndex the sourcefile_index of the new {@code SourceFileAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code attributeNameIndex} or {@code sourceFileIndex} are less than or equal to {@code 0}
+	 */
+	public SourceFileAttribute(final int attributeNameIndex, final int sourceFileIndex) {
 		super(NAME, attributeNameIndex);
 		
-		this.sourceFileIndex = sourceFileIndex;
+		this.sourceFileIndex = ParameterArguments.requireRange(sourceFileIndex, 1, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -200,19 +209,5 @@ public final class SourceFileAttribute extends AttributeInfo {
 	 */
 	public static List<SourceFileAttribute> filter(final Node node) {
 		return NodeFilter.filter(node, NodeFilter.any(), SourceFileAttribute.class);
-	}
-	
-	/**
-	 * Returns a new {@code SourceFileAttribute} instance.
-	 * <p>
-	 * If either {@code attributeNameIndex} or {@code sourceFileIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code SourceFileAttribute} instance
-	 * @param sourceFileIndex the sourcefile_index of the new {@code SourceFileAttribute} instance
-	 * @return a new {@code SourceFileAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code attributeNameIndex} or {@code sourceFileIndex} are less than or equal to {@code 0}
-	 */
-	public static SourceFileAttribute newInstance(final int attributeNameIndex, final int sourceFileIndex) {
-		return new SourceFileAttribute(ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE), ParameterArguments.requireRange(sourceFileIndex, 1, Integer.MAX_VALUE));
 	}
 }

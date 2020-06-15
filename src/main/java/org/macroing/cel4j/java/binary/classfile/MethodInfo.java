@@ -844,15 +844,6 @@ public final class MethodInfo implements Node {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a new {@code MethodInfo} instance.
-	 * 
-	 * @return a new {@code MethodInfo} instance
-	 */
-	public static MethodInfo newInstance() {
-		return new MethodInfo();
-	}
-	
-	/**
 	 * Returns a {@link NodeFilter} that accepts {@link Node}s that are instances of {@link MethodInfo} and have an {@code isAbstract()} method that returns {@code true}.
 	 * <p>
 	 * The {@code NodeFilter} returned by this method will throw a {@code NullPointerException} if, and only if, the {@code Node} to accept or reject is {@code null}. It is also stateless and therefore considered thread-safe.

@@ -46,7 +46,7 @@ final class RuntimeVisibleParameterAnnotationsAttributeReader  implements Attrib
 	@Override
 	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
-			final RuntimeVisibleParameterAnnotationsAttribute runtimeVisibleParameterAnnotationsAttribute = RuntimeVisibleParameterAnnotationsAttribute.newInstance(attributeNameIndex);
+			final RuntimeVisibleParameterAnnotationsAttribute runtimeVisibleParameterAnnotationsAttribute = new RuntimeVisibleParameterAnnotationsAttribute(attributeNameIndex);
 			
 			final int numParameters = dataInput.readUnsignedByte();
 			

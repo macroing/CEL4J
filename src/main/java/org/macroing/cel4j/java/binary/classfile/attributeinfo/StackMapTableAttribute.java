@@ -30,7 +30,6 @@ import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
-import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * A {@code StackMapTableAttribute} denotes a StackMapTable_attribute structure somewhere in a ClassFile structure.
@@ -52,7 +51,15 @@ public final class StackMapTableAttribute extends AttributeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private StackMapTableAttribute(final int attributeNameIndex) {
+	/**
+	 * Constructs a new {@code StackMapTableAttribute} instance.
+	 * <p>
+	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param attributeNameIndex the attribute_name_index of the new {@code StackMapTableAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 */
+	public StackMapTableAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
 	}
 	
@@ -266,18 +273,5 @@ public final class StackMapTableAttribute extends AttributeInfo {
 	 */
 	public static List<StackMapTableAttribute> filter(final Node node) {
 		return NodeFilter.filter(node, NodeFilter.any(), StackMapTableAttribute.class);
-	}
-	
-	/**
-	 * Returns a new {@code StackMapTableAttribute} instance.
-	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code StackMapTableAttribute} instance
-	 * @return a new {@code StackMapTableAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
-	 */
-	public static StackMapTableAttribute newInstance(final int attributeNameIndex) {
-		return new StackMapTableAttribute(ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE));
 	}
 }

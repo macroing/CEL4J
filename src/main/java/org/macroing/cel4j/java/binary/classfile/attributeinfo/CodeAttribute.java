@@ -58,7 +58,15 @@ public final class CodeAttribute extends AttributeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private CodeAttribute(final int attributeNameIndex) {
+	/**
+	 * Constructs a new {@code CodeAttribute} instance.
+	 * <p>
+	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param attributeNameIndex the attribute_name_index of the new {@code CodeAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 */
+	public CodeAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
 		
 		this.attributeInfos = new ArrayList<>();
@@ -534,19 +542,6 @@ public final class CodeAttribute extends AttributeInfo {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code CodeAttribute} instance.
-	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code CodeAttribute} instance
-	 * @return a new {@code CodeAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
-	 */
-	public static CodeAttribute newInstance(final int attributeNameIndex) {
-		return new CodeAttribute(ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE));
-	}
 	
 	/**
 	 * Returns a {@code List} with all {@code CodeAttribute}s.

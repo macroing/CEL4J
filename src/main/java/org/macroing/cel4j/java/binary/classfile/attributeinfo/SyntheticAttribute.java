@@ -28,7 +28,6 @@ import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
-import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * A {@code SyntheticAttribute} denotes a Synthetic_attribute structure somewhere in a ClassFile structure.
@@ -46,7 +45,15 @@ public final class SyntheticAttribute extends AttributeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private SyntheticAttribute(final int attributeNameIndex) {
+	/**
+	 * Constructs a new {@code SyntheticAttribute} instance.
+	 * <p>
+	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param attributeNameIndex the attribute_name_index of the new {@code SyntheticAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 */
+	public SyntheticAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
 	}
 	
@@ -168,18 +175,5 @@ public final class SyntheticAttribute extends AttributeInfo {
 	 */
 	public static List<SyntheticAttribute> filter(final Node node) {
 		return NodeFilter.filter(node, NodeFilter.any(), SyntheticAttribute.class);
-	}
-	
-	/**
-	 * Returns a new {@code SyntheticAttribute} instance.
-	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code SyntheticAttribute} instance
-	 * @return a new {@code SyntheticAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
-	 */
-	public static SyntheticAttribute newInstance(final int attributeNameIndex) {
-		return new SyntheticAttribute(ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE));
 	}
 }

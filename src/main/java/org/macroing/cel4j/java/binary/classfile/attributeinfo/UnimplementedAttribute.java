@@ -29,7 +29,6 @@ import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
-import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * An {@link AttributeInfo} implementation that is used for all attribute_info structures currently not supported by this library.
@@ -47,10 +46,23 @@ public final class UnimplementedAttribute extends AttributeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private UnimplementedAttribute(final String name, final int attributeNameIndex, final byte[] info) {
+	/**
+	 * Constructs a new {@code UnimplementedAttribute} instance.
+	 * <p>
+	 * If either {@code name} or {@code info} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param name the name for the new {@code UnimplementedAttribute} instance
+	 * @param attributeNameIndex the attribute_name_index of the new {@code UnimplementedAttribute} instance
+	 * @param info the info of the new {@code UnimplementedAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 * @throws NullPointerException thrown if, and only if, either {@code name} or {@code info} are {@code null}
+	 */
+	public UnimplementedAttribute(final String name, final int attributeNameIndex, final byte[] info) {
 		super(name, attributeNameIndex);
 		
-		this.info = info;
+		this.info = Objects.requireNonNull(info, "info == null").clone();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -185,23 +197,5 @@ public final class UnimplementedAttribute extends AttributeInfo {
 	 */
 	public static List<UnimplementedAttribute> filter(final Node node) {
 		return NodeFilter.filter(node, NodeFilter.any(), UnimplementedAttribute.class);
-	}
-	
-	/**
-	 * Returns a new {@code UnimplementedAttribute} instance.
-	 * <p>
-	 * If either {@code name} or {@code info} are {@code null}, a {@code NullPointerException} will be thrown.
-	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param name the name for the new {@code UnimplementedAttribute} instance
-	 * @param attributeNameIndex the attribute_name_index of the new {@code UnimplementedAttribute} instance
-	 * @param info the info of the new {@code UnimplementedAttribute} instance
-	 * @return a new {@code UnimplementedAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
-	 * @throws NullPointerException thrown if, and only if, either {@code name} or {@code info} are {@code null}
-	 */
-	public static UnimplementedAttribute newInstance(final String name, final int attributeNameIndex, final byte[] info) {
-		return new UnimplementedAttribute(Objects.requireNonNull(name, "name == null"), ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE), info.clone());
 	}
 }

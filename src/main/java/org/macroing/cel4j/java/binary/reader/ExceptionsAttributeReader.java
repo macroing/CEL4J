@@ -36,7 +36,7 @@ final class ExceptionsAttributeReader implements AttributeInfoReader {
 	@Override
 	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
-			final ExceptionsAttribute exceptionsAttribute = ExceptionsAttribute.newInstance(attributeNameIndex);
+			final ExceptionsAttribute exceptionsAttribute = new ExceptionsAttribute(attributeNameIndex);
 			
 			final int numberOfExceptions = doReadU2(dataInput);
 			

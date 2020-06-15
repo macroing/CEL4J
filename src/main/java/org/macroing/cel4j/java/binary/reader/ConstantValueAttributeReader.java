@@ -38,7 +38,7 @@ final class ConstantValueAttributeReader implements AttributeInfoReader {
 		try {
 			final int constantValueIndex = dataInput.readUnsignedShort();
 			
-			final AttributeInfo attributeInfo = ConstantValueAttribute.newInstance(attributeNameIndex, constantValueIndex);
+			final AttributeInfo attributeInfo = new ConstantValueAttribute(attributeNameIndex, constantValueIndex);
 			
 			return attributeInfo;
 		} catch(final IOException | IllegalArgumentException e) {

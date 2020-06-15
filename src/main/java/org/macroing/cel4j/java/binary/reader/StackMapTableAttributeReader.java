@@ -55,7 +55,7 @@ final class StackMapTableAttributeReader implements AttributeInfoReader {
 	@Override
 	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
-			final StackMapTableAttribute stackMapTableAttribute = StackMapTableAttribute.newInstance(attributeNameIndex);
+			final StackMapTableAttribute stackMapTableAttribute = new StackMapTableAttribute(attributeNameIndex);
 			
 			final int numberOfEntries = dataInput.readUnsignedShort();
 			

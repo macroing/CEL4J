@@ -38,7 +38,7 @@ final class SignatureAttributeReader implements AttributeInfoReader {
 		try {
 			final int signatureIndex = dataInput.readUnsignedShort();
 			
-			final AttributeInfo attributeInfo = SignatureAttribute.newInstance(attributeNameIndex, signatureIndex);
+			final AttributeInfo attributeInfo = new SignatureAttribute(attributeNameIndex, signatureIndex);
 			
 			return attributeInfo;
 		} catch(final IOException | IllegalArgumentException e) {

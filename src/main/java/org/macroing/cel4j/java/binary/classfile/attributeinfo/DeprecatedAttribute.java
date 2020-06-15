@@ -30,7 +30,6 @@ import org.macroing.cel4j.java.binary.classfile.MethodInfo;
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
-import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * A {@code DeprecatedAttribute} denotes a Deprecated_attribute structure somewhere in a ClassFile structure.
@@ -48,7 +47,15 @@ public final class DeprecatedAttribute extends AttributeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private DeprecatedAttribute(final int attributeNameIndex) {
+	/**
+	 * Constructs a new {@code DeprecatedAttribute} instance.
+	 * <p>
+	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param attributeNameIndex the attribute_name_index of the new {@code DeprecatedAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 */
+	public DeprecatedAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
 	}
 	
@@ -156,19 +163,6 @@ public final class DeprecatedAttribute extends AttributeInfo {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code DeprecatedAttribute} instance.
-	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code DeprecatedAttribute} instance
-	 * @return a new {@code DeprecatedAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
-	 */
-	public static DeprecatedAttribute newInstance(final int attributeNameIndex) {
-		return new DeprecatedAttribute(ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE));
-	}
 	
 	/**
 	 * Returns a {@code List} with all {@code DeprecatedAttribute}s.

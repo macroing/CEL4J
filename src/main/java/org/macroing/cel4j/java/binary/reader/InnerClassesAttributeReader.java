@@ -37,13 +37,13 @@ final class InnerClassesAttributeReader implements AttributeInfoReader {
 	@Override
 	public AttributeInfo read(final DataInput dataInput, final int attributeNameIndex, final List<CPInfo> constantPool) {
 		try {
-			final InnerClassesAttribute innerClassesAttribute = InnerClassesAttribute.newInstance(attributeNameIndex);
+			final InnerClassesAttribute innerClassesAttribute = new InnerClassesAttribute(attributeNameIndex);
 			
 			final int numberOfClasses = dataInput.readUnsignedShort();
 			
 			for(int i = 0; i < numberOfClasses; i++) {
 				final
-				InnerClass innerClass = InnerClass.newInstance();
+				InnerClass innerClass = new InnerClass();
 				innerClass.setInnerClassInfoIndex(dataInput.readUnsignedShort());
 				innerClass.setOuterClassInfoIndex(dataInput.readUnsignedShort());
 				innerClass.setInnerNameIndex(dataInput.readUnsignedShort());

@@ -1,3 +1,13 @@
+2020-06-15  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Binary:
+
+		* CHANGE:	Change the visibility for the constructors of CPInfo implementations.
+		* CHANGE:	Change the visibility for the constructors of AttributeInfo implementations and some of their internal classes to public.
+		* REMOVE:	Remove the newInstance(...) methods from the CPInfo implementations.
+		* REMOVE:	Remove the newInstance(...) methods from the AttributeInfo implementations and some of their internal classes.
+		* REMOVE:	Remove the newInstance(...) methods from the ClassFile, FieldInfo and MethodInfo classes.
+
 2020-06-14  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:

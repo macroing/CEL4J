@@ -230,7 +230,7 @@ public final class ClassFile implements Node {
 	public ClassFile() {
 		this.attributeInfos = new CopyOnWriteArrayList<>();
 		this.cPInfos = new CopyOnWriteArrayList<>();
-		this.cPInfos.add(ConstantUnreachableInfo.newInstance());
+		this.cPInfos.add(new ConstantUnreachableInfo());
 		this.fieldInfos = new CopyOnWriteArrayList<>();
 		this.interfaces = new CopyOnWriteArrayList<>();
 		this.methodInfos = new CopyOnWriteArrayList<>();
@@ -849,7 +849,7 @@ public final class ClassFile implements Node {
 	public boolean addCPInfo(final CPInfo cPInfo) {
 		if(this.cPInfos.add(Objects.requireNonNull(cPInfo, "cPInfo == null"))) {
 			for(int i = 1; i < cPInfo.getConstantPoolEntryCount(); i++) {
-				this.cPInfos.add(ConstantUnreachableInfo.newInstance());
+				this.cPInfos.add(new ConstantUnreachableInfo());
 			}
 			
 			return true;
@@ -1254,7 +1254,7 @@ public final class ClassFile implements Node {
 		this.cPInfos.add(index, Objects.requireNonNull(cPInfo, "cPInfo == null"));
 		
 		for(int i = 1; i < cPInfo.getConstantPoolEntryCount(); i++) {
-			this.cPInfos.add(index + i, ConstantUnreachableInfo.newInstance());
+			this.cPInfos.add(index + i, new ConstantUnreachableInfo());
 		}
 		
 		return true;
@@ -1739,16 +1739,5 @@ public final class ClassFile implements Node {
 	 */
 	public void setThisClass(final int thisClass) {
 		this.thisClass = ParameterArguments.requireRange(thisClass, 1, Integer.MAX_VALUE);
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new empty {@code ClassFile} instance.
-	 * 
-	 * @return a new empty {@code ClassFile} instance
-	 */
-	public static ClassFile newInstance() {
-		return new ClassFile();
 	}
 }

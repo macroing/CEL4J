@@ -30,7 +30,6 @@ import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
-import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * A {@code RuntimeVisibleAnnotationsAttribute} denotes a RuntimeVisibleAnnotations_attribute structure somewhere in a ClassFile structure.
@@ -52,7 +51,15 @@ public final class RuntimeVisibleAnnotationsAttribute extends AttributeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private RuntimeVisibleAnnotationsAttribute(final int attributeNameIndex) {
+	/**
+	 * Constructs a new {@code RuntimeVisibleAnnotationsAttribute} instance.
+	 * <p>
+	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param attributeNameIndex the attribute_name_index of the new {@code RuntimeVisibleAnnotationsAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 */
+	public RuntimeVisibleAnnotationsAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
 	}
 	
@@ -279,18 +286,5 @@ public final class RuntimeVisibleAnnotationsAttribute extends AttributeInfo {
 	 */
 	public static List<RuntimeVisibleAnnotationsAttribute> filter(final Node node) {
 		return NodeFilter.filter(node, NodeFilter.any(), RuntimeVisibleAnnotationsAttribute.class);
-	}
-	
-	/**
-	 * Returns a new {@code RuntimeVisibleAnnotationsAttribute} instance.
-	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code RuntimeVisibleAnnotationsAttribute} instance
-	 * @return a new {@code RuntimeVisibleAnnotationsAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
-	 */
-	public static RuntimeVisibleAnnotationsAttribute newInstance(final int attributeNameIndex) {
-		return new RuntimeVisibleAnnotationsAttribute(ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE));
 	}
 }
