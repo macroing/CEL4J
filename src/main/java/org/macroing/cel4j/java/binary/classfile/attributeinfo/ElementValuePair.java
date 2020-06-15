@@ -36,9 +36,10 @@ public final class ElementValuePair implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ElementValuePair(final int elementNameIndex, final ElementValue value) {
-		this.elementNameIndex = elementNameIndex;
-		this.value = value;
+//	TODO: Add Javadocs!
+	public ElementValuePair(final int elementNameIndex, final ElementValue value) {
+		this.elementNameIndex = ParameterArguments.requireRange(elementNameIndex, 1, Integer.MAX_VALUE, "elementNameIndex");
+		this.value = Objects.requireNonNull(value, "value == null");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,12 +113,5 @@ public final class ElementValuePair implements Node {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-//	TODO: Add Javadocs!
-	public static ElementValuePair newInstance(final int elementNameIndex, final ElementValue value) {
-		return new ElementValuePair(ParameterArguments.requireRange(elementNameIndex, 1, Integer.MAX_VALUE, "elementNameIndex"), Objects.requireNonNull(value, "value == null"));
 	}
 }

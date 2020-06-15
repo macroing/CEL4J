@@ -32,8 +32,9 @@ public final class ConstValueIndexUnion implements Union {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ConstValueIndexUnion(final int constValueIndex) {
-		this.constValueIndex = constValueIndex;
+//	TODO: Add Javadocs!
+	public ConstValueIndexUnion(final int constValueIndex) {
+		this.constValueIndex = ParameterArguments.requireRange(constValueIndex, 1, Integer.MAX_VALUE, "constValueIndex");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,12 +84,5 @@ public final class ConstValueIndexUnion implements Union {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-//	TODO: Add Javadocs!
-	public static ConstValueIndexUnion newInstance(final int constValueIndex) {
-		return new ConstValueIndexUnion(ParameterArguments.requireRange(constValueIndex, 1, Integer.MAX_VALUE, "constValueIndex"));
 	}
 }

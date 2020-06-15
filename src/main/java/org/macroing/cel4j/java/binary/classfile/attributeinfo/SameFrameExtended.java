@@ -33,9 +33,10 @@ public final class SameFrameExtended implements StackMapFrame {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private SameFrameExtended(final int frameType, final int offsetDelta) {
-		this.frameType = frameType;
-		this.offsetDelta = offsetDelta;
+//	TODO: Add Javadocs!
+	public SameFrameExtended(final int frameType, final int offsetDelta) {
+		this.frameType = ParameterArguments.requireRange(frameType, 251, 251, "frameType");
+		this.offsetDelta = ParameterArguments.requireRange(offsetDelta, 0, Integer.MAX_VALUE, "offsetDelta");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,12 +95,5 @@ public final class SameFrameExtended implements StackMapFrame {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-//	TODO: Add Javadocs!
-	public static SameFrameExtended newInstance(final int frameType, final int offsetDelta) {
-		return new SameFrameExtended(ParameterArguments.requireRange(frameType, 251, 251, "frameType"), ParameterArguments.requireRange(offsetDelta, 0, Integer.MAX_VALUE, "offsetDelta"));
 	}
 }

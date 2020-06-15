@@ -33,8 +33,9 @@ public final class UninitializedVariableInfo implements VerificationTypeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private UninitializedVariableInfo(final int offset) {
-		this.offset = offset;
+//	TODO: Add Javadocs!
+	public UninitializedVariableInfo(final int offset) {
+		this.offset = ParameterArguments.requireRange(offset, 0, Integer.MAX_VALUE);
 		this.tag = ITEM_UNINITIALIZED;
 	}
 	
@@ -94,12 +95,5 @@ public final class UninitializedVariableInfo implements VerificationTypeInfo {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-//	TODO: Add Javadocs!
-	public static UninitializedVariableInfo newInstance(final int offset) {
-		return new UninitializedVariableInfo(ParameterArguments.requireRange(offset, 0, Integer.MAX_VALUE));
 	}
 }

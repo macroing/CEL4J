@@ -33,9 +33,10 @@ public final class EnumConstValueUnion implements Union {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private EnumConstValueUnion(final int typeNameIndex, final int constNameIndex) {
-		this.typeNameIndex = typeNameIndex;
-		this.constNameIndex = constNameIndex;
+//	TODO: Add Javadocs!
+	public EnumConstValueUnion(final int typeNameIndex, final int constNameIndex) {
+		this.typeNameIndex = ParameterArguments.requireRange(typeNameIndex, 1, Integer.MAX_VALUE, "typeNameIndex");
+		this.constNameIndex = ParameterArguments.requireRange(constNameIndex, 1, Integer.MAX_VALUE, "constNameIndex");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,12 +94,5 @@ public final class EnumConstValueUnion implements Union {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-//	TODO: Add Javadocs!
-	public static EnumConstValueUnion newInstance(final int typeNameIndex, final int constNameIndex) {
-		return new EnumConstValueUnion(ParameterArguments.requireRange(typeNameIndex, 1, Integer.MAX_VALUE, "typeNameIndex"), ParameterArguments.requireRange(constNameIndex, 1, Integer.MAX_VALUE, "constNameIndex"));
 	}
 }

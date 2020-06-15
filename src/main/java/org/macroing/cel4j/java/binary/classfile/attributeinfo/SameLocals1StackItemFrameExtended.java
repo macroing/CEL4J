@@ -36,10 +36,11 @@ public final class SameLocals1StackItemFrameExtended implements StackMapFrame {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private SameLocals1StackItemFrameExtended(final int frameType, final int offsetDelta, final VerificationTypeInfo verificationTypeInfo) {
-		this.frameType = frameType;
-		this.offsetDelta = offsetDelta;
-		this.verificationTypeInfo = verificationTypeInfo;
+//	TODO: Add Javadocs!
+	public SameLocals1StackItemFrameExtended(final int frameType, final int offsetDelta, final VerificationTypeInfo verificationTypeInfo) {
+		this.frameType = ParameterArguments.requireRange(frameType, 247, 247, "frameType");
+		this.offsetDelta = ParameterArguments.requireRange(offsetDelta, 0, Integer.MAX_VALUE, "offsetDelta");
+		this.verificationTypeInfo = Objects.requireNonNull(verificationTypeInfo, "verificationTypeInfo == null");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -125,12 +126,5 @@ public final class SameLocals1StackItemFrameExtended implements StackMapFrame {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-//	TODO: Add Javadocs!
-	public static SameLocals1StackItemFrameExtended newInstance(final int frameType, final int offsetDelta, final VerificationTypeInfo verificationTypeInfo) {
-		return new SameLocals1StackItemFrameExtended(ParameterArguments.requireRange(frameType, 247, 247, "frameType"), ParameterArguments.requireRange(offsetDelta, 0, Integer.MAX_VALUE, "offsetDelta"), Objects.requireNonNull(verificationTypeInfo, "verificationTypeInfo == null"));
 	}
 }

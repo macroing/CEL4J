@@ -32,8 +32,9 @@ public final class ClassInfoIndexUnion implements Union {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ClassInfoIndexUnion(final int classInfoIndex) {
-		this.classInfoIndex = classInfoIndex;
+//	TODO: Add Javadocs!
+	public ClassInfoIndexUnion(final int classInfoIndex) {
+		this.classInfoIndex = ParameterArguments.requireRange(classInfoIndex, 1, Integer.MAX_VALUE, "classInfoIndex");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,12 +84,5 @@ public final class ClassInfoIndexUnion implements Union {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-//	TODO: Add Javadocs!
-	public static ClassInfoIndexUnion newInstance(final int classInfoIndex) {
-		return new ClassInfoIndexUnion(ParameterArguments.requireRange(classInfoIndex, 1, Integer.MAX_VALUE, "classInfoIndex"));
 	}
 }

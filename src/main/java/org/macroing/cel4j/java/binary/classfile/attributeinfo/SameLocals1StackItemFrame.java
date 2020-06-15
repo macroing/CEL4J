@@ -35,9 +35,10 @@ public final class SameLocals1StackItemFrame implements StackMapFrame {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private SameLocals1StackItemFrame(final int frameType, final VerificationTypeInfo verificationTypeInfo) {
-		this.frameType = frameType;
-		this.verificationTypeInfo = verificationTypeInfo;
+//	TODO: Add Javadocs!
+	public SameLocals1StackItemFrame(final int frameType, final VerificationTypeInfo verificationTypeInfo) {
+		this.frameType = ParameterArguments.requireRange(frameType, 64, 127, "frameType");
+		this.verificationTypeInfo = Objects.requireNonNull(verificationTypeInfo, "verificationTypeInfo == null");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,12 +116,5 @@ public final class SameLocals1StackItemFrame implements StackMapFrame {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-//	TODO: Add Javadocs!
-	public static SameLocals1StackItemFrame newInstance(final int frameType, final VerificationTypeInfo verificationTypeInfo) {
-		return new SameLocals1StackItemFrame(ParameterArguments.requireRange(frameType, 64, 127, "frameType"), Objects.requireNonNull(verificationTypeInfo, "verificationTypeInfo == null"));
 	}
 }

@@ -76,9 +76,10 @@ public final class ElementValue implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ElementValue(final int tag, final Union value) {
-		this.tag = tag;
-		this.value = value;
+//	TODO: Add Javadocs!
+	public ElementValue(final int tag, final Union value) {
+		this.tag = doRequireValidTag(tag);
+		this.value = doRequireValidValue(tag, value);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -152,13 +153,6 @@ public final class ElementValue implements Node {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-//	TODO: Add Javadocs!
-	public static ElementValue newInstance(final int tag, final Union value) {
-		return new ElementValue(doRequireValidTag(tag), doRequireValidValue(tag, value));
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

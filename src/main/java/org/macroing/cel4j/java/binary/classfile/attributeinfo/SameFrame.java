@@ -32,8 +32,9 @@ public final class SameFrame implements StackMapFrame {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private SameFrame(final int frameType) {
-		this.frameType = frameType;
+//	TODO: Add Javadocs!
+	public SameFrame(final int frameType) {
+		this.frameType = ParameterArguments.requireRange(frameType, 0, 63, "frameType");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -84,12 +85,5 @@ public final class SameFrame implements StackMapFrame {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-//	TODO: Add Javadocs!
-	public static SameFrame newInstance(final int frameType) {
-		return new SameFrame(ParameterArguments.requireRange(frameType, 0, 63, "frameType"));
 	}
 }

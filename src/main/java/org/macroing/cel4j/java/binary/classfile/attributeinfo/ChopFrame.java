@@ -33,9 +33,10 @@ public final class ChopFrame implements StackMapFrame {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ChopFrame(final int frameType, final int offsetDelta) {
-		this.frameType = frameType;
-		this.offsetDelta = offsetDelta;
+//	TODO: Add Javadocs!
+	public ChopFrame(final int frameType, final int offsetDelta) {
+		this.frameType = ParameterArguments.requireRange(frameType, 248, 250, "frameType");
+		this.offsetDelta = ParameterArguments.requireRange(offsetDelta, 0, Integer.MAX_VALUE, "offsetDelta");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,12 +95,5 @@ public final class ChopFrame implements StackMapFrame {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-//	TODO: Add Javadocs!
-	public static ChopFrame newInstance(final int frameType, final int offsetDelta) {
-		return new ChopFrame(ParameterArguments.requireRange(frameType, 248, 250, "frameType"), ParameterArguments.requireRange(offsetDelta, 0, Integer.MAX_VALUE, "offsetDelta"));
 	}
 }

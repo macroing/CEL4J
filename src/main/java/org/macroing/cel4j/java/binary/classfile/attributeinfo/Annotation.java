@@ -38,8 +38,9 @@ public final class Annotation implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private Annotation(final int typeIndex) {
-		this.typeIndex = typeIndex;
+//	TODO: Add Javadocs!
+	public Annotation(final int typeIndex) {
+		this.typeIndex = ParameterArguments.requireRange(typeIndex, 1, Integer.MAX_VALUE);
 		this.elementValuePairs = new ArrayList<>();
 	}
 	
@@ -147,12 +148,5 @@ public final class Annotation implements Node {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-//	TODO: Add Javadocs!
-	public static Annotation newInstance(final int typeIndex) {
-		return new Annotation(ParameterArguments.requireRange(typeIndex, 1, Integer.MAX_VALUE));
 	}
 }

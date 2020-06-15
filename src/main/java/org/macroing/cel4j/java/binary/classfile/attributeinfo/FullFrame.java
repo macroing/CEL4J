@@ -40,11 +40,12 @@ public final class FullFrame implements StackMapFrame {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private FullFrame(final int frameType, final int offsetDelta, final List<VerificationTypeInfo> locals, final List<VerificationTypeInfo> stack) {
-		this.frameType = frameType;
-		this.offsetDelta = offsetDelta;
-		this.locals = locals;
-		this.stack = stack;
+//	TODO: Add Javadocs!
+	public FullFrame(final int frameType, final int offsetDelta, final List<VerificationTypeInfo> locals, final List<VerificationTypeInfo> stack) {
+		this.frameType = ParameterArguments.requireRange(frameType, 255, 255, "frameType");
+		this.offsetDelta = ParameterArguments.requireRange(offsetDelta, 0, Integer.MAX_VALUE, "offsetDelta");
+		this.locals = new ArrayList<>(ParameterArguments.requireNonNullList(locals, "locals"));
+		this.stack = new ArrayList<>(ParameterArguments.requireNonNullList(stack, "stack"));
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -169,18 +170,5 @@ public final class FullFrame implements StackMapFrame {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-//	TODO: Add Javadocs!
-	public static FullFrame newInstance(final int frameType, final int offsetDelta, final List<VerificationTypeInfo> locals, final List<VerificationTypeInfo> stack) {
-		final int frameType0 = ParameterArguments.requireRange(frameType, 255, 255, "frameType");
-		final int offsetDelta0 = ParameterArguments.requireRange(offsetDelta, 0, Integer.MAX_VALUE, "offsetDelta");
-		
-		final List<VerificationTypeInfo> locals0 = new ArrayList<>(ParameterArguments.requireNonNullList(locals, "locals"));
-		final List<VerificationTypeInfo> stack0 = new ArrayList<>(ParameterArguments.requireNonNullList(stack, "stack"));
-		
-		return new FullFrame(frameType0, offsetDelta0, locals0, stack0);
 	}
 }

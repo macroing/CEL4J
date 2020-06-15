@@ -71,7 +71,7 @@ final class RuntimeInvisibleParameterAnnotationsAttributeReader  implements Attr
 		final int typeIndex = dataInput.readUnsignedShort();
 		final int numElementValuePairs = dataInput.readUnsignedShort();
 		
-		final Annotation annotation = Annotation.newInstance(typeIndex);
+		final Annotation annotation = new Annotation(typeIndex);
 		
 		for(int i = 0; i < numElementValuePairs; i++) {
 			annotation.addElementValuePair(doReadElementValuePair(dataInput));
@@ -85,11 +85,11 @@ final class RuntimeInvisibleParameterAnnotationsAttributeReader  implements Attr
 		
 		final Union value = doReadUnion(dataInput, tag);
 		
-		return ElementValue.newInstance(tag, value);
+		return new ElementValue(tag, value);
 	}
 	
 	private static ElementValuePair doReadElementValuePair(final DataInput dataInput) throws IOException {
-		return ElementValuePair.newInstance(dataInput.readUnsignedShort(), doReadElementValue(dataInput));
+		return new ElementValuePair(dataInput.readUnsignedShort(), doReadElementValue(dataInput));
 	}
 	
 	private static ParameterAnnotation doReadParameterAnnotation(final DataInput dataInput) throws IOException {
@@ -107,7 +107,7 @@ final class RuntimeInvisibleParameterAnnotationsAttributeReader  implements Attr
 	private static Union doReadUnion(final DataInput dataInput, final int tag) throws IOException {
 		switch(tag) {
 			case ElementValue.ANNOTATION_TYPE_TAG:
-				return AnnotationValueUnion.newInstance(doReadAnnotation(dataInput));
+				return new AnnotationValueUnion(doReadAnnotation(dataInput));
 			case ElementValue.ARRAY_TAG:
 				final int numValues = dataInput.readUnsignedShort();
 				
@@ -119,27 +119,27 @@ final class RuntimeInvisibleParameterAnnotationsAttributeReader  implements Attr
 				
 				return arrayValueUnion;
 			case ElementValue.BOOLEAN_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
+				return new ConstValueIndexUnion(dataInput.readUnsignedShort());
 			case ElementValue.BYTE_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
+				return new ConstValueIndexUnion(dataInput.readUnsignedShort());
 			case ElementValue.CHAR_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
+				return new ConstValueIndexUnion(dataInput.readUnsignedShort());
 			case ElementValue.CLASS_TAG:
-				return ClassInfoIndexUnion.newInstance(dataInput.readUnsignedShort());
+				return new ClassInfoIndexUnion(dataInput.readUnsignedShort());
 			case ElementValue.DOUBLE_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
+				return new ConstValueIndexUnion(dataInput.readUnsignedShort());
 			case ElementValue.ENUM_CONSTANT_TAG:
-				return EnumConstValueUnion.newInstance(dataInput.readUnsignedShort(), dataInput.readUnsignedShort());
+				return new EnumConstValueUnion(dataInput.readUnsignedShort(), dataInput.readUnsignedShort());
 			case ElementValue.FLOAT_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
+				return new ConstValueIndexUnion(dataInput.readUnsignedShort());
 			case ElementValue.INT_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
+				return new ConstValueIndexUnion(dataInput.readUnsignedShort());
 			case ElementValue.LONG_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
+				return new ConstValueIndexUnion(dataInput.readUnsignedShort());
 			case ElementValue.SHORT_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
+				return new ConstValueIndexUnion(dataInput.readUnsignedShort());
 			case ElementValue.STRING_TAG:
-				return ConstValueIndexUnion.newInstance(dataInput.readUnsignedShort());
+				return new ConstValueIndexUnion(dataInput.readUnsignedShort());
 			default:
 				throw new IOException(String.format("Malformed tag: %s", Integer.valueOf(tag)));
 		}

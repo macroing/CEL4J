@@ -39,10 +39,15 @@ public final class AppendFrame implements StackMapFrame {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private AppendFrame(final int frameType, final int offsetDelta, final List<VerificationTypeInfo> locals) {
-		this.frameType = frameType;
-		this.offsetDelta = offsetDelta;
-		this.locals = locals;
+//	TODO: Add Javadocs!
+	public AppendFrame(final int frameType, final int offsetDelta, final List<VerificationTypeInfo> locals) {
+		this.frameType = ParameterArguments.requireRange(frameType, 252, 254, "frameType");
+		this.offsetDelta = ParameterArguments.requireRange(offsetDelta, 0, Integer.MAX_VALUE, "offsetDelta");
+		this.locals = new ArrayList<>(ParameterArguments.requireNonNullList(locals, "locals"));
+		
+		if(this.locals.size() != this.frameType - 251) {
+			throw new IllegalArgumentException(String.format("locals.size() != frameType - 251: Expected %s but found %s", Integer.valueOf(this.frameType - 251), Integer.valueOf(this.locals.size())));
+		}
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -140,21 +145,5 @@ public final class AppendFrame implements StackMapFrame {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-//	TODO: Add Javadocs!
-	public static AppendFrame newInstance(final int frameType, final int offsetDelta, final List<VerificationTypeInfo> locals) {
-		final int frameType0 = ParameterArguments.requireRange(frameType, 252, 254, "frameType");
-		final int offsetDelta0 = ParameterArguments.requireRange(offsetDelta, 0, Integer.MAX_VALUE, "offsetDelta");
-		
-		final List<VerificationTypeInfo> locals0 = new ArrayList<>(ParameterArguments.requireNonNullList(locals, "locals"));
-		
-		if(locals0.size() != frameType0 - 251) {
-			throw new IllegalArgumentException(String.format("locals.size() != frameType - 251: Expected %s but found %s", Integer.valueOf(frameType0 - 251), Integer.valueOf(locals0.size())));
-		}
-		
-		return new AppendFrame(frameType0, offsetDelta0, locals0);
 	}
 }

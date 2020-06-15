@@ -33,8 +33,9 @@ public final class ObjectVariableInfo implements VerificationTypeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ObjectVariableInfo(final int constantPoolIndex) {
-		this.constantPoolIndex = constantPoolIndex;
+//	TODO: Add Javadocs!
+	public ObjectVariableInfo(final int constantPoolIndex) {
+		this.constantPoolIndex = ParameterArguments.requireRange(constantPoolIndex, 1, Integer.MAX_VALUE);
 		this.tag = ITEM_OBJECT;
 	}
 	
@@ -94,12 +95,5 @@ public final class ObjectVariableInfo implements VerificationTypeInfo {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-//	TODO: Add Javadocs!
-	public static ObjectVariableInfo newInstance(final int constantPoolIndex) {
-		return new ObjectVariableInfo(ParameterArguments.requireRange(constantPoolIndex, 1, Integer.MAX_VALUE));
 	}
 }

@@ -80,15 +80,15 @@ final class StackMapTableAttributeReader implements AttributeInfoReader {
 		final int frameType = dataInput.readByte() & 0xFF;
 		
 		if(frameType >= 0 && frameType <= 63) {
-			return SameFrame.newInstance(frameType);
+			return new SameFrame(frameType);
 		} else if(frameType >= 64 && frameType <= 127) {
-			return SameLocals1StackItemFrame.newInstance(frameType, doReadVerificationTypeInfo(dataInput));
+			return new SameLocals1StackItemFrame(frameType, doReadVerificationTypeInfo(dataInput));
 		} else if(frameType == 247) {
-			return SameLocals1StackItemFrameExtended.newInstance(frameType, dataInput.readShort(), doReadVerificationTypeInfo(dataInput));
+			return new SameLocals1StackItemFrameExtended(frameType, dataInput.readShort(), doReadVerificationTypeInfo(dataInput));
 		} else if(frameType >= 248 && frameType <= 250) {
-			return ChopFrame.newInstance(frameType, dataInput.readShort());
+			return new ChopFrame(frameType, dataInput.readShort());
 		} else if(frameType == 251) {
-			return SameFrameExtended.newInstance(frameType, dataInput.readShort());
+			return new SameFrameExtended(frameType, dataInput.readShort());
 		} else if(frameType >= 252 && frameType <= 254) {
 			final int offsetDelta = dataInput.readShort();
 			final int numberOfLocals = frameType - 251;
@@ -99,7 +99,7 @@ final class StackMapTableAttributeReader implements AttributeInfoReader {
 				locals.add(doReadVerificationTypeInfo(dataInput));
 			}
 			
-			return AppendFrame.newInstance(frameType, offsetDelta, locals);
+			return new AppendFrame(frameType, offsetDelta, locals);
 		} else if(frameType == 255) {
 			final int offsetDelta = dataInput.readShort();
 			final int numberOfLocals = dataInput.readShort();
@@ -118,7 +118,7 @@ final class StackMapTableAttributeReader implements AttributeInfoReader {
 				stack.add(doReadVerificationTypeInfo(dataInput));
 			}
 			
-			return FullFrame.newInstance(frameType, offsetDelta, locals, stack);
+			return new FullFrame(frameType, offsetDelta, locals, stack);
 		}
 		
 		throw new AttributeInfoReaderException(String.format("Illegal frame_type: %s", Integer.toString(frameType)));
@@ -139,11 +139,11 @@ final class StackMapTableAttributeReader implements AttributeInfoReader {
 			case VerificationTypeInfo.ITEM_NULL:
 				return NullVariableInfo.getInstance();
 			case VerificationTypeInfo.ITEM_OBJECT:
-				return ObjectVariableInfo.newInstance(dataInput.readShort());
+				return new ObjectVariableInfo(dataInput.readShort());
 			case VerificationTypeInfo.ITEM_TOP:
 				return TopVariableInfo.getInstance();
 			case VerificationTypeInfo.ITEM_UNINITIALIZED:
-				return UninitializedVariableInfo.newInstance(dataInput.readShort());
+				return new UninitializedVariableInfo(dataInput.readShort());
 			case VerificationTypeInfo.ITEM_UNINITIALIZED_THIS:
 				return UninitializedThisVariableInfo.getInstance();
 			default:

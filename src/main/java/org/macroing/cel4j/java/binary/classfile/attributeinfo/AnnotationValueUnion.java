@@ -31,8 +31,9 @@ public final class AnnotationValueUnion implements Union {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private AnnotationValueUnion(final Annotation annotationValue) {
-		this.annotationValue = annotationValue;
+//	TODO: Add Javadocs!
+	public AnnotationValueUnion(final Annotation annotationValue) {
+		this.annotationValue = Objects.requireNonNull(annotationValue, "annotationValue == null");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,12 +97,5 @@ public final class AnnotationValueUnion implements Union {
 	@Override
 	public void write(final DataOutput dataOutput) {
 		this.annotationValue.write(dataOutput);
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-//	TODO: Add Javadocs!
-	public static AnnotationValueUnion newInstance(final Annotation annotationValue) {
-		return new AnnotationValueUnion(Objects.requireNonNull(annotationValue, "annotationValue == null"));
 	}
 }
