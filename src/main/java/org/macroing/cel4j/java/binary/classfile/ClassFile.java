@@ -362,7 +362,7 @@ public final class ClassFile implements Node {
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @return {@code dataOutput}
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, some {@code IOException} is caught
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	public DataOutput write(final DataOutput dataOutput) {
 		try {

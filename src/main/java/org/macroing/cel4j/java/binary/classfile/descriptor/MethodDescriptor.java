@@ -118,7 +118,7 @@ public final class MethodDescriptor implements Node {
 	 * <ul>
 	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
 	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
-	 * <li>traverse its child {@code Node}s.</li>
+	 * <li>traverse its child {@code Node} instances.</li>
 	 * </ul>
 	 * 
 	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
