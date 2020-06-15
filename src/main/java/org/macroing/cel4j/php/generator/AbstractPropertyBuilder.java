@@ -18,9 +18,9 @@
  */
 package org.macroing.cel4j.php.generator;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.macroing.cel4j.php.model.PConst;
 import org.macroing.cel4j.php.model.PField;
@@ -31,18 +31,35 @@ import org.macroing.cel4j.php.model.PType;
 import org.macroing.cel4j.php.model.PValue;
 import org.macroing.cel4j.util.Strings;
 
-//TODO: Add Javadocs!
+/**
+ * An {@code AbstractPropertyBuilder} an abstract convenience implementation of {@link PropertyBuilder}.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public abstract class AbstractPropertyBuilder implements PropertyBuilder {
-//	TODO: Add Javadocs!
+	/**
+	 * Constructs a new {@code AbstractPropertyBuilder} instance.
+	 */
 	protected AbstractPropertyBuilder() {
 		
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} of {@link PConst} with the consts to generate for {@code property}.
+	 * <p>
+	 * If {@code property} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param property the {@link Property} instance to generate for
+	 * @return a {@code List} of {@code PConst} with the consts to generate for {@code property}
+	 * @throws NullPointerException thrown if, and only if, {@code property} is {@code null}
+	 */
 	@Override
 	public List<PConst> toConsts(final Property property) {
+		Objects.requireNonNull(property, "property == null");
+		
 		final List<PConst> consts = new ArrayList<>();
 		
 		consts.add(toConst(property));
@@ -50,9 +67,19 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		return consts;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} of {@link PField} with the fields to generate for {@code property}.
+	 * <p>
+	 * If {@code property} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param property the {@link Property} instance to generate for
+	 * @return a {@code List} of {@code PField} with the fields to generate for {@code property}
+	 * @throws NullPointerException thrown if, and only if, {@code property} is {@code null}
+	 */
 	@Override
 	public List<PField> toFields(final Property property) {
+		Objects.requireNonNull(property, "property == null");
+		
 		final List<PField> fields = new ArrayList<>();
 		
 		fields.add(toField(property));
@@ -60,9 +87,19 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		return fields;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} of {@link PMethod} with the methods to generate for {@code property}.
+	 * <p>
+	 * If {@code property} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param property the {@link Property} instance to generate for
+	 * @return a {@code List} of {@code PMethod} with the methods to generate for {@code property}
+	 * @throws NullPointerException thrown if, and only if, {@code property} is {@code null}
+	 */
 	@Override
 	public List<PMethod> toMethods(final Property property) {
+		Objects.requireNonNull(property, "property == null");
+		
 		final List<PMethod> methods = new ArrayList<>();
 		
 		final PType type = property.getType();
@@ -115,9 +152,19 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		return methods;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated constructor.
+	 * <p>
+	 * If {@code property} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param property the {@link Property} instance to generate for
+	 * @return a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated constructor
+	 * @throws NullPointerException thrown if, and only if, {@code property} is {@code null}
+	 */
 	@Override
 	public List<String> toConstructorLines(final Property property) {
+		Objects.requireNonNull(property, "property == null");
+		
 		final String name = property.getName();
 		final String nameCamelCase = Strings.formatCamelCase(name);
 		
@@ -128,9 +175,21 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		return constructorLines;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated method {@code copy()}.
+	 * <p>
+	 * If either {@code property} or {@code nameType} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param property the {@link Property} instance to generate for
+	 * @param nameType the name of the type
+	 * @return a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated method {@code copy()}
+	 * @throws NullPointerException thrown if, and only if, either {@code property} or {@code nameType} are {@code null}
+	 */
 	@Override
 	public List<String> toMethodCopyLines(final Property property, final String nameType) {
+		Objects.requireNonNull(property, "property == null");
+		Objects.requireNonNull(nameType, "nameType == null");
+		
 		final String name = property.getName();
 		final String nameCamelCase = Strings.formatCamelCase(name);
 		
@@ -141,9 +200,23 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		return methodCopyLines;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated method {@code parseArray(array)}.
+	 * <p>
+	 * If either {@code property}, {@code nameArray} or {@code nameType} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param property the {@link Property} instance to generate for
+	 * @param nameArray the name of the array
+	 * @param nameType the name of the type
+	 * @return a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated method {@code parseArray(array)}
+	 * @throws NullPointerException thrown if, and only if, either {@code property}, {@code nameArray} or {@code nameType} are {@code null}
+	 */
 	@Override
 	public List<String> toMethodParseArrayLines(final Property property, final String nameArray, final String nameType) {
+		Objects.requireNonNull(property, "property == null");
+		Objects.requireNonNull(nameArray, "nameArray == null");
+		Objects.requireNonNull(nameType, "nameType == null");
+		
 		final String name = property.getName();
 		final String nameCamelCase = Strings.formatCamelCase(name);
 		final String nameMethod = doGetNameMethod(property);
@@ -158,9 +231,21 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		return methodParseArrayLines;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated method {@code set(Type)}.
+	 * <p>
+	 * If either {@code property} or {@code nameType} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param property the {@link Property} instance to generate for
+	 * @param nameType the name of the type
+	 * @return a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated method {@code set(Type)}
+	 * @throws NullPointerException thrown if, and only if, either {@code property} or {@code nameType} are {@code null}
+	 */
 	@Override
 	public List<String> toMethodSetLines(final Property property, final String nameType) {
+		Objects.requireNonNull(property, "property == null");
+		Objects.requireNonNull(nameType, "nameType == null");
+		
 		final String name = property.getName();
 		final String nameCamelCase = Strings.formatCamelCase(name);
 		
@@ -171,9 +256,19 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		return methodSetLines;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated method {@code toArray(bool)}.
+	 * <p>
+	 * If {@code property} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param property the {@link Property} instance to generate for
+	 * @return a {@code List} of {@code String} with the source code lines associated with {@code property} in the generated method {@code toArray(bool)}
+	 * @throws NullPointerException thrown if, and only if, {@code property} is {@code null}
+	 */
 	@Override
 	public List<String> toMethodToArrayLines(final Property property) {
+		Objects.requireNonNull(property, "property == null");
+		
 		final PType type = property.getType();
 		
 		final String typeName = type.getName();
@@ -212,9 +307,19 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		return methodToArrayLines;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns {@code true} if, and only if, {@code type} is supported by this {@code PropertyBuilder} instance, {@code false} otherwise.
+	 * <p>
+	 * If {@code type} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param type the {@link PType} to check support for
+	 * @return {@code true} if, and only if, {@code type} is supported by this {@code PropertyBuilder} instance, {@code false} otherwise
+	 * @throws NullPointerException thrown if, and only if, {@code type} is {@code null}
+	 */
 	@Override
 	public boolean isTypeSupported(final PType type) {
+		Objects.requireNonNull(type, "type == null");
+		
 		final String typeName = type.getName();
 		
 		switch(typeName) {
@@ -245,13 +350,11 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
-	protected static PConst toConst(final Property property) {
+	static PConst toConst(final Property property) {
 		return new PConst(Strings.formatUnderscoreSeparatedUpperCase(property.getName()), PValue.valueOf(property.getCode()));
 	}
 	
-//	TODO: Add Javadocs!
-	protected static PField toField(final Property property) {
+	static PField toField(final Property property) {
 		final
 		PField pField = new PField();
 		pField.setName(Strings.formatCamelCaseModified(property.getName()));
@@ -260,8 +363,7 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		return pField;
 	}
 	
-//	TODO: Add Javadocs!
-	protected static PMethod toMethodDoParse(final String typeName) {
+	static PMethod toMethodDoParse(final String typeName) {
 		final String typeNameCamelCase = Strings.formatCamelCase(typeName);
 		
 		final
@@ -279,8 +381,7 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		return pMethod;
 	}
 	
-//	TODO: Add Javadocs!
-	protected static PMethod toMethodDoParseArray() {
+	static PMethod toMethodDoParseArray() {
 		final
 		PMethod pMethod = new PMethod();
 		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
@@ -296,8 +397,7 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		return pMethod;
 	}
 	
-//	TODO: Add Javadocs!
-	protected static PMethod toMethodDoParseBool() {
+	static PMethod toMethodDoParseBool() {
 		final
 		PMethod pMethod = new PMethod();
 		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
@@ -313,8 +413,7 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		return pMethod;
 	}
 	
-//	TODO: Add Javadocs!
-	protected static PMethod toMethodDoParseFloat() {
+	static PMethod toMethodDoParseFloat() {
 		final
 		PMethod pMethod = new PMethod();
 		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
@@ -330,8 +429,7 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		return pMethod;
 	}
 	
-//	TODO: Add Javadocs!
-	protected static PMethod toMethodDoParseInt() {
+	static PMethod toMethodDoParseInt() {
 		final
 		PMethod pMethod = new PMethod();
 		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
@@ -347,8 +445,7 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		return pMethod;
 	}
 	
-//	TODO: Add Javadocs!
-	protected static PMethod toMethodDoParseObject() {
+	static PMethod toMethodDoParseObject() {
 		final
 		PMethod pMethod = new PMethod();
 		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
@@ -364,8 +461,7 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		return pMethod;
 	}
 	
-//	TODO: Add Javadocs!
-	protected static PMethod toMethodDoParseString() {
+	static PMethod toMethodDoParseString() {
 		final
 		PMethod pMethod = new PMethod();
 		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
@@ -381,18 +477,15 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		return pMethod;
 	}
 	
-//	TODO: Add Javadocs!
-	protected static PMethod toMethodGet(final Property property) {
+	static PMethod toMethodGet(final Property property) {
 		return PMethod.newClassMethodGet(Strings.formatCamelCase(property.getName()), property.getType(), true);
 	}
 	
-//	TODO: Add Javadocs!
-	protected static PMethod toMethodHas(final Property property) {
+	static PMethod toMethodHas(final Property property) {
 		return PMethod.newClassMethodHas(Strings.formatCamelCase(property.getName()));
 	}
 	
-//	TODO: Add Javadocs!
-	protected static PMethod toMethodSet(final Property property) {
+	static PMethod toMethodSet(final Property property) {
 		final PType type = property.getType();
 		
 		final String name = property.getName();
