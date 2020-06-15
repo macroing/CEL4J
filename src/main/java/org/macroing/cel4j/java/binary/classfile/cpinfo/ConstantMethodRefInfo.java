@@ -59,11 +59,20 @@ public final class ConstantMethodRefInfo extends CPInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ConstantMethodRefInfo(final int classIndex, final int nameAndTypeIndex) {
+	/**
+	 * Constructs a new {@code ConstantMethodRefInfo}.
+	 * <p>
+	 * If either {@code classIndex} or {@code nameAndTypeIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param classIndex the class_index of the new {@code ConstantMethodRefInfo} instance
+	 * @param nameAndTypeIndex the name_and_type_index of the new {@code ConstantMethodRefInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code classIndex} or {@code nameAndTypeIndex} are less than or equal to {@code 0}
+	 */
+	public ConstantMethodRefInfo(final int classIndex, final int nameAndTypeIndex) {
 		super(NAME, TAG, 1);
 		
-		this.classIndex = classIndex;
-		this.nameAndTypeIndex = nameAndTypeIndex;
+		this.classIndex = ParameterArguments.requireRange(classIndex, 1, Integer.MAX_VALUE);
+		this.nameAndTypeIndex = ParameterArguments.requireRange(nameAndTypeIndex, 1, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -213,20 +222,6 @@ public final class ConstantMethodRefInfo extends CPInfo {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code ConstantMethodRefInfo}.
-	 * <p>
-	 * If either {@code classIndex} or {@code nameAndTypeIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param classIndex the class_index of the new {@code ConstantMethodRefInfo} instance
-	 * @param nameAndTypeIndex the name_and_type_index of the new {@code ConstantMethodRefInfo} instance
-	 * @return a new {@code ConstantMethodRefInfo}
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code classIndex} or {@code nameAndTypeIndex} are less than or equal to {@code 0}
-	 */
-	public static ConstantMethodRefInfo newInstance(final int classIndex, final int nameAndTypeIndex) {
-		return new ConstantMethodRefInfo(ParameterArguments.requireRange(classIndex, 1, Integer.MAX_VALUE), ParameterArguments.requireRange(nameAndTypeIndex, 1, Integer.MAX_VALUE));
-	}
 	
 	/**
 	 * Returns a {@code List} with all {@code ConstantMethodRefInfo}s.

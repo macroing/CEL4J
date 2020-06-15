@@ -60,11 +60,20 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ConstantNameAndTypeInfo(final int nameIndex, final int descriptorIndex) {
+	/**
+	 * Constructs a new {@code ConstantNameAndTypeInfo}.
+	 * <p>
+	 * If either {@code nameIndex} or {@code descriptorIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param nameIndex the name_index of the new {@code ConstantNameAndTypeInfo} instance
+	 * @param descriptorIndex the descriptor_index of the new {@code ConstantNameAndTypeInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code nameIndex} or {@code descriptorIndex} are less than or equal to {@code 0}
+	 */
+	public ConstantNameAndTypeInfo(final int nameIndex, final int descriptorIndex) {
 		super(NAME, TAG, 1);
 		
-		this.descriptorIndex = descriptorIndex;
-		this.nameIndex = nameIndex;
+		this.descriptorIndex = ParameterArguments.requireRange(descriptorIndex, 1, Integer.MAX_VALUE);
+		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -279,20 +288,6 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	 */
 	public static ConstantNameAndTypeInfo findByNameAndTypeIndex(final ClassFile classFile, final ConstantMethodRefInfo constantMethodRefInfo) {
 		return classFile.getCPInfo(classFile.getCPInfo(constantMethodRefInfo, ConstantMethodRefInfo.class).getNameAndTypeIndex(), ConstantNameAndTypeInfo.class);
-	}
-	
-	/**
-	 * Returns a new {@code ConstantNameAndTypeInfo}.
-	 * <p>
-	 * If either {@code nameIndex} or {@code descriptorIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param nameIndex the name_index of the new {@code ConstantNameAndTypeInfo} instance
-	 * @param descriptorIndex the descriptor_index of the new {@code ConstantNameAndTypeInfo} instance
-	 * @return a new {@code ConstantNameAndTypeInfo}
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code nameIndex} or {@code descriptorIndex} are less than or equal to {@code 0}
-	 */
-	public static ConstantNameAndTypeInfo newInstance(final int nameIndex, final int descriptorIndex) {
-		return new ConstantNameAndTypeInfo(ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE), ParameterArguments.requireRange(descriptorIndex, 1, Integer.MAX_VALUE));
 	}
 	
 	/**

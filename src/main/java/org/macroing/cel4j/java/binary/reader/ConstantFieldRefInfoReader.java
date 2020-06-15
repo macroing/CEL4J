@@ -35,12 +35,7 @@ final class ConstantFieldRefInfoReader implements CPInfoReader {
 	@Override
 	public CPInfo read(final DataInput dataInput, final int tag) {
 		try {
-			final int classIndex = dataInput.readUnsignedShort();
-			final int nameAndTypeIndex = dataInput.readUnsignedShort();
-			
-			final CPInfo cPInfo = ConstantFieldRefInfo.newInstance(classIndex, nameAndTypeIndex);
-			
-			return cPInfo;
+			return new ConstantFieldRefInfo(dataInput.readUnsignedShort(), dataInput.readUnsignedShort());
 		} catch(final IOException | IllegalArgumentException e) {
 			throw new CPInfoReaderException("Unable to read CONSTANT_Fieldref_info", e);
 		}

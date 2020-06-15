@@ -57,7 +57,12 @@ public final class ConstantIntegerInfo extends CPInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ConstantIntegerInfo(final int value) {
+	/**
+	 * Constructs a new {@code ConstantIntegerInfo}.
+	 * 
+	 * @param value the {@code int} representation of the new {@code ConstantIntegerInfo} instance
+	 */
+	public ConstantIntegerInfo(final int value) {
 		super(NAME, TAG, 1);
 		
 		this.value = value;
@@ -182,16 +187,6 @@ public final class ConstantIntegerInfo extends CPInfo {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code ConstantIntegerInfo}.
-	 * 
-	 * @param value the {@code int} representation of the new {@code ConstantIntegerInfo} instance
-	 * @return a new {@code ConstantIntegerInfo}
-	 */
-	public static ConstantIntegerInfo newInstance(final int value) {
-		return new ConstantIntegerInfo(value);
-	}
 	
 	/**
 	 * Returns a {@code List} with all {@code ConstantIntegerInfo}s.

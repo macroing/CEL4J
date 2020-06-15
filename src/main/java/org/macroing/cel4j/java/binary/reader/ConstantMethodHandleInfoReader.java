@@ -35,12 +35,7 @@ final class ConstantMethodHandleInfoReader implements CPInfoReader {
 	@Override
 	public CPInfo read(final DataInput dataInput, final int tag) {
 		try {
-			final int referenceKind = dataInput.readUnsignedByte();
-			final int referenceIndex = dataInput.readUnsignedShort();
-			
-			final CPInfo cPInfo = ConstantMethodHandleInfo.newInstance(referenceKind, referenceIndex);
-			
-			return cPInfo;
+			return new ConstantMethodHandleInfo(dataInput.readUnsignedByte(), dataInput.readUnsignedShort());
 		} catch(final IOException | IllegalArgumentException e) {
 			throw new CPInfoReaderException("Unable to read CONSTANT_MethodHandle_info", e);
 		}

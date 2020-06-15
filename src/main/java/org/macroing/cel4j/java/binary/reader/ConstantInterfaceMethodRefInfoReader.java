@@ -35,12 +35,7 @@ final class ConstantInterfaceMethodRefInfoReader implements CPInfoReader {
 	@Override
 	public CPInfo read(final DataInput dataInput, final int tag) {
 		try {
-			final int classIndex = dataInput.readUnsignedShort();
-			final int nameAndTypeIndex = dataInput.readUnsignedShort();
-			
-			final CPInfo cPInfo = ConstantInterfaceMethodRefInfo.newInstance(classIndex, nameAndTypeIndex);
-			
-			return cPInfo;
+			return new ConstantInterfaceMethodRefInfo(dataInput.readUnsignedShort(), dataInput.readUnsignedShort());
 		} catch(final IOException | IllegalArgumentException e) {
 			throw new CPInfoReaderException("Unable to read CONSTANT_InterfaceMethodref_info", e);
 		}

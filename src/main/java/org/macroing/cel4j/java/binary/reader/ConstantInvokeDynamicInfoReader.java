@@ -35,12 +35,7 @@ final class ConstantInvokeDynamicInfoReader implements CPInfoReader {
 	@Override
 	public CPInfo read(final DataInput dataInput, final int tag) {
 		try {
-			final int bootstrapMethodAttrIndex = dataInput.readUnsignedShort();
-			final int nameAndTypeIndex = dataInput.readUnsignedShort();
-			
-			final CPInfo cPInfo = ConstantInvokeDynamicInfo.newInstance(bootstrapMethodAttrIndex, nameAndTypeIndex);
-			
-			return cPInfo;
+			return new ConstantInvokeDynamicInfo(dataInput.readUnsignedShort(), dataInput.readUnsignedShort());
 		} catch(final IOException | IllegalArgumentException e) {
 			throw new CPInfoReaderException("Unable to read CONSTANT_InvokeDynamic_info", e);
 		}

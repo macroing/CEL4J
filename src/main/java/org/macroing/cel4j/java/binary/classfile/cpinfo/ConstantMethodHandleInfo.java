@@ -104,11 +104,20 @@ public final class ConstantMethodHandleInfo extends CPInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ConstantMethodHandleInfo(final int referenceKind, final int referenceIndex) {
+	/**
+	 * Constructs a new {@code ConstantMethodHandleInfo}.
+	 * <p>
+	 * If {@code referenceKind} is less than {@code 0}, or {@code referenceIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param referenceKind the reference_kind for the new {@code ConstantMethodHandleInfo} instance
+	 * @param referenceIndex the reference_index for the new {@code ConstantMethodHandleInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code referenceKind} is less than {@code 0}, or {@code referenceIndex} is less than or equal to {@code 0}
+	 */
+	public ConstantMethodHandleInfo(final int referenceKind, final int referenceIndex) {
 		super(NAME, TAG, 1);
 		
-		this.referenceIndex = referenceIndex;
-		this.referenceKind = referenceKind;
+		this.referenceIndex = ParameterArguments.requireRange(referenceIndex, 1, Integer.MAX_VALUE);
+		this.referenceKind = ParameterArguments.requireRange(referenceKind, 0, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -258,20 +267,6 @@ public final class ConstantMethodHandleInfo extends CPInfo {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code ConstantMethodHandleInfo}.
-	 * <p>
-	 * If {@code referenceKind} is less than {@code 0}, or {@code referenceIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param referenceKind the reference_kind for the new {@code ConstantMethodHandleInfo} instance
-	 * @param referenceIndex the reference_index for the new {@code ConstantMethodHandleInfo} instance
-	 * @return a new {@code ConstantMethodHandleInfo}
-	 * @throws IllegalArgumentException thrown if, and only if, {@code referenceKind} is less than {@code 0}, or {@code referenceIndex} is less than or equal to {@code 0}
-	 */
-	public static ConstantMethodHandleInfo newInstance(final int referenceKind, final int referenceIndex) {
-		return new ConstantMethodHandleInfo(ParameterArguments.requireRange(referenceKind, 0, Integer.MAX_VALUE), ParameterArguments.requireRange(referenceIndex, 1, Integer.MAX_VALUE));
-	}
 	
 	/**
 	 * Returns a {@code List} with all {@code ConstantMethodHandleInfo}s.

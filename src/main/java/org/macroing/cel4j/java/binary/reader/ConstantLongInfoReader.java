@@ -35,11 +35,7 @@ final class ConstantLongInfoReader implements CPInfoReader {
 	@Override
 	public CPInfo read(final DataInput dataInput, final int tag) {
 		try {
-			final long toLong = dataInput.readLong();
-			
-			final CPInfo cPInfo = ConstantLongInfo.newInstance(toLong);
-			
-			return cPInfo;
+			return new ConstantLongInfo(dataInput.readLong());
 		} catch(final IOException | IllegalArgumentException e) {
 			throw new CPInfoReaderException("Unable to read CONSTANT_Long_info", e);
 		}

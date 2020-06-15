@@ -35,12 +35,7 @@ final class ConstantNameAndTypeInfoReader implements CPInfoReader {
 	@Override
 	public CPInfo read(final DataInput dataInput, final int tag) {
 		try {
-			final int nameIndex = dataInput.readUnsignedShort();
-			final int descriptorIndex = dataInput.readUnsignedShort();
-			
-			final CPInfo cPInfo = ConstantNameAndTypeInfo.newInstance(nameIndex, descriptorIndex);
-			
-			return cPInfo;
+			return new ConstantNameAndTypeInfo(dataInput.readUnsignedShort(), dataInput.readUnsignedShort());
 		} catch(final IOException | IllegalArgumentException e) {
 			throw new CPInfoReaderException("Unable to read CONSTANT_NameAndType_info", e);
 		}

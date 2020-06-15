@@ -35,11 +35,7 @@ final class ConstantUTF8InfoReader implements CPInfoReader {
 	@Override
 	public CPInfo read(final DataInput dataInput, final int tag) {
 		try {
-			final String toString = dataInput.readUTF();
-			
-			final CPInfo cPInfo = ConstantUTF8Info.newInstance(toString);
-			
-			return cPInfo;
+			return new ConstantUTF8Info(dataInput.readUTF());
 		} catch(final IOException | IllegalArgumentException e) {
 			throw new CPInfoReaderException("Unable to read CONSTANT_Utf8_info", e);
 		}

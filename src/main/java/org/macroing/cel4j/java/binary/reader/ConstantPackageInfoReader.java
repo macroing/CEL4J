@@ -35,11 +35,7 @@ final class ConstantPackageInfoReader implements CPInfoReader {
 	@Override
 	public CPInfo read(final DataInput dataInput, final int tag) {
 		try {
-			final int nameIndex = dataInput.readUnsignedShort();
-			
-			final CPInfo cPInfo = ConstantPackageInfo.newInstance(nameIndex);
-			
-			return cPInfo;
+			return new ConstantPackageInfo(dataInput.readUnsignedShort());
 		} catch(final IOException | IllegalArgumentException e) {
 			throw new CPInfoReaderException("Unable to read CONSTANT_Package_info", e);
 		}

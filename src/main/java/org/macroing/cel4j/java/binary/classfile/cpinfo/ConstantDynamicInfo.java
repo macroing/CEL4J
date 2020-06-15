@@ -59,11 +59,20 @@ public final class ConstantDynamicInfo extends CPInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ConstantDynamicInfo(final int bootstrapMethodAttrIndex, final int nameAndTypeIndex) {
+	/**
+	 * Constructs a new {@code ConstantDynamicInfo}.
+	 * <p>
+	 * If {@code bootstrapMethodAttrIndex} is less than {@code 0}, or {@code nameAndTypeIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param bootstrapMethodAttrIndex the bootstrap_method_attr_index of the new {@code ConstantDynamicInfo} instance
+	 * @param nameAndTypeIndex the name_and_type_index of the new {@code ConstantDynamicInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code bootstrapMethodAttrIndex} is less than {@code 0}, or {@code nameAndTypeIndex} is less than or equal to {@code 0}
+	 */
+	public ConstantDynamicInfo(final int bootstrapMethodAttrIndex, final int nameAndTypeIndex) {
 		super(NAME, TAG, 1);
 		
-		this.bootstrapMethodAttrIndex = bootstrapMethodAttrIndex;
-		this.nameAndTypeIndex = nameAndTypeIndex;
+		this.bootstrapMethodAttrIndex = ParameterArguments.requireRange(bootstrapMethodAttrIndex, 0, Integer.MAX_VALUE);
+		this.nameAndTypeIndex = ParameterArguments.requireRange(nameAndTypeIndex, 1, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -211,20 +220,6 @@ public final class ConstantDynamicInfo extends CPInfo {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code ConstantDynamicInfo}.
-	 * <p>
-	 * If {@code bootstrapMethodAttrIndex} is less than {@code 0}, or {@code nameAndTypeIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param bootstrapMethodAttrIndex the bootstrap_method_attr_index of the  new {@code ConstantDynamicInfo} instance
-	 * @param nameAndTypeIndex the name_and_type_index of the new {@code ConstantDynamicInfo} instance
-	 * @return a new {@code ConstantDynamicInfo}
-	 * @throws IllegalArgumentException thrown if, and only if, {@code bootstrapMethodAttrIndex} is less than {@code 0}, or {@code nameAndTypeIndex} is less than or equal to {@code 0}
-	 */
-	public static ConstantDynamicInfo newInstance(final int bootstrapMethodAttrIndex, final int nameAndTypeIndex) {
-		return new ConstantDynamicInfo(ParameterArguments.requireRange(bootstrapMethodAttrIndex, 0, Integer.MAX_VALUE), ParameterArguments.requireRange(nameAndTypeIndex, 1, Integer.MAX_VALUE));
-	}
 	
 	/**
 	 * Returns a {@code List} with all {@code ConstantDynamicInfo}s.

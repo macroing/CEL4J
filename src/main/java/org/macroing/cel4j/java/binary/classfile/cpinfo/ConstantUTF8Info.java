@@ -61,10 +61,18 @@ public final class ConstantUTF8Info extends CPInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ConstantUTF8Info(final String string) {
+	/**
+	 * Constructs a new {@code ConstantUTF8Info}.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param string the {@code String} representation of the new {@code ConstantUTF8Info} instance
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
+	public ConstantUTF8Info(final String string) {
 		super(NAME, TAG, 1);
 		
-		this.string = string;
+		this.string = Objects.requireNonNull(string, "string == null");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -636,19 +644,6 @@ public final class ConstantUTF8Info extends CPInfo {
 	 */
 	public static ConstantUTF8Info findByStringIndex(final ClassFile classFile, final ConstantStringInfo constantStringInfo) {
 		return classFile.getCPInfo(classFile.getCPInfo(constantStringInfo, ConstantStringInfo.class).getStringIndex(), ConstantUTF8Info.class);
-	}
-	
-	/**
-	 * Returns a new {@code ConstantUTF8Info}.
-	 * <p>
-	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param string the {@code String} representation of the new {@code ConstantUTF8Info} instance
-	 * @return a new {@code ConstantUTF8Info}
-	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
-	 */
-	public static ConstantUTF8Info newInstance(final String string) {
-		return new ConstantUTF8Info(Objects.requireNonNull(string, "string == null"));
 	}
 	
 	/**

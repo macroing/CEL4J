@@ -58,10 +58,18 @@ public final class ConstantPackageInfo extends CPInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ConstantPackageInfo(final int nameIndex) {
+	/**
+	 * Constructs a new {@code ConstantPackageInfo}.
+	 * <p>
+	 * If {@code nameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param nameIndex the name_index of the new {@code ConstantPackageInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than or equal to {@code 0}
+	 */
+	public ConstantPackageInfo(final int nameIndex) {
 		super(NAME, TAG, 1);
 		
-		this.nameIndex = nameIndex;
+		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,19 +192,6 @@ public final class ConstantPackageInfo extends CPInfo {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code ConstantPackageInfo}.
-	 * <p>
-	 * If {@code nameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param nameIndex the name_index of the new {@code ConstantPackageInfo} instance
-	 * @return a new {@code ConstantPackageInfo}
-	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than or equal to {@code 0}
-	 */
-	public static ConstantPackageInfo newInstance(final int nameIndex) {
-		return new ConstantPackageInfo(ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE));
-	}
 	
 	/**
 	 * Returns a {@code List} with all {@code ConstantPackageInfo}s.

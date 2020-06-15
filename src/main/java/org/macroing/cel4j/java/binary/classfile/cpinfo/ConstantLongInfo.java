@@ -57,7 +57,12 @@ public final class ConstantLongInfo extends CPInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ConstantLongInfo(final long value) {
+	/**
+	 * Constructs a new {@code ConstantLongInfo}.
+	 * 
+	 * @param value the {@code long} representation of the new {@code ConstantLongInfo} instance
+	 */
+	public ConstantLongInfo(final long value) {
 		super(NAME, TAG, 2);
 		
 		this.value = value;
@@ -180,16 +185,6 @@ public final class ConstantLongInfo extends CPInfo {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code ConstantLongInfo}.
-	 * 
-	 * @param value the {@code long} representation of the new {@code ConstantLongInfo} instance
-	 * @return a new {@code ConstantLongInfo}
-	 */
-	public static ConstantLongInfo newInstance(final long value) {
-		return new ConstantLongInfo(value);
-	}
 	
 	/**
 	 * Returns a {@code List} with all {@code ConstantLongInfo}s.

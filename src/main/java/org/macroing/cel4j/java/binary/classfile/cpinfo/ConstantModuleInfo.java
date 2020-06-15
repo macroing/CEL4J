@@ -58,10 +58,18 @@ public final class ConstantModuleInfo extends CPInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ConstantModuleInfo(final int nameIndex) {
+	/**
+	 * Constructs a new {@code ConstantModuleInfo}.
+	 * <p>
+	 * If {@code nameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param nameIndex the name_index of the new {@code ConstantModuleInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than or equal to {@code 0}
+	 */
+	public ConstantModuleInfo(final int nameIndex) {
 		super(NAME, TAG, 1);
 		
-		this.nameIndex = nameIndex;
+		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,19 +192,6 @@ public final class ConstantModuleInfo extends CPInfo {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code ConstantModuleInfo}.
-	 * <p>
-	 * If {@code nameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param nameIndex the name_index of the new {@code ConstantModuleInfo} instance
-	 * @return a new {@code ConstantModuleInfo}
-	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than or equal to {@code 0}
-	 */
-	public static ConstantModuleInfo newInstance(final int nameIndex) {
-		return new ConstantModuleInfo(ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE));
-	}
 	
 	/**
 	 * Returns a {@code List} with all {@code ConstantModuleInfo}s.

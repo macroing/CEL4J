@@ -58,10 +58,18 @@ public final class ConstantStringInfo extends CPInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ConstantStringInfo(final int stringIndex) {
+	/**
+	 * Constructs a new {@code ConstantStringInfo}.
+	 * <p>
+	 * If {@code stringIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param stringIndex the string_index of the new {@code ConstantStringInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code stringIndex} is less than or equal to {@code 0}
+	 */
+	public ConstantStringInfo(final int stringIndex) {
 		super(NAME, TAG, 1);
 		
-		this.stringIndex = stringIndex;
+		this.stringIndex = ParameterArguments.requireRange(stringIndex, 1, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -186,19 +194,6 @@ public final class ConstantStringInfo extends CPInfo {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code ConstantStringInfo}.
-	 * <p>
-	 * If {@code stringIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param stringIndex the string_index of the new {@code ConstantStringInfo} instance
-	 * @return a new {@code ConstantStringInfo}
-	 * @throws IllegalArgumentException thrown if, and only if, {@code stringIndex} is less than or equal to {@code 0}
-	 */
-	public static ConstantStringInfo newInstance(final int stringIndex) {
-		return new ConstantStringInfo(ParameterArguments.requireRange(stringIndex, 1, Integer.MAX_VALUE));
-	}
 	
 	/**
 	 * Returns a {@code List} with all {@code ConstantStringInfo}s.

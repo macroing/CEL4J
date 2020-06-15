@@ -35,11 +35,7 @@ final class ConstantDoubleInfoReader implements CPInfoReader {
 	@Override
 	public CPInfo read(final DataInput dataInput, final int tag) {
 		try {
-			final double toDouble = dataInput.readDouble();
-			
-			final CPInfo cPInfo = ConstantDoubleInfo.newInstance(toDouble);
-			
-			return cPInfo;
+			return new ConstantDoubleInfo(dataInput.readDouble());
 		} catch(final IOException | IllegalArgumentException e) {
 			throw new CPInfoReaderException("Unable to read CONSTANT_Class_info", e);
 		}

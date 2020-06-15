@@ -57,7 +57,12 @@ public final class ConstantFloatInfo extends CPInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ConstantFloatInfo(final float value) {
+	/**
+	 * Constructs a new {@code ConstantFloatInfo}.
+	 * 
+	 * @param value the {@code float} representation of the new {@code ConstantFloatInfo} instance
+	 */
+	public ConstantFloatInfo(final float value) {
 		super(NAME, TAG, 1);
 		
 		this.value = value;
@@ -182,16 +187,6 @@ public final class ConstantFloatInfo extends CPInfo {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code ConstantFloatInfo}.
-	 * 
-	 * @param value the {@code float} representation of the new {@code ConstantFloatInfo} instance
-	 * @return a new {@code ConstantFloatInfo}
-	 */
-	public static ConstantFloatInfo newInstance(final float value) {
-		return new ConstantFloatInfo(value);
-	}
 	
 	/**
 	 * Returns a {@code List} with all {@code ConstantFloatInfo}s.

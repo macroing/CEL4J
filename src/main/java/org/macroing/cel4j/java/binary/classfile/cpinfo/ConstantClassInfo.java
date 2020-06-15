@@ -59,10 +59,18 @@ public final class ConstantClassInfo extends CPInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ConstantClassInfo(final int nameIndex) {
+	/**
+	 * Constructs a new {@code ConstantClassInfo}.
+	 * <p>
+	 * If {@code nameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param nameIndex the name_index of the new {@code ConstantClassInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than or equal to {@code 0}
+	 */
+	public ConstantClassInfo(final int nameIndex) {
 		super(NAME, TAG, 1);
 		
-		this.nameIndex = nameIndex;
+		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -252,19 +260,6 @@ public final class ConstantClassInfo extends CPInfo {
 	 */
 	public static ConstantClassInfo findByClassIndex(final ClassFile classFile, final ConstantMethodRefInfo constantMethodRefInfo) {
 		return classFile.getCPInfo(classFile.getCPInfo(constantMethodRefInfo, ConstantMethodRefInfo.class).getClassIndex(), ConstantClassInfo.class);
-	}
-	
-	/**
-	 * Returns a new {@code ConstantClassInfo}.
-	 * <p>
-	 * If {@code nameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param nameIndex the name_index of the new {@code ConstantClassInfo} instance
-	 * @return a new {@code ConstantClassInfo}
-	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than or equal to {@code 0}
-	 */
-	public static ConstantClassInfo newInstance(final int nameIndex) {
-		return new ConstantClassInfo(ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE));
 	}
 	
 	/**

@@ -35,11 +35,7 @@ final class ConstantIntegerInfoReader implements CPInfoReader {
 	@Override
 	public CPInfo read(final DataInput dataInput, final int tag) {
 		try {
-			final int toInt = dataInput.readInt();
-			
-			final CPInfo cPInfo = ConstantIntegerInfo.newInstance(toInt);
-			
-			return cPInfo;
+			return new ConstantIntegerInfo(dataInput.readInt());
 		} catch(final IOException | IllegalArgumentException e) {
 			throw new CPInfoReaderException("Unable to read CONSTANT_Integer_info", e);
 		}

@@ -57,7 +57,12 @@ public final class ConstantDoubleInfo extends CPInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ConstantDoubleInfo(final double value) {
+	/**
+	 * Constructs a new {@code ConstantDoubleInfo}.
+	 * 
+	 * @param value the {@code double} representation of the new {@code ConstantDoubleInfo} instance
+	 */
+	public ConstantDoubleInfo(final double value) {
 		super(NAME, TAG, 2);
 		
 		this.value = value;
@@ -182,16 +187,6 @@ public final class ConstantDoubleInfo extends CPInfo {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code ConstantDoubleInfo}.
-	 * 
-	 * @param value the {@code double} representation of the new {@code ConstantDoubleInfo} instance
-	 * @return a new {@code ConstantDoubleInfo}
-	 */
-	public static ConstantDoubleInfo newInstance(final double value) {
-		return new ConstantDoubleInfo(value);
-	}
 	
 	/**
 	 * Returns a {@code List} with all {@code ConstantDoubleInfo}s.

@@ -58,10 +58,18 @@ public final class ConstantMethodTypeInfo extends CPInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ConstantMethodTypeInfo(final int descriptorIndex) {
+	/**
+	 * Constructs a new {@code ConstantMethodTypeInfo}.
+	 * <p>
+	 * If {@code descriptorIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param descriptorIndex the descriptor_index of the new {@code ConstantMethodTypeInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code descriptorIndex} is less than or equal to {@code 0}
+	 */
+	public ConstantMethodTypeInfo(final int descriptorIndex) {
 		super(NAME, TAG, 1);
 		
-		this.descriptorIndex = descriptorIndex;
+		this.descriptorIndex = ParameterArguments.requireRange(descriptorIndex, 1, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -186,19 +194,6 @@ public final class ConstantMethodTypeInfo extends CPInfo {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code ConstantMethodTypeInfo}.
-	 * <p>
-	 * If {@code descriptorIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param descriptorIndex the descriptor_index of the new {@code ConstantMethodTypeInfo} instance
-	 * @return a new {@code ConstantMethodTypeInfo}
-	 * @throws IllegalArgumentException thrown if, and only if, {@code descriptorIndex} is less than or equal to {@code 0}
-	 */
-	public static ConstantMethodTypeInfo newInstance(final int descriptorIndex) {
-		return new ConstantMethodTypeInfo(ParameterArguments.requireRange(descriptorIndex, 1, Integer.MAX_VALUE));
-	}
 	
 	/**
 	 * Returns a {@code List} with all {@code ConstantMethodTypeInfo}s.

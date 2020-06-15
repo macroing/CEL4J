@@ -59,11 +59,20 @@ public final class ConstantInterfaceMethodRefInfo extends CPInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ConstantInterfaceMethodRefInfo(final int classIndex, final int nameAndTypeIndex) {
+	/**
+	 * Constructs a new {@code ConstantInterfaceMethodRefInfo}.
+	 * <p>
+	 * If either {@code classIndex} or {@code nameAndTypeIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param classIndex the class_index for the new {@code ConstantInterfaceMethodRefInfo} instance
+	 * @param nameAndTypeIndex the name_and_type_index for the new {@code ConstantInterfaceMethodRefInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code classIndex} or {@code nameAndTypeIndex} are less than or equal to {@code 0}
+	 */
+	public ConstantInterfaceMethodRefInfo(final int classIndex, final int nameAndTypeIndex) {
 		super(NAME, TAG, 1);
 		
-		this.classIndex = classIndex;
-		this.nameAndTypeIndex = nameAndTypeIndex;
+		this.classIndex = ParameterArguments.requireRange(classIndex, 1, Integer.MAX_VALUE);
+		this.nameAndTypeIndex = ParameterArguments.requireRange(nameAndTypeIndex, 1, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -213,20 +222,6 @@ public final class ConstantInterfaceMethodRefInfo extends CPInfo {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a new {@code ConstantInterfaceMethodRefInfo}.
-	 * <p>
-	 * If either {@code classIndex} or {@code nameAndTypeIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param classIndex the class_index for the new {@code ConstantInterfaceMethodRefInfo} instance
-	 * @param nameAndTypeIndex the name_and_type_index for the new {@code ConstantInterfaceMethodRefInfo} instance
-	 * @return a new {@code ConstantInterfaceMethodRefInfo}
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code classIndex} or {@code nameAndTypeIndex} are less than or equal to {@code 0}
-	 */
-	public static ConstantInterfaceMethodRefInfo newInstance(final int classIndex, final int nameAndTypeIndex) {
-		return new ConstantInterfaceMethodRefInfo(ParameterArguments.requireRange(classIndex, 1, Integer.MAX_VALUE), ParameterArguments.requireRange(nameAndTypeIndex, 1, Integer.MAX_VALUE));
-	}
 	
 	/**
 	 * Returns a {@code List} with all {@code ConstantInterfaceMethodRefInfo}s.

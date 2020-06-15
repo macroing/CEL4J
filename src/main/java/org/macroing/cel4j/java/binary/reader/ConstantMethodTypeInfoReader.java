@@ -35,11 +35,7 @@ final class ConstantMethodTypeInfoReader implements CPInfoReader {
 	@Override
 	public CPInfo read(final DataInput dataInput, final int tag) {
 		try {
-			final int descriptorIndex = dataInput.readUnsignedShort();
-			
-			final CPInfo cPInfo = ConstantMethodTypeInfo.newInstance(descriptorIndex);
-			
-			return cPInfo;
+			return new ConstantMethodTypeInfo(dataInput.readUnsignedShort());
 		} catch(final IOException | IllegalArgumentException e) {
 			throw new CPInfoReaderException("Unable to read CONSTANT_MethodType_info", e);
 		}
