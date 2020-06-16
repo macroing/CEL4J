@@ -21,6 +21,7 @@ This library consists of several projects. They are presented below.
  - [CEL4J Java Decompiler](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Java-Decompiler) provides a decompiler that can decompile Java bytecode into Java source code.
  - [CEL4J Java Source](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Java-Source) provides functionality for reading, manipulating and writing Java source code.
  - [CEL4J JSON](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-JSON) provides functionality for reading, manipulating and writing JSON.
+ - [CEL4J Lexer](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Lexer) provides lexing functionality for different formal languages.
  - [CEL4J Node](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Node) provides functionality for modeling data types that can be filtered and traversed in various ways.
  - [CEL4J PHP](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-PHP) provides functionality to generate PHP source code.
  - [CEL4J Scanner](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Scanner) provides scanning functionality for data in various forms.
