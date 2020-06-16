@@ -35,16 +35,34 @@ import org.macroing.cel4j.node.NodeTraversalException;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code CodeAttribute} denotes a Code_attribute structure somewhere in a ClassFile structure.
+ * A {@code CodeAttribute} denotes a {@code Code_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code Code_attribute} structure has the following format:
+ * <pre>
+ * <code>
+ * Code_attribute {
+ *     u2 attribute_name_index;
+ *     u4 attribute_length;
+ *     u2 max_stack;
+ *     u2 max_locals;
+ *     u4 code_length;
+ *     u1[code_length] code;
+ *     u2 exception_table_length;
+ *     exception_handler[exception_table_length] exception_table;
+ *     u2 attributes_count;
+ *     attribute_info[attributes_count] attributes;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class CodeAttribute extends AttributeInfo {
 	/**
-	 * The name of the Code_attribute structure.
+	 * The name of the {@code Code_attribute} structure.
 	 */
 	public static final String NAME = "Code";
 	
@@ -61,10 +79,10 @@ public final class CodeAttribute extends AttributeInfo {
 	/**
 	 * Constructs a new {@code CodeAttribute} instance.
 	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code CodeAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 * @param attributeNameIndex the value for the {@code attribute_name_index} item associated with this {@code CodeAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than {@code 1}
 	 */
 	public CodeAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
@@ -79,14 +97,14 @@ public final class CodeAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns the {@link AttributeInfo} instance of this {@code CodeAttribute} instance that is equal to {@code attributeInfo}.
+	 * Returns the first {@link AttributeInfo} instance of this {@code CodeAttribute} instance that is equal to {@code attributeInfo}.
 	 * <p>
 	 * If {@code attributeInfo} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
 	 * If this {@code CodeAttribute} instance does not contain an {@code AttributeInfo} instance that is equal to {@code attributeInfo}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param attributeInfo the {@code AttributeInfo} instance to test for equality against
-	 * @return the {@code AttributeInfo} instance of this {@code CodeAttribute} instance that is equal to {@code attributeInfo}
+	 * @return the first {@code AttributeInfo} instance of this {@code CodeAttribute} instance that is equal to {@code attributeInfo}
 	 * @throws IllegalArgumentException thrown if, and only if, this {@code CodeAttribute} instance does not contain an {@code AttributeInfo} instance that is equal to {@code attributeInfo}
 	 * @throws NullPointerException thrown if, and only if, {@code attributeInfo} is {@code null}
 	 */
@@ -137,33 +155,33 @@ public final class CodeAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns a {@code List} with all currently added {@code AttributeInfo}s.
+	 * Returns a {@code List} with all currently added {@code AttributeInfo} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code CodeAttribute} instance.
 	 * 
-	 * @return a {@code List} with all currently added {@code AttributeInfo}s
+	 * @return a {@code List} with all currently added {@code AttributeInfo} instances
 	 */
 	public List<AttributeInfo> getAttributeInfos() {
 		return new ArrayList<>(this.attributeInfos);
 	}
 	
 	/**
-	 * Returns a {@code List} with all currently added {@code ExceptionHandler}s.
+	 * Returns a {@code List} with all currently added {@code ExceptionHandler} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code CodeAttribute} instance.
 	 * 
-	 * @return a {@code List} with all currently added {@code ExceptionHandler}s
+	 * @return a {@code List} with all currently added {@code ExceptionHandler} instances
 	 */
 	public List<ExceptionHandler> getExceptionHandlers() {
 		return new ArrayList<>(this.exceptionHandlers);
 	}
 	
 	/**
-	 * Returns a {@code List} with all currently added {@code Instruction}s.
+	 * Returns a {@code List} with all currently added {@code Instruction} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code CodeAttribute} instance.
 	 * 
-	 * @return a {@code List} with all currently added {@code Instruction}s
+	 * @return a {@code List} with all currently added {@code Instruction} instances
 	 */
 	public List<Instruction> getInstructions() {
 		return new ArrayList<>(this.instructions);
@@ -211,7 +229,7 @@ public final class CodeAttribute extends AttributeInfo {
 	 * <ul>
 	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
 	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
-	 * <li>traverse its child {@code Node}s, if it has any.</li>
+	 * <li>traverse its child {@code Node} instances, if it has any.</li>
 	 * </ul>
 	 * 
 	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
@@ -272,10 +290,12 @@ public final class CodeAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code CodeAttribute}, and that {@code CodeAttribute} instance is equal to this {@code CodeAttribute} instance, {@code false} otherwise.
+	 * Compares {@code object} to this {@code CodeAttribute} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code CodeAttribute}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code CodeAttribute} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code CodeAttribute}, and that {@code CodeAttribute} instance is equal to this {@code CodeAttribute} instance, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code CodeAttribute} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code CodeAttribute}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -311,18 +331,18 @@ public final class CodeAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the attributes_count of this {@code CodeAttribute} instance.
+	 * Returns the value of the {@code attributes_count} item associated with this {@code CodeAttribute} instance.
 	 * 
-	 * @return the attributes_count of this {@code CodeAttribute} instance
+	 * @return the value of the {@code attributes_count} item associated with this {@code CodeAttribute} instance
 	 */
 	public int getAttributeInfoCount() {
 		return this.attributeInfos.size();
 	}
 	
 	/**
-	 * Returns the attribute_length of this {@code CodeAttribute} instance.
+	 * Returns the value of the {@code attribute_length} item associated with this {@code CodeAttribute} instance.
 	 * 
-	 * @return the attribute_length of this {@code CodeAttribute} instance
+	 * @return the value of the {@code attribute_length} item associated with this {@code CodeAttribute} instance
 	 */
 	@Override
 	public int getAttributeLength() {
@@ -344,9 +364,9 @@ public final class CodeAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the code_length of this {@code CodeAttribute} instance.
+	 * Returns the value of the {@code code_length} item associated with this {@code CodeAttribute} instance.
 	 * 
-	 * @return the code_length of this {@code CodeAttribute} instance
+	 * @return the value of the {@code code_length} item associated with this {@code CodeAttribute} instance
 	 */
 	public int getCodeLength() {
 		int codeLength = 0;
@@ -359,27 +379,27 @@ public final class CodeAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the exception_table_length of this {@code CodeAttribute} instance.
+	 * Returns the value of the {@code exception_table_length} item associated with this {@code CodeAttribute} instance.
 	 * 
-	 * @return the exception_table_length of this {@code CodeAttribute} instance
+	 * @return the value of the {@code exception_table_length} item associated with this {@code CodeAttribute} instance
 	 */
 	public int getExceptionTableLength() {
 		return this.exceptionHandlers.size();
 	}
 	
 	/**
-	 * Returns the max_locals of this {@code CodeAttribute} instance.
+	 * Returns the value of the {@code max_locals} item associated with this {@code CodeAttribute} instance.
 	 * 
-	 * @return the max_locals of this {@code CodeAttribute} instance
+	 * @return the value of the {@code max_locals} item associated with this {@code CodeAttribute} instance
 	 */
 	public int getMaxLocals() {
 		return this.maxLocals;
 	}
 	
 	/**
-	 * Returns the max_stack of this {@code CodeAttribute} instance.
+	 * Returns the value of the {@code max_stack} item associated with this {@code CodeAttribute} instance.
 	 * 
-	 * @return the max_stack of this {@code CodeAttribute} instance
+	 * @return the value of the {@code max_stack} item associated with this {@code CodeAttribute} instance
 	 */
 	public int getMaxStack() {
 		return this.maxStack;
@@ -396,13 +416,11 @@ public final class CodeAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Attempts to add {@code attributeInfo} to this {@code CodeAttribute} instance.
+	 * Adds {@code attributeInfo} to this {@code CodeAttribute} instance, if absent.
 	 * <p>
 	 * If {@code attributeInfo} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * <p>
-	 * If {@code attributeInfo} (or an {@code AttributeInfo} instance that equals {@code attributeInfo}) has already been added prior to this method call, nothing will happen.
 	 * 
-	 * @param attributeInfo the {@code AttributeInfo} to add
+	 * @param attributeInfo the {@link AttributeInfo} to add
 	 * @throws NullPointerException thrown if, and only if, {@code attributeInfo} is {@code null}
 	 */
 	public void addAttributeInfo(final AttributeInfo attributeInfo) {
@@ -412,13 +430,11 @@ public final class CodeAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Attempts to add {@code exceptionHandler} to this {@code CodeAttribute} instance.
+	 * Adds {@code exceptionHandler} to this {@code CodeAttribute} instance, if absent.
 	 * <p>
 	 * If {@code exceptionHandler} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * <p>
-	 * If {@code exceptionHandler} (or an {@code ExceptionHandler} instance that equals {@code exceptionHandler}) has already been added prior to this method call, nothing will happen.
 	 * 
-	 * @param exceptionHandler the {@code ExceptionHandler} to add
+	 * @param exceptionHandler the {@link ExceptionHandler} to add
 	 * @throws NullPointerException thrown if, and only if, {@code exceptionHandler} is {@code null}
 	 */
 	public void addExceptionHandler(final ExceptionHandler exceptionHandler) {
@@ -432,7 +448,7 @@ public final class CodeAttribute extends AttributeInfo {
 	 * <p>
 	 * If {@code instruction} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param instruction the {@code Instruction} to add
+	 * @param instruction the {@link Instruction} to add
 	 * @throws NullPointerException thrown if, and only if, {@code instruction} is {@code null}
 	 */
 	public void addInstruction(final Instruction instruction) {
@@ -440,13 +456,11 @@ public final class CodeAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Attempts to remove {@code attributeInfo} from this {@code CodeAttribute} instance.
+	 * Removes {@code attributeInfo} from this {@code CodeAttribute} instance, if present.
 	 * <p>
 	 * If {@code attributeInfo} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * <p>
-	 * If no {@code AttributeInfo} equal to {@code attributeInfo} can be found, nothing will happen.
 	 * 
-	 * @param attributeInfo the {@code AttributeInfo} to remove
+	 * @param attributeInfo the {@link AttributeInfo} to remove
 	 * @throws NullPointerException thrown if, and only if, {@code attributeInfo} is {@code null}
 	 */
 	public void removeAttributeInfo(final AttributeInfo attributeInfo) {
@@ -454,13 +468,11 @@ public final class CodeAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Attempts to remove {@code exceptionHandler} from this {@code CodeAttribute} instance.
+	 * Removes {@code exceptionHandler} from this {@code CodeAttribute} instance, if present.
 	 * <p>
 	 * If {@code exceptionHandler} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * <p>
-	 * If no {@code ExceptionHandler} equal to {@code exceptionHandler} can be found, nothing will happen.
 	 * 
-	 * @param exceptionHandler the {@code ExceptionHandler} to remove
+	 * @param exceptionHandler the {@link ExceptionHandler} to remove
 	 * @throws NullPointerException thrown if, and only if, {@code exceptionHandler} is {@code null}
 	 */
 	public void removeExceptionHandler(final ExceptionHandler exceptionHandler) {
@@ -468,13 +480,11 @@ public final class CodeAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Attempts to remove {@code instruction} from this {@code CodeAttribute} instance.
+	 * Removes {@code instruction} from this {@code CodeAttribute} instance, if present.
 	 * <p>
 	 * If {@code instruction} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * <p>
-	 * If no {@code Instruction} equal to {@code instruction} can be found, nothing will happen.
 	 * 
-	 * @param instruction the {@code Instruction} to remove
+	 * @param instruction the {@link Instruction} to remove
 	 * @throws NullPointerException thrown if, and only if, {@code instruction} is {@code null}
 	 */
 	public void removeInstruction(final Instruction instruction) {
@@ -482,11 +492,11 @@ public final class CodeAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Sets a new max_locals for this {@code CodeAttribute} instance.
+	 * Sets {@code maxLocals} as the value for the {@code max_locals} item associated with this {@code CodeAttribute} instance.
 	 * <p>
 	 * If {@code maxLocals} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param maxLocals the new max_locals for this {@code CodeAttribute} instance
+	 * @param maxLocals the value for the {@code max_locals} item associated with this {@code CodeAttribute} instance
 	 * @throws IllegalArgumentException thrown if, and only if, {@code maxLocals} is less than {@code 0}
 	 */
 	public void setMaxLocals(final int maxLocals) {
@@ -494,11 +504,11 @@ public final class CodeAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Sets a new max_stack for this {@code CodeAttribute} instance.
+	 * Sets {@code maxStack} as the value for the {@code max_stack} item associated with this {@code CodeAttribute} instance.
 	 * <p>
 	 * If {@code maxStack} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param maxStack the new max_stack for this {@code CodeAttribute} instance
+	 * @param maxStack the value for the {@code max_stack} item associated with this {@code CodeAttribute} instance
 	 * @throws IllegalArgumentException thrown if, and only if, {@code maxStack} is less than {@code 0}
 	 */
 	public void setMaxStack(final int maxStack) {
@@ -508,15 +518,15 @@ public final class CodeAttribute extends AttributeInfo {
 	/**
 	 * Writes this {@code CodeAttribute} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
@@ -544,14 +554,14 @@ public final class CodeAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@code CodeAttribute}s.
+	 * Returns a {@code List} with all {@code CodeAttribute} instances in {@code node}.
 	 * <p>
-	 * All {@code CodeAttribute}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code CodeAttribute} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code CodeAttribute}s
+	 * @return a {@code List} with all {@code CodeAttribute} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<CodeAttribute> filter(final Node node) {

@@ -26,9 +26,20 @@ import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * An {@code AttributeInfo} denotes an attribute_info structure somewhere in a ClassFile structure.
+ * An {@code AttributeInfo} denotes an {@code attribute_info} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code attribute_info} structure has the following format:
+ * <pre>
+ * <code>
+ * attribute_info {
+ *     u2 attribute_name_index;
+ *     u4 attribute_length;
+ *     u1[attribute_length] info;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
@@ -44,11 +55,11 @@ public abstract class AttributeInfo implements Node {
 	 * <p>
 	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param name the name of this {@code AttributeInfo} instance
-	 * @param attributeNameIndex the attribute_name_index of this {@code AttributeInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 * @param name the name associated with this {@code AttributeInfo} instance
+	 * @param attributeNameIndex the value for the {@code attribute_name_index} item associated with this {@code AttributeInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than {@code 1}
 	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
 	 */
 	protected AttributeInfo(final String name, final int attributeNameIndex) {
@@ -66,37 +77,37 @@ public abstract class AttributeInfo implements Node {
 	public abstract AttributeInfo copy();
 	
 	/**
-	 * Returns the name of this {@code AttributeInfo} instance.
+	 * Returns the name associated with this {@code AttributeInfo} instance.
 	 * 
-	 * @return the name of this {@code AttributeInfo} instance
+	 * @return the name associated with this {@code AttributeInfo} instance
 	 */
 	public final String getName() {
 		return this.name;
 	}
 	
 	/**
-	 * Returns the attribute_length of this {@code AttributeInfo} instance.
+	 * Returns the value of the {@code attribute_length} item associated with this {@code AttributeInfo} instance.
 	 * 
-	 * @return the attribute_length of this {@code AttributeInfo} instance
+	 * @return the value of the {@code attribute_length} item associated with this {@code AttributeInfo} instance
 	 */
 	public abstract int getAttributeLength();
 	
 	/**
-	 * Returns the attribute_name_index of this {@code AttributeInfo} instance.
+	 * Returns the value of the {@code attribute_name_index} item associated with this {@code AttributeInfo} instance.
 	 * 
-	 * @return the attribute_name_index of this {@code AttributeInfo} instance
+	 * @return the value of the {@code attribute_name_index} item associated with this {@code AttributeInfo} instance
 	 */
 	public final int getAttributeNameIndex() {
 		return this.attributeNameIndex;
 	}
 	
 	/**
-	 * Sets the attribute_name_index for this {@code AttributeInfo} instance.
+	 * Sets {@code attributeNameIndex} as the value for the {@code attribute_name_index} item associated with this {@code AttributeInfo} instance.
 	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param attributeNameIndex the new attribute_name_index
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 * @param attributeNameIndex the value for the {@code attribute_name_index} item associated with this {@code AttributeInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than {@code 1}
 	 */
 	public final void setAttributeNameIndex(final int attributeNameIndex) {
 		this.attributeNameIndex = ParameterArguments.requireRange(attributeNameIndex, 1, Integer.MAX_VALUE);
@@ -105,15 +116,15 @@ public abstract class AttributeInfo implements Node {
 	/**
 	 * Writes this {@code AttributeInfo} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
+	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} may be thrown. But no guarantees can be made.
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	public abstract void write(final DataOutput dataOutput);
 }

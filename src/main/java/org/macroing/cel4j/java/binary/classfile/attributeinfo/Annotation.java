@@ -56,11 +56,11 @@ public final class Annotation implements Node {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Constructs a new {@code Annotation} instance with {@code typeIndex} as its associated {@code type_index}.
+	 * Constructs a new {@code Annotation} instance with {@code typeIndex} as the value for the associated {@code type_index} item.
 	 * <p>
 	 * If {@code typeIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param typeIndex the associated {@code type_index}
+	 * @param typeIndex the value for the {@code type_index} item associated with this {@code Annotation} instance
 	 * @throws IllegalArgumentException thrown if, and only if, {@code typeIndex} is less than {@code 1}
 	 */
 	public Annotation(final int typeIndex) {
