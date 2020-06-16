@@ -61,6 +61,7 @@ import org.macroing.cel4j.util.Document;
 final class ArtifactScriptEngine extends AbstractScriptEngine implements Compilable {
 	private static final AtomicInteger IDENTIFIER;
 	private static final String DEFAULT_PACKAGE_NAME;
+	private static final String DEFAULT_SUPER_CLASS_NAME;
 	private static final String LINE_SEPARATOR;
 	private static final String PROPERTY_DUMP;
 	private static final String TMP_DIRECTORY;
@@ -68,6 +69,7 @@ final class ArtifactScriptEngine extends AbstractScriptEngine implements Compila
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private final AtomicReference<String> packageName;
+	private final AtomicReference<String> superClassName;
 	private final List<String> importStatements;
 	private final List<String> importStatementsRequired;
 	private final Map<String, CompiledScript> compiledScripts;
@@ -77,11 +79,12 @@ final class ArtifactScriptEngine extends AbstractScriptEngine implements Compila
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public ArtifactScriptEngine(final ScriptEngineFactory scriptEngineFactory) {
-		this.scriptEngineFactory = Objects.requireNonNull(scriptEngineFactory, "scriptEngineFactory == null");
 		this.packageName = new AtomicReference<>(DEFAULT_PACKAGE_NAME);
+		this.superClassName = new AtomicReference<>(DEFAULT_SUPER_CLASS_NAME);
 		this.importStatements = new ArrayList<>();
 		this.importStatementsRequired = doCreateImportStatementsRequired();
 		this.compiledScripts = new HashMap<>();
+		this.scriptEngineFactory = Objects.requireNonNull(scriptEngineFactory, "scriptEngineFactory == null");
 		this.isDumpingSourceCode = Objects.toString(System.getProperty(PROPERTY_DUMP)).equals("true");
 	}
 	
@@ -91,6 +94,8 @@ final class ArtifactScriptEngine extends AbstractScriptEngine implements Compila
 		IDENTIFIER = new AtomicInteger(0);
 		
 		DEFAULT_PACKAGE_NAME = "org.macroing.cel4j.artifact";
+		
+		DEFAULT_SUPER_CLASS_NAME = "ArtifactScript";
 		
 		PROPERTY_DUMP = "org.macroing.cel4j.artifact.dump";
 		
@@ -136,6 +141,7 @@ final class ArtifactScriptEngine extends AbstractScriptEngine implements Compila
 		final String script0 = doSearchAndReplace(script);
 		final String className = "ArtifactScriptImpl" + IDENTIFIER.incrementAndGet();
 		final String packageName = this.packageName.get();
+		final String superClassName = this.superClassName.get();
 		final String directory = packageName.replace(".", "/");
 		
 		final File binaryDirectory = doGetBinaryDirectory();
@@ -143,7 +149,7 @@ final class ArtifactScriptEngine extends AbstractScriptEngine implements Compila
 		final File sourceFile = doGetSourceFile(directory, className);
 		
 		doAddToClassPath(binaryDirectory);
-		doGenerateSourceCode(packageName, className, script0, sourceFile);
+		doGenerateSourceCode(packageName, className, superClassName, script0, sourceFile);
 		
 		try {
 			final JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
@@ -160,7 +166,7 @@ final class ArtifactScriptEngine extends AbstractScriptEngine implements Compila
 				final boolean isCompiled = compilationTask.call().booleanValue();
 				
 				if(!isCompiled) {
-					throw new ScriptException("Unable to compile script \"" + script + "\".");
+					throw new ScriptException("Unable to compile script.");
 				}
 			}
 		} catch(final IOException | RuntimeException e) {
@@ -172,7 +178,25 @@ final class ArtifactScriptEngine extends AbstractScriptEngine implements Compila
 			
 			final Object object = clazz.getConstructor(new Class<?>[] {ScriptEngine.class}).newInstance(new Object[] {this});
 			
-			return CompiledScript.class.cast(object);
+			if(object instanceof CompiledScript) {
+				return CompiledScript.class.cast(object);
+			}
+			
+			return new CompiledScript() {
+				@Override
+				public Object eval(final ScriptContext scriptContext) throws ScriptException {
+					try {
+						return clazz.getMethod("eval", ScriptContext.class).invoke(object, scriptContext);
+					} catch(final IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+						throw new ScriptException(e);
+					}
+				}
+				
+				@Override
+				public ScriptEngine getEngine() {
+					return ArtifactScriptEngine.this;
+				}
+			};
 		} catch(final Exception e) {
 			throw new ScriptException(e);
 		}
@@ -204,7 +228,7 @@ final class ArtifactScriptEngine extends AbstractScriptEngine implements Compila
 		}
 	}
 	
-	private String doGenerateSourceCode(final String packageName, final String className, final String script) throws ScriptException {
+	private String doGenerateSourceCode(final String packageName, final String className, final String superClassName, final String script) throws ScriptException {
 		final
 		Document document = new Document();
 		document.linef("package %s;", packageName);
@@ -233,12 +257,13 @@ final class ArtifactScriptEngine extends AbstractScriptEngine implements Compila
 		}
 		
 		document.linef("");
-		document.linef("public final class %s extends ArtifactScript {", className);
+		document.linef("public final class %s extends %s {", className, superClassName);
+		document.linef("	private ScriptEngine scriptEngine;");
+		document.linef("	");
 		document.linef("	public %s(final ScriptEngine scriptEngine) {", className);
-		document.linef("		super(scriptEngine);");
+		document.linef("		this.scriptEngine = scriptEngine;");
 		document.linef("	}");
 		document.linef("	");
-		document.linef("	@Override");
 		document.linef("	public Object eval(final ScriptContext scriptContext) throws ScriptException {");
 		document.linef("		Exception exception = null;");
 		document.linef("		");
@@ -254,17 +279,41 @@ final class ArtifactScriptEngine extends AbstractScriptEngine implements Compila
 		document.linef("			return null;");
 		document.linef("		}");
 		document.linef("	}");
+		document.linef("	");
+		document.linef("	public ScriptEngine getEngine() {");
+		document.linef("		return this.scriptEngine;");
+		document.linef("	}");
 		document.linef("}");
 		
 		return document.toString();
 	}
 	
 	private String doSearchAndReplace(String script) throws ScriptException {
+		script = doSearchAndReplaceExtends(script);
 		script = doSearchAndReplaceImports(script);
 		script = doSearchAndReplacePackages(script);
 		script = doSearchAndReplaceSubstitutionVariables(script);
 		
 		return script;
+	}
+	
+	private String doSearchAndReplaceExtends(final String script) {
+		final StringBuffer stringBuffer = new StringBuffer(script.length());
+		
+		final Matcher matcher = Matchers.newExtendsStatementMatcher(script);
+		
+		while(matcher.find()) {
+			final String superClassName = matcher.group(Matchers.NAME_EXTENDS_STATEMENT);
+			final String replacement = "";
+			
+			this.superClassName.set(superClassName);
+			
+			matcher.appendReplacement(stringBuffer, replacement);
+		}
+		
+		matcher.appendTail(stringBuffer);
+		
+		return stringBuffer.toString();
 	}
 	
 	private String doSearchAndReplaceImports(final String script) {
@@ -332,8 +381,8 @@ final class ArtifactScriptEngine extends AbstractScriptEngine implements Compila
 		return stringBuffer.toString();
 	}
 	
-	private void doGenerateSourceCode(final String packageName, final String className, final String script, final File sourceFile) throws ScriptException {
-		final String sourceCode = doGenerateSourceCode(packageName, className, script);
+	private void doGenerateSourceCode(final String packageName, final String className, final String superClassName, final String script, final File sourceFile) throws ScriptException {
+		final String sourceCode = doGenerateSourceCode(packageName, className, superClassName, script);
 		
 		if(this.isDumpingSourceCode) {
 			System.out.println(sourceCode);

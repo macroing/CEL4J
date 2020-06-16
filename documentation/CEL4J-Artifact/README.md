@@ -11,6 +11,7 @@ Supported Features
 * The `eval(String)` method allows the script to evaluate Java source code on its own.
 * Import statements in the script will be pre-processed and added to the compilation unit.
 * Package statements in the script will be pre-processed and added to the compilation unit.
+* Extends statements in the script will be pre-processed and alter the super class.
 * The `set(String, Object)` method can be used to set a variable in the `ScriptContext`.
 * The `get(String)` method can be used to get a variable from the `ScriptContext`.
 * Variables starting with `$` are cast to their type, as they are stored in the `ScriptContext`.
@@ -54,6 +55,9 @@ public class HelloWorld {
 The following example demonstrates how CEL4J Artifact scripts can be written:
 
 ```java
+//Changes the super class:
+extends org.macroing.cel4j.artifact.ArtifactScript;
+
 //Changes the package:
 package org.macroing.cel4j.artifact.example;
 

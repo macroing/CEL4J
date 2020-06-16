@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * This {@code Artifact} class is meant to be used for configuration of Artifact.
+ * This {@code Artifact} class is used for global configuration of Artifact.
  * <p>
  * One use case for this class is to add import statements globally. Consider the following example:
  * <pre>

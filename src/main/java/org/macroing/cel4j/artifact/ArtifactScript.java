@@ -18,11 +18,8 @@
  */
 package org.macroing.cel4j.artifact;
 
-import java.util.Objects;
-
 import javax.script.CompiledScript;
 import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 /**
@@ -34,20 +31,11 @@ import javax.script.ScriptException;
  * @author J&#246;rgen Lundgren
  */
 public abstract class ArtifactScript extends CompiledScript {
-	private final ScriptEngine scriptEngine;
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
 	/**
 	 * Constructs a new {@code ArtifactScript} instance.
-	 * <p>
-	 * If {@code scriptEngine} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param scriptEngine a {@code ScriptEngine}
-	 * @throws NullPointerException thrown if, and only if, {@code scriptEngine} is {@code null}
 	 */
-	protected ArtifactScript(final ScriptEngine scriptEngine) {
-		this.scriptEngine = Objects.requireNonNull(scriptEngine, "scriptEngine == null");
+	protected ArtifactScript() {
+		
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -68,7 +56,7 @@ public abstract class ArtifactScript extends CompiledScript {
 	 */
 	public final Object eval(final String script) throws ScriptException {
 		try {
-			return this.scriptEngine.eval(script);
+			return getEngine().eval(script);
 		} catch(final Exception e) {
 			throw new ScriptException(e);
 		}
@@ -87,17 +75,7 @@ public abstract class ArtifactScript extends CompiledScript {
 	 * @throws NullPointerException thrown if, and only if, {@code key} is {@code null}
 	 */
 	public final Object get(final String key) {
-		return this.scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE).get(key);
-	}
-	
-	/**
-	 * Returns the {@code ScriptEngine} whose compile method created this {@code ArtifactScript}.
-	 * 
-	 * @return the {@code ScriptEngine} whose compile method created this {@code ArtifactScript}
-	 */
-	@Override
-	public final ScriptEngine getEngine() {
-		return this.scriptEngine;
+		return getEngine().getBindings(ScriptContext.ENGINE_SCOPE).get(key);
 	}
 	
 	/**
@@ -113,6 +91,6 @@ public abstract class ArtifactScript extends CompiledScript {
 	 * @throws NullPointerException thrown if, and only if, {@code key} is {@code null}
 	 */
 	public final void set(final String key, final Object value) {
-		this.scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE).put(key, value);
+		getEngine().getBindings(ScriptContext.ENGINE_SCOPE).put(key, value);
 	}
 }
