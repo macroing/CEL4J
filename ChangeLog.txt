@@ -1,3 +1,13 @@
+2020-06-17  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Source:
+
+		* CHANGE:		Update the Regex used when parsing traditional comments.
+
+	CEL4J Lexer:
+
+		* CHANGE:		Update the Regex used when parsing end-of-line comments.
+
 2020-06-16  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Artifact:

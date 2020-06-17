@@ -153,7 +153,7 @@ final class Constants {
 	public static final String REGEX_OPERATOR = String.format("(?<%s>==|=|>>>=|>>>|>>=|>>|>=|>|<<=|<<|<=|<|!=|!|~|\\?|:|&&|&=|&|\\|\\||\\|=|\\||\\+\\+|\\+=|\\+|--|-=|->|-|\\*=|\\*|/=|/|\\^=|\\^|%%=|%%)", NAME_OPERATOR);
 	public static final String REGEX_SEPARATOR = String.format("(?<%s>\\(|\\)|\\{|\\}|\\[|\\]|;|,|\\.\\.\\.|\\.|@|::)", NAME_SEPARATOR);
 	public static final String REGEX_STRING_LITERAL = String.format("(?<%s>\"([^\"\\\\]|\\\\([btnfr\"'\\\\0-7]|[0-7]{2}|[0-3][0-7]{2}|u+[0-9a-fA-F]{4}))*\")", NAME_STRING_LITERAL);
-	public static final String REGEX_TRADITIONAL_COMMENT = String.format("(?<%s>/\\*([^\\*]|(?!\\*/).)*\\*/)", NAME_TRADITIONAL_COMMENT);
+	public static final String REGEX_TRADITIONAL_COMMENT = String.format("(?s)(?<%s>/\\*((?!\\*/).)*\\*/)(?-s)", NAME_TRADITIONAL_COMMENT);
 	public static final String REGEX_WHITE_SPACE = String.format("(?<%s>\\s)", NAME_WHITE_SPACE);
 	public static final String REGEX_COMMENT = REGEX_END_OF_LINE_COMMENT + "|" + REGEX_TRADITIONAL_COMMENT;
 	public static final String REGEX_FLOATING_POINT_LITERAL = REGEX_DECIMAL_FLOATING_POINT_LITERAL + "|" + REGEX_HEXADECIMAL_FLOATING_POINT_LITERAL;
