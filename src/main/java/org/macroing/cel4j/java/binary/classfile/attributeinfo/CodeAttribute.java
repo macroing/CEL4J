@@ -211,9 +211,7 @@ public final class CodeAttribute extends AttributeInfo {
 		stringBuilder.append(" ");
 		stringBuilder.append("code_length=" + getCodeLength());
 		
-		final String toString = stringBuilder.toString();
-		
-		return toString;
+		return stringBuilder.toString();
 	}
 	
 	/**

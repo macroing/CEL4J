@@ -32,16 +32,26 @@ import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 
 /**
- * A {@code DeprecatedAttribute} denotes a Deprecated_attribute structure somewhere in a ClassFile structure.
+ * A {@code DeprecatedAttribute} denotes a {@code Deprecated_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code ConstantValue_attribute} structure has the following format:
+ * <pre>
+ * <code>
+ * Deprecated_attribute {
+ *     u2 attribute_name_index;
+ *     u4 attribute_length;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class DeprecatedAttribute extends AttributeInfo {
 	/**
-	 * The name of the Deprecated_attribute structure.
+	 * The name of the {@code Deprecated_attribute} structure.
 	 */
 	public static final String NAME = "Deprecated";
 	
@@ -50,10 +60,10 @@ public final class DeprecatedAttribute extends AttributeInfo {
 	/**
 	 * Constructs a new {@code DeprecatedAttribute} instance.
 	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code DeprecatedAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 * @param attributeNameIndex the value for the {@code attribute_name_index} item associated with this {@code DeprecatedAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than {@code 1}
 	 */
 	public DeprecatedAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
@@ -89,18 +99,16 @@ public final class DeprecatedAttribute extends AttributeInfo {
 		stringBuilder.append(" ");
 		stringBuilder.append("attribute_length=" + getAttributeLength());
 		
-		final String toString = stringBuilder.toString();
-		
-		return toString;
+		return stringBuilder.toString();
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code DeprecatedAttribute}, and that {@code DeprecatedAttribute} instance is equal to this {@code DeprecatedAttribute} instance, {@code false}
-	 * otherwise.
+	 * Compares {@code object} to this {@code DeprecatedAttribute} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code DeprecatedAttribute}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code DeprecatedAttribute} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code DeprecatedAttribute}, and that {@code DeprecatedAttribute} instance is equal to this {@code DeprecatedAttribute} instance, {@code false}
-	 * otherwise
+	 * @param object the {@code Object} to compare to this {@code DeprecatedAttribute} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code DeprecatedAttribute}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -120,9 +128,9 @@ public final class DeprecatedAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the attribute_length of this {@code DeprecatedAttribute} instance.
+	 * Returns the value of the {@code attribute_length} item associated with this {@code DeprecatedAttribute} instance.
 	 * 
-	 * @return the attribute_length of this {@code DeprecatedAttribute} instance
+	 * @return the value of the {@code attribute_length} item associated with this {@code DeprecatedAttribute} instance
 	 */
 	@Override
 	public int getAttributeLength() {
@@ -142,15 +150,15 @@ public final class DeprecatedAttribute extends AttributeInfo {
 	/**
 	 * Writes this {@code DeprecatedAttribute} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
@@ -165,14 +173,14 @@ public final class DeprecatedAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@code DeprecatedAttribute}s.
+	 * Returns a {@code List} with all {@code DeprecatedAttribute} instances in {@code node}.
 	 * <p>
-	 * All {@code DeprecatedAttribute}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code DeprecatedAttribute} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code DeprecatedAttribute}s
+	 * @return a {@code List} with all {@code DeprecatedAttribute} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<DeprecatedAttribute> filter(final Node node) {
