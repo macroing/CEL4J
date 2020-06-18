@@ -21,52 +21,94 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 
-//TODO: Add Javadocs!
+/**
+ * An {@code ElementValue} denotes an {@code element_value} structure as defined by the Java Virtual Machine Specifications.
+ * <p>
+ * This class is indirectly mutable and not thread-safe.
+ * <p>
+ * The {@code element_value} structure has the following format:
+ * <pre>
+ * <code>
+ * element_value {
+ *     u1 tag;
+ *     union value;
+ * }
+ * </code>
+ * </pre>
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class ElementValue implements Node {
-//	TODO: Add Javadocs!
-	public static final char ANNOTATION_TYPE_TAG = '@';
+	/**
+	 * A tag that defines an annotation.
+	 */
+	public static final char ANNOTATION_TAG = '@';
 	
-//	TODO: Add Javadocs!
+	/**
+	 * A tag that defines an array.
+	 */
 	public static final char ARRAY_TAG = '[';
 	
-//	TODO: Add Javadocs!
+	/**
+	 * A tag that defines a {@code boolean}.
+	 */
 	public static final char BOOLEAN_TAG = 'Z';
 	
-//	TODO: Add Javadocs!
+	/**
+	 * A tag that defines a {@code byte}.
+	 */
 	public static final char BYTE_TAG = 'B';
 	
-//	TODO: Add Javadocs!
+	/**
+	 * A tag that defines a {@code char}.
+	 */
 	public static final char CHAR_TAG = 'C';
 	
-//	TODO: Add Javadocs!
+	/**
+	 * A tag that defines a class.
+	 */
 	public static final char CLASS_TAG = 'c';
 	
-//	TODO: Add Javadocs!
+	/**
+	 * A tag that defines a {@code double}.
+	 */
 	public static final char DOUBLE_TAG = 'D';
 	
-//	TODO: Add Javadocs!
-	public static final char ENUM_CONSTANT_TAG = 'e';
+	/**
+	 * A tag that defines an enum.
+	 */
+	public static final char ENUM_TAG = 'e';
 	
-//	TODO: Add Javadocs!
+	/**
+	 * A tag that defines a {@code float}.
+	 */
 	public static final char FLOAT_TAG = 'F';
 	
-//	TODO: Add Javadocs!
+	/**
+	 * A tag that defines an {@code int}.
+	 */
 	public static final char INT_TAG = 'I';
 	
-//	TODO: Add Javadocs!
+	/**
+	 * A tag that defines a {@code long}.
+	 */
 	public static final char LONG_TAG = 'J';
 	
-//	TODO: Add Javadocs!
+	/**
+	 * A tag that defines a {@code short}.
+	 */
 	public static final char SHORT_TAG = 'S';
 	
-//	TODO: Add Javadocs!
+	/**
+	 * A tag that defines a {@code String}.
+	 */
 	public static final char STRING_TAG = 's';
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,25 +118,64 @@ public final class ElementValue implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Constructs a new {@code ElementValue} instance given {@code tag} and {@code value}.
+	 * <p>
+	 * If {@code value} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code tag} is invalid, or the combination of {@code tag} and {@code value} is, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param tag the value for the {@code tag} item associated with this {@code ElementValue} instance
+	 * @param value the value for the {@code value} item associated with this {@code ElementValue} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code tag} is invalid, or the combination of {@code tag} and {@code value} is
+	 * @throws NullPointerException thrown if, and only if, {@code value} is {@code null}
+	 */
 	public ElementValue(final int tag, final Union value) {
 		this.tag = doRequireValidTag(tag);
-		this.value = doRequireValidValue(tag, value);
+		this.value = doRequireValidValue(tag, Objects.requireNonNull(value, "value == null"));
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a copy of this {@code ElementValue} instance.
+	 * 
+	 * @return a copy of this {@code ElementValue} instance
+	 */
 	public ElementValue copy() {
-		return new ElementValue(this.tag, this.value.copy());
+		return new ElementValue(getTag(), getValue().copy());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the value of the {@code value} item associated with this {@code ElementValue} instance.
+	 * 
+	 * @return the value of the {@code value} item associated with this {@code ElementValue} instance
+	 */
 	public Union getValue() {
 		return this.value;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Accepts a {@link NodeHierarchicalVisitor}.
+	 * <p>
+	 * Returns the result of {@code nodeHierarchicalVisitor.visitLeave(this)}.
+	 * <p>
+	 * If {@code nodeHierarchicalVisitor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}, a {@code NodeTraversalException} will be thrown with the {@code RuntimeException} wrapped.
+	 * <p>
+	 * This implementation will:
+	 * <ul>
+	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
+	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
+	 * <li>traverse its child {@code Node}, a {@link Union}.</li>
+	 * </ul>
+	 * 
+	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
+	 * @return the result of {@code nodeHierarchicalVisitor.visitLeave(this)}
+	 * @throws NodeTraversalException thrown if, and only if, a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}
+	 * @throws NullPointerException thrown if, and only if, {@code nodeHierarchicalVisitor} is {@code null}
+	 */
 	@Override
 	public boolean accept(final NodeHierarchicalVisitor nodeHierarchicalVisitor) {
 		Objects.requireNonNull(nodeHierarchicalVisitor, "nodeHierarchicalVisitor == null");
@@ -112,44 +193,77 @@ public final class ElementValue implements Node {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Compares {@code object} to this {@code ElementValue} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ElementValue}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code ElementValue} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ElementValue}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
 		} else if(!(object instanceof ElementValue)) {
 			return false;
-		} else if(!Objects.equals(Integer.valueOf(this.tag), Integer.valueOf(ElementValue.class.cast(object).tag))) {
+		} else if(!Objects.equals(Integer.valueOf(getTag()), Integer.valueOf(ElementValue.class.cast(object).getTag()))) {
 			return false;
-		} else if(!Objects.equals(this.value, ElementValue.class.cast(object).value)) {
+		} else if(!Objects.equals(getValue(), ElementValue.class.cast(object).getValue())) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the length of this {@code ElementValue} instance.
+	 * 
+	 * @return the length of this {@code ElementValue} instance
+	 */
 	public int getLength() {
-		return 1 + this.value.getLength();
+		return 1 + getValue().getLength();
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the value of the {@code tag} item associated with this {@code ElementValue} instance.
+	 * 
+	 * @return the value of the {@code tag} item associated with this {@code ElementValue} instance
+	 */
 	public int getTag() {
 		return this.tag;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code ElementValue} instance.
+	 * 
+	 * @return a hash code for this {@code ElementValue} instance
+	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(Integer.valueOf(this.tag), this.value);
+		return Objects.hash(Integer.valueOf(getTag()), getValue());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Writes this {@code ElementValue} to {@code dataOutput}.
+	 * <p>
+	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
+	 * 
+	 * @param dataOutput the {@code DataOutput} to write to
+	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
+	 */
 	public void write(final DataOutput dataOutput) {
 		try {
-			dataOutput.writeByte(this.tag);
+			dataOutput.writeByte(getTag());
 			
-			this.value.write(dataOutput);
+			final
+			Union union = getValue();
+			union.write(dataOutput);
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
@@ -159,7 +273,7 @@ public final class ElementValue implements Node {
 	
 	private static Union doRequireValidValue(final int tag, final Union value) {
 		switch(tag) {
-			case ANNOTATION_TYPE_TAG:
+			case ANNOTATION_TAG:
 				return doRequireValidType(value, AnnotationValueUnion.class);
 			case ARRAY_TAG:
 				return doRequireValidType(value, ArrayValueUnion.class);
@@ -171,7 +285,7 @@ public final class ElementValue implements Node {
 				return doRequireValidType(value, ClassInfoIndexUnion.class);
 			case DOUBLE_TAG:
 				return doRequireValidType(value, ConstValueIndexUnion.class);
-			case ENUM_CONSTANT_TAG:
+			case ENUM_TAG:
 				return doRequireValidType(value, EnumConstValueUnion.class);
 			case FLOAT_TAG:
 			case INT_TAG:
@@ -194,14 +308,14 @@ public final class ElementValue implements Node {
 	
 	private static int doRequireValidTag(final int tag) {
 		switch(tag) {
-			case ANNOTATION_TYPE_TAG:
+			case ANNOTATION_TAG:
 			case ARRAY_TAG:
 			case BOOLEAN_TAG:
 			case BYTE_TAG:
 			case CHAR_TAG:
 			case CLASS_TAG:
 			case DOUBLE_TAG:
-			case ENUM_CONSTANT_TAG:
+			case ENUM_TAG:
 			case FLOAT_TAG:
 			case INT_TAG:
 			case LONG_TAG:

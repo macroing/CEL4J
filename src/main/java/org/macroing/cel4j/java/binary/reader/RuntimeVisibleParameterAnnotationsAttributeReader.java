@@ -106,7 +106,7 @@ final class RuntimeVisibleParameterAnnotationsAttributeReader  implements Attrib
 	
 	private static Union doReadUnion(final DataInput dataInput, final int tag) throws IOException {
 		switch(tag) {
-			case ElementValue.ANNOTATION_TYPE_TAG:
+			case ElementValue.ANNOTATION_TAG:
 				return new AnnotationValueUnion(doReadAnnotation(dataInput));
 			case ElementValue.ARRAY_TAG:
 				final int numValues = dataInput.readUnsignedShort();
@@ -128,7 +128,7 @@ final class RuntimeVisibleParameterAnnotationsAttributeReader  implements Attrib
 				return new ClassInfoIndexUnion(dataInput.readUnsignedShort());
 			case ElementValue.DOUBLE_TAG:
 				return new ConstValueIndexUnion(dataInput.readUnsignedShort());
-			case ElementValue.ENUM_CONSTANT_TAG:
+			case ElementValue.ENUM_TAG:
 				return new EnumConstValueUnion(dataInput.readUnsignedShort(), dataInput.readUnsignedShort());
 			case ElementValue.FLOAT_TAG:
 				return new ConstValueIndexUnion(dataInput.readUnsignedShort());

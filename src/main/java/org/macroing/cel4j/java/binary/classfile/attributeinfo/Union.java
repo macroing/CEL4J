@@ -19,18 +19,45 @@
 package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 
 import java.io.DataOutput;
-import java.lang.reflect.Field;//TODO: Add Javadocs!
+import java.io.UncheckedIOException;
 
 import org.macroing.cel4j.node.Node;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code Union} denotes a {@code union} structure as defined by the Java Virtual Machine Specifications.
+ * <p>
+ * A {@code union} is part of an {@code element_value} structure, which is defined by the {@link ElementValue} class.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public interface Union extends Node {
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a copy of this {@code Union} instance.
+	 * 
+	 * @return a copy of this {@code Union} instance
+	 */
 	Union copy();
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the length of this {@code Union} instance.
+	 * 
+	 * @return the length of this {@code Union} instance
+	 */
 	int getLength();
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Writes this {@code Union} to {@code dataOutput}.
+	 * <p>
+	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
+	 * 
+	 * @param dataOutput the {@code DataOutput} to write to
+	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
+	 */
 	void write(final DataOutput dataOutput);
 }
