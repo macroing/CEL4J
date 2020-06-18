@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -36,16 +35,27 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code SignatureAttribute} denotes a Signature_attribute structure somewhere in a ClassFile structure.
+ * A {@code SignatureAttribute} denotes a {@code Signature_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code Signature_attribute} structure has the following format:
+ * <pre>
+ * <code>
+ * Signature_attribute {
+ *     u2 attribute_name_index;
+ *     u4 attribute_length;
+ *     u2 signature_index;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class SignatureAttribute extends AttributeInfo {
 	/**
-	 * The name of the Signature_attribute structure.
+	 * The name of the {@code Signature_attribute} structure.
 	 */
 	public static final String NAME = "Signature";
 	
@@ -58,11 +68,11 @@ public final class SignatureAttribute extends AttributeInfo {
 	/**
 	 * Constructs a new {@code SignatureAttribute} instance.
 	 * <p>
-	 * If either {@code attributeNameIndex} or {@code signatureIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If either {@code attributeNameIndex} or {@code signatureIndex} are less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code SignatureAttribute} instance
-	 * @param signatureIndex the signature_index of the new {@code SignatureAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code attributeNameIndex} or {@code signatureIndex} are less than or equal to {@code 0}
+	 * @param attributeNameIndex the value for the {@code attribute_name_index} item associated with this {@code SignatureAttribute} instance
+	 * @param signatureIndex the value for the {@code signature_index} item associated with this {@code SignatureAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code attributeNameIndex} or {@code signatureIndex} are less than {@code 1}
 	 */
 	public SignatureAttribute(final int attributeNameIndex, final int signatureIndex) {
 		super(NAME, attributeNameIndex);
@@ -79,7 +89,7 @@ public final class SignatureAttribute extends AttributeInfo {
 	 */
 	@Override
 	public SignatureAttribute copy() {
-		return new SignatureAttribute(getAttributeNameIndex(), this.signatureIndex);
+		return new SignatureAttribute(getAttributeNameIndex(), getSignatureIndex());
 	}
 	
 	/**
@@ -102,18 +112,16 @@ public final class SignatureAttribute extends AttributeInfo {
 		stringBuilder.append(" ");
 		stringBuilder.append("signature_index=" + this.signatureIndex);
 		
-		final String toString = stringBuilder.toString();
-		
-		return toString;
+		return stringBuilder.toString();
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code SignatureAttribute}, and that {@code SignatureAttribute} instance is equal to this {@code SignatureAttribute} instance, {@code false}
-	 * otherwise.
+	 * Compares {@code object} to this {@code SignatureAttribute} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code SignatureAttribute}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code SignatureAttribute} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code SignatureAttribute}, and that {@code SignatureAttribute} instance is equal to this {@code SignatureAttribute} instance, {@code false}
-	 * otherwise
+	 * @param object the {@code Object} to compare to this {@code SignatureAttribute} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code SignatureAttribute}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -135,9 +143,9 @@ public final class SignatureAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the attribute_length of this {@code SignatureAttribute} instance.
+	 * Returns the value of the {@code attribute_length} item associated with this {@code SignatureAttribute} instance.
 	 * 
-	 * @return the attribute_length of this {@code SignatureAttribute} instance
+	 * @return the value of the {@code attribute_length} item associated with this {@code SignatureAttribute} instance
 	 */
 	@Override
 	public int getAttributeLength() {
@@ -145,9 +153,9 @@ public final class SignatureAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the signature_index of this {@code SignatureAttribute} instance.
+	 * Returns the value of the {@code signature_index} item associated with this {@code SignatureAttribute} instance.
 	 * 
-	 * @return the signature_index of this {@code SignatureAttribute} instance
+	 * @return the value of the {@code signature_index} item associated with this {@code SignatureAttribute} instance
 	 */
 	public int getSignatureIndex() {
 		return this.signatureIndex;
@@ -164,12 +172,12 @@ public final class SignatureAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Sets a new signature_index for this {@code SignatureAttribute} instance.
+	 * Sets {@code signatureIndex} as the value for the {@code signature_index} item associated with this {@code SignatureAttribute} instance.
 	 * <p>
-	 * If {@code signatureIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code signatureIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param signatureIndex the new signature_index for this {@code SignatureAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code signatureIndex} is less than or equal to {@code 0}
+	 * @param signatureIndex the value for the {@code signature_index} item associated with this {@code SignatureAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code signatureIndex} is less than {@code 1}
 	 */
 	public void setSignatureIndex(final int signatureIndex) {
 		this.signatureIndex = ParameterArguments.requireRange(signatureIndex, 1, Integer.MAX_VALUE);
@@ -178,22 +186,22 @@ public final class SignatureAttribute extends AttributeInfo {
 	/**
 	 * Writes this {@code SignatureAttribute} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
 		try {
 			dataOutput.writeShort(getAttributeNameIndex());
 			dataOutput.writeInt(getAttributeLength());
-			dataOutput.writeShort(this.signatureIndex);
+			dataOutput.writeShort(getSignatureIndex());
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
@@ -202,14 +210,14 @@ public final class SignatureAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@code SignatureAttribute}s.
+	 * Returns a {@code List} with all {@code SignatureAttribute} instances in {@code node}.
 	 * <p>
-	 * All {@code SignatureAttribute}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code SignatureAttribute} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code SignatureAttribute}s
+	 * @return a {@code List} with all {@code SignatureAttribute} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<SignatureAttribute> filter(final Node node) {

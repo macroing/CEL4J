@@ -145,11 +145,17 @@ public final class CodeAttribute extends AttributeInfo {
 		codeAttribute.setMaxLocals(getMaxLocals());
 		codeAttribute.setMaxStack(getMaxStack());
 		
-		this.attributeInfos.forEach(attributeInfo -> codeAttribute.addAttributeInfo(attributeInfo.copy()));
+		for(final AttributeInfo attributeInfo : this.attributeInfos) {
+			codeAttribute.addAttributeInfo(attributeInfo);
+		}
 		
-		this.exceptionHandlers.forEach(exceptionHandler -> codeAttribute.addExceptionHandler(exceptionHandler.copy()));
+		for(final ExceptionHandler exceptionHandler : this.exceptionHandlers) {
+			codeAttribute.addExceptionHandler(exceptionHandler);
+		}
 		
-		this.instructions.forEach(instruction -> codeAttribute.addInstruction(instruction.copy()));
+		for(final Instruction instruction : this.instructions) {
+			codeAttribute.addInstruction(instruction);
+		}
 		
 		return codeAttribute;
 	}
@@ -529,21 +535,31 @@ public final class CodeAttribute extends AttributeInfo {
 	@Override
 	public void write(final DataOutput dataOutput) {
 		try {
+			final List<AttributeInfo> attributeInfos = this.attributeInfos;
+			final List<ExceptionHandler> exceptionHandlers = this.exceptionHandlers;
+			final List<Instruction> instructions = this.instructions;
+			
 			dataOutput.writeShort(getAttributeNameIndex());
 			dataOutput.writeInt(getAttributeLength());
 			dataOutput.writeShort(getMaxStack());
 			dataOutput.writeShort(getMaxLocals());
 			dataOutput.writeInt(getCodeLength());
 			
-			this.instructions.forEach(instruction -> instruction.write(dataOutput));
+			for(final Instruction instruction : instructions) {
+				instruction.write(dataOutput);
+			}
 			
 			dataOutput.writeShort(getExceptionTableLength());
 			
-			this.exceptionHandlers.forEach(exceptionHandler -> exceptionHandler.write(dataOutput));
+			for(final ExceptionHandler exceptionHandler : exceptionHandlers) {
+				exceptionHandler.write(dataOutput);
+			}
 			
-			dataOutput.writeShort(this.attributeInfos.size());
+			dataOutput.writeShort(attributeInfos.size());
 			
-			this.attributeInfos.forEach(attributeInfo -> attributeInfo.write(dataOutput));
+			for(final AttributeInfo attributeInfo : attributeInfos) {
+				attributeInfo.write(dataOutput);
+			}
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}

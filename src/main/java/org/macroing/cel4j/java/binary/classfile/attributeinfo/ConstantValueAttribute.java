@@ -199,7 +199,7 @@ public final class ConstantValueAttribute extends AttributeInfo {
 		try {
 			dataOutput.writeShort(getAttributeNameIndex());
 			dataOutput.writeInt(getAttributeLength());
-			dataOutput.writeShort(this.constantValueIndex);
+			dataOutput.writeShort(getConstantValueIndex());
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}

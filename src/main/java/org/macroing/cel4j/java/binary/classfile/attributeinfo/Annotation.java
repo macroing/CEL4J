@@ -64,8 +64,8 @@ public final class Annotation implements Node {
 	 * @throws IllegalArgumentException thrown if, and only if, {@code typeIndex} is less than {@code 1}
 	 */
 	public Annotation(final int typeIndex) {
-		this.typeIndex = ParameterArguments.requireRange(typeIndex, 1, Integer.MAX_VALUE);
 		this.elementValuePairs = new ArrayList<>();
+		this.typeIndex = ParameterArguments.requireRange(typeIndex, 1, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +76,7 @@ public final class Annotation implements Node {
 	 * @return a copy of this {@code Annotation} instance
 	 */
 	public Annotation copy() {
-		final Annotation annotation = new Annotation(this.typeIndex);
+		final Annotation annotation = new Annotation(getTypeIndex());
 		
 		for(final ElementValuePair elementValuePair : this.elementValuePairs) {
 			annotation.addElementValuePair(elementValuePair.copy());
@@ -183,7 +183,7 @@ public final class Annotation implements Node {
 			return false;
 		} else if(!Objects.equals(this.elementValuePairs, Annotation.class.cast(object).elementValuePairs)) {
 			return false;
-		} else if(this.typeIndex != Annotation.class.cast(object).typeIndex) {
+		} else if(getTypeIndex() != Annotation.class.cast(object).getTypeIndex()) {
 			return false;
 		} else {
 			return true;
@@ -232,7 +232,7 @@ public final class Annotation implements Node {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.elementValuePairs, Integer.valueOf(this.typeIndex));
+		return Objects.hash(this.elementValuePairs, Integer.valueOf(getTypeIndex()));
 	}
 	
 	/**

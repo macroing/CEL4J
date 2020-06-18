@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.List;
 import java.util.Objects;
 
@@ -32,16 +31,27 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code SourceFileAttribute} denotes a SourceFile_attribute structure somewhere in a ClassFile structure.
+ * A {@code SourceFileAttribute} denotes a {@code SourceFile_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code SourceFile_attribute} structure has the following format:
+ * <pre>
+ * <code>
+ * SourceFile_attribute {
+ *     u2 attribute_name_index;
+ *     u4 attribute_length;
+ *     u2 sourcefile_index;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class SourceFileAttribute extends AttributeInfo {
 	/**
-	 * The name of the SourceFile_attribute structure.
+	 * The name of the {@code SourceFile_attribute} structure.
 	 */
 	public static final String NAME = "SourceFile";
 	
@@ -54,11 +64,11 @@ public final class SourceFileAttribute extends AttributeInfo {
 	/**
 	 * Constructs a new {@code SourceFileAttribute} instance.
 	 * <p>
-	 * If either {@code attributeNameIndex} or {@code sourceFileIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If either {@code attributeNameIndex} or {@code sourceFileIndex} are less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code SourceFileAttribute} instance
-	 * @param sourceFileIndex the sourcefile_index of the new {@code SourceFileAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code attributeNameIndex} or {@code sourceFileIndex} are less than or equal to {@code 0}
+	 * @param attributeNameIndex the value for the {@code attribute_name_index} item associated with this {@code SourceFileAttribute} instance
+	 * @param sourceFileIndex the value for the {@code sourcefile_index} item associated with this {@code SourceFileAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code attributeNameIndex} or {@code sourceFileIndex} are less than {@code 1}
 	 */
 	public SourceFileAttribute(final int attributeNameIndex, final int sourceFileIndex) {
 		super(NAME, attributeNameIndex);
@@ -75,7 +85,7 @@ public final class SourceFileAttribute extends AttributeInfo {
 	 */
 	@Override
 	public SourceFileAttribute copy() {
-		return new SourceFileAttribute(getAttributeNameIndex(), this.sourceFileIndex);
+		return new SourceFileAttribute(getAttributeNameIndex(), getSourceFileIndex());
 	}
 	
 	/**
@@ -98,18 +108,16 @@ public final class SourceFileAttribute extends AttributeInfo {
 		stringBuilder.append(" ");
 		stringBuilder.append("sourcefile_index=" + this.sourceFileIndex);
 		
-		final String toString = stringBuilder.toString();
-		
-		return toString;
+		return stringBuilder.toString();
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code SourceFileAttribute}, and that {@code SourceFileAttribute} instance is equal to this {@code SourceFileAttribute} instance, {@code false}
-	 * otherwise.
+	 * Compares {@code object} to this {@code SourceFileAttribute} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code SourceFileAttribute}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code SourceFileAttribute} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code SourceFileAttribute}, and that {@code SourceFileAttribute} instance is equal to this {@code SourceFileAttribute} instance, {@code false}
-	 * otherwise
+	 * @param object the {@code Object} to compare to this {@code SourceFileAttribute} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code SourceFileAttribute}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -131,9 +139,9 @@ public final class SourceFileAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the attribute_length of this {@code SourceFileAttribute} instance.
+	 * Returns the value of the {@code attribute_length} item associated with this {@code SourceFileAttribute} instance.
 	 * 
-	 * @return the attribute_length of this {@code SourceFileAttribute} instance
+	 * @return the value of the {@code attribute_length} item associated with this {@code SourceFileAttribute} instance
 	 */
 	@Override
 	public int getAttributeLength() {
@@ -141,9 +149,9 @@ public final class SourceFileAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the sourcefile_index of this {@code SourceFileAttribute} instance.
+	 * Returns the value of the {@code sourcefile_index} item associated with this {@code SourceFileAttribute} instance.
 	 * 
-	 * @return the sourcefile_index of this {@code SourceFileAttribute} instance
+	 * @return the value of the {@code sourcefile_index} item associated with this {@code SourceFileAttribute} instance
 	 */
 	public int getSourceFileIndex() {
 		return this.sourceFileIndex;
@@ -160,12 +168,12 @@ public final class SourceFileAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Sets a new sourcefile_index for this {@code SourceFileAttribute} instance.
+	 * Sets {@code sourceFileIndex} as the value for the {@code sourcefile_index} item associated with this {@code SourceFileAttribute} instance.
 	 * <p>
-	 * If {@code sourceFileIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code sourceFileIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param sourceFileIndex the new sourcefile_index for this {@code SourceFileAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code sourceFileIndex} is less than or equal to {@code 0}
+	 * @param sourceFileIndex the value for the {@code sourcefile_index} item associated with this {@code SourceFileAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code sourceFileIndex} is less than {@code 1}
 	 */
 	public void setSourceFileIndex(final int sourceFileIndex) {
 		this.sourceFileIndex = ParameterArguments.requireRange(sourceFileIndex, 1, Integer.MAX_VALUE);
@@ -174,22 +182,22 @@ public final class SourceFileAttribute extends AttributeInfo {
 	/**
 	 * Writes this {@code SourceFileAttribute} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
 		try {
 			dataOutput.writeShort(getAttributeNameIndex());
 			dataOutput.writeInt(getAttributeLength());
-			dataOutput.writeShort(this.sourceFileIndex);
+			dataOutput.writeShort(getSourceFileIndex());
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
@@ -198,14 +206,14 @@ public final class SourceFileAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@code SourceFileAttribute}s.
+	 * Returns a {@code List} with all {@code SourceFileAttribute} instances in {@code node}.
 	 * <p>
-	 * All {@code SourceFileAttribute}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code SourceFileAttribute} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code SourceFileAttribute}s
+	 * @return a {@code List} with all {@code SourceFileAttribute} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<SourceFileAttribute> filter(final Node node) {
