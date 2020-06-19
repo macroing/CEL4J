@@ -20,7 +20,6 @@ package org.macroing.cel4j.java.binary.classfile;
 
 import java.io.DataOutput;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.node.Node;
@@ -28,9 +27,9 @@ import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code CPInfo} denotes a cp_info structure somewhere in a ClassFile structure.
+ * A {@code CPInfo} denotes a {@code cp_info} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
@@ -49,9 +48,9 @@ public abstract class CPInfo implements Node {
 	 * <p>
 	 * If either {@code tag} or {@code constantPoolEntryCount} are less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param name the name of the cp_info structure
-	 * @param tag the tag of the cp_info structure
-	 * @param constantPoolEntryCount the entry count of the constant_pool table
+	 * @param name the name associated with this {@code CPInfo} instance
+	 * @param tag the value for the {@code tag} item associated with this {@code CPInfo} instance
+	 * @param constantPoolEntryCount the entry count of the {@code constant_pool} table associated with this {@code CPInfo} instance
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code tag} or {@code constantPoolEntryCount} are less than {@code 0}
 	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
 	 */
@@ -71,27 +70,27 @@ public abstract class CPInfo implements Node {
 	public abstract CPInfo copy();
 	
 	/**
-	 * Returns the name of the this {@code CPInfo} instance.
+	 * Returns the name associated with the this {@code CPInfo} instance.
 	 * 
-	 * @return the name of the this {@code CPInfo} instance
+	 * @return the name associated with the this {@code CPInfo} instance
 	 */
 	public final String getName() {
 		return this.name;
 	}
 	
 	/**
-	 * Returns the entry count of the constant_pool table.
+	 * Returns the entry count of the {@code constant_pool} table associated with this {@code CPInfo} instance.
 	 * 
-	 * @return the entry count of the constant_pool table
+	 * @return the entry count of the {@code constant_pool} table associated with this {@code CPInfo} instance
 	 */
 	public final int getConstantPoolEntryCount() {
 		return this.constantPoolEntryCount;
 	}
 	
 	/**
-	 * Returns the tag of this {@code CPInfo} instance.
+	 * Returns the value for the {@code tag} item associated with this {@code CPInfo} instance.
 	 * 
-	 * @return the tag of this {@code CPInfo} instance
+	 * @return the value for the {@code tag} item associated with this {@code CPInfo} instance
 	 */
 	public final int getTag() {
 		return this.tag;
@@ -100,22 +99,22 @@ public abstract class CPInfo implements Node {
 	/**
 	 * Writes this {@code CPInfo} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
+	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} may be thrown. But no guarantees can be made.
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	public abstract void write(final DataOutput dataOutput);
 	
 	/**
 	 * Writes this {@code CPInfo} to {@code document}.
 	 * <p>
-	 * If {@code document} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param document the {@link Document} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
