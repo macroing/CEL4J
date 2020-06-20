@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.List;
 import java.util.Objects;
 
@@ -32,16 +31,28 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * An {@code EnclosingMethodAttribute} denotes an EnclosingMethod_attribute structure somewhere in a ClassFile structure.
+ * An {@code EnclosingMethodAttribute} denotes an {@code EnclosingMethod_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code EnclosingMethod_attribute} structure has the following format:
+ * <pre>
+ * <code>
+ * EnclosingMethod_attribute {
+ *     u2 attribute_name_index;
+ *     u4 attribute_length;
+ *     u2 class_index;
+ *     u2 method_index;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class EnclosingMethodAttribute extends AttributeInfo {
 	/**
-	 * The name of the EnclosingMethod_attribute structure.
+	 * The name of the {@code EnclosingMethod_attribute} structure.
 	 */
 	public static final String NAME = "EnclosingMethod";
 	
@@ -55,12 +66,12 @@ public final class EnclosingMethodAttribute extends AttributeInfo {
 	/**
 	 * Constructs a new {@code EnclosingMethodAttribute} instance.
 	 * <p>
-	 * If either {@code attributeNameIndex} or {@code classIndex} are less than or equal to {@code 0}, or {@code methodIndex} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If either {@code attributeNameIndex} or {@code classIndex} are less than {@code 1}, or {@code methodIndex} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param attributeNameIndex the attribute_name_index for the new {@code EnclosingMethodAttribute} instance
-	 * @param classIndex the class_index for the new {@code EnclosingMethodAttribute} instance
-	 * @param methodIndex the method_index for the new {@code EnclosingMethodAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code attributeNameIndex} or {@code classIndex} are less than or equal to {@code 0}, or {@code methodIndex} is less than {@code 0}
+	 * @param attributeNameIndex the value for the {@code attribute_name_index} item associated with this {@code EnclosingMethodAttribute} instance
+	 * @param classIndex the value for the {@code class_index} item associated with this {@code EnclosingMethodAttribute} instance
+	 * @param methodIndex the value for the {@code method_index} item associated with this {@code EnclosingMethodAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code attributeNameIndex} or {@code classIndex} are less than {@code 1}, or {@code methodIndex} is less than {@code 0}
 	 */
 	public EnclosingMethodAttribute(final int attributeNameIndex, final int classIndex, final int methodIndex) {
 		super(NAME, attributeNameIndex);
@@ -82,12 +93,12 @@ public final class EnclosingMethodAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code EnclosingMethodAttribute}, and that {@code EnclosingMethodAttribute} instance is equal to this {@code EnclosingMethodAttribute} instance,
-	 * {@code false} otherwise.
+	 * Compares {@code object} to this {@code EnclosingMethodAttribute} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code EnclosingMethodAttribute}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code EnclosingMethodAttribute} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code EnclosingMethodAttribute}, and that {@code EnclosingMethodAttribute} instance is equal to this {@code EnclosingMethodAttribute} instance,
-	 * {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code EnclosingMethodAttribute} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code EnclosingMethodAttribute}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -111,9 +122,9 @@ public final class EnclosingMethodAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the attribute_length of this {@code EnclosingMethodAttribute} instance.
+	 * Returns the value of the {@code attribute_length} item associated with this {@code EnclosingMethodAttribute} instance.
 	 * 
-	 * @return the attribute_length of this {@code EnclosingMethodAttribute} instance
+	 * @return the value of the {@code attribute_length} item associated with this {@code EnclosingMethodAttribute} instance
 	 */
 	@Override
 	public int getAttributeLength() {
@@ -121,18 +132,18 @@ public final class EnclosingMethodAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the class_index of this {@code EnclosingMethodAttribute} instance.
+	 * Returns the value of the {@code class_index} item associated with this {@code EnclosingMethodAttribute} instance.
 	 * 
-	 * @return the class_index of this {@code EnclosingMethodAttribute} instance
+	 * @return the value of the {@code class_index} item associated with this {@code EnclosingMethodAttribute} instance
 	 */
 	public int getClassIndex() {
 		return this.classIndex;
 	}
 	
 	/**
-	 * Returns the method_index of this {@code EnclosingMethodAttribute} instance.
+	 * Returns the value of the {@code method_index} item associated with this {@code EnclosingMethodAttribute} instance.
 	 * 
-	 * @return the method_index of this {@code EnclosingMethodAttribute} instance
+	 * @return the value of the {@code method_index} item associated with this {@code EnclosingMethodAttribute} instance
 	 */
 	public int getMethodIndex() {
 		return this.methodIndex;
@@ -149,23 +160,23 @@ public final class EnclosingMethodAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Sets a new class_index for this {@code EnclosingMethodAttribute} instance.
+	 * Sets {@code classIndex} as the value for the {@code class_index} item associated with this {@code EnclosingMethodAttribute} instance.
 	 * <p>
-	 * If {@code classIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code classIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param classIndex the new class_index for this {@code EnclosingMethodAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code classIndex} is less than or equal to {@code 0}
+	 * @param classIndex the value for the {@code class_index} item associated with this {@code EnclosingMethodAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code classIndex} is less than {@code 1}
 	 */
 	public void setClassIndex(final int classIndex) {
 		this.classIndex = ParameterArguments.requireRange(classIndex, 1, Integer.MAX_VALUE);
 	}
 	
 	/**
-	 * Sets a new method_index for this {@code EnclosingMethodAttribute} instance.
+	 * Sets {@code methodIndex} as the value for the {@code method_index} item associated with this {@code EnclosingMethodAttribute} instance.
 	 * <p>
 	 * If {@code methodIndex} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param methodIndex the new method_index for this {@code EnclosingMethodAttribute} instance
+	 * @param methodIndex the value for the {@code method_index} item associated with this {@code EnclosingMethodAttribute} instance
 	 * @throws IllegalArgumentException thrown if, and only if, {@code methodIndex} is less than {@code 0}
 	 */
 	public void setMethodIndex(final int methodIndex) {
@@ -175,15 +186,15 @@ public final class EnclosingMethodAttribute extends AttributeInfo {
 	/**
 	 * Writes this {@code EnclosingMethodAttribute} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
@@ -200,14 +211,14 @@ public final class EnclosingMethodAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@code EnclosingMethodAttribute}s.
+	 * Returns a {@code List} with all {@code EnclosingMethodAttribute} instances in {@code node}.
 	 * <p>
-	 * All {@code EnclosingMethodAttribute}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code EnclosingMethodAttribute} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code EnclosingMethodAttribute}s
+	 * @return a {@code List} with all {@code EnclosingMethodAttribute} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<EnclosingMethodAttribute> filter(final Node node) {
