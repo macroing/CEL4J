@@ -24,7 +24,7 @@ import java.io.UncheckedIOException;
 import org.macroing.cel4j.node.Node;
 
 /**
- * A {@code Union} denotes a {@code union} structure as defined by the Java Virtual Machine Specifications.
+ * A {@code Union} represents a {@code union} structure as defined by the Java Virtual Machine Specifications.
  * <p>
  * A {@code union} is part of an {@code element_value} structure, which is defined by the {@link ElementValue} class.
  * 

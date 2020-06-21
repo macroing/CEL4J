@@ -33,7 +33,7 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code ConstantValueAttribute} denotes a {@code ConstantValue_attribute} structure as defined by the Java Virtual Machine Specifications.
+ * A {@code ConstantValueAttribute} represents a {@code ConstantValue_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
  * This class is mutable and not thread-safe.
  * <p>

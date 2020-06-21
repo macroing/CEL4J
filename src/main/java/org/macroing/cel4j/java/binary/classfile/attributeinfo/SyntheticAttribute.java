@@ -30,7 +30,7 @@ import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 
 /**
- * A {@code SyntheticAttribute} denotes a {@code Synthetic_attribute} structure as defined by the Java Virtual Machine Specifications.
+ * A {@code SyntheticAttribute} represents a {@code Synthetic_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
  * This class is mutable and not thread-safe.
  * <p>

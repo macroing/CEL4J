@@ -31,7 +31,7 @@ import org.macroing.cel4j.node.NodeTraversalException;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * An {@code Annotation} denotes an {@code annotation} structure as defined by the Java Virtual Machine Specifications.
+ * An {@code Annotation} represents an {@code annotation} structure as defined by the Java Virtual Machine Specifications.
  * <p>
  * This class is mutable and not thread-safe.
  * <p>

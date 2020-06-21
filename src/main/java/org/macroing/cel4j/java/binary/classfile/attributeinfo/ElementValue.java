@@ -28,7 +28,7 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 
 /**
- * An {@code ElementValue} denotes an {@code element_value} structure as defined by the Java Virtual Machine Specifications.
+ * An {@code ElementValue} represents an {@code element_value} structure as defined by the Java Virtual Machine Specifications.
  * <p>
  * This class is indirectly mutable and not thread-safe.
  * <p>

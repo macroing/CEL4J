@@ -32,7 +32,7 @@ import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 
 /**
- * A {@code DeprecatedAttribute} denotes a {@code Deprecated_attribute} structure as defined by the Java Virtual Machine Specifications.
+ * A {@code DeprecatedAttribute} represents a {@code Deprecated_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
  * This class is mutable and not thread-safe.
  * <p>

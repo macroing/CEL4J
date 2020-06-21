@@ -26,7 +26,7 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 
 /**
- * An {@code AnnotationValueUnion} denotes an unnamed {@code annotation_value} {@code union} structure as defined by the Java Virtual Machine Specifications.
+ * An {@code AnnotationValueUnion} represents an unnamed {@code annotation_value} {@code union} structure as defined by the Java Virtual Machine Specifications.
  * <p>
  * This class is indirectly mutable and not thread-safe.
  * <p>

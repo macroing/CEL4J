@@ -27,9 +27,19 @@ import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code CPInfo} denotes a {@code cp_info} structure as defined by the Java Virtual Machine Specifications.
+ * A {@code CPInfo} represents a {@code cp_info} structure as defined by the Java Virtual Machine Specifications.
  * <p>
  * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code cp_info} structure has the following format:
+ * <pre>
+ * <code>
+ * cp_info {
+ *     u1 tag;
+ *     u1[] info;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren

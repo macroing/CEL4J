@@ -29,7 +29,7 @@ import org.macroing.cel4j.node.NodeTraversalException;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * An {@code ElementValuePair} denotes an {@code element_value_pair} structure as defined by the Java Virtual Machine Specifications.
+ * An {@code ElementValuePair} represents an {@code element_value_pair} structure as defined by the Java Virtual Machine Specifications.
  * <p>
  * This class is indirectly mutable and not thread-safe.
  * <p>

@@ -35,7 +35,7 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code SignatureAttribute} denotes a {@code Signature_attribute} structure as defined by the Java Virtual Machine Specifications.
+ * A {@code SignatureAttribute} represents a {@code Signature_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
  * This class is mutable and not thread-safe.
  * <p>

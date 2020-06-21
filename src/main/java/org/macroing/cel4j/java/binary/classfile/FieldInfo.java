@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,56 +33,69 @@ import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code FieldInfo} denotes a field_info structure somewhere in a ClassFile structure.
+ * A {@code FieldInfo} represents a {@code field_info} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code field_info} structure has the following format:
+ * <pre>
+ * <code>
+ * field_info {
+ *     u2 access_flags;
+ *     u2 name_index;
+ *     u2 descriptor_index;
+ *     u2 attributes_count;
+ *     attribute_info[attributes_count] attributes;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class FieldInfo implements Node {
 	/**
-	 * This field represents ACC_ENUM in the access_flags element of a field_info structure.
+	 * The value for the access flag {@code ACC_ENUM} in the {@code access_flags} item of the {@code field_info} structure.
 	 */
 	public static final int ACC_ENUM = 0x4000;
 	
 	/**
-	 * This field represents ACC_FINAL in the access_flags element of a field_info structure.
+	 * The value for the access flag {@code ACC_FINAL} in the {@code access_flags} item of the {@code field_info} structure.
 	 */
 	public static final int ACC_FINAL = 0x0010;
 	
 	/**
-	 * This field represents ACC_PRIVATE in the access_flags element of a field_info structure.
+	 * The value for the access flag {@code ACC_PRIVATE} in the {@code access_flags} item of the {@code field_info} structure.
 	 */
 	public static final int ACC_PRIVATE = 0x0002;
 	
 	/**
-	 * This field represents ACC_PROTECTED in the access_flags element of a field_info structure.
+	 * The value for the access flag {@code ACC_PROTECTED} in the {@code access_flags} item of the {@code field_info} structure.
 	 */
 	public static final int ACC_PROTECTED = 0x0004;
 	
 	/**
-	 * This field represents ACC_PUBLIC in the access_flags element of a field_info structure.
+	 * The value for the access flag {@code ACC_PUBLIC} in the {@code access_flags} item of the {@code field_info} structure.
 	 */
 	public static final int ACC_PUBLIC = 0x0001;
 	
 	/**
-	 * This field represents ACC_STATIC in the access_flags element of a field_info structure.
+	 * The value for the access flag {@code ACC_STATIC} in the {@code access_flags} item of the {@code field_info} structure.
 	 */
 	public static final int ACC_STATIC = 0x0008;
 	
 	/**
-	 * This field represents ACC_SYNTHETIC in the access_flags element of a field_info structure.
+	 * The value for the access flag {@code ACC_SYNTHETIC} in the {@code access_flags} item of the {@code field_info} structure.
 	 */
 	public static final int ACC_SYNTHETIC = 0x1000;
 	
 	/**
-	 * This field represents ACC_TRANSIENT in the access_flags element of a field_info structure.
+	 * The value for the access flag {@code ACC_TRANSIENT} in the {@code access_flags} item of the {@code field_info} structure.
 	 */
 	public static final int ACC_TRANSIENT = 0x0080;
 	
 	/**
-	 * This field represents ACC_VOLATILE in the access_flags element of a field_info structure.
+	 * The value for the access flag {@code ACC_VOLATILE} in the {@code access_flags} item of the {@code field_info} structure.
 	 */
 	public static final int ACC_VOLATILE = 0x0040;
 	
@@ -133,12 +145,12 @@ public final class FieldInfo implements Node {
 	}
 	
 	/**
-	 * Returns an {@link AttributeInfo} given its index.
+	 * Returns the {@link AttributeInfo} instance on the index {@code index}.
 	 * <p>
 	 * If {@code index} is less than {@code 0}, or greater than or equal to {@link #getAttributeInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param index the index of the {@code AttributeInfo}
-	 * @return an {@code AttributeInfo} given its index
+	 * @return the {@code AttributeInfo} instance on the index {@code index}
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code index} is less than {@code 0}, or greater than or equal to {@code getAttributeInfoCount()}
 	 */
 	public AttributeInfo getAttributeInfo(final int index) {
@@ -240,11 +252,11 @@ public final class FieldInfo implements Node {
 	}
 	
 	/**
-	 * Returns a {@code List} with all currently added {@link AttributeInfo}s.
+	 * Returns a {@code List} with all currently added {@link AttributeInfo} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code FieldInfo} instance.
 	 * 
-	 * @return a {@code List} with all currently added {@code AttributeInfo}s
+	 * @return a {@code List} with all currently added {@code AttributeInfo} instances
 	 */
 	public List<AttributeInfo> getAttributeInfos() {
 		return new ArrayList<>(this.attributeInfos);
@@ -366,8 +378,8 @@ public final class FieldInfo implements Node {
 	/**
 	 * Returns {@code true} if, and only if, this {@code FieldInfo} instance may be used in a class, {@code false} otherwise.
 	 * <p>
-	 * This method should always return {@code true}. This is because, any and all of the access flag mutator methods will take care of their own constraints, such that an instance of this class will always be in a valid
-	 * state. A class may have any access flag, but not all combinations thereof.
+	 * This method should always return {@code true}. This is because, any and all of the access flag mutator methods will take care of their own constraints, such that an instance of this class will always be in a valid state. A class may have any
+	 * access flag, but not all combinations thereof.
 	 * 
 	 * @return {@code true} if, and only if, this {@code FieldInfo} instance may be used in a class, {@code false} otherwise
 	 */
@@ -377,18 +389,18 @@ public final class FieldInfo implements Node {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_ENUM is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_ENUM} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_ENUM is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_ENUM} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise
 	 */
 	public boolean isEnum() {
 		return (this.accessFlags & ACC_ENUM) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_FINAL is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_FINAL} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_FINAL is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_FINAL} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise
 	 */
 	public boolean isFinal() {
 		return (this.accessFlags & ACC_FINAL) != 0;
@@ -397,8 +409,8 @@ public final class FieldInfo implements Node {
 	/**
 	 * Returns {@code true} if, and only if, this {@code FieldInfo} instance may be used in an interface, {@code false} otherwise.
 	 * <p>
-	 * In order for this method to return {@code true}, all of the methods {@code isFinal()}, {@code isPublic()} and {@code isStatic()} must return {@code true}. The method {@code isSynthetic()} may return {@code true},
-	 * but this is not a requirement. All the other methods, namely {@code isEnum()}, {@code isPrivate()}, {@code isProtected()}, {@code isTransient()} and {@code isVolatile()}, must return {@code false}.
+	 * In order for this method to return {@code true}, all of the methods {@code isFinal()}, {@code isPublic()} and {@code isStatic()} must return {@code true}. The method {@code isSynthetic()} may return {@code true}, but this is not a requirement.
+	 * All the other methods, namely {@code isEnum()}, {@code isPrivate()}, {@code isProtected()}, {@code isTransient()} and {@code isVolatile()}, must return {@code false}.
 	 * 
 	 * @return {@code true} if, and only if, this {@code FieldInfo} instance may be used in an interface, {@code false} otherwise
 	 */
@@ -419,63 +431,63 @@ public final class FieldInfo implements Node {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_PRIVATE is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_PRIVATE} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_PRIVATE is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_PRIVATE} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise
 	 */
 	public boolean isPrivate() {
 		return (this.accessFlags & ACC_PRIVATE) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_PROTECTED is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_PROTECTED} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_PROTECTED is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_PROTECTED} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise
 	 */
 	public boolean isProtected() {
 		return (this.accessFlags & ACC_PROTECTED) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_PUBLIC is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_PUBLIC} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_PUBLIC is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_PUBLIC} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise
 	 */
 	public boolean isPublic() {
 		return (this.accessFlags & ACC_PUBLIC) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_STATIC is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_STATIC} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_STATIC is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_STATIC} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise
 	 */
 	public boolean isStatic() {
 		return (this.accessFlags & ACC_STATIC) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_SYNTHETIC is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_SYNTHETIC} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_SYNTHETIC is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_SYNTHETIC} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise
 	 */
 	public boolean isSynthetic() {
 		return (this.accessFlags & ACC_SYNTHETIC) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_TRANSIENT is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_TRANSIENT} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_TRANSIENT is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_TRANSIENT} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise
 	 */
 	public boolean isTransient() {
 		return (this.accessFlags & ACC_TRANSIENT) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_VOLATILE is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_VOLATILE} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_VOLATILE is set in the access_flags item of this {@code FieldInfo} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_VOLATILE} is set in the {@code access_flags} item associated with this {@code FieldInfo} instance, {@code false} otherwise
 	 */
 	public boolean isVolatile() {
 		return (this.accessFlags & ACC_VOLATILE) != 0;
@@ -497,36 +509,36 @@ public final class FieldInfo implements Node {
 	}
 	
 	/**
-	 * Returns the access_flags of this {@code FieldInfo} instance.
+	 * Returns the value of the {@code access_flags} item associated with this {@code FieldInfo} instance.
 	 * 
-	 * @return the access_flags of this {@code FieldInfo} instance
+	 * @return the value of the {@code access_flags} item associated with this {@code FieldInfo} instance
 	 */
 	public int getAccessFlags() {
 		return this.accessFlags;
 	}
 	
 	/**
-	 * Returns the number of {@link AttributeInfo}s currently added.
+	 * Returns the value of the {@code attributes_count} item associated with this {@code FieldInfo} instance.
 	 * 
-	 * @return the number of {@code AttributeInfo}s currently added
+	 * @return the value of the {@code attributes_count} item associated with this {@code FieldInfo} instance
 	 */
 	public int getAttributeInfoCount() {
 		return this.attributeInfos.size();
 	}
 	
 	/**
-	 * Returns the descriptor_index of this {@code FieldInfo} instance.
+	 * Returns the value of the {@code descriptor_index} item associated with this {@code FieldInfo} instance.
 	 * 
-	 * @return the descriptor_index of this {@code FieldInfo} instance
+	 * @return the value of the {@code descriptor_index} item associated with this {@code FieldInfo} instance
 	 */
 	public int getDescriptorIndex() {
 		return this.descriptorIndex;
 	}
 	
 	/**
-	 * Returns the name_index of this {@code FieldInfo} instance.
+	 * Returns the value of the {@code name_index} item associated with this {@code FieldInfo} instance.
 	 * 
-	 * @return the name_index of this {@code FieldInfo} instance
+	 * @return the value of the {@code name_index} item associated with this {@code FieldInfo} instance
 	 */
 	public int getNameIndex() {
 		return this.nameIndex;
@@ -543,21 +555,21 @@ public final class FieldInfo implements Node {
 	}
 	
 	/**
-	 * Sets a new descriptor_index for this {@code FieldInfo} instance.
+	 * Sets {@code descriptorIndex} as the value for the {@code descriptor_index} item associated with this {@code FieldInfo} instance.
 	 * <p>
-	 * If {@code descriptorIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code descriptorIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param descriptorIndex the new descriptor_index for this {@code FieldInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code descriptorIndex} is less than or equal to {@code 0}
+	 * @param descriptorIndex the value for the {@code descriptor_index} item associated with this {@code FieldInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code descriptorIndex} is less than {@code 1}
 	 */
 	public void setDescriptorIndex(final int descriptorIndex) {
 		this.descriptorIndex = ParameterArguments.requireRange(descriptorIndex, 1, Integer.MAX_VALUE);
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_ENUM.
+	 * Adds or removes the access flag {@code ACC_ENUM}.
 	 * 
-	 * @param isEnum {@code true} to add the access flag ACC_ENUM
+	 * @param isEnum {@code true} if, and only if, the access flag {@code ACC_ENUM} should be added, {@code false} otherwise
 	 */
 	public void setEnum(final boolean isEnum) {
 		if(isEnum) {
@@ -568,14 +580,14 @@ public final class FieldInfo implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_FINAL.
+	 * Adds or removes the access flag {@code ACC_FINAL}.
 	 * <p>
-	 * This method turns off the following access flags, if given a parameter argument that is set to {@code true}:
+	 * If {@code isFinal} is {@code true}, the following access flags will be removed:
 	 * <ul>
-	 * <li>ACC_VOLATILE</li>
+	 * <li>{@code ACC_VOLATILE}</li>
 	 * </ul>
 	 * 
-	 * @param isFinal {@code true} to add the access flag ACC_FINAL
+	 * @param isFinal {@code true} if, and only if, the access flag {@code ACC_FINAL} should be added, {@code false} otherwise
 	 */
 	public void setFinal(final boolean isFinal) {
 		if(isFinal) {
@@ -587,27 +599,27 @@ public final class FieldInfo implements Node {
 	}
 	
 	/**
-	 * Sets a new name_index for this {@code FieldInfo} instance.
+	 * Sets {@code nameIndex} as the value for the {@code name_index} item associated with this {@code FieldInfo} instance.
 	 * <p>
-	 * If {@code nameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code nameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param nameIndex the new name_index for this {@code FieldInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than or equal to {@code 0}
+	 * @param nameIndex the value for the {@code name_index} item associated with this {@code FieldInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than {@code 1}
 	 */
 	public void setNameIndex(final int nameIndex) {
 		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE);
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_PRIVATE.
+	 * Adds or removes the access flag {@code ACC_PRIVATE}.
 	 * <p>
-	 * This method turns off the following access flags, if given a parameter argument that is set to {@code true}:
+	 * If {@code isPrivate} is {@code true}, the following access flags will be removed:
 	 * <ul>
-	 * <li>ACC_PROTECTED</li>
-	 * <li>ACC_PUBLIC</li>
+	 * <li>{@code ACC_PROTECTED}</li>
+	 * <li>{@code ACC_PUBLIC}</li>
 	 * </ul>
 	 * 
-	 * @param isPrivate {@code true} to add the access flag ACC_PRIVATE
+	 * @param isPrivate {@code true} if, and only if, the access flag {@code ACC_PRIVATE} should be added, {@code false} otherwise
 	 */
 	public void setPrivate(final boolean isPrivate) {
 		if(isPrivate) {
@@ -620,15 +632,15 @@ public final class FieldInfo implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_PROTECTED.
+	 * Adds or removes the access flag {@code ACC_PROTECTED}.
 	 * <p>
-	 * This method turns off the following access flags, if given a parameter argument that is set to {@code true}:
+	 * If {@code isProtected} is {@code true}, the following access flags will be removed:
 	 * <ul>
-	 * <li>ACC_PRIVATE</li>
-	 * <li>ACC_PUBLIC</li>
+	 * <li>{@code ACC_PRIVATE}</li>
+	 * <li>{@code ACC_PUBLIC}</li>
 	 * </ul>
 	 * 
-	 * @param isProtected {@code true} to add the access flag ACC_PROTECTED
+	 * @param isProtected {@code true} if, and only if, the access flag {@code ACC_PROTECTED} should be added, {@code false} otherwise
 	 */
 	public void setProtected(final boolean isProtected) {
 		if(isProtected) {
@@ -641,15 +653,15 @@ public final class FieldInfo implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_PUBLIC.
+	 * Adds or removes the access flag {@code ACC_PUBLIC}.
 	 * <p>
-	 * This method turns off the following access flags, if given a parameter argument that is set to {@code true}:
+	 * If {@code isPublic} is {@code true}, the following access flags will be removed:
 	 * <ul>
-	 * <li>ACC_PRIVATE</li>
-	 * <li>ACC_PROTECTED</li>
+	 * <li>{@code ACC_PRIVATE}</li>
+	 * <li>{@code ACC_PROTECTED}</li>
 	 * </ul>
 	 * 
-	 * @param isPublic {@code true} to add the access flag ACC_PUBLIC
+	 * @param isPublic {@code true} if, and only if, the access flag {@code ACC_PUBLIC} should be added, {@code false} otherwise
 	 */
 	public void setPublic(final boolean isPublic) {
 		if(isPublic) {
@@ -662,9 +674,9 @@ public final class FieldInfo implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_STATIC.
+	 * Adds or removes the access flag {@code ACC_STATIC}.
 	 * 
-	 * @param isStatic {@code true} to add the access flag ACC_STATIC
+	 * @param isStatic {@code true} if, and only if, the access flag {@code ACC_STATIC} should be added, {@code false} otherwise
 	 */
 	public void setStatic(final boolean isStatic) {
 		if(isStatic) {
@@ -675,9 +687,9 @@ public final class FieldInfo implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_SYNTHETIC.
+	 * Adds or removes the access flag {@code ACC_SYNTHETIC}.
 	 * 
-	 * @param isSynthetic {@code true} to add the access flag ACC_SYNTHETIC
+	 * @param isSynthetic {@code true} if, and only if, the access flag {@code ACC_SYNTHETIC} should be added, {@code false} otherwise
 	 */
 	public void setSynthetic(final boolean isSynthetic) {
 		if(isSynthetic) {
@@ -688,9 +700,9 @@ public final class FieldInfo implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_TRANSIENT.
+	 * Adds or removes the access flag {@code ACC_TRANSIENT}.
 	 * 
-	 * @param isTransient {@code true} to add the access flag ACC_TRANSIENT
+	 * @param isTransient {@code true} if, and only if, the access flag {@code ACC_TRANSIENT} should be added, {@code false} otherwise
 	 */
 	public void setTransient(final boolean isTransient) {
 		if(isTransient) {
@@ -701,14 +713,14 @@ public final class FieldInfo implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_VOLATILE.
+	 * Adds or removes the access flag {@code ACC_VOLATILE}.
 	 * <p>
-	 * This method turns off the following access flags, if given a parameter argument that is set to {@code true}:
+	 * If {@code isVolatile} is {@code true}, the following access flags will be removed:
 	 * <ul>
-	 * <li>ACC_FINAL</li>
+	 * <li>{@code ACC_FINAL}</li>
 	 * </ul>
 	 * 
-	 * @param isVolatile {@code true} to add the access flag ACC_VOLATILE
+	 * @param isVolatile {@code true} if, and only if, the access flag {@code ACC_VOLATILE} should be added, {@code false} otherwise
 	 */
 	public void setVolatile(final boolean isVolatile) {
 		if(isVolatile) {

@@ -26,7 +26,7 @@ import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * An {@code AttributeInfo} denotes an {@code attribute_info} structure as defined by the Java Virtual Machine Specifications.
+ * An {@code AttributeInfo} represents an {@code attribute_info} structure as defined by the Java Virtual Machine Specifications.
  * <p>
  * This class is mutable and not thread-safe.
  * <p>

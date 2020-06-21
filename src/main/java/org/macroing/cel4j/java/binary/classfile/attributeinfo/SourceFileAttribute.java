@@ -31,7 +31,7 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code SourceFileAttribute} denotes a {@code SourceFile_attribute} structure as defined by the Java Virtual Machine Specifications.
+ * A {@code SourceFileAttribute} represents a {@code SourceFile_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
  * This class is mutable and not thread-safe.
  * <p>

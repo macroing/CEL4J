@@ -19,29 +19,29 @@
 package org.macroing.cel4j.java.binary.classfile;
 
 import java.io.DataOutput;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
+import java.io.UncheckedIOException;
 import java.util.Objects;
 
 import org.macroing.cel4j.util.Document;
 
 /**
- * A {@code ConstantUnreachableInfo} denotes a custom CONSTANT_Unreachable_info structure.
+ * A {@code ConstantUnreachableInfo} represents a custom {@code CONSTANT_Unreachable_info} structure.
  * <p>
- * It is not part of the official ClassFile structure. But it is used in this library to denote an entry in a constant_pool table that is unreachable.
+ * This class is mutable and not thread-safe.
  * <p>
- * This class is not thread-safe.
+ * The {@code CONSTANT_Unreachable_info} structure is not defined by the Java Virtual Machine Specifications. It is defined by this library to represent an entry in the {@code constant_pool} table that is unreachable.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class ConstantUnreachableInfo extends CPInfo {
 	/**
-	 * The name of the CONSTANT_Unreachable_info structure.
+	 * The name of the {@code CONSTANT_Unreachable_info} structure.
 	 */
 	public static final String NAME = "CONSTANT_Unreachable";
 	
 	/**
-	 * The tag for CONSTANT_Unreachable.
+	 * The value for the {@code tag} item associated with the {@code CONSTANT_Unreachable_info} structure.
 	 */
 	public static final int TAG = 0;
 	
@@ -112,12 +112,17 @@ public final class ConstantUnreachableInfo extends CPInfo {
 	}
 	
 	/**
-	 * Writes this {@code CPInfo} to {@code dataOutput}.
+	 * Writes this {@code ConstantUnreachableInfo} to {@code dataOutput}.
 	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
@@ -125,7 +130,7 @@ public final class ConstantUnreachableInfo extends CPInfo {
 	}
 	
 	/**
-	 * Writes this {@code CPInfo} to {@code document}.
+	 * Writes this {@code ConstantUnreachableInfo} to {@code document}.
 	 * <p>
 	 * If {@code document} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
 	 * 

@@ -35,7 +35,7 @@ import org.macroing.cel4j.node.NodeTraversalException;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code CodeAttribute} denotes a {@code Code_attribute} structure as defined by the Java Virtual Machine Specifications.
+ * A {@code CodeAttribute} represents a {@code Code_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
  * This class is mutable and not thread-safe.
  * <p>
