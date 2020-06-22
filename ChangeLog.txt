@@ -4,6 +4,10 @@
 
 		* CHANGE:		Update Javadocs.
 
+	CEL4J Utilities:
+
+		* CHANGE:		Update Javadocs.
+
 2020-06-21  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:

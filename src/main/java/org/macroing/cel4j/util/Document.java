@@ -85,12 +85,9 @@ public final class Document {
 	/**
 	 * Appends an empty line of text to this {@code Document} instance.
 	 * <p>
-	 * If either {@code textAfterIndentation} or {@code textBeforeIndentation} contains one or more line separators, they will be split into multiple lines of text. The one of the two with most line separators will decide
-	 * how many lines to create. If one of the two has less line separators than the other, an empty {@code String} literal will be used where no corresponding text can be found.
+	 * Returns the {@code Document} itself, such that method chaining is possible.
 	 * <p>
 	 * Calling this method is equivalent to calling {@code line("")}.
-	 * <p>
-	 * Returns the {@code Document} itself, such that method chaining is possible.
 	 * 
 	 * @return the {@code Document} itself, such that method chaining is possible
 	 */
@@ -101,14 +98,11 @@ public final class Document {
 	/**
 	 * Appends an empty line of text to this {@code Document} instance.
 	 * <p>
-	 * If either {@code textAfterIndentation} or {@code textBeforeIndentation} contains one or more line separators, they will be split into multiple lines of text. The one of the two with most line separators will decide
-	 * how many lines to create. If one of the two has less line separators than the other, an empty {@code String} literal will be used where no corresponding text can be found.
-	 * <p>
-	 * Calling this method is equivalent to calling {@code line("", indentation)}.
-	 * <p>
 	 * Returns the {@code Document} itself, such that method chaining is possible.
 	 * <p>
 	 * If {@code indentation} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to calling {@code line("", indentation)}.
 	 * 
 	 * @param indentation the indentation operation to be used at the end
 	 * @return the {@code Document} itself, such that method chaining is possible
@@ -121,16 +115,15 @@ public final class Document {
 	/**
 	 * Appends a line of text to this {@code Document} instance.
 	 * <p>
-	 * The line of text consists of {@code textAfterIndentation}, which is appended after the indentation of the given line.
-	 * <p>
-	 * If either {@code textAfterIndentation} or {@code textBeforeIndentation} contains one or more line separators, they will be split into multiple lines of text. The one of the two with most line separators will decide
-	 * how many lines to create. If one of the two has less line separators than the other, an empty {@code String} literal will be used where no corresponding text can be found.
-	 * <p>
-	 * Calling this method is equivalent to calling {@code line(textAfterIndentation, "")}.
-	 * <p>
 	 * Returns the {@code Document} itself, such that method chaining is possible.
 	 * <p>
 	 * If {@code textAfterIndentation} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * The line of text consists of {@code textAfterIndentation}, which is appended after the indentation of the given line.
+	 * <p>
+	 * If {@code textAfterIndentation} contains one or more line separators, it will be split into multiple lines of text.
+	 * <p>
+	 * Calling this method is equivalent to calling {@code line(textAfterIndentation, "")}.
 	 * 
 	 * @param textAfterIndentation the text to append after the indentation
 	 * @return the {@code Document} itself, such that method chaining is possible
@@ -143,16 +136,15 @@ public final class Document {
 	/**
 	 * Appends a line of text to this {@code Document} instance.
 	 * <p>
-	 * The line of text consists of {@code textAfterIndentation}, which is appended after the indentation of the given line.
-	 * <p>
-	 * If either {@code textAfterIndentation} or {@code textBeforeIndentation} contains one or more line separators, they will be split into multiple lines of text. The one of the two with most line separators will decide
-	 * how many lines to create. If one of the two has less line separators than the other, an empty {@code String} literal will be used where no corresponding text can be found.
-	 * <p>
-	 * Calling this method is equivalent to calling {@code line(textAfterIndentation, "", indentation)}.
-	 * <p>
 	 * Returns the {@code Document} itself, such that method chaining is possible.
 	 * <p>
 	 * If either {@code textAfterIndentation} or {@code indentation} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * The line of text consists of {@code textAfterIndentation}, which is appended after the indentation of the given line.
+	 * <p>
+	 * If {@code textAfterIndentation} contains one or more line separators, it will be split into multiple lines of text.
+	 * <p>
+	 * Calling this method is equivalent to calling {@code line(textAfterIndentation, "", indentation)}.
 	 * 
 	 * @param textAfterIndentation the text to append after the indentation
 	 * @param indentation the indentation operation to be used at the end
@@ -166,16 +158,16 @@ public final class Document {
 	/**
 	 * Appends a line of text to this {@code Document} instance.
 	 * <p>
+	 * Returns the {@code Document} itself, such that method chaining is possible.
+	 * <p>
+	 * If either {@code textAfterIndentation} or {@code textBeforeIndentation} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
 	 * The line of text consists of three parts. The first part comes from {@code textBeforeIndentation}. The second part is the indentation itself, if any. The third part comes from {@code textAfterIndentation}.
 	 * <p>
 	 * If either {@code textAfterIndentation} or {@code textBeforeIndentation} contains one or more line separators, they will be split into multiple lines of text. The one of the two with most line separators will decide
 	 * how many lines to create. If one of the two has less line separators than the other, an empty {@code String} literal will be used where no corresponding text can be found.
 	 * <p>
 	 * Calling this method is equivalent to calling {@code line(textAfterIndentation, textBeforeIndentation, Indentation.SKIP)}.
-	 * <p>
-	 * Returns the {@code Document} itself, such that method chaining is possible.
-	 * <p>
-	 * If either {@code textAfterIndentation} or {@code textBeforeIndentation} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param textAfterIndentation the text to append after the indentation
 	 * @param textBeforeIndentation the text to prepend before the indentation
@@ -189,6 +181,10 @@ public final class Document {
 	/**
 	 * Appends a line of text to this {@code Document} instance.
 	 * <p>
+	 * Returns the {@code Document} itself, such that method chaining is possible.
+	 * <p>
+	 * If either {@code textAfterIndentation}, {@code textBeforeIndentation} or {@code indentation} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
 	 * The line of text consists of three parts. The first part comes from {@code textBeforeIndentation}. The second part is the indentation itself, if any. The third part comes from {@code textAfterIndentation}.
 	 * <p>
 	 * If either {@code textAfterIndentation} or {@code textBeforeIndentation} contains one or more line separators, they will be split into multiple lines of text. The one of the two with most line separators will decide
@@ -196,10 +192,6 @@ public final class Document {
 	 * <p>
 	 * The parameter {@code indentation} is used to perform an optional indent- or outdent operation at the end. To perform an indent operation, use {@code Indentation.INDENT}. To perform an outdent operation, use
 	 * {@code Indentation.OUTDENT}. To perform no indent- or outdent operation, use {@code Indentation.SKIP}.
-	 * <p>
-	 * Returns the {@code Document} itself, such that method chaining is possible.
-	 * <p>
-	 * If either {@code textAfterIndentation}, {@code textBeforeIndentation} or {@code indentation} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param textAfterIndentation the text to append after the indentation
 	 * @param textBeforeIndentation the text to prepend before the indentation
@@ -245,16 +237,15 @@ public final class Document {
 	/**
 	 * Appends a line of text to this {@code Document} instance.
 	 * <p>
-	 * The line of text consists of {@code String.format(textAfterIndentationFormat, objects)}, which is appended after the indentation of the given line.
-	 * <p>
-	 * If either {@code textAfterIndentation} or {@code textBeforeIndentation} contains one or more line separators, they will be split into multiple lines of text. The one of the two with most line separators will decide
-	 * how many lines to create. If one of the two has less line separators than the other, an empty {@code String} literal will be used where no corresponding text can be found.
-	 * <p>
-	 * Calling this method is equivalent to calling {@code line(String.format(textAfterIndentationFormat, objects))}, with the exception that {@code null} references are not allowed.
-	 * <p>
 	 * Returns the {@code Document} itself, such that method chaining is possible.
 	 * <p>
 	 * If either {@code textAfterIndentationFormat} or {@code objects} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * The line of text consists of {@code String.format(textAfterIndentationFormat, objects)}, which is appended after the indentation of the given line.
+	 * <p>
+	 * If {@code textAfterIndentation} contains one or more line separators, it will be split into multiple lines of text.
+	 * <p>
+	 * Calling this method is equivalent to calling {@code line(String.format(textAfterIndentationFormat, objects))}, with the exception that {@code null} references are not allowed.
 	 * 
 	 * @param textAfterIndentationFormat a format {@code String} for the text to append after the indentation
 	 * @param objects an array of {@code Object}s to use in the format {@code String}
