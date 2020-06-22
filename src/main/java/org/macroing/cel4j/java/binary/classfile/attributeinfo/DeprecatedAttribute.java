@@ -88,18 +88,7 @@ public final class DeprecatedAttribute extends AttributeInfo {
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("Deprecated_attribute");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("name=" + getName());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_name_index=" + getAttributeNameIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_length=" + getAttributeLength());
-		
-		return stringBuilder.toString();
+		return String.format("new DeprecatedAttribute(%s)", Integer.toString(getAttributeNameIndex()));
 	}
 	
 	/**
@@ -116,11 +105,11 @@ public final class DeprecatedAttribute extends AttributeInfo {
 			return true;
 		} else if(!(object instanceof DeprecatedAttribute)) {
 			return false;
-		} else if(!Objects.equals(DeprecatedAttribute.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), DeprecatedAttribute.class.cast(object).getName())) {
 			return false;
-		} else if(DeprecatedAttribute.class.cast(object).getAttributeNameIndex() != getAttributeNameIndex()) {
+		} else if(getAttributeNameIndex() != DeprecatedAttribute.class.cast(object).getAttributeNameIndex()) {
 			return false;
-		} else if(DeprecatedAttribute.class.cast(object).getAttributeLength() != getAttributeLength()) {
+		} else if(getAttributeLength() != DeprecatedAttribute.class.cast(object).getAttributeLength()) {
 			return false;
 		} else {
 			return true;

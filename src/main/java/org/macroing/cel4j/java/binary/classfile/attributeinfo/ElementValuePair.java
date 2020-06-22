@@ -90,6 +90,16 @@ public final class ElementValuePair implements Node {
 	}
 	
 	/**
+	 * Returns a {@code String} representation of this {@code ElementValuePair} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code ElementValuePair} instance
+	 */
+	@Override
+	public String toString() {
+		return String.format("new ElementValuePair(%s, %s)", Integer.toString(getElementNameIndex()), getValue());
+	}
+	
+	/**
 	 * Accepts a {@link NodeHierarchicalVisitor}.
 	 * <p>
 	 * Returns the result of {@code nodeHierarchicalVisitor.visitLeave(this)}.
@@ -116,7 +126,7 @@ public final class ElementValuePair implements Node {
 		
 		try {
 			if(nodeHierarchicalVisitor.visitEnter(this)) {
-				if(!this.value.accept(nodeHierarchicalVisitor)) {
+				if(!getValue().accept(nodeHierarchicalVisitor)) {
 					return nodeHierarchicalVisitor.visitLeave(this);
 				}
 			}
@@ -141,9 +151,9 @@ public final class ElementValuePair implements Node {
 			return true;
 		} else if(!(object instanceof ElementValuePair)) {
 			return false;
-		} else if(!Objects.equals(Integer.valueOf(this.elementNameIndex), Integer.valueOf(ElementValuePair.class.cast(object).elementNameIndex))) {
+		} else if(getElementNameIndex() != ElementValuePair.class.cast(object).getElementNameIndex()) {
 			return false;
-		} else if(!Objects.equals(this.value, ElementValuePair.class.cast(object).value)) {
+		} else if(!Objects.equals(getValue(), ElementValuePair.class.cast(object).getValue())) {
 			return false;
 		} else {
 			return true;
@@ -165,7 +175,7 @@ public final class ElementValuePair implements Node {
 	 * @return the length of this {@code ElementValuePair} instance
 	 */
 	public int getLength() {
-		return 2 + this.value.getLength();
+		return 2 + getValue().getLength();
 	}
 	
 	/**
@@ -175,7 +185,7 @@ public final class ElementValuePair implements Node {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(Integer.valueOf(this.elementNameIndex), this.value);
+		return Objects.hash(Integer.valueOf(getElementNameIndex()), getValue());
 	}
 	
 	/**
@@ -193,9 +203,11 @@ public final class ElementValuePair implements Node {
 	 */
 	public void write(final DataOutput dataOutput) {
 		try {
-			dataOutput.writeShort(this.elementNameIndex);
+			dataOutput.writeShort(getElementNameIndex());
 			
-			this.value.write(dataOutput);
+			final
+			ElementValue elementValue = getValue();
+			elementValue.write(dataOutput);
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}

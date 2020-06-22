@@ -97,20 +97,7 @@ public final class ConstantValueAttribute extends AttributeInfo {
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("ConstantValue_attribute");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("name=" + getName());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_name_index=" + getAttributeNameIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_length=" + getAttributeLength());
-		stringBuilder.append(" ");
-		stringBuilder.append("constantvalue_index=" + this.constantValueIndex);
-		
-		return stringBuilder.toString();
+		return String.format("new ConstantValueAttribute(%s, %s)", Integer.toString(getAttributeNameIndex()), Integer.toString(getConstantValueIndex()));
 	}
 	
 	/**
@@ -127,13 +114,13 @@ public final class ConstantValueAttribute extends AttributeInfo {
 			return true;
 		} else if(!(object instanceof ConstantValueAttribute)) {
 			return false;
-		} else if(!Objects.equals(ConstantValueAttribute.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), ConstantValueAttribute.class.cast(object).getName())) {
 			return false;
-		} else if(ConstantValueAttribute.class.cast(object).getAttributeNameIndex() != getAttributeNameIndex()) {
+		} else if(getAttributeNameIndex() != ConstantValueAttribute.class.cast(object).getAttributeNameIndex()) {
 			return false;
-		} else if(ConstantValueAttribute.class.cast(object).getAttributeLength() != getAttributeLength()) {
+		} else if(getAttributeLength() != ConstantValueAttribute.class.cast(object).getAttributeLength()) {
 			return false;
-		} else if(ConstantValueAttribute.class.cast(object).getConstantValueIndex() != getConstantValueIndex()) {
+		} else if(getConstantValueIndex() != ConstantValueAttribute.class.cast(object).getConstantValueIndex()) {
 			return false;
 		} else {
 			return true;

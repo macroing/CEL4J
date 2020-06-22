@@ -128,6 +128,16 @@ public final class Annotation implements Node {
 	}
 	
 	/**
+	 * Returns a {@code String} representation of this {@code Annotation} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code Annotation} instance
+	 */
+	@Override
+	public String toString() {
+		return String.format("new Annotation(%s)", Integer.toString(getTypeIndex()));
+	}
+	
+	/**
 	 * Accepts a {@link NodeHierarchicalVisitor}.
 	 * <p>
 	 * Returns the result of {@code nodeHierarchicalVisitor.visitLeave(this)}.

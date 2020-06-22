@@ -147,6 +147,16 @@ public final class ElementValue implements Node {
 	}
 	
 	/**
+	 * Returns a {@code String} representation of this {@code ElementValue} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code ElementValue} instance
+	 */
+	@Override
+	public String toString() {
+		return String.format("new ElementValue(%s, %s)", Integer.toString(getTag()), getValue());
+	}
+	
+	/**
 	 * Returns the value of the {@code value} item associated with this {@code ElementValue} instance.
 	 * 
 	 * @return the value of the {@code value} item associated with this {@code ElementValue} instance
@@ -182,7 +192,7 @@ public final class ElementValue implements Node {
 		
 		try {
 			if(nodeHierarchicalVisitor.visitEnter(this)) {
-				if(!this.value.accept(nodeHierarchicalVisitor)) {
+				if(!getValue().accept(nodeHierarchicalVisitor)) {
 					return nodeHierarchicalVisitor.visitLeave(this);
 				}
 			}
@@ -207,7 +217,7 @@ public final class ElementValue implements Node {
 			return true;
 		} else if(!(object instanceof ElementValue)) {
 			return false;
-		} else if(!Objects.equals(Integer.valueOf(getTag()), Integer.valueOf(ElementValue.class.cast(object).getTag()))) {
+		} else if(getTag() != ElementValue.class.cast(object).getTag()) {
 			return false;
 		} else if(!Objects.equals(getValue(), ElementValue.class.cast(object).getValue())) {
 			return false;

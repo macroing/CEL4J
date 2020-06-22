@@ -76,18 +76,7 @@ public final class SyntheticAttribute extends AttributeInfo {
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("Synthetic_attribute");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("name=" + getName());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_name_index=" + getAttributeNameIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_length=" + getAttributeLength());
-		
-		return stringBuilder.toString();
+		return String.format("new SyntheticAttribute(%s)", Integer.toString(getAttributeNameIndex()));
 	}
 	
 	/**
@@ -114,11 +103,11 @@ public final class SyntheticAttribute extends AttributeInfo {
 			return true;
 		} else if(!(object instanceof SyntheticAttribute)) {
 			return false;
-		} else if(!Objects.equals(SyntheticAttribute.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), SyntheticAttribute.class.cast(object).getName())) {
 			return false;
-		} else if(SyntheticAttribute.class.cast(object).getAttributeNameIndex() != getAttributeNameIndex()) {
+		} else if(getAttributeNameIndex() != SyntheticAttribute.class.cast(object).getAttributeNameIndex()) {
 			return false;
-		} else if(SyntheticAttribute.class.cast(object).getAttributeLength() != getAttributeLength()) {
+		} else if(getAttributeLength() != SyntheticAttribute.class.cast(object).getAttributeLength()) {
 			return false;
 		} else {
 			return true;

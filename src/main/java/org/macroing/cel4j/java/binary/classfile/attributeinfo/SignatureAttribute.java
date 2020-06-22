@@ -99,20 +99,7 @@ public final class SignatureAttribute extends AttributeInfo {
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("Signature_attribute");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("name=" + getName());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_name_index=" + getAttributeNameIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_length=" + getAttributeLength());
-		stringBuilder.append(" ");
-		stringBuilder.append("signature_index=" + this.signatureIndex);
-		
-		return stringBuilder.toString();
+		return String.format("new SignatureAttribute(%s, %s)", Integer.toString(getAttributeNameIndex()), Integer.toString(getSignatureIndex()));
 	}
 	
 	/**
@@ -129,13 +116,13 @@ public final class SignatureAttribute extends AttributeInfo {
 			return true;
 		} else if(!(object instanceof SignatureAttribute)) {
 			return false;
-		} else if(!Objects.equals(SignatureAttribute.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), SignatureAttribute.class.cast(object).getName())) {
 			return false;
-		} else if(SignatureAttribute.class.cast(object).getAttributeNameIndex() != getAttributeNameIndex()) {
+		} else if(getAttributeNameIndex() != SignatureAttribute.class.cast(object).getAttributeNameIndex()) {
 			return false;
-		} else if(SignatureAttribute.class.cast(object).getAttributeLength() != getAttributeLength()) {
+		} else if(getAttributeLength() != SignatureAttribute.class.cast(object).getAttributeLength()) {
 			return false;
-		} else if(SignatureAttribute.class.cast(object).getSignatureIndex() != getSignatureIndex()) {
+		} else if(getSignatureIndex() != SignatureAttribute.class.cast(object).getSignatureIndex()) {
 			return false;
 		} else {
 			return true;

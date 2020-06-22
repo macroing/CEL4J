@@ -161,7 +161,7 @@ public final class CodeAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns a {@code List} with all currently added {@code AttributeInfo} instances.
+	 * Returns a {@code List} with all currently added {@link AttributeInfo} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code CodeAttribute} instance.
 	 * 
@@ -172,7 +172,7 @@ public final class CodeAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns a {@code List} with all currently added {@code ExceptionHandler} instances.
+	 * Returns a {@code List} with all currently added {@link ExceptionHandler} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code CodeAttribute} instance.
 	 * 
@@ -183,7 +183,7 @@ public final class CodeAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns a {@code List} with all currently added {@code Instruction} instances.
+	 * Returns a {@code List} with all currently added {@link Instruction} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code CodeAttribute} instance.
 	 * 
@@ -200,24 +200,7 @@ public final class CodeAttribute extends AttributeInfo {
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("Code_attribute");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("name=" + getName());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_name_index=" + getAttributeNameIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_length=" + getAttributeLength());
-		stringBuilder.append(" ");
-		stringBuilder.append("max_stack=" + getMaxStack());
-		stringBuilder.append(" ");
-		stringBuilder.append("max_locals=" + getMaxLocals());
-		stringBuilder.append(" ");
-		stringBuilder.append("code_length=" + getCodeLength());
-		
-		return stringBuilder.toString();
+		return String.format("new CodeAttribute(%s)", Integer.toString(getAttributeNameIndex()));
 	}
 	
 	/**

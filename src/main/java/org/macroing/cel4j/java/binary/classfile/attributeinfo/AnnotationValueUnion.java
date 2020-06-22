@@ -81,6 +81,16 @@ public final class AnnotationValueUnion implements Union {
 	}
 	
 	/**
+	 * Returns a {@code String} representation of this {@code AnnotationValueUnion} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code AnnotationValueUnion} instance
+	 */
+	@Override
+	public String toString() {
+		return String.format("new AnnotationValueUnion(%s)", getAnnotationValue());
+	}
+	
+	/**
 	 * Accepts a {@link NodeHierarchicalVisitor}.
 	 * <p>
 	 * Returns the result of {@code nodeHierarchicalVisitor.visitLeave(this)}.
@@ -107,7 +117,7 @@ public final class AnnotationValueUnion implements Union {
 		
 		try {
 			if(nodeHierarchicalVisitor.visitEnter(this)) {
-				if(!this.annotationValue.accept(nodeHierarchicalVisitor)) {
+				if(!getAnnotationValue().accept(nodeHierarchicalVisitor)) {
 					return nodeHierarchicalVisitor.visitLeave(this);
 				}
 			}
@@ -146,7 +156,7 @@ public final class AnnotationValueUnion implements Union {
 	 */
 	@Override
 	public int getLength() {
-		return this.annotationValue.getLength();
+		return getAnnotationValue().getLength();
 	}
 	
 	/**

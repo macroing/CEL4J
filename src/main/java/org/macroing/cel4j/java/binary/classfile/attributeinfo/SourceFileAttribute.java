@@ -95,20 +95,7 @@ public final class SourceFileAttribute extends AttributeInfo {
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("SourceFile_attribute");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("name=" + getName());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_name_index=" + getAttributeNameIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_length=" + getAttributeLength());
-		stringBuilder.append(" ");
-		stringBuilder.append("sourcefile_index=" + this.sourceFileIndex);
-		
-		return stringBuilder.toString();
+		return String.format("new SourceFileAttribute(%s, %s)", Integer.toString(getAttributeNameIndex()), Integer.toString(getSourceFileIndex()));
 	}
 	
 	/**
@@ -125,13 +112,13 @@ public final class SourceFileAttribute extends AttributeInfo {
 			return true;
 		} else if(!(object instanceof SourceFileAttribute)) {
 			return false;
-		} else if(!Objects.equals(SourceFileAttribute.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), SourceFileAttribute.class.cast(object).getName())) {
 			return false;
-		} else if(SourceFileAttribute.class.cast(object).getAttributeNameIndex() != getAttributeNameIndex()) {
+		} else if(getAttributeNameIndex() != SourceFileAttribute.class.cast(object).getAttributeNameIndex()) {
 			return false;
-		} else if(SourceFileAttribute.class.cast(object).getAttributeLength() != getAttributeLength()) {
+		} else if(getAttributeLength() != SourceFileAttribute.class.cast(object).getAttributeLength()) {
 			return false;
-		} else if(SourceFileAttribute.class.cast(object).getSourceFileIndex() != getSourceFileIndex()) {
+		} else if(getSourceFileIndex() != SourceFileAttribute.class.cast(object).getSourceFileIndex()) {
 			return false;
 		} else {
 			return true;

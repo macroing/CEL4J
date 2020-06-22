@@ -21,66 +21,133 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.util.ParameterArguments;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code ClassInfoIndexUnion} represents an unnamed {@code class_info_index} {@code union} structure as defined by the Java Virtual Machine Specifications.
+ * <p>
+ * This class is immutable and thread-safe.
+ * <p>
+ * The unnamed {@code class_info_index} {@code union} structure has the following format:
+ * <pre>
+ * <code>
+ * {
+ *     u2 class_info_index;
+ * }
+ * </code>
+ * </pre>
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class ClassInfoIndexUnion implements Union {
 	private final int classInfoIndex;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Constructs a new {@code ClassInfoIndexUnion} instance.
+	 * <p>
+	 * If {@code classInfoIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param classInfoIndex the value for the {@code class_info_index} item associated with this {@code ClassInfoIndexUnion} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code classInfoIndex} is less than {@code 1}
+	 */
 	public ClassInfoIndexUnion(final int classInfoIndex) {
 		this.classInfoIndex = ParameterArguments.requireRange(classInfoIndex, 1, Integer.MAX_VALUE, "classInfoIndex");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a copy of this {@code ClassInfoIndexUnion} instance.
+	 * 
+	 * @return a copy of this {@code ClassInfoIndexUnion} instance
+	 */
 	@Override
 	public ClassInfoIndexUnion copy() {
-		return new ClassInfoIndexUnion(this.classInfoIndex);
+		return new ClassInfoIndexUnion(getClassInfoIndex());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code ClassInfoIndexUnion} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code ClassInfoIndexUnion} instance
+	 */
+	@Override
+	public String toString() {
+		return String.format("new ClassInfoIndexUnion(%s)", Integer.toString(getClassInfoIndex()));
+	}
+	
+	/**
+	 * Compares {@code object} to this {@code ClassInfoIndexUnion} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ClassInfoIndexUnion}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code ClassInfoIndexUnion} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ClassInfoIndexUnion}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
 		} else if(!(object instanceof ClassInfoIndexUnion)) {
 			return false;
-		} else if(!Objects.equals(Integer.valueOf(this.classInfoIndex), Integer.valueOf(ClassInfoIndexUnion.class.cast(object).classInfoIndex))) {
+		} else if(getClassInfoIndex() != ClassInfoIndexUnion.class.cast(object).getClassInfoIndex()) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the value of the {@code class_info_index} item associated with this {@code ClassInfoIndexUnion} instance.
+	 * 
+	 * @return the value of the {@code class_info_index} item associated with this {@code ClassInfoIndexUnion} instance
+	 */
 	public int getClassInfoIndex() {
 		return this.classInfoIndex;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the length of this {@code ClassInfoIndexUnion} instance.
+	 * 
+	 * @return the length of this {@code ClassInfoIndexUnion} instance
+	 */
 	@Override
 	public int getLength() {
 		return 2;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code ClassInfoIndexUnion} instance.
+	 * 
+	 * @return a hash code for this {@code ClassInfoIndexUnion} instance
+	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(Integer.valueOf(this.classInfoIndex));
+		return Objects.hash(Integer.valueOf(getClassInfoIndex()));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Writes this {@code ClassInfoIndexUnion} to {@code dataOutput}.
+	 * <p>
+	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
+	 * 
+	 * @param dataOutput the {@code DataOutput} to write to
+	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
+	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
 		try {
-			dataOutput.writeShort(this.classInfoIndex);
+			dataOutput.writeShort(getClassInfoIndex());
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}

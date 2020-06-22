@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -33,35 +32,49 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * An {@code ExceptionsAttribute} denotes an Exceptions_attribute structure somewhere in a ClassFile structure.
+ * An {@code ExceptionsAttribute} represents an {@code Exceptions_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code Exceptions_attribute} structure has the following format:
+ * <pre>
+ * <code>
+ * Exceptions_attribute {
+ *     u2 attribute_name_index;
+ *     u4 attribute_length;
+ *     u2 number_of_exceptions;
+ *     u2[number_of_exceptions] exception_index_table;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class ExceptionsAttribute extends AttributeInfo {
 	/**
-	 * The name of the Exceptions_attribute structure.
+	 * The name of the {@code Exceptions_attribute} structure.
 	 */
 	public static final String NAME = "Exceptions";
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final List<Integer> exceptionIndexTable = new ArrayList<>();
+	private final List<Integer> exceptionIndexTable;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Constructs a new {@code ExceptionsAttribute} instance.
 	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code ExceptionsAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 * @param attributeNameIndex the value for the {@code attribute_name_index} item associated with this {@code ExceptionsAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than {@code 1}
 	 */
 	public ExceptionsAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
+		
+		this.exceptionIndexTable = new ArrayList<>();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -75,17 +88,19 @@ public final class ExceptionsAttribute extends AttributeInfo {
 	public ExceptionsAttribute copy() {
 		final ExceptionsAttribute exceptionsAttribute = new ExceptionsAttribute(getAttributeNameIndex());
 		
-		this.exceptionIndexTable.forEach(exceptionIndex -> exceptionsAttribute.addExceptionIndex(exceptionIndex.intValue()));
+		for(final int exceptionIndex : this.exceptionIndexTable) {
+			exceptionsAttribute.addExceptionIndex(exceptionIndex);
+		}
 		
 		return exceptionsAttribute;
 	}
 	
 	/**
-	 * Returns the exception_index_table of this {@code ExceptionsAttribute} instance.
+	 * Returns a {@code List} that represents the {@code exception_index_table} item associated with this {@code ExceptionsAttribute} instance.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code ExceptionsAttribute} instance.
 	 * 
-	 * @return the exception_index_table of this {@code ExceptionsAttribute} instance
+	 * @return a {@code List} that represents the {@code exception_index_table} item associated with this {@code ExceptionsAttribute} instance
 	 */
 	public List<Integer> getExceptionIndexTable() {
 		return new ArrayList<>(this.exceptionIndexTable);
@@ -98,31 +113,16 @@ public final class ExceptionsAttribute extends AttributeInfo {
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("Exceptions_attribute");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("name=" + getName());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_name_index=" + getAttributeNameIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_length=" + getAttributeLength());
-		stringBuilder.append(" ");
-		stringBuilder.append("number_of_exceptions=" + getNumberOfExceptions());
-		
-		final String toString = stringBuilder.toString();
-		
-		return toString;
+		return String.format("new ExceptionsAttribute(%s)", Integer.toString(getAttributeNameIndex()));
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ExceptionsAttribute}, and that {@code ExceptionsAttribute} instance is equal to this {@code ExceptionsAttribute} instance, {@code false}
-	 * otherwise.
+	 * Compares {@code object} to this {@code ExceptionsAttribute} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ExceptionsAttribute}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code ExceptionsAttribute} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ExceptionsAttribute}, and that {@code ExceptionsAttribute} instance is equal to this {@code ExceptionsAttribute} instance, {@code false}
-	 * otherwise
+	 * @param object the {@code Object} to compare to this {@code ExceptionsAttribute} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ExceptionsAttribute}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -130,15 +130,15 @@ public final class ExceptionsAttribute extends AttributeInfo {
 			return true;
 		} else if(!(object instanceof ExceptionsAttribute)) {
 			return false;
-		} else if(!Objects.equals(ExceptionsAttribute.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), ExceptionsAttribute.class.cast(object).getName())) {
 			return false;
-		} else if(ExceptionsAttribute.class.cast(object).getAttributeNameIndex() != getAttributeNameIndex()) {
+		} else if(getAttributeNameIndex() != ExceptionsAttribute.class.cast(object).getAttributeNameIndex()) {
 			return false;
-		} else if(ExceptionsAttribute.class.cast(object).getAttributeLength() != getAttributeLength()) {
+		} else if(getAttributeLength() != ExceptionsAttribute.class.cast(object).getAttributeLength()) {
 			return false;
-		} else if(ExceptionsAttribute.class.cast(object).getNumberOfExceptions() != getNumberOfExceptions()) {
+		} else if(getNumberOfExceptions() != ExceptionsAttribute.class.cast(object).getNumberOfExceptions()) {
 			return false;
-		} else if(!Objects.equals(ExceptionsAttribute.class.cast(object).exceptionIndexTable, this.exceptionIndexTable)) {
+		} else if(!Objects.equals(this.exceptionIndexTable, ExceptionsAttribute.class.cast(object).exceptionIndexTable)) {
 			return false;
 		} else {
 			return true;
@@ -146,9 +146,9 @@ public final class ExceptionsAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the attribute_length of this {@code ExceptionsAttribute} instance.
+	 * Returns the value of the {@code attribute_length} item associated with this {@code ExceptionsAttribute} instance.
 	 * 
-	 * @return the attribute_length of this {@code ExceptionsAttribute} instance
+	 * @return the value of the {@code attribute_length} item associated with this {@code ExceptionsAttribute} instance
 	 */
 	@Override
 	public int getAttributeLength() {
@@ -161,9 +161,9 @@ public final class ExceptionsAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the number_of_exceptions of this {@code ExceptionsAttribute} instance.
+	 * Returns the value of the {@code number_of_exceptions} item associated with this {@code ExceptionsAttribute} instance.
 	 * 
-	 * @return the number_of_exceptions of this {@code ExceptionsAttribute} instance
+	 * @return the value of the {@code number_of_exceptions} item associated with this {@code ExceptionsAttribute} instance
 	 */
 	public int getNumberOfExceptions() {
 		return this.exceptionIndexTable.size();
@@ -180,24 +180,24 @@ public final class ExceptionsAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Adds {@code exceptionIndex} to the exception_index_table of this {@code ExceptionsAttribute} instance.
+	 * Adds {@code exceptionIndex} to the {@code exception_index_table} item associated with this {@code ExceptionsAttribute} instance.
 	 * <p>
-	 * If {@code exceptionIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code exceptionIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param exceptionIndex the exception index to add
-	 * @throws IllegalArgumentException thrown if, and only if, {@code exceptionIndex} is less than or equal to {@code 0}
+	 * @throws IllegalArgumentException thrown if, and only if, {@code exceptionIndex} is less than {@code 1}
 	 */
 	public void addExceptionIndex(final int exceptionIndex) {
 		this.exceptionIndexTable.add(Integer.valueOf(ParameterArguments.requireRange(exceptionIndex, 1, Integer.MAX_VALUE)));
 	}
 	
 	/**
-	 * Removes {@code exceptionIndex} from the exception_index_table of this {@code ExceptionsAttribute} instance.
+	 * Removes {@code exceptionIndex} from the {@code exception_index_table} item associated with this {@code ExceptionsAttribute} instance.
 	 * <p>
-	 * If {@code exceptionIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code exceptionIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param exceptionIndex the exception index to remove
-	 * @throws IllegalArgumentException thrown if, and only if, {@code exceptionIndex} is less than or equal to {@code 0}
+	 * @throws IllegalArgumentException thrown if, and only if, {@code exceptionIndex} is less than {@code 1}
 	 */
 	public void removeExceptionIndex(final int exceptionIndex) {
 		this.exceptionIndexTable.remove(Integer.valueOf(ParameterArguments.requireRange(exceptionIndex, 1, Integer.MAX_VALUE)));
@@ -206,15 +206,15 @@ public final class ExceptionsAttribute extends AttributeInfo {
 	/**
 	 * Writes this {@code ExceptionsAttribute} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
@@ -234,14 +234,14 @@ public final class ExceptionsAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@code ExceptionsAttribute}s.
+	 * Returns a {@code List} with all {@code ExceptionsAttribute} instances in {@code node}.
 	 * <p>
-	 * All {@code ExceptionsAttribute}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code ExceptionsAttribute} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code ExceptionsAttribute}s
+	 * @return a {@code List} with all {@code ExceptionsAttribute} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<ExceptionsAttribute> filter(final Node node) {

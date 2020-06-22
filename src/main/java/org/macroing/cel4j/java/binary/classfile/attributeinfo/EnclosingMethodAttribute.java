@@ -89,7 +89,17 @@ public final class EnclosingMethodAttribute extends AttributeInfo {
 	 */
 	@Override
 	public EnclosingMethodAttribute copy() {
-		return new EnclosingMethodAttribute(getAttributeNameIndex(), this.classIndex, this.methodIndex);
+		return new EnclosingMethodAttribute(getAttributeNameIndex(), getClassIndex(), getMethodIndex());
+	}
+	
+	/**
+	 * Returns a {@code String} representation of this {@code EnclosingMethodAttribute} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code EnclosingMethodAttribute} instance
+	 */
+	@Override
+	public String toString() {
+		return String.format("new EnclosingMethodAttribute(%s, %s, %s)", Integer.toString(getAttributeNameIndex()), Integer.toString(getClassIndex()), Integer.toString(getMethodIndex()));
 	}
 	
 	/**
@@ -106,15 +116,15 @@ public final class EnclosingMethodAttribute extends AttributeInfo {
 			return true;
 		} else if(!(object instanceof EnclosingMethodAttribute)) {
 			return false;
-		} else if(!Objects.equals(EnclosingMethodAttribute.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), EnclosingMethodAttribute.class.cast(object).getName())) {
 			return false;
-		} else if(EnclosingMethodAttribute.class.cast(object).getAttributeNameIndex() != getAttributeNameIndex()) {
+		} else if(getAttributeNameIndex() != EnclosingMethodAttribute.class.cast(object).getAttributeNameIndex()) {
 			return false;
-		} else if(EnclosingMethodAttribute.class.cast(object).getAttributeLength() != getAttributeLength()) {
+		} else if(getAttributeLength() != EnclosingMethodAttribute.class.cast(object).getAttributeLength()) {
 			return false;
-		} else if(EnclosingMethodAttribute.class.cast(object).getClassIndex() != getClassIndex()) {
+		} else if(getClassIndex() != EnclosingMethodAttribute.class.cast(object).getClassIndex()) {
 			return false;
-		} else if(EnclosingMethodAttribute.class.cast(object).getMethodIndex() != getMethodIndex()) {
+		} else if(getMethodIndex() != EnclosingMethodAttribute.class.cast(object).getMethodIndex()) {
 			return false;
 		} else {
 			return true;
@@ -201,8 +211,8 @@ public final class EnclosingMethodAttribute extends AttributeInfo {
 		try {
 			dataOutput.writeShort(getAttributeNameIndex());
 			dataOutput.writeInt(getAttributeLength());
-			dataOutput.writeShort(this.classIndex);
-			dataOutput.writeShort(this.methodIndex);
+			dataOutput.writeShort(getClassIndex());
+			dataOutput.writeShort(getMethodIndex());
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
