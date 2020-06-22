@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,35 +34,49 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 
 /**
- * An {@code InnerClassesAttribute} denotes an InnerClasses_attribute structure somewhere in a ClassFile structure.
+ * An {@code InnerClassesAttribute} represents an {@code InnerClasses_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code InnerClasses_attribute} structure has the following format:
+ * <pre>
+ * <code>
+ * InnerClasses_attribute {
+ *     u2 attribute_name_index;
+ *     u4 attribute_length;
+ *     u2 number_of_classes;
+ *     class[number_of_classes] classes;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class InnerClassesAttribute extends AttributeInfo {
 	/**
-	 * The name of the InnerClasses_attribute structure.
+	 * The name of the {@code InnerClasses_attribute} structure.
 	 */
 	public static final String NAME = "InnerClasses";
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final List<InnerClass> innerClasses = new ArrayList<>();
+	private final List<InnerClass> innerClasses;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Constructs a new {@code InnerClassesAttribute} instance.
 	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code InnerClassesAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 * @param attributeNameIndex the value for the {@code attribute_name_index} item associated with this {@code InnerClassesAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than {@code 1}
 	 */
 	public InnerClassesAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
+		
+		this.innerClasses = new ArrayList<>();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -77,17 +90,19 @@ public final class InnerClassesAttribute extends AttributeInfo {
 	public InnerClassesAttribute copy() {
 		final InnerClassesAttribute innerClassesAttribute = new InnerClassesAttribute(getAttributeNameIndex());
 		
-		this.innerClasses.forEach(innerClass -> innerClassesAttribute.addInnerClass(innerClass.copy()));
+		for(final InnerClass innerClass : this.innerClasses) {
+			innerClassesAttribute.addInnerClass(innerClass.copy());
+		}
 		
 		return innerClassesAttribute;
 	}
 	
 	/**
-	 * Returns a {@code List} with all currently added {@code InnerClass}s.
+	 * Returns a {@code List} with all currently added {@code InnerClass} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code InnerClassesAttribute} instance.
 	 * 
-	 * @return a {@code List} with all currently added {@code InnerClass}s
+	 * @return a {@code List} with all currently added {@code InnerClass} instances
 	 */
 	public List<InnerClass> getInnerClasses() {
 		return new ArrayList<>(this.innerClasses);
@@ -100,22 +115,7 @@ public final class InnerClassesAttribute extends AttributeInfo {
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("InnerClasses_attribute");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("name=" + getName());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_name_index=" + getAttributeNameIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_length=" + getAttributeLength());
-		stringBuilder.append(" ");
-		stringBuilder.append("number_of_classes=" + getNumberOfClasses());
-		
-		final String toString = stringBuilder.toString();
-		
-		return toString;
+		return String.format("new InnerClassesAttribute(%s)", Integer.toString(getAttributeNameIndex()));
 	}
 	
 	/**
@@ -131,7 +131,7 @@ public final class InnerClassesAttribute extends AttributeInfo {
 	 * <ul>
 	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
 	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
-	 * <li>traverse its child {@code Node}s, if it has any.</li>
+	 * <li>traverse its child {@code Node} instances, if it has any.</li>
 	 * </ul>
 	 * 
 	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
@@ -159,12 +159,12 @@ public final class InnerClassesAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code InnerClassesAttribute}, and that {@code InnerClassesAttribute} instance is equal to this {@code InnerClassesAttribute} instance,
-	 * {@code false} otherwise.
+	 * Compares {@code object} to this {@code InnerClassesAttribute} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code InnerClassesAttribute}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code InnerClassesAttribute} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code InnerClassesAttribute}, and that {@code InnerClassesAttribute} instance is equal to this {@code InnerClassesAttribute} instance,
-	 * {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code InnerClassesAttribute} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code InnerClassesAttribute}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -172,13 +172,13 @@ public final class InnerClassesAttribute extends AttributeInfo {
 			return true;
 		} else if(!(object instanceof InnerClassesAttribute)) {
 			return false;
-		} else if(!Objects.equals(InnerClassesAttribute.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), InnerClassesAttribute.class.cast(object).getName())) {
 			return false;
-		} else if(InnerClassesAttribute.class.cast(object).getAttributeNameIndex() != getAttributeNameIndex()) {
+		} else if(getAttributeNameIndex() != InnerClassesAttribute.class.cast(object).getAttributeNameIndex()) {
 			return false;
-		} else if(InnerClassesAttribute.class.cast(object).getAttributeLength() != getAttributeLength()) {
+		} else if(getAttributeLength() != InnerClassesAttribute.class.cast(object).getAttributeLength()) {
 			return false;
-		} else if(!Objects.equals(InnerClassesAttribute.class.cast(object).innerClasses, this.innerClasses)) {
+		} else if(!Objects.equals(this.innerClasses, InnerClassesAttribute.class.cast(object).innerClasses)) {
 			return false;
 		} else {
 			return true;
@@ -186,9 +186,9 @@ public final class InnerClassesAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the attribute_length of this {@code InnerClassesAttribute} instance.
+	 * Returns the value of the {@code attribute_length} item associated with this {@code InnerClassesAttribute} instance.
 	 * 
-	 * @return the attribute_length of this {@code InnerClassesAttribute} instance.
+	 * @return the value of the {@code attribute_length} item associated with this {@code InnerClassesAttribute} instance
 	 */
 	@Override
 	public int getAttributeLength() {
@@ -201,9 +201,9 @@ public final class InnerClassesAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the number_of_classes of this {@code InnerClassesAttribute} instance.
+	 * Returns the value of the {@code number_of_classes} item associated with this {@code InnerClassesAttribute} instance.
 	 * 
-	 * @return the number_of_classes of this {@code InnerClassesAttribute} instance.
+	 * @return the value of the {@code number_of_classes} item associated with this {@code InnerClassesAttribute} instance
 	 */
 	public int getNumberOfClasses() {
 		return this.innerClasses.size();
@@ -220,13 +220,11 @@ public final class InnerClassesAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Attempts to add {@code innerClass} to this {@code InnerClassesAttribute} instance.
+	 * Adds {@code innerClass} to this {@code InnerClassesAttribute} instance, if absent.
 	 * <p>
 	 * If {@code innerClass} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * <p>
-	 * If {@code innerClass} (or an {@code InnerClass} instance that equals {@code innerClass}) has already been added prior to this method call, nothing will happen.
 	 * 
-	 * @param innerClass the {@code InnerClass} to add
+	 * @param innerClass the {@link InnerClass} to add
 	 * @throws NullPointerException thrown if, and only if, {@code innerClass} is {@code null}
 	 */
 	public void addInnerClass(final InnerClass innerClass) {
@@ -236,13 +234,11 @@ public final class InnerClassesAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Attempts to remove {@code innerClass} from this {@code InnerClassesAttribute} instance.
+	 * Removes {@code innerClass} from this {@code InnerClassesAttribute} instance, if present.
 	 * <p>
 	 * If {@code innerClass} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * <p>
-	 * If no {@code InnerClass} equal to {@code innerClass} can be found, nothing will happen.
 	 * 
-	 * @param innerClass the {@code InnerClass} to remove
+	 * @param innerClass the {@link InnerClass} to remove
 	 * @throws NullPointerException thrown if, and only if, {@code innerClass} is {@code null}
 	 */
 	public void removeInnerClass(final InnerClass innerClass) {
@@ -252,15 +248,15 @@ public final class InnerClassesAttribute extends AttributeInfo {
 	/**
 	 * Writes this {@code InnerClassesAttribute} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
@@ -269,7 +265,9 @@ public final class InnerClassesAttribute extends AttributeInfo {
 			dataOutput.writeInt(getAttributeLength());
 			dataOutput.writeShort(getNumberOfClasses());
 			
-			this.innerClasses.forEach(innerClass -> innerClass.write(dataOutput));
+			for(final InnerClass innerClass : this.innerClasses) {
+				innerClass.write(dataOutput);
+			}
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
@@ -278,14 +276,14 @@ public final class InnerClassesAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@code InnerClassesAttribute}s.
+	 * Returns a {@code List} with all {@code InnerClassesAttribute} instances in {@code node}.
 	 * <p>
-	 * All {@code InnerClassesAttribute}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code InnerClassesAttribute} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code InnerClassesAttribute}s
+	 * @return a {@code List} with all {@code InnerClassesAttribute} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<InnerClassesAttribute> filter(final Node node) {

@@ -19,50 +19,100 @@
 package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 
 import java.io.DataOutput;
-import java.lang.reflect.Field;//TODO: Add Javadocs!
+import java.io.UncheckedIOException;
 
 import org.macroing.cel4j.node.Node;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code VerificationTypeInfo} represents a {@code verification_type_info} {@code union} structure as defined by the Java Virtual Machine Specifications.
+ * <p>
+ * A {@code verification_type_info} {@code union} is part of the structures {@code append_frame}, {@code full_frame}, {@code same_locals_1_stack_item_frame} and {@code same_locals_1_stack_item_frame_extended}. The structures mentioned and some others,
+ * are part of the {@code StackMapTable_attribute} structure.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public interface VerificationTypeInfo extends Node {
-//	TODO: Add Javadocs!
+	/**
+	 * The value of the {@code tag} item called {@code ITEM_Double}.
+	 */
 	int ITEM_DOUBLE = 3;
 	
-//	TODO: Add Javadocs!
+	/**
+	 * The value of the {@code tag} item called {@code ITEM_Float}.
+	 */
 	int ITEM_FLOAT = 2;
 	
-//	TODO: Add Javadocs!
+	/**
+	 * The value of the {@code tag} item called {@code ITEM_Integer}.
+	 */
 	int ITEM_INTEGER = 1;
 	
-//	TODO: Add Javadocs!
+	/**
+	 * The value of the {@code tag} item called {@code ITEM_Long}.
+	 */
 	int ITEM_LONG = 4;
 	
-//	TODO: Add Javadocs!
+	/**
+	 * The value of the {@code tag} item called {@code ITEM_Null}.
+	 */
 	int ITEM_NULL = 5;
 	
-//	TODO: Add Javadocs!
+	/**
+	 * The value of the {@code tag} item called {@code ITEM_Object}.
+	 */
 	int ITEM_OBJECT = 7;
 	
-//	TODO: Add Javadocs!
+	/**
+	 * The value of the {@code tag} item called {@code ITEM_Top}.
+	 */
 	int ITEM_TOP = 0;
 	
-//	TODO: Add Javadocs!
+	/**
+	 * The value of the {@code tag} item called {@code ITEM_Uninitialized}.
+	 */
 	int ITEM_UNINITIALIZED = 8;
 	
-//	TODO: Add Javadocs!
+	/**
+	 * The value of the {@code tag} item called {@code ITEM_UninitializedThis}.
+	 */
 	int ITEM_UNINITIALIZED_THIS = 6;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a copy of this {@code VerificationTypeInfo} instance.
+	 * 
+	 * @return a copy of this {@code VerificationTypeInfo} instance
+	 */
 	VerificationTypeInfo copy();
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the length of this {@code VerificationTypeInfo} instance.
+	 * 
+	 * @return the length of this {@code VerificationTypeInfo} instance
+	 */
 	int getLength();
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the value of the {@code tag} item associated with this {@code VerificationTypeInfo} instance.
+	 * 
+	 * @return the value of the {@code tag} item associated with this {@code VerificationTypeInfo} instance
+	 */
 	int getTag();
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Writes this {@code VerificationTypeInfo} to {@code dataOutput}.
+	 * <p>
+	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
+	 * 
+	 * @param dataOutput the {@code DataOutput} to write to
+	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
+	 */
 	void write(final DataOutput dataOutput);
 }

@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -33,35 +32,49 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 
 /**
- * A {@code LineNumberTableAttribute} denotes a LineNumberTable_attribute structure somewhere in a ClassFile structure.
+ * A {@code LineNumberTableAttribute} represents a {@code LineNumberTable_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code LineNumberTable_attribute} structure has the following format:
+ * <pre>
+ * <code>
+ * LineNumberTable_attribute {
+ *     u2 attribute_name_index;
+ *     u4 attribute_length;
+ *     u2 line_number_table_length;
+ *     line_number[line_number_table_length] line_number_table;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class LineNumberTableAttribute extends AttributeInfo {
 	/**
-	 * The name of the LocalVariableTable_attribute structure.
+	 * The name of the {@code LineNumberTable_attribute} structure.
 	 */
 	public static final String NAME = "LineNumberTable";
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final List<LineNumber> lineNumberTable = new ArrayList<>();
+	private final List<LineNumber> lineNumberTable;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Constructs a new {@code LineNumberTableAttribute} instance.
 	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code LineNumberTableAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 * @param attributeNameIndex the value for the {@code attribute_name_index} item associated with this {@code LineNumberTableAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than {@code 1}
 	 */
 	public LineNumberTableAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
+		
+		this.lineNumberTable = new ArrayList<>();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -75,17 +88,19 @@ public final class LineNumberTableAttribute extends AttributeInfo {
 	public LineNumberTableAttribute copy() {
 		final LineNumberTableAttribute lineNumberTableAttribute = new LineNumberTableAttribute(getAttributeNameIndex());
 		
-		this.lineNumberTable.forEach(lineNumber -> lineNumberTableAttribute.addLineNumber(lineNumber.copy()));
+		for(final LineNumber lineNumber : this.lineNumberTable) {
+			lineNumberTableAttribute.addLineNumber(lineNumber.copy());
+		}
 		
 		return lineNumberTableAttribute;
 	}
 	
 	/**
-	 * Returns a {@code List} with all currently added {@code LineNumber}s.
+	 * Returns a {@code List} that represents the {@code line_number_table} item associated with this {@code LineNumberTableAttribute} instance.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code LineNumberTableAttribute} instance.
 	 * 
-	 * @return a {@code List} with all currently added {@code LineNumber}s
+	 * @return a {@code List} that represents the {@code line_number_table} item associated with this {@code LineNumberTableAttribute} instance
 	 */
 	public List<LineNumber> getLineNumberTable() {
 		return new ArrayList<>(this.lineNumberTable);
@@ -98,22 +113,7 @@ public final class LineNumberTableAttribute extends AttributeInfo {
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("LineNumberTable_attribute");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("name=" + getName());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_name_index=" + getAttributeNameIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_length=" + getAttributeLength());
-		stringBuilder.append(" ");
-		stringBuilder.append("line_number_table_length=" + getLineNumberTableLength());
-		
-		final String toString = stringBuilder.toString();
-		
-		return toString;
+		return String.format("new LineNumberTableAttribute(%s)", Integer.toString(getAttributeNameIndex()));
 	}
 	
 	/**
@@ -129,7 +129,7 @@ public final class LineNumberTableAttribute extends AttributeInfo {
 	 * <ul>
 	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
 	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
-	 * <li>traverse its child {@code Node}s, if it has any.</li>
+	 * <li>traverse its child {@code Node} instances, if it has any.</li>
 	 * </ul>
 	 * 
 	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
@@ -157,12 +157,12 @@ public final class LineNumberTableAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code LineNumberTableAttribute}, and that {@code LineNumberTableAttribute} instance is equal to this {@code LineNumberTableAttribute} instance,
-	 * {@code false} otherwise.
+	 * Compares {@code object} to this {@code LineNumberTableAttribute} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code LineNumberTableAttribute}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code LineNumberTableAttribute} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code LineNumberTableAttribute}, and that {@code LineNumberTableAttribute} instance is equal to this {@code LineNumberTableAttribute} instance,
-	 * {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code LineNumberTableAttribute} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code LineNumberTableAttribute}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -170,15 +170,15 @@ public final class LineNumberTableAttribute extends AttributeInfo {
 			return true;
 		} else if(!(object instanceof LineNumberTableAttribute)) {
 			return false;
-		} else if(!Objects.equals(LineNumberTableAttribute.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), LineNumberTableAttribute.class.cast(object).getName())) {
 			return false;
-		} else if(LineNumberTableAttribute.class.cast(object).getAttributeNameIndex() != getAttributeNameIndex()) {
+		} else if(getAttributeNameIndex() != LineNumberTableAttribute.class.cast(object).getAttributeNameIndex()) {
 			return false;
-		} else if(LineNumberTableAttribute.class.cast(object).getAttributeLength() != getAttributeLength()) {
+		} else if(getAttributeLength() != LineNumberTableAttribute.class.cast(object).getAttributeLength()) {
 			return false;
-		} else if(LineNumberTableAttribute.class.cast(object).getLineNumberTableLength() != getLineNumberTableLength()) {
+		} else if(getLineNumberTableLength() != LineNumberTableAttribute.class.cast(object).getLineNumberTableLength()) {
 			return false;
-		} else if(!Objects.equals(LineNumberTableAttribute.class.cast(object).lineNumberTable, this.lineNumberTable)) {
+		} else if(!Objects.equals(this.lineNumberTable, LineNumberTableAttribute.class.cast(object).lineNumberTable)) {
 			return false;
 		} else {
 			return true;
@@ -186,9 +186,9 @@ public final class LineNumberTableAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the attribute_length of this {@code LineNumberTableAttribute} instance.
+	 * Returns the value of the {@code attribute_length} item associated with this {@code LineNumberTableAttribute} instance.
 	 * 
-	 * @return the attribute_length of this {@code LineNumberTableAttribute} instance.
+	 * @return the value of the {@code attribute_length} item associated with this {@code LineNumberTableAttribute} instance
 	 */
 	@Override
 	public int getAttributeLength() {
@@ -201,9 +201,9 @@ public final class LineNumberTableAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the line_number_table_length of this {@code LineNumberTableAttribute} instance.
+	 * Returns the value of the {@code line_number_table_length} item associated with this {@code LineNumberTableAttribute} instance.
 	 * 
-	 * @return the line_number_table_length of this {@code LineNumberTableAttribute} instance.
+	 * @return the value of the {@code line_number_table_length} item associated with this {@code LineNumberTableAttribute} instance
 	 */
 	public int getLineNumberTableLength() {
 		return this.lineNumberTable.size();
@@ -225,6 +225,7 @@ public final class LineNumberTableAttribute extends AttributeInfo {
 	 * If {@code lineNumber} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param lineNumber the {@link LineNumber} to add
+	 * @throws NullPointerException thrown if, and only if, {@code lineNumber} is {@code null}
 	 */
 	public void addLineNumber(final LineNumber lineNumber) {
 		this.lineNumberTable.add(Objects.requireNonNull(lineNumber, "lineNumber == null"));
@@ -236,6 +237,7 @@ public final class LineNumberTableAttribute extends AttributeInfo {
 	 * If {@code lineNumber} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param lineNumber the {@link LineNumber} to remove
+	 * @throws NullPointerException thrown if, and only if, {@code lineNumber} is {@code null}
 	 */
 	public void removeLineNumber(final LineNumber lineNumber) {
 		this.lineNumberTable.remove(Objects.requireNonNull(lineNumber, "lineNumber == null"));
@@ -244,15 +246,15 @@ public final class LineNumberTableAttribute extends AttributeInfo {
 	/**
 	 * Writes this {@code LineNumberTableAttribute} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
@@ -272,14 +274,14 @@ public final class LineNumberTableAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@code LineNumberTableAttribute}s.
+	 * Returns a {@code List} with all {@code LineNumberTableAttribute} instances in {@code node}.
 	 * <p>
-	 * All {@code LineNumberTableAttribute}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code LineNumberTableAttribute} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code LineNumberTableAttribute}s
+	 * @return a {@code List} with all {@code LineNumberTableAttribute} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<LineNumberTableAttribute> filter(final Node node) {

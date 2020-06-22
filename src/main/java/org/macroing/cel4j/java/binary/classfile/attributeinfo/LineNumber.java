@@ -21,16 +21,25 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code LineNumber} denotes a line_number structure somewhere in a LineNumberTable_attribute structure.
+ * A {@code LineNumber} represents an entry in the {@code line_number_table} item of the {@code LineNumberTable_attribute} structure.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * Each entry has the following format:
+ * <pre>
+ * <code>
+ * {
+ *     u2 start_pc;
+ *     u2 line_number;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
@@ -44,14 +53,14 @@ public final class LineNumber implements Node {
 	/**
 	 * Constructs a new {@code LineNumber} instance.
 	 * <p>
-	 * If {@code lineNumber} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If either {@code startPC} or {@code lineNumber} are less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param startPC the start_pc
-	 * @param lineNumber the line_number
-	 * @throws IllegalArgumentException thrown if, and only if, {@code lineNumber} is less than {@code 0}
+	 * @param startPC the value for the {@code start_pc} item associated with this {@code LineNumber} instance
+	 * @param lineNumber the value for the {@code line_number} item associated with this {@code LineNumber} instance
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code startPC} or {@code lineNumber} are less than {@code 0}
 	 */
 	public LineNumber(final int startPC, final int lineNumber) {
-		this.startPC = startPC;
+		this.startPC = ParameterArguments.requireRange(startPC, 0, Integer.MAX_VALUE);
 		this.lineNumber = ParameterArguments.requireRange(lineNumber, 0, Integer.MAX_VALUE);
 	}
 	
@@ -63,7 +72,7 @@ public final class LineNumber implements Node {
 	 * @return a copy of this {@code LineNumber} instance
 	 */
 	public LineNumber copy() {
-		return new LineNumber(this.startPC, this.lineNumber);
+		return new LineNumber(getStartPC(), getLineNumber());
 	}
 	
 	/**
@@ -73,25 +82,16 @@ public final class LineNumber implements Node {
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("line_number");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("start_pc=" + getStartPC());
-		stringBuilder.append(" ");
-		stringBuilder.append("line_number=" + getLineNumber());
-		
-		final String toString = stringBuilder.toString();
-		
-		return toString;
+		return String.format("new LineNumber(%s, %s)", Integer.toString(getStartPC()), Integer.toString(getLineNumber()));
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code LineNumber}, and that {@code LineNumber} instance is equal to this {@code LineNumber} instance, {@code false} otherwise.
+	 * Compares {@code object} to this {@code LineNumber} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code LineNumber}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code LineNumber} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code LineNumber}, and that {@code LineNumber} instance is equal to this {@code LineNumber} instance, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code LineNumber} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code LineNumber}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -99,9 +99,9 @@ public final class LineNumber implements Node {
 			return true;
 		} else if(!(object instanceof LineNumber)) {
 			return false;
-		} else if(LineNumber.class.cast(object).getStartPC() != getStartPC()) {
+		} else if(getStartPC() != LineNumber.class.cast(object).getStartPC()) {
 			return false;
-		} else if(LineNumber.class.cast(object).getLineNumber() != getLineNumber()) {
+		} else if(getLineNumber() != LineNumber.class.cast(object).getLineNumber()) {
 			return false;
 		} else {
 			return true;
@@ -109,18 +109,18 @@ public final class LineNumber implements Node {
 	}
 	
 	/**
-	 * Returns the line_number of this {@code LineNumber} instance.
+	 * Returns the value of the {@code line_number} item associated with this {@code LineNumber} instance.
 	 * 
-	 * @return the line_number of this {@code LineNumber} instance.
+	 * @return the value of the {@code line_number} item associated with this {@code LineNumber} instance
 	 */
 	public int getLineNumber() {
 		return this.lineNumber;
 	}
 	
 	/**
-	 * Returns the start_pc of this {@code LineNumber} instance.
+	 * Returns the value of the {@code start_pc} item associated with this {@code LineNumber} instance.
 	 * 
-	 * @return the start_pc of this {@code LineNumber} instance.
+	 * @return the value of the {@code start_pc} item associated with this {@code LineNumber} instance
 	 */
 	public int getStartPC() {
 		return this.startPC;
@@ -137,11 +137,11 @@ public final class LineNumber implements Node {
 	}
 	
 	/**
-	 * Sets the line_number for this {@code LineNumber} instance.
+	 * Sets {@code lineNumber} as the value for the {@code line_number} item associated with this {@code LineNumber} instance.
 	 * <p>
 	 * If {@code lineNumber} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param lineNumber the new line_number
+	 * @param lineNumber the value for the {@code line_number} item associated with this {@code LineNumber} instance
 	 * @throws IllegalArgumentException thrown if, and only if, {@code lineNumber} is less than {@code 0}
 	 */
 	public void setLineNumber(final int lineNumber) {
@@ -149,26 +149,29 @@ public final class LineNumber implements Node {
 	}
 	
 	/**
-	 * Sets the start_pc for this {@code LineNumber} instance.
+	 * Sets {@code startPC} as the value for the {@code start_pc} item associated with this {@code LineNumber} instance.
+	 * <p>
+	 * If {@code startPC} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param startPC the new start_pc
+	 * @param startPC the value for the {@code start_pc} item associated with this {@code LineNumber} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code startPC} is less than {@code 0}
 	 */
 	public void setStartPC(final int startPC) {
-		this.startPC = startPC;
+		this.startPC = ParameterArguments.requireRange(startPC, 0, Integer.MAX_VALUE);
 	}
 	
 	/**
 	 * Writes this {@code LineNumber} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	public void write(final DataOutput dataOutput) {
 		try {
