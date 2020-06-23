@@ -27,6 +27,7 @@ import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.macroing.cel4j.node.Node;
+import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 import org.macroing.cel4j.util.Document;
@@ -118,6 +119,21 @@ public final class FieldInfo implements Node {
 		this.nameIndex = 1;
 	}
 	
+	/**
+	 * Constructs a new {@code FieldInfo} instance that is a copy of {@code fieldInfo}.
+	 * <p>
+	 * If {@code fieldInfo} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param fieldInfo the {@code FieldInfo} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code fieldInfo} is {@code null}
+	 */
+	public FieldInfo(final FieldInfo fieldInfo) {
+		this.attributeInfos = fieldInfo.attributeInfos.stream().map(attributeInfo -> attributeInfo.copy()).collect(CopyOnWriteArrayList::new, CopyOnWriteArrayList::add, CopyOnWriteArrayList::addAll);
+		this.accessFlags = fieldInfo.accessFlags;
+		this.descriptorIndex = fieldInfo.descriptorIndex;
+		this.nameIndex = fieldInfo.nameIndex;
+	}
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
@@ -135,7 +151,7 @@ public final class FieldInfo implements Node {
 	public AttributeInfo getAttributeInfo(final AttributeInfo attributeInfo) {
 		Objects.requireNonNull(attributeInfo, "attributeInfo == null");
 		
-		for(final AttributeInfo currentAttributeInfo : getAttributeInfos()) {
+		for(final AttributeInfo currentAttributeInfo : this.attributeInfos) {
 			if(currentAttributeInfo.equals(attributeInfo)) {
 				return currentAttributeInfo;
 			}
@@ -175,12 +191,14 @@ public final class FieldInfo implements Node {
 	 */
 	public DataOutput write(final DataOutput dataOutput) {
 		try {
-			dataOutput.writeShort(this.accessFlags);
-			dataOutput.writeShort(this.nameIndex);
-			dataOutput.writeShort(this.descriptorIndex);
-			dataOutput.writeShort(this.attributeInfos.size());
+			dataOutput.writeShort(getAccessFlags());
+			dataOutput.writeShort(getNameIndex());
+			dataOutput.writeShort(getDescriptorIndex());
+			dataOutput.writeShort(getAttributeInfoCount());
 			
-			this.attributeInfos.forEach(attributeInfo -> attributeInfo.write(dataOutput));
+			for(final AttributeInfo attributeInfo : this.attributeInfos) {
+				attributeInfo.write(dataOutput);
+			}
 			
 			return dataOutput;
 		} catch(final IOException e) {
@@ -240,15 +258,7 @@ public final class FieldInfo implements Node {
 	 * @return a copy of this {@code FieldInfo} instance
 	 */
 	public FieldInfo copy() {
-		final
-		FieldInfo fieldInfo = new FieldInfo();
-		fieldInfo.accessFlags = this.accessFlags;
-		fieldInfo.descriptorIndex = this.descriptorIndex;
-		fieldInfo.nameIndex = this.nameIndex;
-		
-		this.attributeInfos.forEach(attributeInfo -> fieldInfo.addAttributeInfo(attributeInfo.copy()));
-		
-		return fieldInfo;
+		return new FieldInfo(this);
 	}
 	
 	/**
@@ -269,7 +279,7 @@ public final class FieldInfo implements Node {
 	 */
 	@Override
 	public String toString() {
-		return write().toString();
+		return "new FieldInfo()";
 	}
 	
 	/**
@@ -285,7 +295,7 @@ public final class FieldInfo implements Node {
 	 * <ul>
 	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
 	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
-	 * <li>traverse its child {@code Node}s, if it has any.</li>
+	 * <li>traverse its child {@code Node} instances, if it has any.</li>
 	 * </ul>
 	 * 
 	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
@@ -362,13 +372,13 @@ public final class FieldInfo implements Node {
 			return true;
 		} else if(!(object instanceof FieldInfo)) {
 			return false;
-		} else if(FieldInfo.class.cast(object).accessFlags != this.accessFlags) {
+		} else if(getAccessFlags() != FieldInfo.class.cast(object).getAccessFlags()) {
 			return false;
-		} else if(FieldInfo.class.cast(object).nameIndex != this.nameIndex) {
+		} else if(getNameIndex() != FieldInfo.class.cast(object).getNameIndex()) {
 			return false;
-		} else if(FieldInfo.class.cast(object).descriptorIndex != this.descriptorIndex) {
+		} else if(getDescriptorIndex() != FieldInfo.class.cast(object).getDescriptorIndex()) {
 			return false;
-		} else if(!Objects.equals(FieldInfo.class.cast(object).attributeInfos, this.attributeInfos)) {
+		} else if(!Objects.equals(this.attributeInfos, FieldInfo.class.cast(object).attributeInfos)) {
 			return false;
 		} else {
 			return true;
@@ -551,7 +561,7 @@ public final class FieldInfo implements Node {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(Integer.valueOf(this.accessFlags), Integer.valueOf(this.nameIndex), Integer.valueOf(this.descriptorIndex), this.attributeInfos);
+		return Objects.hash(Integer.valueOf(getAccessFlags()), Integer.valueOf(getNameIndex()), Integer.valueOf(getDescriptorIndex()), this.attributeInfos);
 	}
 	
 	/**
@@ -729,5 +739,252 @@ public final class FieldInfo implements Node {
 		} else {
 			this.accessFlags &= ~ACC_VOLATILE;
 		}
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns a {@code List} with all {@code FieldInfo} instances in {@code node}.
+	 * <p>
+	 * All {@code FieldInfo} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * <p>
+	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param node the {@link Node} to start traversal from
+	 * @return a {@code List} with all {@code FieldInfo} instances in {@code node}
+	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
+	 */
+	public static List<FieldInfo> filter(final Node node) {
+		return NodeFilter.filter(node, NodeFilter.any(), FieldInfo.class);
+	}
+	
+	/**
+	 * Returns a {@link NodeFilter} that accepts {@link Node} instances that are instances of {@link FieldInfo} and have an {@code isEnum()} method that returns {@code true}.
+	 * <p>
+	 * The {@code NodeFilter} returned by this method will throw a {@code NullPointerException} if, and only if, the {@code Node} to accept or reject is {@code null}. It is also stateless and therefore considered thread-safe.
+	 * 
+	 * @return a {@code NodeFilter} that accepts {@code Node} instances that are instances of {@code FieldInfo} and have an {@code isEnum()} method that returns {@code true}
+	 */
+	public static NodeFilter newEnumNodeFilter() {
+		return node -> {
+			Objects.requireNonNull(node, "node == null");
+			
+			if(node instanceof FieldInfo) {
+				final FieldInfo fieldInfo = FieldInfo.class.cast(node);
+				
+				if(fieldInfo.isEnum()) {
+					return true;
+				}
+			}
+			
+			return false;
+		};
+	}
+	
+	/**
+	 * Returns a {@link NodeFilter} that accepts {@link Node} instances that are instances of {@link FieldInfo} and have an {@code isFinal()} method that returns {@code true}.
+	 * <p>
+	 * The {@code NodeFilter} returned by this method will throw a {@code NullPointerException} if, and only if, the {@code Node} to accept or reject is {@code null}. It is also stateless and therefore considered thread-safe.
+	 * 
+	 * @return a {@code NodeFilter} that accepts {@code Node} instances that are instances of {@code FieldInfo} and have an {@code isFinal()} method that returns {@code true}
+	 */
+	public static NodeFilter newFinalNodeFilter() {
+		return node -> {
+			Objects.requireNonNull(node, "node == null");
+			
+			if(node instanceof FieldInfo) {
+				final FieldInfo fieldInfo = FieldInfo.class.cast(node);
+				
+				if(fieldInfo.isFinal()) {
+					return true;
+				}
+			}
+			
+			return false;
+		};
+	}
+	
+	/**
+	 * Returns a {@link NodeFilter} that accepts {@link Node} instances that are instances of {@link FieldInfo} and have an {@code isStatic()} method that returns {@code false}.
+	 * <p>
+	 * The {@code NodeFilter} returned by this method will throw a {@code NullPointerException} if, and only if, the {@code Node} to accept or reject is {@code null}. It is also stateless and therefore considered thread-safe.
+	 * 
+	 * @return a {@code NodeFilter} that accepts {@code Node} instances that are instances of {@code FieldInfo} and have an {@code isStatic()} method that returns {@code false}
+	 */
+	public static NodeFilter newNonStaticNodeFilter() {
+		return node -> {
+			Objects.requireNonNull(node, "node == null");
+			
+			if(node instanceof FieldInfo) {
+				final FieldInfo fieldInfo = FieldInfo.class.cast(node);
+				
+				if(!fieldInfo.isStatic()) {
+					return true;
+				}
+			}
+			
+			return false;
+		};
+	}
+	
+	/**
+	 * Returns a {@link NodeFilter} that accepts {@link Node} instances that are instances of {@link FieldInfo} and have an {@code isPrivate()} method that returns {@code true}.
+	 * <p>
+	 * The {@code NodeFilter} returned by this method will throw a {@code NullPointerException} if, and only if, the {@code Node} to accept or reject is {@code null}. It is also stateless and therefore considered thread-safe.
+	 * 
+	 * @return a {@code NodeFilter} that accepts {@code Node} instances that are instances of {@code FieldInfo} and have an {@code isPrivate()} method that returns {@code true}
+	 */
+	public static NodeFilter newPrivateNodeFilter() {
+		return node -> {
+			Objects.requireNonNull(node, "node == null");
+			
+			if(node instanceof FieldInfo) {
+				final FieldInfo fieldInfo = FieldInfo.class.cast(node);
+				
+				if(fieldInfo.isPrivate()) {
+					return true;
+				}
+			}
+			
+			return false;
+		};
+	}
+	
+	/**
+	 * Returns a {@link NodeFilter} that accepts {@link Node} instances that are instances of {@link FieldInfo} and have an {@code isProtected()} method that returns {@code true}.
+	 * <p>
+	 * The {@code NodeFilter} returned by this method will throw a {@code NullPointerException} if, and only if, the {@code Node} to accept or reject is {@code null}. It is also stateless and therefore considered thread-safe.
+	 * 
+	 * @return a {@code NodeFilter} that accepts {@code Node} instances that are instances of {@code FieldInfo} and have an {@code isProtected()} method that returns {@code true}
+	 */
+	public static NodeFilter newProtectedNodeFilter() {
+		return node -> {
+			Objects.requireNonNull(node, "node == null");
+			
+			if(node instanceof FieldInfo) {
+				final FieldInfo fieldInfo = FieldInfo.class.cast(node);
+				
+				if(fieldInfo.isProtected()) {
+					return true;
+				}
+			}
+			
+			return false;
+		};
+	}
+	
+	/**
+	 * Returns a {@link NodeFilter} that accepts {@link Node} instances that are instances of {@link FieldInfo} and have an {@code isPublic()} method that returns {@code true}.
+	 * <p>
+	 * The {@code NodeFilter} returned by this method will throw a {@code NullPointerException} if, and only if, the {@code Node} to accept or reject is {@code null}. It is also stateless and therefore considered thread-safe.
+	 * 
+	 * @return a {@code NodeFilter} that accepts {@code Node} instances that are instances of {@code FieldInfo} and have an {@code isPublic()} method that returns {@code true}
+	 */
+	public static NodeFilter newPublicNodeFilter() {
+		return node -> {
+			Objects.requireNonNull(node, "node == null");
+			
+			if(node instanceof FieldInfo) {
+				final FieldInfo fieldInfo = FieldInfo.class.cast(node);
+				
+				if(fieldInfo.isPublic()) {
+					return true;
+				}
+			}
+			
+			return false;
+		};
+	}
+	
+	/**
+	 * Returns a {@link NodeFilter} that accepts {@link Node} instances that are instances of {@link FieldInfo} and have an {@code isStatic()} method that returns {@code true}.
+	 * <p>
+	 * The {@code NodeFilter} returned by this method will throw a {@code NullPointerException} if, and only if, the {@code Node} to accept or reject is {@code null}. It is also stateless and therefore considered thread-safe.
+	 * 
+	 * @return a {@code NodeFilter} that accepts {@code Node} instances that are instances of {@code FieldInfo} and have an {@code isStatic()} method that returns {@code true}
+	 */
+	public static NodeFilter newStaticNodeFilter() {
+		return node -> {
+			Objects.requireNonNull(node, "node == null");
+			
+			if(node instanceof FieldInfo) {
+				final FieldInfo fieldInfo = FieldInfo.class.cast(node);
+				
+				if(fieldInfo.isStatic()) {
+					return true;
+				}
+			}
+			
+			return false;
+		};
+	}
+	
+	/**
+	 * Returns a {@link NodeFilter} that accepts {@link Node} instances that are instances of {@link FieldInfo} and have an {@code isSynthetic()} method that returns {@code true}.
+	 * <p>
+	 * The {@code NodeFilter} returned by this method will throw a {@code NullPointerException} if, and only if, the {@code Node} to accept or reject is {@code null}. It is also stateless and therefore considered thread-safe.
+	 * 
+	 * @return a {@code NodeFilter} that accepts {@code Node} instances that are instances of {@code FieldInfo} and have an {@code isSynthetic()} method that returns {@code true}
+	 */
+	public static NodeFilter newSyntheticNodeFilter() {
+		return node -> {
+			Objects.requireNonNull(node, "node == null");
+			
+			if(node instanceof FieldInfo) {
+				final FieldInfo fieldInfo = FieldInfo.class.cast(node);
+				
+				if(fieldInfo.isSynthetic()) {
+					return true;
+				}
+			}
+			
+			return false;
+		};
+	}
+	
+	/**
+	 * Returns a {@link NodeFilter} that accepts {@link Node} instances that are instances of {@link FieldInfo} and have an {@code isTransient()} method that returns {@code true}.
+	 * <p>
+	 * The {@code NodeFilter} returned by this method will throw a {@code NullPointerException} if, and only if, the {@code Node} to accept or reject is {@code null}. It is also stateless and therefore considered thread-safe.
+	 * 
+	 * @return a {@code NodeFilter} that accepts {@code Node} instances that are instances of {@code FieldInfo} and have an {@code isTransient()} method that returns {@code true}
+	 */
+	public static NodeFilter newTransientNodeFilter() {
+		return node -> {
+			Objects.requireNonNull(node, "node == null");
+			
+			if(node instanceof FieldInfo) {
+				final FieldInfo fieldInfo = FieldInfo.class.cast(node);
+				
+				if(fieldInfo.isTransient()) {
+					return true;
+				}
+			}
+			
+			return false;
+		};
+	}
+	
+	/**
+	 * Returns a {@link NodeFilter} that accepts {@link Node} instances that are instances of {@link FieldInfo} and have an {@code isVolatile()} method that returns {@code true}.
+	 * <p>
+	 * The {@code NodeFilter} returned by this method will throw a {@code NullPointerException} if, and only if, the {@code Node} to accept or reject is {@code null}. It is also stateless and therefore considered thread-safe.
+	 * 
+	 * @return a {@code NodeFilter} that accepts {@code Node} instances that are instances of {@code FieldInfo} and have an {@code isVolatile()} method that returns {@code true}
+	 */
+	public static NodeFilter newVolatileNodeFilter() {
+		return node -> {
+			Objects.requireNonNull(node, "node == null");
+			
+			if(node instanceof FieldInfo) {
+				final FieldInfo fieldInfo = FieldInfo.class.cast(node);
+				
+				if(fieldInfo.isVolatile()) {
+					return true;
+				}
+			}
+			
+			return false;
+		};
 	}
 }

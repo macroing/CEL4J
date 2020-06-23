@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -37,176 +36,200 @@ import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code ClassFile} denotes a ClassFile structure.
+ * A {@code ClassFile} represents a {@code ClassFile} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code ClassFile} structure has the following format:
+ * <pre>
+ * <code>
+ * ClassFile {
+ *     u4 magic;
+ *     u2 minor_version;
+ *     u2 major_version;
+ *     u2 constant_pool_count;
+ *     cp_info[constant_pool_count - 1] constant_pool;
+ *     u2 access_flags;
+ *     u2 this_class;
+ *     u2 super_class;
+ *     u2 interfaces_count;
+ *     u2[interfaces_count] interfaces;
+ *     u2 fields_count;
+ *     field_info[fields_count] fields;
+ *     u2 methods_count;
+ *     method_info[methods_count] methods;
+ *     u2 attributes_count;
+ *     attribute_info[attributes_count] attributes;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class ClassFile implements Node {
 	/**
-	 * This field represents ACC_ABSTRACT in the access_flags element of a ClassFile structure.
+	 * The value for the access flag {@code ACC_ABSTRACT} in the {@code access_flags} item of the {@code ClassFile} structure.
 	 */
 	public static final int ACC_ABSTRACT = 0x0400;
 	
 	/**
-	 * This field represents ACC_ANNOTATION in the access_flags element of a ClassFile structure.
+	 * The value for the access flag {@code ACC_ANNOTATION} in the {@code access_flags} item of the {@code ClassFile} structure.
 	 */
 	public static final int ACC_ANNOTATION = 0x2000;
 	
 	/**
-	 * This field represents ACC_ENUM in the access_flags element of a ClassFile structure.
+	 * The value for the access flag {@code ACC_ENUM} in the {@code access_flags} item of the {@code ClassFile} structure.
 	 */
 	public static final int ACC_ENUM = 0x4000;
 	
 	/**
-	 * This field represents ACC_FINAL in the access_flags element of a ClassFile structure.
+	 * The value for the access flag {@code ACC_FINAL} in the {@code access_flags} item of the {@code ClassFile} structure.
 	 */
 	public static final int ACC_FINAL = 0x0010;
 	
 	/**
-	 * This field represents ACC_INTERFACE in the access_flags element of a ClassFile structure.
+	 * The value for the access flag {@code ACC_INTERFACE} in the {@code access_flags} item of the {@code ClassFile} structure.
 	 */
 	public static final int ACC_INTERFACE = 0x0200;
 	
 	/**
-	 * This field represents ACC_MODULE in the access_flags element of a ClassFile structure.
+	 * The value for the access flag {@code ACC_MODULE} in the {@code access_flags} item of the {@code ClassFile} structure.
 	 */
 	public static final int ACC_MODULE = 0x8000;
 	
 	/**
-	 * This field represents ACC_PUBLIC in the access_flags element of a ClassFile structure.
+	 * The value for the access flag {@code ACC_PUBLIC} in the {@code access_flags} item of the {@code ClassFile} structure.
 	 */
 	public static final int ACC_PUBLIC = 0x0001;
 	
 	/**
-	 * This field represents ACC_SUPER in the access_flags element of a ClassFile structure.
+	 * The value for the access flag {@code ACC_SUPER} in the {@code access_flags} item of the {@code ClassFile} structure.
 	 */
 	public static final int ACC_SUPER = 0x0020;
 	
 	/**
-	 * This field represents ACC_SYNTHETIC in the access_flags element of a ClassFile structure.
+	 * The value for the access flag {@code ACC_SYNTHETIC} in the {@code access_flags} item of the {@code ClassFile} structure.
 	 */
 	public static final int ACC_SYNTHETIC = 0x1000;
 	
 	/**
-	 * The major_version for JDK 1.0.
+	 * The value for the {@code major_version} item used by JDK 1.0.
 	 */
 	public static final int MAJOR_VERSION_1_0 = 45;
 	
 	/**
-	 * The major_version for JDK 1.1.
+	 * The value for the {@code major_version} item used by JDK 1.1.
 	 */
 	public static final int MAJOR_VERSION_1_1 = 45;
 	
 	/**
-	 * The major_version for JDK 1.2.
+	 * The value for the {@code major_version} item used by JDK 1.2.
 	 */
 	public static final int MAJOR_VERSION_1_2 = 46;
 	
 	/**
-	 * The major_version for JDK 1.3.
+	 * The value for the {@code major_version} item used by JDK 1.3.
 	 */
 	public static final int MAJOR_VERSION_1_3 = 47;
 	
 	/**
-	 * The major_version for JDK 1.4.
+	 * The value for the {@code major_version} item used by JDK 1.4.
 	 */
 	public static final int MAJOR_VERSION_1_4 = 48;
 	
 	/**
-	 * The major_version for J2SE 10.0.
+	 * The value for the {@code major_version} item used by J2SE 10.0.
 	 */
 	public static final int MAJOR_VERSION_10_0 = 54;
 	
 	/**
-	 * The major_version for J2SE 11.0.
+	 * The value for the {@code major_version} item used by J2SE 11.0.
 	 */
 	public static final int MAJOR_VERSION_11_0 = 55;
 	
 	/**
-	 * The major_version for J2SE 5.0.
+	 * The value for the {@code major_version} item used by J2SE 5.0.
 	 */
 	public static final int MAJOR_VERSION_5_0 = 49;
 	
 	/**
-	 * The major_version for J2SE 6.0.
+	 * The value for the {@code major_version} item used by J2SE 6.0.
 	 */
 	public static final int MAJOR_VERSION_6_0 = 50;
 	
 	/**
-	 * The major_version for J2SE 7.0.
+	 * The value for the {@code major_version} item used by J2SE 7.0.
 	 */
 	public static final int MAJOR_VERSION_7_0 = 51;
 	
 	/**
-	 * The major_version for J2SE 8.0.
+	 * The value for the {@code major_version} item used by J2SE 8.0.
 	 */
 	public static final int MAJOR_VERSION_8_0 = 52;
 	
 	/**
-	 * The major_version for J2SE 9.0.
+	 * The value for the {@code major_version} item used by J2SE 9.0.
 	 */
 	public static final int MAJOR_VERSION_9_0 = 53;
 	
 	/**
-	 * The minor_version for JDK 1.0.
+	 * The value for the {@code minor_version} item used by JDK 1.0.
 	 */
 	public static final int MINOR_VERSION_1_0 = 3;
 	
 	/**
-	 * The minor_version for JDK 1.1.
+	 * The value for the {@code minor_version} item used by JDK 1.1.
 	 */
 	public static final int MINOR_VERSION_1_1 = 3;
 	
 	/**
-	 * The minor_version for JDK 1.2.
+	 * The value for the {@code minor_version} item used by JDK 1.2.
 	 */
 	public static final int MINOR_VERSION_1_2 = 0;
 	
 	/**
-	 * The minor_version for JDK 1.3.
+	 * The value for the {@code minor_version} item used by JDK 1.3.
 	 */
 	public static final int MINOR_VERSION_1_3 = 0;
 	
 	/**
-	 * The minor_version for JDK 1.4.
+	 * The value for the {@code minor_version} item used by JDK 1.4.
 	 */
 	public static final int MINOR_VERSION_1_4 = 0;
 	
 	/**
-	 * The minor_version for JDK 10.0.
+	 * The value for the {@code minor_version} item used by JDK 10.0.
 	 */
 	public static final int MINOR_VERSION_10_0 = 0;
 	
 	/**
-	 * The minor_version for JDK 11.0.
+	 * The value for the {@code minor_version} item used by JDK 11.0.
 	 */
 	public static final int MINOR_VERSION_11_0 = 0;
 	
 	/**
-	 * The minor_version for J2SE 5.0.
+	 * The value for the {@code minor_version} item used by J2SE 5.0.
 	 */
 	public static final int MINOR_VERSION_5_0 = 0;
 	
 	/**
-	 * The minor_version for J2SE 6.0.
+	 * The value for the {@code minor_version} item used by J2SE 6.0.
 	 */
 	public static final int MINOR_VERSION_6_0 = 0;
 	
 	/**
-	 * The minor_version for J2SE 7.0.
+	 * The value for the {@code minor_version} item used by J2SE 7.0.
 	 */
 	public static final int MINOR_VERSION_7_0 = 0;
 	
 	/**
-	 * The minor_version for J2SE 8.0.
+	 * The value for the {@code minor_version} item used by J2SE 8.0.
 	 */
 	public static final int MINOR_VERSION_8_0 = 0;
 	
 	/**
-	 * The minor_version for J2SE 9.0.
+	 * The value for the {@code minor_version} item used by J2SE 9.0.
 	 */
 	public static final int MINOR_VERSION_9_0 = 0;
 	
@@ -242,6 +265,27 @@ public final class ClassFile implements Node {
 		this.thisClass = 1;
 	}
 	
+	/**
+	 * Constructs a new {@code ClassFile} instance that is a copy of {@code classFile}.
+	 * <p>
+	 * If {@code classFile} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param classFile the {@code ClassFile} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code classFile} is {@code null}
+	 */
+	public ClassFile(final ClassFile classFile) {
+		this.attributeInfos = classFile.attributeInfos.stream().map(attributeInfo -> attributeInfo.copy()).collect(CopyOnWriteArrayList::new, CopyOnWriteArrayList::add, CopyOnWriteArrayList::addAll);
+		this.cPInfos = classFile.cPInfos.stream().map(cPInfo -> cPInfo.copy()).collect(CopyOnWriteArrayList::new, CopyOnWriteArrayList::add, CopyOnWriteArrayList::addAll);
+		this.fieldInfos = classFile.fieldInfos.stream().map(fieldInfo -> new FieldInfo(fieldInfo)).collect(CopyOnWriteArrayList::new, CopyOnWriteArrayList::add, CopyOnWriteArrayList::addAll);
+		this.interfaces = classFile.interfaces.stream().collect(CopyOnWriteArrayList::new, CopyOnWriteArrayList::add, CopyOnWriteArrayList::addAll);
+		this.methodInfos = classFile.methodInfos.stream().map(methodInfo -> new MethodInfo(methodInfo)).collect(CopyOnWriteArrayList::new, CopyOnWriteArrayList::add, CopyOnWriteArrayList::addAll);
+		this.accessFlags = classFile.accessFlags;
+		this.majorVersion = classFile.majorVersion;
+		this.minorVersion = classFile.minorVersion;
+		this.superClass = classFile.superClass;
+		this.thisClass = classFile.thisClass;
+	}
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
@@ -259,7 +303,7 @@ public final class ClassFile implements Node {
 	public AttributeInfo getAttributeInfo(final AttributeInfo attributeInfo) {
 		Objects.requireNonNull(attributeInfo, "attributeInfo == null");
 		
-		for(final AttributeInfo currentAttributeInfo : getAttributeInfos()) {
+		for(final AttributeInfo currentAttributeInfo : this.attributeInfos) {
 			if(currentAttributeInfo.equals(attributeInfo)) {
 				return currentAttributeInfo;
 			}
@@ -269,12 +313,12 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Returns an {@link AttributeInfo} given its index.
+	 * Returns the {@link AttributeInfo} instance on the index {@code index}.
 	 * <p>
 	 * If {@code index} is less than {@code 0}, or greater than or equal to {@link #getAttributeInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param index the index of the {@code AttributeInfo}
-	 * @return an {@code AttributeInfo} given its index
+	 * @return the {@code AttributeInfo} instance on the index {@code index}
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code index} is less than {@code 0}, or greater than or equal to {@code getAttributeInfoCount()}
 	 */
 	public AttributeInfo getAttributeInfo(final int index) {
@@ -306,12 +350,12 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Returns a {@link CPInfo} given its index.
+	 * Returns the {@link CPInfo} instance on the index {@code index}.
 	 * <p>
 	 * If {@code index} is less than {@code 0}, or greater than or equal to {@link #getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param index the index of the {@code CPInfo}
-	 * @return a {@code CPInfo} given its index
+	 * @return the {@code CPInfo} instance on the index {@code index}
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code index} is less than {@code 0}, or greater than or equal to {@code getCPInfoCount()}
 	 */
 	public CPInfo getCPInfo(final int index) {
@@ -324,29 +368,7 @@ public final class ClassFile implements Node {
 	 * @return a copy of this {@code ClassFile} instance
 	 */
 	public ClassFile copy() {
-		final
-		ClassFile classFile = new ClassFile();
-		classFile.accessFlags = this.accessFlags;
-		classFile.majorVersion = this.majorVersion;
-		classFile.minorVersion = this.minorVersion;
-		classFile.superClass = this.superClass;
-		classFile.thisClass = this.thisClass;
-		
-		this.attributeInfos.forEach(attributeInfo -> classFile.addAttributeInfo(attributeInfo.copy()));
-		
-		this.cPInfos.forEach(cPInfo -> {
-			if(!(cPInfo instanceof ConstantUnreachableInfo)) {
-				classFile.addCPInfo(cPInfo.copy());
-			}
-		});
-		
-		this.fieldInfos.forEach(fieldInfo -> classFile.addFieldInfo(fieldInfo.copy()));
-		
-		this.interfaces.forEach(index -> classFile.addInterface(index.intValue()));
-		
-		this.methodInfos.forEach(methodInfo -> classFile.addMethodInfo(methodInfo.copy()));
-		
-		return classFile;
+		return new ClassFile(this);
 	}
 	
 	/**
@@ -368,32 +390,40 @@ public final class ClassFile implements Node {
 	public DataOutput write(final DataOutput dataOutput) {
 		try {
 			dataOutput.writeInt(0xCAFEBABE);
-			dataOutput.writeShort(this.minorVersion);
-			dataOutput.writeShort(this.majorVersion);
-			dataOutput.writeShort(this.cPInfos.size());
+			dataOutput.writeShort(getMinorVersion());
+			dataOutput.writeShort(getMajorVersion());
+			dataOutput.writeShort(getCPInfoCount());
 			
-			this.cPInfos.forEach(cPInfo -> cPInfo.write(dataOutput));
-			
-			dataOutput.writeShort(this.accessFlags);
-			dataOutput.writeShort(this.thisClass);
-			dataOutput.writeShort(this.superClass);
-			dataOutput.writeShort(this.interfaces.size());
-			
-			for(final int interfaceIndex : this.interfaces) {
-				dataOutput.writeShort(interfaceIndex);
+			for(final CPInfo cPInfo : this.cPInfos) {
+				cPInfo.write(dataOutput);
 			}
 			
-			dataOutput.writeShort(this.fieldInfos.size());
+			dataOutput.writeShort(getAccessFlags());
+			dataOutput.writeShort(getThisClass());
+			dataOutput.writeShort(getSuperClass());
+			dataOutput.writeShort(getInterfaceCount());
 			
-			this.fieldInfos.forEach(fieldInfo -> fieldInfo.write(dataOutput));
+			for(final int index : this.interfaces) {
+				dataOutput.writeShort(index);
+			}
 			
-			dataOutput.writeShort(this.methodInfos.size());
+			dataOutput.writeShort(getFieldInfoCount());
 			
-			this.methodInfos.forEach(methodInfo -> methodInfo.write(dataOutput));
+			for(final FieldInfo fieldInfo : this.fieldInfos) {
+				fieldInfo.write(dataOutput);
+			}
 			
-			dataOutput.writeShort(this.attributeInfos.size());
+			dataOutput.writeShort(getMethodInfoCount());
 			
-			this.attributeInfos.forEach(attributeInfo -> attributeInfo.write(dataOutput));
+			for(final MethodInfo methodInfo : this.methodInfos) {
+				methodInfo.write(dataOutput);
+			}
+			
+			dataOutput.writeShort(getAttributeInfoCount());
+			
+			for(final AttributeInfo attributeInfo : this.attributeInfos) {
+				attributeInfo.write(dataOutput);
+			}
 			
 			return dataOutput;
 		} catch(final IOException e) {
@@ -545,12 +575,12 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Returns a {@link FieldInfo} given its index.
+	 * Returns the {@link FieldInfo} instance on the index {@code index}.
 	 * <p>
 	 * If {@code index} is less than {@code 0}, or greater than or equal to {@link #getFieldInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param index the index of the {@code FieldInfo}
-	 * @return a {@code FieldInfo} given its index
+	 * @return the {@code FieldInfo} instance on the index {@code index}
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code index} is less than {@code 0}, or greater than or equal to {@code getFieldInfoCount()}
 	 */
 	public FieldInfo getFieldInfo(final int index) {
@@ -558,33 +588,33 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Returns a {@code List} with all currently added {@link AttributeInfo}s.
+	 * Returns a {@code List} with all currently added {@link AttributeInfo} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code ClassFile} instance.
 	 * 
-	 * @return a {@code List} with all currently added {@code AttributeInfo}s
+	 * @return a {@code List} with all currently added {@code AttributeInfo} instances
 	 */
 	public List<AttributeInfo> getAttributeInfos() {
 		return new ArrayList<>(this.attributeInfos);
 	}
 	
 	/**
-	 * Returns a {@code List} with all currently added {@link CPInfo}s.
+	 * Returns a {@code List} with all currently added {@link CPInfo} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code ClassFile} instance.
 	 * 
-	 * @return a {@code List} with all currently added {@code CPInfo}s
+	 * @return a {@code List} with all currently added {@code CPInfo} instances
 	 */
 	public List<CPInfo> getCPInfos() {
 		return new ArrayList<>(this.cPInfos);
 	}
 	
 	/**
-	 * Returns a {@code List} with all currently added {@link FieldInfo}s.
+	 * Returns a {@code List} with all currently added {@link FieldInfo} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code ClassFile} instance.
 	 * 
-	 * @return a {@code List} with all currently added {@code FieldInfo}s
+	 * @return a {@code List} with all currently added {@code FieldInfo} instances
 	 */
 	public List<FieldInfo> getFieldInfos() {
 		return new ArrayList<>(this.fieldInfos);
@@ -602,11 +632,11 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Returns a {@code List} with all currently added {@link MethodInfo}s.
+	 * Returns a {@code List} with all currently added {@link MethodInfo} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code ClassFile} instance.
 	 * 
-	 * @return a {@code List} with all currently added {@code MethodInfo}s
+	 * @return a {@code List} with all currently added {@code MethodInfo} instances
 	 */
 	public List<MethodInfo> getMethodInfos() {
 		return new ArrayList<>(this.methodInfos);
@@ -637,12 +667,12 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Returns a {@link MethodInfo} given its index.
+	 * Returns the {@link MethodInfo} instance on the index {@code index}.
 	 * <p>
 	 * If {@code index} is less than {@code 0}, or greater than or equal to {@link #getMethodInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param index the index of the {@code MethodInfo}
-	 * @return a {@code MethodInfo} given its index
+	 * @return the {@code MethodInfo} instance on the index {@code index}
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code index} is less than {@code 0}, or greater than or equal to {@code getMethodInfoCount()}
 	 */
 	public MethodInfo getMethodInfo(final int index) {
@@ -656,7 +686,7 @@ public final class ClassFile implements Node {
 	 */
 	@Override
 	public String toString() {
-		return write().toString();
+		return "new ClassFile()";
 	}
 	
 	/**
@@ -776,7 +806,7 @@ public final class ClassFile implements Node {
 	 * <ul>
 	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
 	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
-	 * <li>traverse its child {@code Node}s, if it has any.</li>
+	 * <li>traverse its child {@code Node} instances, if it has any.</li>
 	 * </ul>
 	 * 
 	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
@@ -879,11 +909,11 @@ public final class ClassFile implements Node {
 	 * <p>
 	 * Returns {@code true} if, and only if, the interface index was added, {@code false} otherwise.
 	 * <p>
-	 * If {@code index} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code index} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param index the interface index to add
 	 * @return {@code true} if, and only if, the interface index was added, {@code false} otherwise
-	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than or equal to {@code 0}
+	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 1}
 	 */
 	public boolean addInterface(final int index) {
 		return this.interfaces.addIfAbsent(Integer.valueOf(ParameterArguments.requireRange(index, 1, Integer.MAX_VALUE)));
@@ -1002,25 +1032,25 @@ public final class ClassFile implements Node {
 			return true;
 		} else if(!(object instanceof ClassFile)) {
 			return false;
-		} else if(ClassFile.class.cast(object).minorVersion != this.minorVersion) {
+		} else if(getMinorVersion() != ClassFile.class.cast(object).getMinorVersion()) {
 			return false;
-		} else if(ClassFile.class.cast(object).majorVersion != this.majorVersion) {
+		} else if(getMajorVersion() != ClassFile.class.cast(object).getMajorVersion()) {
 			return false;
-		} else if(!Objects.equals(ClassFile.class.cast(object).cPInfos, this.cPInfos)) {
+		} else if(!Objects.equals(this.cPInfos, ClassFile.class.cast(object).cPInfos)) {
 			return false;
-		} else if(ClassFile.class.cast(object).accessFlags != this.accessFlags) {
+		} else if(getAccessFlags() != ClassFile.class.cast(object).getAccessFlags()) {
 			return false;
-		} else if(ClassFile.class.cast(object).thisClass != this.thisClass) {
+		} else if(getThisClass() != ClassFile.class.cast(object).getThisClass()) {
 			return false;
-		} else if(ClassFile.class.cast(object).superClass != this.superClass) {
+		} else if(getSuperClass() != ClassFile.class.cast(object).getSuperClass()) {
 			return false;
-		} else if(!Objects.equals(ClassFile.class.cast(object).interfaces, this.interfaces)) {
+		} else if(!Objects.equals(this.interfaces, ClassFile.class.cast(object).interfaces)) {
 			return false;
-		} else if(!Objects.equals(ClassFile.class.cast(object).fieldInfos, this.fieldInfos)) {
+		} else if(!Objects.equals(this.fieldInfos, ClassFile.class.cast(object).fieldInfos)) {
 			return false;
-		} else if(!Objects.equals(ClassFile.class.cast(object).methodInfos, this.methodInfos)) {
+		} else if(!Objects.equals(this.methodInfos, ClassFile.class.cast(object).methodInfos)) {
 			return false;
-		} else if(!Objects.equals(ClassFile.class.cast(object).attributeInfos, this.attributeInfos)) {
+		} else if(!Objects.equals(this.attributeInfos, ClassFile.class.cast(object).attributeInfos)) {
 			return false;
 		} else {
 			return true;
@@ -1028,81 +1058,81 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_ABSTRACT is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_ABSTRACT} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_ABSTRACT is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_ABSTRACT} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise
 	 */
 	public boolean isAbstract() {
 		return (this.accessFlags & ACC_ABSTRACT) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_ANNOTATION is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_ANNOTATION} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_ANNOTATION is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_ANNOTATION} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise
 	 */
 	public boolean isAnnotation() {
 		return (this.accessFlags & ACC_ANNOTATION) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_ENUM is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_ENUM} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_ENUM is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_ENUM} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise
 	 */
 	public boolean isEnum() {
 		return (this.accessFlags & ACC_ENUM) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_FINAL is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_FINAL} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_FINAL is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_FINAL} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise
 	 */
 	public boolean isFinal() {
 		return (this.accessFlags & ACC_FINAL) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_INTERFACE is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_INTERFACE} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_INTERFACE is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_INTERFACE} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise
 	 */
 	public boolean isInterface() {
 		return (this.accessFlags & ACC_INTERFACE) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_MODULE is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_MODULE} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_MODULE is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_MODULE} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise
 	 */
 	public boolean isModule() {
 		return (this.accessFlags & ACC_MODULE) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_PUBLIC is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_PUBLIC} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_PUBLIC is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_PUBLIC} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise
 	 */
 	public boolean isPublic() {
 		return (this.accessFlags & ACC_PUBLIC) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_SUPER is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_SUPER} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_SUPER is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_SUPER} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise
 	 */
 	public boolean isSuper() {
 		return (this.accessFlags & ACC_SUPER) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_SYNTHETIC is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_SYNTHETIC} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_SYNTHETIC is set in the access_flags item of this {@code ClassFile} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_SYNTHETIC} is set in the {@code access_flags} item associated with this {@code ClassFile} instance, {@code false} otherwise
 	 */
 	public boolean isSynthetic() {
 		return (this.accessFlags & ACC_SYNTHETIC) != 0;
@@ -1174,11 +1204,11 @@ public final class ClassFile implements Node {
 	 * <p>
 	 * Returns {@code true} if, and only if, the interface index was removed, {@code false} otherwise.
 	 * <p>
-	 * If {@code index} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code index} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param index the interface index to remove
 	 * @return {@code true} if, and only if, the interface index was removed, {@code false} otherwise
-	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than or equal to {@code 0}
+	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 1}
 	 */
 	public boolean removeInterface(final int index) {
 		return this.interfaces.remove(Integer.valueOf(ParameterArguments.requireRange(index, 1, Integer.MAX_VALUE)));
@@ -1304,54 +1334,54 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Returns the access_flags of this {@code ClassFile} instance.
+	 * Returns the value of the {@code access_flags} item associated with this {@code ClassFile} instance.
 	 * 
-	 * @return the access_flags of this {@code ClassFile} instance
+	 * @return the value of the {@code access_flags} item associated with this {@code ClassFile} instance
 	 */
 	public int getAccessFlags() {
 		return this.accessFlags;
 	}
 	
 	/**
-	 * Returns the number of {@link AttributeInfo}s currently added.
+	 * Returns the value of the {@code attributes_count} item associated with this {@code ClassFile} instance.
 	 * 
-	 * @return the number of {@code AttributeInfo}s currently added
+	 * @return the value of the {@code attributes_count} item associated with this {@code ClassFile} instance
 	 */
 	public int getAttributeInfoCount() {
 		return this.attributeInfos.size();
 	}
 	
 	/**
-	 * Returns the number of {@link CPInfo}s currently added.
+	 * Returns the value of the {@code constant_pool_count} item associated with this {@code ClassFile} instance.
 	 * 
-	 * @return the number of {@code CPInfo}s currently added
+	 * @return the value of the {@code constant_pool_count} item associated with this {@code ClassFile} instance
 	 */
 	public int getCPInfoCount() {
 		return this.cPInfos.size();
 	}
 	
 	/**
-	 * Returns the number of {@link FieldInfo}s currently added.
+	 * Returns the value of the {@code fields_count} item associated with this {@code ClassFile} instance.
 	 * 
-	 * @return the number of {@code FieldInfo}s currently added
+	 * @return the value of the {@code fields_count} item associated with this {@code ClassFile} instance
 	 */
 	public int getFieldInfoCount() {
 		return this.fieldInfos.size();
 	}
 	
 	/**
-	 * Returns the number of interfaces currently added.
+	 * Returns the value of the {@code interfaces_count} item associated with this {@code ClassFile} instance.
 	 * 
-	 * @return the number of interfaces currently added
+	 * @return the value of the {@code interfaces_count} item associated with this {@code ClassFile} instance
 	 */
 	public int getInterfaceCount() {
 		return this.interfaces.size();
 	}
 	
 	/**
-	 * Returns the magic of this {@code ClassFile} instance.
+	 * Returns the value of the {@code magic} item associated with this {@code ClassFile} instance.
 	 * 
-	 * @return the magic of this {@code ClassFile} instance
+	 * @return the value of the {@code magic} item associated with this {@code ClassFile} instance
 	 */
 	@SuppressWarnings("static-method")
 	public int getMagic() {
@@ -1359,45 +1389,45 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Returns the major_version of this {@code ClassFile} instance.
+	 * Returns the value of the {@code major_version} item associated with this {@code ClassFile} instance.
 	 * 
-	 * @return the major_version of this {@code ClassFile} instance
+	 * @return the value of the {@code major_version} item associated with this {@code ClassFile} instance
 	 */
 	public int getMajorVersion() {
 		return this.majorVersion;
 	}
 	
 	/**
-	 * Returns the number of {@link MethodInfo}s currently added.
+	 * Returns the value of the {@code methods_count} item associated with this {@code ClassFile} instance.
 	 * 
-	 * @return the number of {@code MethodInfo}s currently added
+	 * @return the value of the {@code methods_count} item associated with this {@code ClassFile} instance
 	 */
 	public int getMethodInfoCount() {
 		return this.methodInfos.size();
 	}
 	
 	/**
-	 * Returns the minor_version of this {@code ClassFile} instance.
+	 * Returns the value of the {@code minor_version} item associated with this {@code ClassFile} instance.
 	 * 
-	 * @return the minor_version of this {@code ClassFile} instance
+	 * @return the value of the {@code minor_version} item associated with this {@code ClassFile} instance
 	 */
 	public int getMinorVersion() {
 		return this.minorVersion;
 	}
 	
 	/**
-	 * Returns the super_class of this {@code ClassFile} instance.
+	 * Returns the value of the {@code super_class} item associated with this {@code ClassFile} instance.
 	 * 
-	 * @return the super_class of this {@code ClassFile} instance
+	 * @return the value of the {@code super_class} item associated with this {@code ClassFile} instance
 	 */
 	public int getSuperClass() {
 		return this.superClass;
 	}
 	
 	/**
-	 * Returns the this_class of this {@code ClassFile} instance.
+	 * Returns the value of the {@code this_class} item associated with this {@code ClassFile} instance.
 	 * 
-	 * @return the this_class of this {@code ClassFile} instance
+	 * @return the value of the {@code this_class} item associated with this {@code ClassFile} instance
 	 */
 	public int getThisClass() {
 		return this.thisClass;
@@ -1414,12 +1444,12 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Returns the index of {@code cPInfo} in the constant_pool of this {@code ClassFile} instance, or {@code -1} if it is an instance of {@link ConstantUnreachableInfo} or it does not exist.
+	 * Returns the index of {@code cPInfo} in the {@code constant_pool} of this {@code ClassFile} instance, or {@code -1} if it is an instance of {@link ConstantUnreachableInfo} or it does not exist.
 	 * <p>
 	 * If {@code cPInfo} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param cPInfo the {@link CPInfo} to get the index of in this {@code ClassFile} instance
-	 * @return the index of {@code cPInfo} in the constant_pool of this {@code ClassFile} instance, or {@code -1} if it is an instance of {@code ConstantUnreachableInfo} or it does not exist
+	 * @return the index of {@code cPInfo} in the {@code constant_pool} of this {@code ClassFile} instance, or {@code -1} if it is an instance of {@code ConstantUnreachableInfo} or it does not exist
 	 * @throws NullPointerException thrown if, and only if, {@code cPInfo} is {@code null}
 	 */
 	public int indexOf(final CPInfo cPInfo) {
@@ -1445,21 +1475,21 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_ABSTRACT.
+	 * Adds or removes the access flag {@code ACC_ABSTRACT}.
 	 * <p>
-	 * This method turns off the following access flags, if given a parameter argument that is set to {@code true}:
+	 * If {@code isAbstract} is {@code true}, the following access flags will be removed:
 	 * <ul>
-	 * <li>ACC_FINAL</li>
-	 * <li>ACC_MODULE</li>
+	 * <li>{@code ACC_FINAL}</li>
+	 * <li>{@code ACC_MODULE}</li>
 	 * </ul>
 	 * <p>
-	 * This method turns off the following access flags, if given a parameter argument that is set to {@code false}:
+	 * If {@code isAbstract} is {@code false}, the following access flags will be removed:
 	 * <ul>
-	 * <li>ACC_ANNOTATION</li>
-	 * <li>ACC_INTERFACE</li>
+	 * <li>{@code ACC_ANNOTATION}</li>
+	 * <li>{@code ACC_INTERFACE}</li>
 	 * </ul>
 	 * 
-	 * @param isAbstract {@code true} to add the access flag ACC_ABSTRACT
+	 * @param isAbstract {@code true} if, and only if, the access flag {@code ACC_ABSTRACT} should be added, {@code false} otherwise
 	 */
 	public void setAbstract(final boolean isAbstract) {
 		if(isAbstract) {
@@ -1474,32 +1504,23 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Sets the access_flags for this {@code ClassFile} instance.
-	 * 
-	 * @param accessFlags the access_flags to set
-	 */
-	public void setAccessFlags(final int accessFlags) {
-		this.accessFlags = accessFlags;
-	}
-	
-	/**
-	 * Adds or removes the access flag ACC_ANNOTATION.
+	 * Adds or removes the access flag {@code ACC_ANNOTATION}.
 	 * <p>
-	 * This method turns off the following access flags, if given a parameter argument that is set to {@code true}:
+	 * If {@code isAnnotation} is {@code true}, the following access flags will be removed:
 	 * <ul>
-	 * <li>ACC_ENUM</li>
-	 * <li>ACC_FINAL</li>
-	 * <li>ACC_MODULE</li>
-	 * <li>ACC_SUPER</li>
+	 * <li>{@code ACC_ENUM}</li>
+	 * <li>{@code ACC_FINAL}</li>
+	 * <li>{@code ACC_MODULE}</li>
+	 * <li>{@code ACC_SUPER}</li>
 	 * </ul>
 	 * <p>
-	 * This method turns on the following access flags, if given a parameter argument that is set to {@code true}:
+	 * If {@code isAnnotation} is {@code true}, the following access flags will be added:
 	 * <ul>
-	 * <li>ACC_ABSTRACT</li>
-	 * <li>ACC_INTERFACE</li>
+	 * <li>{@code ACC_ABSTRACT}</li>
+	 * <li>{@code ACC_INTERFACE}</li>
 	 * </ul>
 	 * 
-	 * @param isAnnotation {@code true} to add the access flag ACC_ANNOTATION
+	 * @param isAnnotation {@code true} if, and only if, the access flag {@code ACC_ANNOTATION} should be added, {@code false} otherwise
 	 */
 	public void setAnnotation(final boolean isAnnotation) {
 		if(isAnnotation) {
@@ -1516,16 +1537,16 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_ENUM.
+	 * Adds or removes the access flag {@code ACC_ENUM}.
 	 * <p>
-	 * This method turns off the following access flags, if given a parameter argument that is set to {@code true}:
+	 * If {@code isEnum} is {@code true}, the following access flags will be removed:
 	 * <ul>
-	 * <li>ACC_ANNOTATION</li>
-	 * <li>ACC_INTERFACE</li>
-	 * <li>ACC_MODULE</li>
+	 * <li>{@code ACC_ANNOTATION}</li>
+	 * <li>{@code ACC_INTERFACE}</li>
+	 * <li>{@code ACC_MODULE}</li>
 	 * </ul>
 	 * 
-	 * @param isEnum {@code true} to add the access flag ACC_ENUM
+	 * @param isEnum {@code true} if, and only if, the access flag {@code ACC_ENUM} should be added, {@code false} otherwise
 	 */
 	public void setEnum(final boolean isEnum) {
 		if(isEnum) {
@@ -1539,17 +1560,17 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_FINAL.
+	 * Adds or removes the access flag {@code ACC_FINAL}.
 	 * <p>
-	 * This method turns off the following access flags, if given a parameter argument that is set to {@code true}:
+	 * If {@code isFinal} is {@code true}, the following access flags will be removed:
 	 * <ul>
-	 * <li>ACC_ABSTRACT</li>
-	 * <li>ACC_ANNOTATION</li>
-	 * <li>ACC_INTERFACE</li>
-	 * <li>ACC_MODULE</li>
+	 * <li>{@code ACC_ABSTRACT}</li>
+	 * <li>{@code ACC_ANNOTATION}</li>
+	 * <li>{@code ACC_INTERFACE}</li>
+	 * <li>{@code ACC_MODULE}</li>
 	 * </ul>
 	 * 
-	 * @param isFinal {@code true} to add the access flag ACC_FINAL
+	 * @param isFinal {@code true} if, and only if, the access flag {@code ACC_FINAL} should be added, {@code false} otherwise
 	 */
 	public void setFinal(final boolean isFinal) {
 		if(isFinal) {
@@ -1564,27 +1585,27 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_INTERFACE.
+	 * Adds or removes the access flag {@code ACC_INTERFACE}.
 	 * <p>
-	 * This method turns off the following access flags, if given a parameter argument that is set to {@code true}:
+	 * If {@code isInterface} is {@code true}, the following access flags will be removed:
 	 * <ul>
-	 * <li>ACC_ENUM</li>
-	 * <li>ACC_FINAL</li>
-	 * <li>ACC_MODULE</li>
-	 * <li>ACC_SUPER</li>
+	 * <li>{@code ACC_ENUM}</li>
+	 * <li>{@code ACC_FINAL}</li>
+	 * <li>{@code ACC_MODULE}</li>
+	 * <li>{@code ACC_SUPER}</li>
 	 * </ul>
 	 * <p>
-	 * This method turns on the following access flags, if given a parameter argument that is set to {@code true}:
+	 * If {@code isInterface} is {@code true}, the following access flags will be added:
 	 * <ul>
-	 * <li>ACC_ABSTRACT</li>
+	 * <li>{@code ACC_ABSTRACT}</li>
 	 * </ul>
 	 * <p>
-	 * This method turns off the following access flags, if given a parameter argument that is set to {@code false}:
+	 * If {@code isInterface} is {@code false}, the following access flags will be removed:
 	 * <ul>
-	 * <li>ACC_ANNOTATION</li>
+	 * <li>{@code ACC_ANNOTATION}</li>
 	 * </ul>
 	 * 
-	 * @param isInterface {@code true} to add the access flag ACC_INTERFACE
+	 * @param isInterface {@code true} if, and only if, the access flag {@code ACC_INTERFACE} should be added, {@code false} otherwise
 	 */
 	public void setInterface(final boolean isInterface) {
 		if(isInterface) {
@@ -1601,11 +1622,11 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Sets a new major_version for this {@code ClassFile} instance.
+	 * Sets {@code majorVersion} as the value for the {@code major_version} item associated with this {@code ClassFile} instance.
 	 * <p>
 	 * If {@code majorVersion} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param majorVersion the new major_version
+	 * @param majorVersion the value for the {@code major_version} item associated with this {@code ClassFile} instance
 	 * @throws IllegalArgumentException thrown if, and only if, {@code majorVersion} is less than {@code 0}
 	 */
 	public void setMajorVersion(final int majorVersion) {
@@ -1613,11 +1634,11 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Sets a new minor_version for this {@code ClassFile} instance.
+	 * Sets {@code minorVersion} as the value for the {@code minor_version} item associated with this {@code ClassFile} instance.
 	 * <p>
 	 * If {@code minorVersion} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param minorVersion the new minor_version
+	 * @param minorVersion the value for the {@code minor_version} item associated with this {@code ClassFile} instance
 	 * @throws IllegalArgumentException thrown if, and only if, {@code minorVersion} is less than {@code 0}
 	 */
 	public void setMinorVersion(final int minorVersion) {
@@ -1625,21 +1646,21 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_MODULE.
+	 * Adds or removes the access flag {@code ACC_MODULE}.
 	 * <p>
-	 * This method turns off the following access flags, if given a parameter argument that is set to {@code true}:
+	 * If {@code isModule} is {@code true}, the following access flags will be removed:
 	 * <ul>
-	 * <li>ACC_ABSTRACT</li>
-	 * <li>ACC_ANNOTATION</li>
-	 * <li>ACC_ENUM</li>
-	 * <li>ACC_FINAL</li>
-	 * <li>ACC_INTERFACE</li>
-	 * <li>ACC_PUBLIC</li>
-	 * <li>ACC_SUPER</li>
-	 * <li>ACC_SYNTHETIC</li>
+	 * <li>{@code ACC_ABSTRACT}</li>
+	 * <li>{@code ACC_ANNOTATION}</li>
+	 * <li>{@code ACC_ENUM}</li>
+	 * <li>{@code ACC_FINAL}</li>
+	 * <li>{@code ACC_INTERFACE}</li>
+	 * <li>{@code ACC_PUBLIC}</li>
+	 * <li>{@code ACC_SUPER}</li>
+	 * <li>{@code ACC_SYNTHETIC}</li>
 	 * </ul>
 	 * 
-	 * @param isModule {@code true} to add the access flag ACC_MODULE
+	 * @param isModule {@code true} if, and only if, the access flag {@code ACC_MODULE} should be added, {@code false} otherwise
 	 */
 	public void setModule(final boolean isModule) {
 		if(isModule) {
@@ -1658,14 +1679,14 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_PUBLIC.
+	 * Adds or removes the access flag {@code ACC_PUBLIC}.
 	 * <p>
-	 * This method turns off the following access flags, if given a parameter argument that is set to {@code true}:
+	 * If {@code isPublic} is {@code true}, the following access flags will be removed:
 	 * <ul>
-	 * <li>ACC_MODULE</li>
+	 * <li>{@code ACC_MODULE}</li>
 	 * </ul>
 	 * 
-	 * @param isPublic {@code true} to add the access flag ACC_PUBLIC
+	 * @param isPublic {@code true} if, and only if, the access flag {@code ACC_PUBLIC} should be added, {@code false} otherwise
 	 */
 	public void setPublic(final boolean isPublic) {
 		if(isPublic) {
@@ -1677,16 +1698,16 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_SUPER.
+	 * Adds or removes the access flag {@code ACC_SUPER}.
 	 * <p>
-	 * This method turns off the following access flags, if given a parameter argument that is set to {@code true}:
+	 * If {@code isSuper} is {@code true}, the following access flags will be removed:
 	 * <ul>
-	 * <li>ACC_ANNOTATION</li>
-	 * <li>ACC_INTERFACE</li>
-	 * <li>ACC_MODULE</li>
+	 * <li>{@code ACC_ANNOTATION}</li>
+	 * <li>{@code ACC_INTERFACE}</li>
+	 * <li>{@code ACC_MODULE}</li>
 	 * </ul>
 	 * 
-	 * @param isSuper {@code true} to add the access flag ACC_SUPER
+	 * @param isSuper {@code true} if, and only if, the access flag {@code ACC_SUPER} should be added, {@code false} otherwise
 	 */
 	public void setSuper(final boolean isSuper) {
 		if(isSuper) {
@@ -1700,11 +1721,11 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Sets a new super_class for this {@code ClassFile} instance.
+	 * Sets {@code superClass} as the value for the {@code super_class} item associated with this {@code ClassFile} instance.
 	 * <p>
 	 * If {@code superClass} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param superClass the new super_class for this {@code ClassFile} instance
+	 * @param superClass the value for the {@code super_class} item associated with this {@code ClassFile} instance
 	 * @throws IllegalArgumentException thrown if, and only if, {@code superClass} is less than {@code 0}
 	 */
 	public void setSuperClass(final int superClass) {
@@ -1712,14 +1733,14 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_SYNTHETIC.
+	 * Adds or removes the access flag {@code ACC_SYNTHETIC}.
 	 * <p>
-	 * This method turns off the following access flags, if given a parameter argument that is set to {@code true}:
+	 * If {@code isSynthetic} is {@code true}, the following access flags will be removed:
 	 * <ul>
-	 * <li>ACC_MODULE</li>
+	 * <li>{@code ACC_MODULE}</li>
 	 * </ul>
 	 * 
-	 * @param isSynthetic {@code true} to add the access flag ACC_SYNTHETIC
+	 * @param isSynthetic {@code true} if, and only if, the access flag {@code ACC_SYNTHETIC} should be added, {@code false} otherwise
 	 */
 	public void setSynthetic(final boolean isSynthetic) {
 		if(isSynthetic) {
@@ -1731,12 +1752,12 @@ public final class ClassFile implements Node {
 	}
 	
 	/**
-	 * Sets a new this_class for this {@code ClassFile} instance.
+	 * Sets {@code thisClass} as the value for the {@code this_class} item associated with this {@code ClassFile} instance.
 	 * <p>
-	 * If {@code thisClass} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code thisClass} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param thisClass the new this_class for this {@code ClassFile} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code thisClass} is less than or equal to {@code 0}
+	 * @param thisClass the value for the {@code this_class} item associated with this {@code ClassFile} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code thisClass} is less than {@code 1}
 	 */
 	public void setThisClass(final int thisClass) {
 		this.thisClass = ParameterArguments.requireRange(thisClass, 1, Integer.MAX_VALUE);
