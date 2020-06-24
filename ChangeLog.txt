@@ -1,3 +1,11 @@
+2020-06-24  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Decompiler:
+
+		* ADD:			The "default" modifier has been added to default methods in interfaces.
+		* ADD:			Constant field assignments of type double, float and long are appended with "D", "F" and "L", respectively.
+		* CHANGE:		Methods with the same signature as in their direct or indirect super-classes were given the annotation @Override. This occurred with private and static methods as well, which is wrong. This has been fixed.
+
 2020-06-23  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:

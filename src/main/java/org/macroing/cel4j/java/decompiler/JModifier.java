@@ -22,6 +22,7 @@ import java.util.Objects;
 
 enum JModifier {
 	ABSTRACT("abstract"),
+	DEFAULT("default"),
 	FINAL("final"),
 	NATIVE("native"),
 	PRIVATE("private"),

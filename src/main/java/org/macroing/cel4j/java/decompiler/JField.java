@@ -218,11 +218,17 @@ final class JField {
 		if(optionalAssignment.isPresent()) {
 			final Object assignment = optionalAssignment.get();
 			
-			if(assignment instanceof String) {
+			if(assignment instanceof Double) {
+				return " = " + assignment + "D";
+			} else if(assignment instanceof Float) {
+				return " = " + assignment + "F";
+			} else if(assignment instanceof Long) {
+				return " = " + assignment + "L";
+			} else if(assignment instanceof String) {
 				return " = \"" + assignment + "\"";
+			} else {
+				return " = " + assignment;
 			}
-			
-			return " = " + assignment;
 		}
 		
 		return "";

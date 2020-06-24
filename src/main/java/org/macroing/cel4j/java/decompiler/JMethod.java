@@ -94,7 +94,7 @@ final class JMethod {
 			document.linef("@Deprecated");
 		}
 		
-		if(isAnnotatingOverriddenMethods && enclosingType.hasMethodOverridden(this)) {
+		if(isAnnotatingOverriddenMethods && enclosingType.hasMethodOverridden(this) && !isPrivate() && !isStatic()) {
 			document.linef("@Override");
 		}
 		
@@ -248,6 +248,10 @@ final class JMethod {
 			modifiers.add(JModifier.STATIC);
 		}
 		
+		if(isEnclosedByInterface() && !isAbstract() && !isStatic()) {
+			modifiers.add(JModifier.DEFAULT);
+		}
+		
 		if(isAbstract()) {
 			modifiers.add(JModifier.ABSTRACT);
 		} else if(isFinal()) {
@@ -307,6 +311,10 @@ final class JMethod {
 	
 	public boolean isFinal() {
 		return this.methodInfo.isFinal();
+	}
+	
+	public boolean isEnclosedByInterface() {
+		return this.enclosingType instanceof JInterface;
 	}
 	
 	public boolean isNative() {
