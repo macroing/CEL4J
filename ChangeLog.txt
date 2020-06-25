@@ -1,3 +1,10 @@
+2020-06-25  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Decompiler:
+
+		* ADD:			The simple name of implemented interfaces are used when both configuration parameters DiscardingUnnecessaryPackageNames and ImportingTypes are set to true.
+		* ADD:			The simple name of method parameter arguments are used when both configuration parameters DiscardingUnnecessaryPackageNames and ImportingTypes are set to true.
+
 2020-06-24  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:

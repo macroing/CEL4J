@@ -266,6 +266,7 @@ final class JInnerType {
 	private static String doGenerateExtendsClause(final DecompilerConfiguration decompilerConfiguration, final JClass jClass) {
 		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
 		final StringBuilder stringBuilder = new StringBuilder();
 		
@@ -278,7 +279,7 @@ final class JInnerType {
 				final Optional<ClassSignature> optionalClassSignature = jClass.getClassSignature();
 				
 				final String string0 = optionalClassSignature.isPresent() ? optionalClassSignature.get().getSuperClassSignature().toExternalForm() : superClass.getName();
-				final String string1 = isDiscardingUnnecessaryPackageNames ? Names.filterPackageNames(JPackageNameFilter.newUnnecessaryPackageName(jClass.getPackageName()), string0) : string0;
+				final String string1 = isDiscardingUnnecessaryPackageNames ? Names.filterPackageNames(JPackageNameFilter.newUnnecessaryPackageName(jClass.getPackageName(), isDiscardingUnnecessaryPackageNames, new ArrayList<>(), isImportingTypes), string0) : string0;
 				
 				stringBuilder.append(string1);
 			}
@@ -289,6 +290,7 @@ final class JInnerType {
 	
 	private static String doGenerateImplementsClause(final DecompilerConfiguration decompilerConfiguration, final List<JInterface> jInterfaces, final Optional<ClassSignature> optionalClassSignature, final String packageName) {
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
 		final StringBuilder stringBuilder = new StringBuilder();
 		
@@ -297,7 +299,7 @@ final class JInnerType {
 			stringBuilder.append("implements");
 			stringBuilder.append(" ");
 			
-			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(packageName);
+			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(packageName, isDiscardingUnnecessaryPackageNames, new ArrayList<>(), isImportingTypes);
 			
 			if(optionalClassSignature.isPresent()) {
 				final ClassSignature classSignature = optionalClassSignature.get();

@@ -292,6 +292,7 @@ final class JConstructor {
 	
 	private static String doGenerateParameters(final DecompilerConfiguration decompilerConfiguration, final JConstructor jConstructor) {
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
 		final JLocalVariableNameGenerator jLocalVariableNameGenerator = (type, index) -> decompilerConfiguration.getLocalVariableNameGenerator().generateLocalVariableName(type.getName(), index);
 		
@@ -302,7 +303,7 @@ final class JConstructor {
 		final List<JParameter> jParameters = jConstructor.getParameters(jLocalVariableNameGenerator);
 		
 		if(jParameters.size() > 0) {
-			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(jConstructor.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames);
+			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(jConstructor.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames, new ArrayList<>(), isImportingTypes);
 			
 			if(optionalMethodSignature.isPresent()) {
 				final MethodSignature methodSignature = optionalMethodSignature.get();
@@ -338,6 +339,7 @@ final class JConstructor {
 	
 	private static String doGenerateTypeWithOptionalTypeParameters(final DecompilerConfiguration decompilerConfiguration, final JConstructor jConstructor, final String simpleName) {
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
 		final Optional<MethodSignature> optionalMethodSignature = jConstructor.getMethodSignature();
 		
@@ -353,7 +355,7 @@ final class JConstructor {
 			if(optionalTypeParameters.isPresent()) {
 				final TypeParameters typeParameters = optionalTypeParameters.get();
 				
-				final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(enclosingType.getPackageName(), isDiscardingUnnecessaryPackageNames);
+				final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(enclosingType.getPackageName(), isDiscardingUnnecessaryPackageNames, new ArrayList<>(), isImportingTypes);
 				
 				stringBuilder.append(Names.filterPackageNames(jPackageNameFilter, typeParameters.toExternalForm()));
 				stringBuilder.append(" ");

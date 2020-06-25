@@ -236,10 +236,11 @@ final class JField {
 	
 	private static String doGenerateType(final DecompilerConfiguration decompilerConfiguration, final JField jField) {
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
 		final Optional<FieldSignature> optionalFieldSignature = jField.getFieldSignature();
 		
-		final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(jField.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames);
+		final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(jField.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames, new ArrayList<>(), isImportingTypes);
 		
 		if(optionalFieldSignature.isPresent()) {
 			final FieldSignature fieldSignature = optionalFieldSignature.get();

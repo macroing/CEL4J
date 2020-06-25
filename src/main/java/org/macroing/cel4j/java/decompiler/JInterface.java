@@ -104,26 +104,24 @@ final class JInterface extends JType {
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		final boolean isSeparatingGroups = decompilerConfiguration.isSeparatingGroups();
 		
+		final List<JType> typesToImport = getTypesToImport();
+		
 		final String packageName = getPackageName();
 		final String modifiers = Strings.optional(getModifiers(), "", " ", " ", modifier -> modifier.getKeyword());
 		final String simpleName = getSimpleName();
-		final String typeParameters = doGenerateTypeParameters(decompilerConfiguration, getTypesToImport(), getTypeParameters(), getPackageName());
-		final String extendsClause = doGenerateExtendsClause(decompilerConfiguration, getInterfaces(), getClassSignature(), getPackageName());
+		final String typeParameters = doGenerateTypeParameters(decompilerConfiguration, typesToImport, getTypeParameters(), getPackageName());
+		final String extendsClause = doGenerateExtendsClause(decompilerConfiguration, getInterfaces(), typesToImport, getClassSignature(), getPackageName());
 		
 		final List<JField> jFields = getFields();
 		final List<JMethod> jMethods = getMethods();
 		
 		document.linef("package %s;", packageName);
 		
-		if(isImportingTypes) {
-			final List<JType> typesToImport = getTypesToImport();
+		if(isImportingTypes && typesToImport.size() > 0) {
+			document.line();
 			
-			if(typesToImport.size() > 0) {
-				document.line();
-				
-				for(final JType typeToImport : typesToImport) {
-					document.linef("import %s;", typeToImport.getName());
-				}
+			for(final JType typeToImport : typesToImport) {
+				document.linef("import %s;", typeToImport.getName());
 			}
 		}
 		
@@ -188,10 +186,10 @@ final class JInterface extends JType {
 		}
 		
 		for(final JMethod method : this.methods) {
-			doAddTypeToImportIfNecessary(method.getReturnType(), typesToImport);
+			final List<JType> methodTypesToImport = method.getTypesToImport();
 			
-			for(final JParameter parameter : method.getParameters()) {
-				doAddTypeToImportIfNecessary(parameter.getType(), typesToImport);
+			for(final JType methodTypeToImport : methodTypesToImport) {
+				doAddTypeToImportIfNecessary(methodTypeToImport, typesToImport);
 			}
 		}
 		
@@ -430,8 +428,9 @@ final class JInterface extends JType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private static String doGenerateExtendsClause(final DecompilerConfiguration decompilerConfiguration, final List<JInterface> jInterfaces, final Optional<ClassSignature> optionalClassSignature, final String packageName) {
+	private static String doGenerateExtendsClause(final DecompilerConfiguration decompilerConfiguration, final List<JInterface> jInterfaces, final List<JType> typesToImport, final Optional<ClassSignature> optionalClassSignature, final String packageName) {
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
 		final StringBuilder stringBuilder = new StringBuilder();
 		
@@ -440,7 +439,7 @@ final class JInterface extends JType {
 			stringBuilder.append("extends");
 			stringBuilder.append(" ");
 			
-			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(packageName);
+			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(packageName, isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes);
 			
 			if(optionalClassSignature.isPresent()) {
 				final ClassSignature classSignature = optionalClassSignature.get();

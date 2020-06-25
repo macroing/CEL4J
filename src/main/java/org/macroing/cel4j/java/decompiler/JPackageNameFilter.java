@@ -18,6 +18,7 @@
  */
 package org.macroing.cel4j.java.decompiler;
 
+import java.util.List;
 import java.util.Objects;
 
 interface JPackageNameFilter {
@@ -25,13 +26,25 @@ interface JPackageNameFilter {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	static JPackageNameFilter newUnnecessaryPackageName(final String packageName) {
-		return newUnnecessaryPackageName(packageName, true);
-	}
-	
-	static JPackageNameFilter newUnnecessaryPackageName(final String packageName, final boolean isDiscardingUnnecessaryPackageNames) {
+	static JPackageNameFilter newUnnecessaryPackageName(final String packageName, final boolean isDiscardingUnnecessaryPackageNames, final List<JType> typesToImport, final boolean isImportingTypes) {
 		Objects.requireNonNull(packageName, "packageName == null");
 		
-		return (packageName0, simpleName) -> isDiscardingUnnecessaryPackageNames && (packageName0.equals(packageName) || packageName0.equals("java.lang")) ? false : true;
+		return (packageName0, simpleName) -> {
+			if(isDiscardingUnnecessaryPackageNames) {
+				if(packageName0.equals(packageName) || packageName0.equals("java.lang")) {
+					return false;
+				}
+				
+				if(isImportingTypes) {
+					for(final JType typeToImport : typesToImport) {
+						if(packageName0.equals(typeToImport.getPackageName())) {
+							return false;
+						}
+					}
+				}
+			}
+			
+			return true;
+		};
 	}
 }

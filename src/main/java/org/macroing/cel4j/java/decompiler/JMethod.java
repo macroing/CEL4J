@@ -20,9 +20,11 @@ package org.macroing.cel4j.java.decompiler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -82,10 +84,12 @@ final class JMethod {
 		
 		final JType enclosingType = getEnclosingType();
 		
+		final List<JType> typesToImport = getTypesToImport();
+		
 		final String modifiers = Strings.optional(doDiscardInterfaceMethodModifiers(decompilerConfiguration, enclosingType, getModifiers()), "", " ", " ", modifier -> modifier.getKeyword());
-		final String returnType = doGenerateReturnTypeWithOptionalTypeParameters(decompilerConfiguration, this);
+		final String returnType = doGenerateReturnTypeWithOptionalTypeParameters(decompilerConfiguration, this, typesToImport);
 		final String name = getName();
-		final String parameters = doGenerateParameters(decompilerConfiguration, this);
+		final String parameters = doGenerateParameters(decompilerConfiguration, this, typesToImport);
 		final String returnStatement = doGenerateDefaultReturnStatement(this);
 		
 		final List<Instruction> instructions = getInstructions();
@@ -183,6 +187,46 @@ final class JMethod {
 		return new ArrayList<>();
 	}
 	
+	public List<JModifier> getModifiers() {
+		final List<JModifier> modifiers = new ArrayList<>();
+		
+		if(isPrivate()) {
+			modifiers.add(JModifier.PRIVATE);
+		} else if(isProtected()) {
+			modifiers.add(JModifier.PROTECTED);
+		} else if(isPublic()) {
+			modifiers.add(JModifier.PUBLIC);
+		}
+		
+		if(isStatic()) {
+			modifiers.add(JModifier.STATIC);
+		}
+		
+		if(isEnclosedByInterface() && !isAbstract() && !isStatic()) {
+			modifiers.add(JModifier.DEFAULT);
+		}
+		
+		if(isAbstract()) {
+			modifiers.add(JModifier.ABSTRACT);
+		} else if(isFinal()) {
+			modifiers.add(JModifier.FINAL);
+		}
+		
+		if(isSynchronized()) {
+			modifiers.add(JModifier.SYNCHRONIZED);
+		}
+		
+		if(isNative()) {
+			modifiers.add(JModifier.NATIVE);
+		}
+		
+		if(isStrict()) {
+			modifiers.add(JModifier.STRICT_F_P);
+		}
+		
+		return modifiers;
+	}
+	
 	public List<JParameter> getParameters() {
 		return getParameters((index, fullyQualifiedName) -> "localVariable" + index);
 	}
@@ -233,44 +277,16 @@ final class JMethod {
 		return jParameters;
 	}
 	
-	public List<JModifier> getModifiers() {
-		final List<JModifier> modifiers = new ArrayList<>();
+	public List<JType> getTypesToImport() {
+		final Set<JType> typesToImport = new LinkedHashSet<>();
 		
-		if(isPrivate()) {
-			modifiers.add(JModifier.PRIVATE);
-		} else if(isProtected()) {
-			modifiers.add(JModifier.PROTECTED);
-		} else if(isPublic()) {
-			modifiers.add(JModifier.PUBLIC);
+		doAddTypeToImportIfNecessary(getReturnType(), typesToImport);
+		
+		for(final JParameter parameter : getParameters()) {
+			doAddTypeToImportIfNecessary(parameter.getType(), typesToImport);
 		}
 		
-		if(isStatic()) {
-			modifiers.add(JModifier.STATIC);
-		}
-		
-		if(isEnclosedByInterface() && !isAbstract() && !isStatic()) {
-			modifiers.add(JModifier.DEFAULT);
-		}
-		
-		if(isAbstract()) {
-			modifiers.add(JModifier.ABSTRACT);
-		} else if(isFinal()) {
-			modifiers.add(JModifier.FINAL);
-		}
-		
-		if(isSynchronized()) {
-			modifiers.add(JModifier.SYNCHRONIZED);
-		}
-		
-		if(isNative()) {
-			modifiers.add(JModifier.NATIVE);
-		}
-		
-		if(isStrict()) {
-			modifiers.add(JModifier.STRICT_F_P);
-		}
-		
-		return modifiers;
+		return new ArrayList<>(typesToImport);
 	}
 	
 	public Optional<MethodSignature> getMethodSignature() {
@@ -386,6 +402,37 @@ final class JMethod {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	private void doAddTypeToImportIfNecessary(final JType typeToImport, final Set<JType> typesToImport) {
+		JType type = typeToImport;
+		
+		while(type instanceof JArray) {
+			type = JArray.class.cast(type).getComponentType();
+		}
+		
+		if(type instanceof JPrimitive) {
+			return;
+		}
+		
+		if(type instanceof JVoid) {
+			return;
+		}
+		
+		final String packageNameThis = getEnclosingType().getPackageName();
+		final String packageNameType = type.getPackageName();
+		
+		if(packageNameType.equals("java.lang")) {
+			return;
+		}
+		
+		if(packageNameType.equals(packageNameThis)) {
+			return;
+		}
+		
+		typesToImport.add(type);
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	private static List<JModifier> doDiscardInterfaceMethodModifiers(final DecompilerConfiguration decompilerConfiguration, final JType enclosingType, final List<JModifier> oldModifiers) {
 		final boolean isDiscardingAbstractInterfaceMethodModifier = decompilerConfiguration.isDiscardingAbstractInterfaceMethodModifier();
 		final boolean isDiscardingPublicInterfaceMethodModifier = decompilerConfiguration.isDiscardingPublicInterfaceMethodModifier();
@@ -435,8 +482,9 @@ final class JMethod {
 		}
 	}
 	
-	private static String doGenerateParameters(final DecompilerConfiguration decompilerConfiguration, final JMethod jMethod) {
+	private static String doGenerateParameters(final DecompilerConfiguration decompilerConfiguration, final JMethod jMethod, final List<JType> typesToImport) {
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
 		final JLocalVariableNameGenerator jLocalVariableNameGenerator = (type, index) -> decompilerConfiguration.getLocalVariableNameGenerator().generateLocalVariableName(type.getName(), index);
 		
@@ -447,7 +495,7 @@ final class JMethod {
 		final List<JParameter> jParameters = jMethod.getParameters(jLocalVariableNameGenerator);
 		
 		if(jParameters.size() > 0) {
-			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(jMethod.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames);
+			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(jMethod.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes);
 			
 			if(optionalMethodSignature.isPresent()) {
 				final MethodSignature methodSignature = optionalMethodSignature.get();
@@ -481,13 +529,14 @@ final class JMethod {
 		return stringBuilder.toString();
 	}
 	
-	private static String doGenerateReturnTypeWithOptionalTypeParameters(final DecompilerConfiguration decompilerConfiguration, final JMethod jMethod) {
+	private static String doGenerateReturnTypeWithOptionalTypeParameters(final DecompilerConfiguration decompilerConfiguration, final JMethod jMethod, final List<JType> typesToImport) {
 		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
 		final Optional<MethodSignature> optionalMethodSignature = jMethod.getMethodSignature();
 		
-		final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(jMethod.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames);
+		final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(jMethod.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes);
 		
 		if(optionalMethodSignature.isPresent()) {
 			final MethodSignature methodSignature = optionalMethodSignature.get();
