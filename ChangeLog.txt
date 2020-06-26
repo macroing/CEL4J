@@ -2,7 +2,12 @@
 
 	CEL4J Java Binary:
 
+		* ADD:			Add Javadocs.
 		* CHANGE:		Update Javadocs.
+
+	CEL4J PHP:
+
+		* ADD:			Add Javadocs.
 
 2020-06-25  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
