@@ -21,10 +21,25 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code DoubleVariableInfo} represents a {@code Double_variable_info} {@code union} structure as defined by the Java Virtual Machine Specifications.
+ * <p>
+ * This class is immutable and thread-safe.
+ * <p>
+ * The {@code Double_variable_info} {@code union} structure has the following format:
+ * <pre>
+ * <code>
+ * Double_variable_info {
+ *     u1 tag = ITEM_Double;
+ * }
+ * </code>
+ * </pre>
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class DoubleVariableInfo implements VerificationTypeInfo {
 	private static final DoubleVariableInfo INSTANCE = new DoubleVariableInfo();
 	
@@ -40,49 +55,96 @@ public final class DoubleVariableInfo implements VerificationTypeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a copy of this {@code DoubleVariableInfo} instance.
+	 * <p>
+	 * Because this class is immutable, the same instance will be returned.
+	 * 
+	 * @return a copy of this {@code DoubleVariableInfo} instance
+	 */
 	@Override
 	public DoubleVariableInfo copy() {
 		return this;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code DoubleVariableInfo} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code DoubleVariableInfo} instance
+	 */
+	@Override
+	public String toString() {
+		return "DoubleVariableInfo.getInstance()";
+	}
+	
+	/**
+	 * Compares {@code object} to this {@code DoubleVariableInfo} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code DoubleVariableInfo}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code DoubleVariableInfo} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code DoubleVariableInfo}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
 		} else if(!(object instanceof DoubleVariableInfo)) {
 			return false;
-		} else if(!Objects.equals(Integer.valueOf(this.tag), Integer.valueOf(DoubleVariableInfo.class.cast(object).tag))) {
+		} else if(getTag() != DoubleVariableInfo.class.cast(object).getTag()) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the length of this {@code DoubleVariableInfo} instance.
+	 * 
+	 * @return the length of this {@code DoubleVariableInfo} instance
+	 */
 	@Override
 	public int getLength() {
 		return 1;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the value of the {@code tag} item associated with this {@code DoubleVariableInfo} instance.
+	 * 
+	 * @return the value of the {@code tag} item associated with this {@code DoubleVariableInfo} instance
+	 */
 	@Override
 	public int getTag() {
 		return this.tag;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code DoubleVariableInfo} instance.
+	 * 
+	 * @return a hash code for this {@code DoubleVariableInfo} instance
+	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(Integer.valueOf(this.tag));
+		return Objects.hash(Integer.valueOf(getTag()));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Writes this {@code DoubleVariableInfo} to {@code dataOutput}.
+	 * <p>
+	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
+	 * 
+	 * @param dataOutput the {@code DataOutput} to write to
+	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
+	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
 		try {
-			dataOutput.writeByte(this.tag);
+			dataOutput.writeByte(getTag());
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
@@ -90,7 +152,11 @@ public final class DoubleVariableInfo implements VerificationTypeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the {@code DoubleVariableInfo} instance.
+	 * 
+	 * @return the {@code DoubleVariableInfo} instance
+	 */
 	public static DoubleVariableInfo getInstance() {
 		return INSTANCE;
 	}
