@@ -19,21 +19,52 @@
 package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 
 import java.io.DataOutput;
-import java.lang.reflect.Field;//TODO: Add Javadocs!
+import java.io.UncheckedIOException;
 
 import org.macroing.cel4j.node.Node;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code StackMapFrame} represents a {@code stack_map_frame} {@code union} structure as defined by the Java Virtual Machine Specifications.
+ * <p>
+ * A {@code stack_map_frame} {@code union} is part of the {@code StackMapTable_attribute} structure.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public interface StackMapFrame extends Node {
-//	TODO: Add Javadocs.
+	/**
+	 * Returns a copy of this {@code StackMapFrame} instance.
+	 * 
+	 * @return a copy of this {@code StackMapFrame} instance
+	 */
 	StackMapFrame copy();
 	
-//	TODO: Add Javadocs.
+	/**
+	 * Returns the value of the {@code frame_type} item associated with this {@code StackMapFrame} instance.
+	 * 
+	 * @return the value of the {@code frame_type} item associated with this {@code StackMapFrame} instance
+	 */
 	int getFrameType();
 	
-//	TODO: Add Javadocs.
+	/**
+	 * Returns the length of this {@code StackMapFrame} instance.
+	 * 
+	 * @return the length of this {@code StackMapFrame} instance
+	 */
 	int getLength();
 	
-//	TODO: Add Javadocs.
+	/**
+	 * Writes this {@code StackMapFrame} to {@code dataOutput}.
+	 * <p>
+	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
+	 * 
+	 * @param dataOutput the {@code DataOutput} to write to
+	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
+	 */
 	void write(final DataOutput dataOutput);
 }
