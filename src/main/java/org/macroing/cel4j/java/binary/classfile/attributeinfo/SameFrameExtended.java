@@ -21,19 +21,43 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.util.ParameterArguments;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code SameFrameExtended} represents a {@code same_frame_extended} structure as defined by the Java Virtual Machine Specifications.
+ * <p>
+ * This class is immutable and thread-safe.
+ * <p>
+ * The {@code same_frame_extended} structure has the following format:
+ * <pre>
+ * <code>
+ * same_frame_extended {
+ *     u1 frame_type;
+ *     u2 offset_delta;
+ * }
+ * </code>
+ * </pre>
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class SameFrameExtended implements StackMapFrame {
 	private final int frameType;
 	private final int offsetDelta;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Constructs a new {@code SameFrameExtended} instance.
+	 * <p>
+	 * If {@code frameType} is not equal to {@code 251} or {@code offsetDelta} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param frameType the value of the {@code frame_type} item associated with this {@code SameFrameExtended} instance
+	 * @param offsetDelta the value of the {@code offset_delta} item associated with this {@code SameFrameExtended} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code frameType} is not equal to {@code 251} or {@code offsetDelta} is less than {@code 0}
+	 */
 	public SameFrameExtended(final int frameType, final int offsetDelta) {
 		this.frameType = ParameterArguments.requireRange(frameType, 251, 251, "frameType");
 		this.offsetDelta = ParameterArguments.requireRange(offsetDelta, 0, Integer.MAX_VALUE, "offsetDelta");
@@ -41,57 +65,108 @@ public final class SameFrameExtended implements StackMapFrame {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a copy of this {@code SameFrameExtended} instance.
+	 * <p>
+	 * Because this class is immutable, the same instance will be returned.
+	 * 
+	 * @return a copy of this {@code SameFrameExtended} instance
+	 */
 	@Override
 	public SameFrameExtended copy() {
 		return this;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of this {@code SameFrameExtended} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code SameFrameExtended} instance
+	 */
+	@Override
+	public String toString() {
+		return String.format("new SameFrameExtended(%s, %s)", Integer.toString(getFrameType()), Integer.toString(getOffsetDelta()));
+	}
+	
+	/**
+	 * Compares {@code object} to this {@code SameFrameExtended} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code SameFrameExtended}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code SameFrameExtended} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code SameFrameExtended}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
 		} else if(!(object instanceof SameFrameExtended)) {
 			return false;
-		} else if(!Objects.equals(Integer.valueOf(this.frameType), Integer.valueOf(SameFrameExtended.class.cast(object).frameType))) {
+		} else if(getFrameType() != SameFrameExtended.class.cast(object).getFrameType()) {
 			return false;
-		} else if(!Objects.equals(Integer.valueOf(this.offsetDelta), Integer.valueOf(SameFrameExtended.class.cast(object).offsetDelta))) {
+		} else if(getOffsetDelta() != SameFrameExtended.class.cast(object).getOffsetDelta()) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the value of the {@code frame_type} item associated with this {@code SameFrameExtended} instance.
+	 * 
+	 * @return the value of the {@code frame_type} item associated with this {@code SameFrameExtended} instance
+	 */
 	@Override
 	public int getFrameType() {
 		return this.frameType;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the length of this {@code SameFrameExtended} instance.
+	 * 
+	 * @return the length of this {@code SameFrameExtended} instance
+	 */
 	@Override
 	public int getLength() {
 		return 3;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the value of the {@code offset_delta} item associated with this {@code SameFrameExtended} instance.
+	 * 
+	 * @return the value of the {@code offset_delta} item associated with this {@code SameFrameExtended} instance
+	 */
 	public int getOffsetDelta() {
 		return this.offsetDelta;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code SameFrameExtended} instance.
+	 * 
+	 * @return a hash code for this {@code SameFrameExtended} instance
+	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(Integer.valueOf(this.frameType), Integer.valueOf(this.offsetDelta));
+		return Objects.hash(Integer.valueOf(getFrameType()), Integer.valueOf(getOffsetDelta()));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Writes this {@code SameFrameExtended} to {@code dataOutput}.
+	 * <p>
+	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
+	 * 
+	 * @param dataOutput the {@code DataOutput} to write to
+	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
+	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
 		try {
-			dataOutput.writeByte(this.frameType);
-			dataOutput.writeShort(this.offsetDelta);
+			dataOutput.writeByte(getFrameType());
+			dataOutput.writeShort(getOffsetDelta());
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}

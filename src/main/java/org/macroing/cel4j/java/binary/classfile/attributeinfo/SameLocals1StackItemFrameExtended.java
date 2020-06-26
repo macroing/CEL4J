@@ -21,49 +21,116 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 import org.macroing.cel4j.util.ParameterArguments;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code SameLocals1StackItemFrameExtended} represents a {@code same_locals_1_stack_item_frame_extended} structure as defined by the Java Virtual Machine Specifications.
+ * <p>
+ * This class is indirectly mutable and not thread-safe.
+ * <p>
+ * The {@code same_locals_1_stack_item_frame_extended} structure has the following format:
+ * <pre>
+ * <code>
+ * same_locals_1_stack_item_frame_extended {
+ *     u1 frame_type;
+ *     u2 offset_delta;
+ *     verification_type_info[1] stack;
+ * }
+ * </code>
+ * </pre>
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class SameLocals1StackItemFrameExtended implements StackMapFrame {
-	private final VerificationTypeInfo verificationTypeInfo;
+	private final VerificationTypeInfo stackItem;
 	private final int frameType;
 	private final int offsetDelta;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
-	public SameLocals1StackItemFrameExtended(final int frameType, final int offsetDelta, final VerificationTypeInfo verificationTypeInfo) {
+	/**
+	 * Constructs a new {@code SameLocals1StackItemFrameExtended} instance.
+	 * <p>
+	 * If either {@code frameType} is not equal to {@code 247} or {@code offsetDelta} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * <p>
+	 * If {@code stackItem} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param frameType the value of the {@code frame_type} item associated with this {@code SameLocals1StackItemFrameExtended} instance
+	 * @param offsetDelta the value of the {@code offset_delta} item associated with this {@code SameLocals1StackItemFrameExtended} instance
+	 * @param stackItem the value of the {@code stack[0]} item associated with this {@code SameLocals1StackItemFrameExtended} instance
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code frameType} is not equal to {@code 247} or {@code offsetDelta} is less than {@code 0}
+	 * @throws NullPointerException thrown if, and only if, {@code stackItem} is {@code null}
+	 */
+	public SameLocals1StackItemFrameExtended(final int frameType, final int offsetDelta, final VerificationTypeInfo stackItem) {
 		this.frameType = ParameterArguments.requireRange(frameType, 247, 247, "frameType");
 		this.offsetDelta = ParameterArguments.requireRange(offsetDelta, 0, Integer.MAX_VALUE, "offsetDelta");
-		this.verificationTypeInfo = Objects.requireNonNull(verificationTypeInfo, "verificationTypeInfo == null");
+		this.stackItem = Objects.requireNonNull(stackItem, "stackItem == null");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a copy of this {@code SameLocals1StackItemFrameExtended} instance.
+	 * 
+	 * @return a copy of this {@code SameLocals1StackItemFrameExtended} instance
+	 */
 	@Override
 	public SameLocals1StackItemFrameExtended copy() {
-		return new SameLocals1StackItemFrameExtended(this.frameType, this.offsetDelta, this.verificationTypeInfo.copy());
+		return new SameLocals1StackItemFrameExtended(getFrameType(), getOffsetDelta(), getStackItem().copy());
 	}
 	
-//	TODO: Add Javadocs!
-	public VerificationTypeInfo getVerificationTypeInfo() {
-		return this.verificationTypeInfo;
+	/**
+	 * Returns a {@code String} representation of this {@code SameLocals1StackItemFrameExtended} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code SameLocals1StackItemFrameExtended} instance
+	 */
+	@Override
+	public String toString() {
+		return String.format("new SameLocals1StackItemFrameExtended(%s, %s, %s)", Integer.toString(getFrameType()), Integer.toString(getOffsetDelta()), getStackItem());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the value of the {@code stack[0]} item associated with this {@code SameLocals1StackItemFrameExtended} instance.
+	 * 
+	 * @return the value of the {@code stack[0]} item associated with this {@code SameLocals1StackItemFrameExtended} instance
+	 */
+	public VerificationTypeInfo getStackItem() {
+		return this.stackItem;
+	}
+	
+	/**
+	 * Accepts a {@link NodeHierarchicalVisitor}.
+	 * <p>
+	 * Returns the result of {@code nodeHierarchicalVisitor.visitLeave(this)}.
+	 * <p>
+	 * If {@code nodeHierarchicalVisitor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}, a {@code NodeTraversalException} will be thrown with the {@code RuntimeException} wrapped.
+	 * <p>
+	 * This implementation will:
+	 * <ul>
+	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
+	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
+	 * <li>traverse its child {@code Node} instance.</li>
+	 * </ul>
+	 * 
+	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
+	 * @return the result of {@code nodeHierarchicalVisitor.visitLeave(this)}
+	 * @throws NodeTraversalException thrown if, and only if, a {@code RuntimeException} is thrown by the current {@code NodeHierarchicalVisitor}
+	 * @throws NullPointerException thrown if, and only if, {@code nodeHierarchicalVisitor} is {@code null}
+	 */
 	@Override
 	public boolean accept(final NodeHierarchicalVisitor nodeHierarchicalVisitor) {
 		Objects.requireNonNull(nodeHierarchicalVisitor, "nodeHierarchicalVisitor == null");
 		
 		try {
 			if(nodeHierarchicalVisitor.visitEnter(this)) {
-				if(!this.verificationTypeInfo.accept(nodeHierarchicalVisitor)) {
+				if(!getStackItem().accept(nodeHierarchicalVisitor)) {
 					return nodeHierarchicalVisitor.visitLeave(this);
 				}
 			}
@@ -74,55 +141,92 @@ public final class SameLocals1StackItemFrameExtended implements StackMapFrame {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Compares {@code object} to this {@code SameLocals1StackItemFrameExtended} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code SameLocals1StackItemFrameExtended}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code SameLocals1StackItemFrameExtended} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code SameLocals1StackItemFrameExtended}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
 		} else if(!(object instanceof SameLocals1StackItemFrameExtended)) {
 			return false;
-		} else if(!Objects.equals(Integer.valueOf(this.frameType), Integer.valueOf(SameLocals1StackItemFrameExtended.class.cast(object).frameType))) {
+		} else if(getFrameType() != SameLocals1StackItemFrameExtended.class.cast(object).getFrameType()) {
 			return false;
-		} else if(!Objects.equals(Integer.valueOf(this.offsetDelta), Integer.valueOf(SameLocals1StackItemFrameExtended.class.cast(object).offsetDelta))) {
+		} else if(getOffsetDelta() != SameLocals1StackItemFrameExtended.class.cast(object).getOffsetDelta()) {
 			return false;
-		} else if(!Objects.equals(this.verificationTypeInfo, SameLocals1StackItemFrameExtended.class.cast(object).verificationTypeInfo)) {
+		} else if(!Objects.equals(getStackItem(), SameLocals1StackItemFrameExtended.class.cast(object).getStackItem())) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the value of the {@code frame_type} item associated with this {@code SameLocals1StackItemFrameExtended} instance.
+	 * 
+	 * @return the value of the {@code frame_type} item associated with this {@code SameLocals1StackItemFrameExtended} instance
+	 */
 	@Override
 	public int getFrameType() {
 		return this.frameType;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the length of this {@code SameLocals1StackItemFrameExtended} instance.
+	 * 
+	 * @return the length of this {@code SameLocals1StackItemFrameExtended} instance
+	 */
 	@Override
 	public int getLength() {
-		return 3 + this.verificationTypeInfo.getLength();
+		return 3 + getStackItem().getLength();
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the value of the {@code offset_delta} item associated with this {@code SameLocals1StackItemFrameExtended} instance.
+	 * 
+	 * @return the value of the {@code offset_delta} item associated with this {@code SameLocals1StackItemFrameExtended} instance
+	 */
 	public int getOffsetDelta() {
 		return this.offsetDelta;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a hash code for this {@code SameLocals1StackItemFrameExtended} instance.
+	 * 
+	 * @return a hash code for this {@code SameLocals1StackItemFrameExtended} instance
+	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(Integer.valueOf(this.frameType), Integer.valueOf(this.offsetDelta), this.verificationTypeInfo);
+		return Objects.hash(Integer.valueOf(getFrameType()), Integer.valueOf(getOffsetDelta()), getStackItem());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Writes this {@code SameLocals1StackItemFrameExtended} to {@code dataOutput}.
+	 * <p>
+	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
+	 * 
+	 * @param dataOutput the {@code DataOutput} to write to
+	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
+	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
 		try {
-			dataOutput.writeByte(this.frameType);
-			dataOutput.writeShort(this.offsetDelta);
+			dataOutput.writeByte(getFrameType());
+			dataOutput.writeShort(getOffsetDelta());
 			
-			this.verificationTypeInfo.write(dataOutput);
+			final
+			VerificationTypeInfo verificationTypeInfo = getStackItem();
+			verificationTypeInfo.write(dataOutput);
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
