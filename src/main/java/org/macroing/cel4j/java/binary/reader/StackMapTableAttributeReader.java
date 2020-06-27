@@ -60,7 +60,7 @@ final class StackMapTableAttributeReader implements AttributeInfoReader {
 			final int numberOfEntries = dataInput.readUnsignedShort();
 			
 			for(int i = 0; i < numberOfEntries; i++) {
-				stackMapTableAttribute.addStackMapFrame(doReadStackMapFrame(dataInput));
+				stackMapTableAttribute.addEntry(doReadStackMapFrame(dataInput));
 			}
 			
 			return stackMapTableAttribute;

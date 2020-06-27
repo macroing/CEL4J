@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -33,38 +32,63 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 
 /**
- * A {@code StackMapTableAttribute} denotes a StackMapTable_attribute structure somewhere in a ClassFile structure.
+ * A {@code StackMapTableAttribute} represents a {@code StackMapTable_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code StackMapTable_attribute} structure has the following format:
+ * <pre>
+ * <code>
+ * StackMapTable_attribute {
+ *     u2 attribute_name_index;
+ *     u4 attribute_length;
+ *     u2 number_of_entries;
+ *     stack_map_frame[number_of_entries] entries;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class StackMapTableAttribute extends AttributeInfo {
 	/**
-	 * The name of the StackMapTable_attribute structure.
+	 * The name of the {@code StackMapTable_attribute} structure.
 	 */
 	public static final String NAME = "StackMapTable";
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final List<StackMapFrame> stackMapFrames = new ArrayList<>();
+	private final List<StackMapFrame> entries;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Constructs a new {@code StackMapTableAttribute} instance.
 	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code StackMapTableAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 * @param attributeNameIndex the value for the {@code attribute_name_index} item associated with this {@code StackMapTableAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than {@code 1}
 	 */
 	public StackMapTableAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
+		
+		this.entries = new ArrayList<>();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns a {@code List} with all currently added {@link StackMapFrame} instances.
+	 * <p>
+	 * Modifying the returned {@code List} will not affect this {@code StackMapTableAttribute} instance.
+	 * 
+	 * @return a {@code List} with all currently added {@code StackMapFrame} instances
+	 */
+	public List<StackMapFrame> getEntries() {
+		return new ArrayList<>(this.entries);
+	}
 	
 	/**
 	 * Returns a copy of this {@code StackMapTableAttribute} instance.
@@ -75,7 +99,9 @@ public final class StackMapTableAttribute extends AttributeInfo {
 	public StackMapTableAttribute copy() {
 		final StackMapTableAttribute stackMapTableAttribute = new StackMapTableAttribute(getAttributeNameIndex());
 		
-		this.stackMapFrames.forEach(stackMapFrame -> stackMapTableAttribute.addStackMapFrame(stackMapFrame.copy()));
+		for(final StackMapFrame entry : this.entries) {
+			stackMapTableAttribute.addEntry(entry.copy());
+		}
 		
 		return stackMapTableAttribute;
 	}
@@ -87,22 +113,7 @@ public final class StackMapTableAttribute extends AttributeInfo {
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("StackMapTable_attribute");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("name=" + getName());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_name_index=" + getAttributeNameIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_length=" + getAttributeLength());
-		stringBuilder.append(" ");
-		stringBuilder.append("number_of_entries=" + getNumberOfStackMapFrames());
-		
-		final String toString = stringBuilder.toString();
-		
-		return toString;
+		return String.format("new StackMapTableAttribute(%s)", Integer.toString(getAttributeNameIndex()));
 	}
 	
 	/**
@@ -118,7 +129,7 @@ public final class StackMapTableAttribute extends AttributeInfo {
 	 * <ul>
 	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
 	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
-	 * <li>traverse its child {@code Node}s, if it has any.</li>
+	 * <li>traverse its child {@code Node} instances, if it has any.</li>
 	 * </ul>
 	 * 
 	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
@@ -132,8 +143,8 @@ public final class StackMapTableAttribute extends AttributeInfo {
 		
 		try {
 			if(nodeHierarchicalVisitor.visitEnter(this)) {
-				for(final StackMapFrame stackMapFrame : this.stackMapFrames) {
-					if(!stackMapFrame.accept(nodeHierarchicalVisitor)) {
+				for(final StackMapFrame entry : this.entries) {
+					if(!entry.accept(nodeHierarchicalVisitor)) {
 						return nodeHierarchicalVisitor.visitLeave(this);
 					}
 				}
@@ -146,12 +157,12 @@ public final class StackMapTableAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code StackMapTableAttribute}, and that {@code StackMapTableAttribute} instance is equal to this {@code StackMapTableAttribute} instance,
-	 * {@code false} otherwise.
+	 * Compares {@code object} to this {@code StackMapTableAttribute} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code StackMapTableAttribute}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code StackMapTableAttribute} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code StackMapTableAttribute}, and that {@code StackMapTableAttribute} instance is equal to this {@code StackMapTableAttribute} instance,
-	 * {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code StackMapTableAttribute} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code StackMapTableAttribute}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -159,13 +170,13 @@ public final class StackMapTableAttribute extends AttributeInfo {
 			return true;
 		} else if(!(object instanceof StackMapTableAttribute)) {
 			return false;
-		} else if(!Objects.equals(StackMapTableAttribute.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), StackMapTableAttribute.class.cast(object).getName())) {
 			return false;
-		} else if(StackMapTableAttribute.class.cast(object).getAttributeNameIndex() != getAttributeNameIndex()) {
+		} else if(getAttributeNameIndex() != StackMapTableAttribute.class.cast(object).getAttributeNameIndex()) {
 			return false;
-		} else if(StackMapTableAttribute.class.cast(object).getAttributeLength() != getAttributeLength()) {
+		} else if(getAttributeLength() != StackMapTableAttribute.class.cast(object).getAttributeLength()) {
 			return false;
-		} else if(!Objects.equals(StackMapTableAttribute.class.cast(object).stackMapFrames, this.stackMapFrames)) {
+		} else if(!Objects.equals(this.entries, StackMapTableAttribute.class.cast(object).entries)) {
 			return false;
 		} else {
 			return true;
@@ -173,28 +184,28 @@ public final class StackMapTableAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the attribute_length of this {@code StackMapTableAttribute} instance.
+	 * Returns the value of the {@code attribute_length} item associated with this {@code StackMapTableAttribute} instance.
 	 * 
-	 * @return the attribute_length of this {@code StackMapTableAttribute} instance
+	 * @return the value of the {@code attribute_length} item associated with this {@code StackMapTableAttribute} instance
 	 */
 	@Override
 	public int getAttributeLength() {
 		int attributeLength = 2;
 		
-		for(final StackMapFrame stackMapFrame : this.stackMapFrames) {
-			attributeLength += stackMapFrame.getLength();
+		for(final StackMapFrame entry : this.entries) {
+			attributeLength += entry.getLength();
 		}
 		
 		return attributeLength;
 	}
 	
 	/**
-	 * Returns the number_of_entries of this {@code StackMapTableAttribute} instance.
+	 * Returns the value of the {@code number_of_entries} item associated with this {@code StackMapTableAttribute} instance.
 	 * 
-	 * @return the number_of_entries of this {@code StackMapTableAttribute} instance
+	 * @return the value of the {@code number_of_entries} item associated with this {@code StackMapTableAttribute} instance
 	 */
-	public int getNumberOfStackMapFrames() {
-		return this.stackMapFrames.size();
+	public int getNumberOfEntries() {
+		return this.entries.size();
 	}
 	
 	/**
@@ -204,56 +215,56 @@ public final class StackMapTableAttribute extends AttributeInfo {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(getName(), Integer.valueOf(getAttributeNameIndex()), Integer.valueOf(getAttributeLength()), this.stackMapFrames);
+		return Objects.hash(getName(), Integer.valueOf(getAttributeNameIndex()), Integer.valueOf(getAttributeLength()), this.entries);
 	}
 	
 	/**
-	 * Adds {@code stackMapFrame} to this {@code StackMapTableAttribute} instance.
+	 * Adds {@code entry} to this {@code StackMapTableAttribute} instance.
 	 * <p>
-	 * If {@code stackMapFrame} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code entry} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param stackMapFrame the {@code StackMapFrame} to add
-	 * @throws NullPointerException thrown if, and only if, {@code stackMapFrame} is {@code null}
+	 * @param entry the {@link StackMapFrame} to add
+	 * @throws NullPointerException thrown if, and only if, {@code entry} is {@code null}
 	 */
-	public void addStackMapFrame(final StackMapFrame stackMapFrame) {
-		this.stackMapFrames.add(Objects.requireNonNull(stackMapFrame, "stackMapFrame == null"));
+	public void addEntry(final StackMapFrame entry) {
+		this.entries.add(Objects.requireNonNull(entry, "entry == null"));
 	}
 	
 	/**
-	 * Attempts to remove {@code stackMapFrame} from this {@code StackMapTableAttribute} instance.
+	 * Removes {@code entry} from this {@code StackMapTableAttribute} instance, if present.
 	 * <p>
-	 * If {@code stackMapFrame} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * <p>
-	 * If no {@code StackMapFrame} equal to {@code stackMapFrame} can be found, nothing will happen.
+	 * If {@code entry} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param stackMapFrame the {@code StackMapFrame} to remove
-	 * @throws NullPointerException thrown if, and only if, {@code stackMapFrame} is {@code null}
+	 * @param entry the {@link StackMapFrame} to remove
+	 * @throws NullPointerException thrown if, and only if, {@code entry} is {@code null}
 	 */
-	public void removeStackMapFrame(final StackMapFrame stackMapFrame) {
-		this.stackMapFrames.remove(Objects.requireNonNull(stackMapFrame, "stackMapFrame == null"));
+	public void removeEntry(final StackMapFrame entry) {
+		this.entries.remove(Objects.requireNonNull(entry, "entry == null"));
 	}
 	
 	/**
 	 * Writes this {@code StackMapTableAttribute} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
 		try {
 			dataOutput.writeShort(getAttributeNameIndex());
 			dataOutput.writeInt(getAttributeLength());
-			dataOutput.writeShort(getNumberOfStackMapFrames());
+			dataOutput.writeShort(getNumberOfEntries());
 			
-			this.stackMapFrames.forEach(stackMapFrame -> stackMapFrame.write(dataOutput));
+			for(final StackMapFrame entry : this.entries) {
+				entry.write(dataOutput);
+			}
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
@@ -262,14 +273,14 @@ public final class StackMapTableAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@code StackMapTableAttribute}s.
+	 * Returns a {@code List} with all {@code StackMapTableAttribute} instances in {@code node}.
 	 * <p>
-	 * All {@code StackMapTableAttribute}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code StackMapTableAttribute} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code StackMapTableAttribute}s
+	 * @return a {@code List} with all {@code StackMapTableAttribute} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<StackMapTableAttribute> filter(final Node node) {
