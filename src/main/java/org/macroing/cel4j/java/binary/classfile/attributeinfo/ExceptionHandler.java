@@ -21,16 +21,27 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * An {@code ExceptionHandler} that can be found as a part of any {@link CodeAttribute} instances.
+ * An {@code ExceptionHandler} represents an entry in the {@code exception_table} item of the {@code Code_attribute} structure.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * Each entry has the following format:
+ * <pre>
+ * <code>
+ * {
+ *     u2 start_pc;
+ *     u2 end_pc;
+ *     u2 handler_pc;
+ *     u2 catch_type;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
@@ -44,19 +55,21 @@ public final class ExceptionHandler implements Node {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Constructs a new {@code ExceptionHandler} based on a start_pc, end_pc and handler_pc.
+	 * Constructs a new {@code ExceptionHandler} instance.
 	 * <p>
-	 * If {@code startPC} is less than {@code 0}, {@code endPC} is less than or equal to {@code startPC} or {@code handlerPC} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If either {@code startPC} is less than {@code 0}, {@code endPC} is less than or equal to {@code startPC}, {@code handlerPC} is less than {@code 0} or {@code catchType} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param startPC the start_pc to use
-	 * @param endPC the end_pc to use
-	 * @param handlerPC the handler_pc to use
-	 * @throws IllegalArgumentException thrown if, and only if, {@code startPC} is less than {@code 0}, {@code endPC} is less than or equal to {@code startPC} or {@code handlerPC} is less than {@code 0}
+	 * @param startPC the value for the {@code start_pc} item associated with this {@code ExceptionHandler} instance
+	 * @param endPC the value for the {@code end_pc} item associated with this {@code ExceptionHandler} instance
+	 * @param handlerPC the value for the {@code handler_pc} item associated with this {@code ExceptionHandler} instance
+	 * @param catchType the value for the {@code catch_type} item associated with this {@code ExceptionHandler} instance
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code startPC} is less than {@code 0}, {@code endPC} is less than or equal to {@code startPC}, {@code handlerPC} is less than {@code 0} or {@code catchType} is less than {@code 0}
 	 */
-	public ExceptionHandler(final int startPC, final int endPC, final int handlerPC) {
+	public ExceptionHandler(final int startPC, final int endPC, final int handlerPC, final int catchType) {
 		this.startPC = ParameterArguments.requireRange(startPC, 0, endPC - 1);
-		this.endPC = ParameterArguments.requireRange(endPC, startPC + 1, 65535);
-		this.handlerPC = ParameterArguments.requireRange(handlerPC, 0, 65535);
+		this.endPC = ParameterArguments.requireRange(endPC, startPC + 1, Integer.MAX_VALUE);
+		this.handlerPC = ParameterArguments.requireRange(handlerPC, 0, Integer.MAX_VALUE);
+		this.catchType = ParameterArguments.requireRange(catchType, 0, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,11 +80,7 @@ public final class ExceptionHandler implements Node {
 	 * @return a copy of this {@code ExceptionHandler} instance
 	 */
 	public ExceptionHandler copy() {
-		final
-		ExceptionHandler exceptionHandler = new ExceptionHandler(this.startPC, this.endPC, this.handlerPC);
-		exceptionHandler.setCatchType(getCatchType());
-		
-		return exceptionHandler;
+		return new ExceptionHandler(getStartPC(), getEndPC(), getHandlerPC(), getCatchType());
 	}
 	
 	/**
@@ -81,31 +90,16 @@ public final class ExceptionHandler implements Node {
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("exception");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("start_pc=" + getStartPC());
-		stringBuilder.append(" ");
-		stringBuilder.append("end_pc=" + getEndPC());
-		stringBuilder.append(" ");
-		stringBuilder.append("handler_pc=" + getHandlerPC());
-		stringBuilder.append(" ");
-		stringBuilder.append("catch_type=" + getCatchType());
-		
-		final String toString = stringBuilder.toString();
-		
-		return toString;
+		return String.format("new ExceptionHandler(%s, %s, %s, %s)", Integer.toString(getStartPC()), Integer.toString(getEndPC()), Integer.toString(getHandlerPC()), Integer.toString(getCatchType()));
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ExceptionHandler}, and that {@code ExceptionHandler} instance is equal to this {@code ExceptionHandler} instance, {@code false}
-	 * otherwise.
+	 * Compares {@code object} to this {@code ExceptionHandler} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ExceptionHandler}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code ExceptionHandler} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ExceptionHandler}, and that {@code ExceptionHandler} instance is equal to this {@code ExceptionHandler} instance, {@code false}
-	 * otherwise
+	 * @param object the {@code Object} to compare to this {@code ExceptionHandler} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ExceptionHandler}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -113,13 +107,13 @@ public final class ExceptionHandler implements Node {
 			return true;
 		} else if(!(object instanceof ExceptionHandler)) {
 			return false;
-		} else if(ExceptionHandler.class.cast(object).getStartPC() != getStartPC()) {
+		} else if(getStartPC() != ExceptionHandler.class.cast(object).getStartPC()) {
 			return false;
-		} else if(ExceptionHandler.class.cast(object).getEndPC() != getEndPC()) {
+		} else if(getEndPC() != ExceptionHandler.class.cast(object).getEndPC()) {
 			return false;
-		} else if(ExceptionHandler.class.cast(object).getHandlerPC() != getHandlerPC()) {
+		} else if(getHandlerPC() != ExceptionHandler.class.cast(object).getHandlerPC()) {
 			return false;
-		} else if(ExceptionHandler.class.cast(object).getCatchType() != getCatchType()) {
+		} else if(getCatchType() != ExceptionHandler.class.cast(object).getCatchType()) {
 			return false;
 		} else {
 			return true;
@@ -127,27 +121,27 @@ public final class ExceptionHandler implements Node {
 	}
 	
 	/**
-	 * Returns the catch_type of this {@code ExceptionHandler} instance.
+	 * Returns the value of the {@code catch_type} item associated with this {@code ExceptionHandler} instance.
 	 * 
-	 * @return the catch_type of this {@code ExceptionHandler} instance
+	 * @return the value of the {@code catch_type} item associated with this {@code ExceptionHandler} instance
 	 */
 	public int getCatchType() {
 		return this.catchType;
 	}
 	
 	/**
-	 * Returns the end_pc of this {@code ExceptionHandler} instance.
+	 * Returns the value of the {@code end_pc} item associated with this {@code ExceptionHandler} instance.
 	 * 
-	 * @return the end_pc of this {@code ExceptionHandler} instance
+	 * @return the value of the {@code end_pc} item associated with this {@code ExceptionHandler} instance
 	 */
 	public int getEndPC() {
 		return this.endPC;
 	}
 	
 	/**
-	 * Returns the handler_pc of this {@code ExceptionHandler} instance.
+	 * Returns the value of the {@code handler_pc} item associated with this {@code ExceptionHandler} instance.
 	 * 
-	 * @return the handler_pc of this {@code ExceptionHandler} instance
+	 * @return the value of the {@code handler_pc} item associated with this {@code ExceptionHandler} instance
 	 */
 	public int getHandlerPC() {
 		return this.handlerPC;
@@ -155,8 +149,6 @@ public final class ExceptionHandler implements Node {
 	
 	/**
 	 * Returns the length of this {@code ExceptionHandler} instance.
-	 * <p>
-	 * All {@code ExceptionHandler}s have a length of {@code 8}.
 	 * 
 	 * @return the length of this {@code ExceptionHandler} instance
 	 */
@@ -166,9 +158,9 @@ public final class ExceptionHandler implements Node {
 	}
 	
 	/**
-	 * Returns the start_pc of this {@code ExceptionHandler} instance.
+	 * Returns the value of the {@code start_pc} item associated with this {@code ExceptionHandler} instance.
 	 * 
-	 * @return the start_pc of this {@code ExceptionHandler} instance
+	 * @return the value of the {@code start_pc} item associated with this {@code ExceptionHandler} instance
 	 */
 	public int getStartPC() {
 		return this.startPC;
@@ -185,11 +177,11 @@ public final class ExceptionHandler implements Node {
 	}
 	
 	/**
-	 * Sets a new catch_type for this {@code ExceptionHandler} instance.
+	 * Sets {@code catchType} as the value for the {@code catch_type} item associated with this {@code ExceptionHandler} instance.
 	 * <p>
 	 * If {@code catchType} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param catchType the new catch_type for this {@code ExceptionHandler} instance
+	 * @param catchType the value for the {@code catch_type} item associated with this {@code ExceptionHandler} instance
 	 * @throws IllegalArgumentException thrown if, and only if, {@code catchType} is less than {@code 0}
 	 */
 	public void setCatchType(final int catchType) {
@@ -197,60 +189,60 @@ public final class ExceptionHandler implements Node {
 	}
 	
 	/**
-	 * Sets a new end_pc for this {@code ExceptionHandler} instance.
+	 * Sets {@code endPC} as the value for the {@code end_pc} item associated with this {@code ExceptionHandler} instance.
 	 * <p>
 	 * If {@code endPC} is less than or equal to {@code getStartPC()}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param endPC the new end_pc for this {@code ExceptionHandler} instance
+	 * @param endPC the value for the {@code end_pc} item associated with this {@code ExceptionHandler} instance
 	 * @throws IllegalArgumentException thrown if, and only if, {@code endPC} is less than or equal to {@code getStartPC()}
 	 */
 	public void setEndPC(final int endPC) {
-		this.endPC = ParameterArguments.requireRange(endPC, this.startPC + 1, Integer.MAX_VALUE);
+		this.endPC = ParameterArguments.requireRange(endPC, getStartPC() + 1, Integer.MAX_VALUE);
 	}
 	
 	/**
-	 * Sets a new handler_pc for this {@code ExceptionHandler} instance.
+	 * Sets {@code handlerPC} as the value for the {@code handler_pc} item associated with this {@code ExceptionHandler} instance.
 	 * <p>
-	 * If {@code handlerPC} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code handlerPC} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param handlerPC the new handler_pc for this {@code ExceptionHandler} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code handlerPC} is less than {@code 1}
+	 * @param handlerPC the value for the {@code handler_pc} item associated with this {@code ExceptionHandler} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code handlerPC} is less than {@code 0}
 	 */
 	public void setHandlerPC(final int handlerPC) {
-		this.handlerPC = ParameterArguments.requireRange(handlerPC, 1, Integer.MAX_VALUE);
+		this.handlerPC = ParameterArguments.requireRange(handlerPC, 0, Integer.MAX_VALUE);
 	}
 	
 	/**
-	 * Sets a new start_pc for this {@code ExceptionHandler} instance.
+	 * Sets {@code startPC} as the value for the {@code start_pc} item associated with this {@code ExceptionHandler} instance.
 	 * <p>
-	 * If {@code startPC} is less than {@code 1} or greater than or equal to {@code getEndPC()}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code startPC} is less than {@code 0} or greater than or equal to {@code getEndPC()}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param startPC the new start_pc for this {@code ExceptionHandler} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code startPC} is less {@code 1} or greater than or equal to {@code getEndPC()}
+	 * @param startPC the value for the {@code start_pc} item associated with this {@code ExceptionHandler} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code startPC} is less than {@code 0} or greater than or equal to {@code getEndPC()}
 	 */
 	public void setStartPC(final int startPC) {
-		this.startPC = ParameterArguments.requireRange(startPC, 1, this.endPC - 1);
+		this.startPC = ParameterArguments.requireRange(startPC, 0, getEndPC() - 1);
 	}
 	
 	/**
 	 * Writes this {@code ExceptionHandler} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	public void write(final DataOutput dataOutput) {
 		try {
-			dataOutput.writeShort(this.startPC);
-			dataOutput.writeShort(this.endPC);
-			dataOutput.writeShort(this.handlerPC);
-			dataOutput.writeShort(this.catchType);
+			dataOutput.writeShort(getStartPC());
+			dataOutput.writeShort(getEndPC());
+			dataOutput.writeShort(getHandlerPC());
+			dataOutput.writeShort(getCatchType());
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}

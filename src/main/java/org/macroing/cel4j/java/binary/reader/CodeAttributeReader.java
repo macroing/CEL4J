@@ -64,16 +64,7 @@ final class CodeAttributeReader implements AttributeInfoReader {
 			final int exceptionTableLength = dataInput.readUnsignedShort();
 			
 			for(int i = 0; i < exceptionTableLength; i++) {
-				final int startPC = doReadU2(dataInput);
-				final int endPC = doReadU2(dataInput);
-				final int handlerPC = doReadU2(dataInput);
-				final int catchType = doReadU2(dataInput);
-				
-				final
-				ExceptionHandler exceptionHandler = new ExceptionHandler(startPC, endPC, handlerPC);
-				exceptionHandler.setCatchType(catchType);
-				
-				codeAttribute.addExceptionHandler(exceptionHandler);
+				codeAttribute.addExceptionHandler(new ExceptionHandler(doReadU2(dataInput), doReadU2(dataInput), doReadU2(dataInput), doReadU2(dataInput)));
 			}
 			
 			doReadAttributeInfos(dataInput, codeAttribute, constantPool);

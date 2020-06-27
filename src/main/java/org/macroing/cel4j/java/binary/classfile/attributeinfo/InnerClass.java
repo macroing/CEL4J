@@ -21,67 +21,79 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.node.Node;
+import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * An {@code InnerClass} that can be found as a part of any {@link InnerClassesAttribute} instances.
+ * An {@code InnerClass} represents an entry in the {@code classes} item of the {@code InnerClasses_attribute} structure.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * Each entry has the following format:
+ * <pre>
+ * <code>
+ * {
+ *     u2 inner_class_info_index;
+ *     u2 outer_class_info_index;
+ *     u2 inner_name_index;
+ *     u2 inner_class_access_flags;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class InnerClass implements Node {
 	/**
-	 * This field represents ACC_ABSTRACT in the inner_class_access_flags element of an inner_class structure.
+	 * The value for the access flag {@code ACC_ABSTRACT} in the {@code inner_class_access_flags} item.
 	 */
 	public static final int ACC_ABSTRACT = 0x0400;
 	
 	/**
-	 * This field represents ACC_ANNOTATION in the inner_class_access_flags element of an inner_class structure.
+	 * The value for the access flag {@code ACC_ANNOTATION} in the {@code inner_class_access_flags} item.
 	 */
 	public static final int ACC_ANNOTATION = 0x2000;
 	
 	/**
-	 * This field represents ACC_ENUM in the inner_class_access_flags element of an inner_class structure.
+	 * The value for the access flag {@code ACC_ENUM} in the {@code inner_class_access_flags} item.
 	 */
 	public static final int ACC_ENUM = 0x4000;
 	
 	/**
-	 * This field represents ACC_FINAL in the inner_class_access_flags element of an inner_class structure.
+	 * The value for the access flag {@code ACC_FINAL} in the {@code inner_class_access_flags} item.
 	 */
 	public static final int ACC_FINAL = 0x0010;
 	
 	/**
-	 * This field represents ACC_INTERFACE in the inner_class_access_flags element of an inner_class structure.
+	 * The value for the access flag {@code ACC_INTERFACE} in the {@code inner_class_access_flags} item.
 	 */
 	public static final int ACC_INTERFACE = 0x0200;
 	
 	/**
-	 * This field represents ACC_PRIVATE in the inner_class_access_flags element of an inner_class structure.
+	 * The value for the access flag {@code ACC_PRIVATE} in the {@code inner_class_access_flags} item.
 	 */
 	public static final int ACC_PRIVATE = 0x0002;
 	
 	/**
-	 * This field represents ACC_PROTECTED in the inner_class_access_flags element of an inner_class structure.
+	 * The value for the access flag {@code ACC_PROTECTED} in the {@code inner_class_access_flags} item.
 	 */
 	public static final int ACC_PROTECTED = 0x0004;
 	
 	/**
-	 * This field represents ACC_PUBLIC in the inner_class_access_flags element of an inner_class structure.
+	 * The value for the access flag {@code ACC_PUBLIC} in the {@code inner_class_access_flags} item.
 	 */
 	public static final int ACC_PUBLIC = 0x0001;
 	
 	/**
-	 * This field represents ACC_STATIC in the inner_class_access_flags element of an inner_class structure.
+	 * The value for the access flag {@code ACC_STATIC} in the {@code inner_class_access_flags} item.
 	 */
 	public static final int ACC_STATIC = 0x0008;
 	
 	/**
-	 * This field represents ACC_SYNTHETIC in the inner_class_access_flags element of an inner_class structure.
+	 * The value for the access flag {@code ACC_SYNTHETIC} in the {@code inner_class_access_flags} item.
 	 */
 	public static final int ACC_SYNTHETIC = 0x1000;
 	
@@ -95,7 +107,7 @@ public final class InnerClass implements Node {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Constructs a new empty {@code InnerClass} instance.
+	 * Constructs a new {@code InnerClass} instance.
 	 */
 	public InnerClass() {
 		
@@ -120,10 +132,22 @@ public final class InnerClass implements Node {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code InnerClass}, and that {@code InnerClass} instance is equal to this {@code InnerClass} instance, {@code false} otherwise.
+	 * Returns a {@code String} representation of this {@code InnerClass} instance.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code InnerClass} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code InnerClass}, and that {@code InnerClass} instance is equal to this {@code InnerClass} instance, {@code false} otherwise
+	 * @return a {@code String} representation of this {@code InnerClass} instance
+	 */
+	@Override
+	public String toString() {
+		return "new InnerClass()";
+	}
+	
+	/**
+	 * Compares {@code object} to this {@code InnerClass} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code InnerClass}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code InnerClass} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code InnerClass}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -131,13 +155,13 @@ public final class InnerClass implements Node {
 			return true;
 		} else if(!(object instanceof InnerClass)) {
 			return false;
-		} else if(InnerClass.class.cast(object).getInnerClassInfoIndex() != getInnerClassInfoIndex()) {
+		} else if(getInnerClassInfoIndex() != InnerClass.class.cast(object).getInnerClassInfoIndex()) {
 			return false;
-		} else if(InnerClass.class.cast(object).getOuterClassInfoIndex() != getOuterClassInfoIndex()) {
+		} else if(getOuterClassInfoIndex() != InnerClass.class.cast(object).getOuterClassInfoIndex()) {
 			return false;
-		} else if(InnerClass.class.cast(object).getInnerNameIndex() != getInnerNameIndex()) {
+		} else if(getInnerNameIndex() != InnerClass.class.cast(object).getInnerNameIndex()) {
 			return false;
-		} else if(InnerClass.class.cast(object).getInnerClassAccessFlags() != getInnerClassAccessFlags()) {
+		} else if(getInnerClassAccessFlags() != InnerClass.class.cast(object).getInnerClassAccessFlags()) {
 			return false;
 		} else {
 			return true;
@@ -145,144 +169,144 @@ public final class InnerClass implements Node {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_ABSTRACT is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_ABSTRACT} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_ABSTRACT is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_ABSTRACT} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise
 	 */
 	public boolean isAbstract() {
-		return (this.innerClassAccessFlags & ACC_ABSTRACT) != 0;
+		return (getInnerClassAccessFlags() & ACC_ABSTRACT) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_ANNOTATION is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_ANNOTATION} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_ANNOTATION is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_ANNOTATION} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise
 	 */
 	public boolean isAnnotation() {
-		return (this.innerClassAccessFlags & ACC_ANNOTATION) != 0;
+		return (getInnerClassAccessFlags() & ACC_ANNOTATION) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, neither of ACC_ANNOTATION, ACC_ENUM and ACC_INTERFACE are set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_ANNOTATION}, {@code ACC_ENUM} and {@code ACC_INTERFACE} are not set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, neither of ACC_ANNOTATION, ACC_ENUM and ACC_INTERFACE are set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_ANNOTATION}, {@code ACC_ENUM} and {@code ACC_INTERFACE} are not set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise
 	 */
 	public boolean isClass() {
 		return !isAnnotation() && !isEnum() && !isInterface();
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_ENUM is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_ENUM} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_ENUM is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_ENUM} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise
 	 */
 	public boolean isEnum() {
-		return (this.innerClassAccessFlags & ACC_ENUM) != 0;
+		return (getInnerClassAccessFlags() & ACC_ENUM) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_FINAL is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_FINAL} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_FINAL is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_FINAL} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise
 	 */
 	public boolean isFinal() {
-		return (this.innerClassAccessFlags & ACC_FINAL) != 0;
+		return (getInnerClassAccessFlags() & ACC_FINAL) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_INTERFACE is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_INTERFACE} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_INTERFACE is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_INTERFACE} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise
 	 */
 	public boolean isInterface() {
-		return (this.innerClassAccessFlags & ACC_INTERFACE) != 0;
+		return (getInnerClassAccessFlags() & ACC_INTERFACE) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, neither of ACC_PRIVATE, ACC_PROTECTED and ACC_PUBLIC are set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_PRIVATE}, {@code ACC_PROTECTED} and {@code ACC_PUBLIC} are not set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, neither of ACC_PRIVATE, ACC_PROTECTED and ACC_PUBLIC are set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_PRIVATE}, {@code ACC_PROTECTED} and {@code ACC_PUBLIC} are not set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise
 	 */
 	public boolean isPackageProtected() {
 		return !isPrivate() && !isProtected() && !isPublic();
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_PRIVATE is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_PRIVATE} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_PRIVATE is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_PRIVATE} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise
 	 */
 	public boolean isPrivate() {
-		return (this.innerClassAccessFlags & ACC_PRIVATE) != 0;
+		return (getInnerClassAccessFlags() & ACC_PRIVATE) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_PROTECTED is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_PROTECTED} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_PROTECTED is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_PROTECTED} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise
 	 */
 	public boolean isProtected() {
-		return (this.innerClassAccessFlags & ACC_PROTECTED) != 0;
+		return (getInnerClassAccessFlags() & ACC_PROTECTED) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_PUBLIC is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_PUBLIC} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_PUBLIC is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_PUBLIC} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise
 	 */
 	public boolean isPublic() {
-		return (this.innerClassAccessFlags & ACC_PUBLIC) != 0;
+		return (getInnerClassAccessFlags() & ACC_PUBLIC) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_STATIC is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_STATIC} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_STATIC is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_STATIC} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise
 	 */
 	public boolean isStatic() {
-		return (this.innerClassAccessFlags & ACC_STATIC) != 0;
+		return (getInnerClassAccessFlags() & ACC_STATIC) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_SYNTHETIC is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_SYNTHETIC} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_SYNTHETIC is set in the inner_class_access_flags item of this {@code InnerClass} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_SYNTHETIC} is set in the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance, {@code false} otherwise
 	 */
 	public boolean isSynthetic() {
-		return (this.innerClassAccessFlags & ACC_SYNTHETIC) != 0;
+		return (getInnerClassAccessFlags() & ACC_SYNTHETIC) != 0;
 	}
 	
 	/**
-	 * Returns the inner_class_access_flags value of this {@code InnerClass} instance.
+	 * Returns the value of the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance.
 	 * 
-	 * @return the inner_class_access_flags value of this {@code InnerClass} instance
+	 * @return the value of the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance
 	 */
 	public int getInnerClassAccessFlags() {
 		return this.innerClassAccessFlags;
 	}
 	
 	/**
-	 * Returns the inner_class_info_index value of this {@code InnerClass} instance.
+	 * Returns the value of the {@code inner_class_info_index} item associated with this {@code InnerClass} instance.
 	 * 
-	 * @return the inner_class_info_index value of this {@code InnerClass} instance
+	 * @return the value of the {@code inner_class_info_index} item associated with this {@code InnerClass} instance
 	 */
 	public int getInnerClassInfoIndex() {
 		return this.innerClassInfoIndex;
 	}
 	
 	/**
-	 * Returns the inner_name_index value of this {@code InnerClass} instance.
+	 * Returns the value of the {@code inner_name_index} item associated with this {@code InnerClass} instance.
 	 * 
-	 * @return the inner_name_index value of this {@code InnerClass} instance
+	 * @return the value of the {@code inner_name_index} item associated with this {@code InnerClass} instance
 	 */
 	public int getInnerNameIndex() {
 		return this.innerNameIndex;
 	}
 	
 	/**
-	 * Returns the outer_class_info_index value of this {@code InnerClass} instance.
+	 * Returns the value of the {@code outer_class_info_index} item associated with this {@code InnerClass} instance.
 	 * 
-	 * @return the outer_class_info_index value of this {@code InnerClass} instance
+	 * @return the value of the {@code outer_class_info_index} item associated with this {@code InnerClass} instance
 	 */
 	public int getOuterClassInfoIndex() {
 		return this.outerClassInfoIndex;
@@ -299,39 +323,51 @@ public final class InnerClass implements Node {
 	}
 	
 	/**
-	 * Sets a new inner_class_access_flags value for this {@code InnerClass} instance.
+	 * Sets {@code innerClassAccessFlags} as the value for the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance.
+	 * <p>
+	 * If {@code innerClassAccessFlags} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param innerClassAccessFlags the new inner_class_access_flags value
+	 * @param innerClassAccessFlags the value for the {@code inner_class_access_flags} item associated with this {@code InnerClass} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code innerClassAccessFlags} is less than {@code 0}
 	 */
 	public void setInnerClassAccessFlags(final int innerClassAccessFlags) {
-		this.innerClassAccessFlags = innerClassAccessFlags;
+		this.innerClassAccessFlags = ParameterArguments.requireRange(innerClassAccessFlags, 0, Integer.MAX_VALUE, "innerClassAccessFlags");
 	}
 	
 	/**
-	 * Sets a new inner_class_info_index value for this {@code InnerClass} instance.
+	 * Sets {@code innerClassInfoIndex} as the value for the {@code inner_class_info_index} item associated with this {@code InnerClass} instance.
+	 * <p>
+	 * If {@code innerClassInfoIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param innerClassInfoIndex the new inner_class_info_index value
+	 * @param innerClassInfoIndex the value for the {@code inner_class_info_index} item associated with this {@code InnerClass} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code innerClassInfoIndex} is less than {@code 1}
 	 */
 	public void setInnerClassInfoIndex(final int innerClassInfoIndex) {
-		this.innerClassInfoIndex = innerClassInfoIndex;
+		this.innerClassInfoIndex = ParameterArguments.requireRange(innerClassInfoIndex, 1, Integer.MAX_VALUE, "innerClassInfoIndex");
 	}
 	
 	/**
-	 * Sets a new inner_name_index value for this {@code InnerClass} instance.
+	 * Sets {@code innerNameIndex} as the value for the {@code inner_name_index} item associated with this {@code InnerClass} instance.
+	 * <p>
+	 * If {@code innerNameIndex} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param innerNameIndex the new inner_name_index value
+	 * @param innerNameIndex the value for the {@code inner_name_index} item associated with this {@code InnerClass} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code innerNameIndex} is less than {@code 0}
 	 */
 	public void setInnerNameIndex(final int innerNameIndex) {
-		this.innerNameIndex = innerNameIndex;
+		this.innerNameIndex = ParameterArguments.requireRange(innerNameIndex, 0, Integer.MAX_VALUE, "innerNameIndex");
 	}
 	
 	/**
-	 * Sets a new outer_class_info_index value for this {@code InnerClass} instance.
+	 * Sets {@code outerClassInfoIndex} as the value for the {@code outer_class_info_index} item associated with this {@code InnerClass} instance.
+	 * <p>
+	 * If {@code outerClassInfoIndex} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param outerClassInfoIndex the new outer_class_info_index value
+	 * @param outerClassInfoIndex the value for the {@code outer_class_info_index} item associated with this {@code InnerClass} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code outerClassInfoIndex} is less than {@code 0}
 	 */
 	public void setOuterClassInfoIndex(final int outerClassInfoIndex) {
-		this.outerClassInfoIndex = outerClassInfoIndex;
+		this.outerClassInfoIndex = ParameterArguments.requireRange(outerClassInfoIndex, 0, Integer.MAX_VALUE, "outerClassInfoIndex");
 	}
 	
 	/**
