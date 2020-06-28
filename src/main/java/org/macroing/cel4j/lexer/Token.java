@@ -19,6 +19,7 @@
 package org.macroing.cel4j.lexer;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A {@code Token} denotes a token.
@@ -29,6 +30,7 @@ import java.util.Objects;
  * @author J&#246;rgen Lundgren
  */
 public final class Token {
+	private final Object object;
 	private final String name;
 	private final String text;
 	private final boolean isSkippable;
@@ -59,6 +61,13 @@ public final class Token {
 	 * Constructs a new {@code Token} instance.
 	 * <p>
 	 * If either {@code name} or {@code text} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new Token(name, text, isSkippable, null);
+	 * }
+	 * </pre>
 	 * 
 	 * @param name the name to use
 	 * @param text the text to use
@@ -66,12 +75,37 @@ public final class Token {
 	 * @throws NullPointerException thrown if, and only if, either {@code name} or {@code text} are {@code null}
 	 */
 	public Token(final String name, final String text, final boolean isSkippable) {
+		this(name, text, isSkippable, null);
+	}
+	
+	/**
+	 * Constructs a new {@code Token} instance.
+	 * <p>
+	 * If either {@code name} or {@code text} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param name the name to use
+	 * @param text the text to use
+	 * @param isSkippable {@code true} if, and only if, this {@code Token} should be skippable, {@code false} otherwise
+	 * @param object the {@code Object} that is associated with this {@code Token}, or {@code null}
+	 * @throws NullPointerException thrown if, and only if, either {@code name} or {@code text} are {@code null}
+	 */
+	public Token(final String name, final String text, final boolean isSkippable, final Object object) {
 		this.name = Objects.requireNonNull(name, "name == null");
 		this.text = Objects.requireNonNull(text, "text == null");
 		this.isSkippable = isSkippable;
+		this.object = object;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns an {@code Optional} with the optional {@code Object} that is associated with this {@code Token} instance.
+	 * 
+	 * @return an {@code Optional} with the optional {@code Object} that is associated with this {@code Token} instance
+	 */
+	public Optional<Object> getObject() {
+		return Optional.ofNullable(this.object);
+	}
 	
 	/**
 	 * Returns the name of this {@code Token} instance.
@@ -115,6 +149,8 @@ public final class Token {
 			return true;
 		} else if(!(object instanceof Token)) {
 			return false;
+		} else if(!Objects.equals(getObject(), Token.class.cast(object).getObject())) {
+			return false;
 		} else if(!Objects.equals(getName(), Token.class.cast(object).getName())) {
 			return false;
 		} else if(!Objects.equals(getText(), Token.class.cast(object).getText())) {
@@ -142,6 +178,6 @@ public final class Token {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(getName(), getText(), Boolean.valueOf(isSkippable()));
+		return Objects.hash(getObject(), getName(), getText(), Boolean.valueOf(isSkippable()));
 	}
 }

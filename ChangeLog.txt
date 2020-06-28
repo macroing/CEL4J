@@ -5,6 +5,10 @@
 		* ADD:			Add copy constructors to all AttributeInfo implementations.
 		* CHANGE:		Update Javadocs.
 
+	CEL4J Lexer:
+
+		* ADD:			The Token class now allows an Object to be associated with it.
+
 2020-06-27  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
