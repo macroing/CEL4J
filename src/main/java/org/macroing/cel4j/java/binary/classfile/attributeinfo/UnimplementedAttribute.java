@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -32,12 +31,12 @@ import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 
 /**
- * An {@link AttributeInfo} implementation that is used for all attribute_info structures currently not supported by this library.
+ * An {@code UnimplementedAttribute} represents a custom {@code Unimplemented_attribute} structure.
  * <p>
- * All {@code AttributeInfo}s read by any {@link org.macroing.cel4j.java.binary.reader.AttributeInfoReader AttributeInfoReader}s, are considered to be supported by this library. This includes all third party implementations of {@code AttributeInfo},
- * for which there exists a corresponding {@code AttributeInfoReader}.
+ * This class is mutable and not thread-safe.
  * <p>
- * This class is not thread-safe.
+ * The {@code Unimplemented_attribute} structure is not defined by the Java Virtual Machine Specifications. It is defined by this library to represent an {@code attribute_info} structure that does not have a corresponding implementation in this
+ * library.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
@@ -52,12 +51,12 @@ public final class UnimplementedAttribute extends AttributeInfo {
 	 * <p>
 	 * If either {@code name} or {@code info} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param name the name for the new {@code UnimplementedAttribute} instance
-	 * @param attributeNameIndex the attribute_name_index of the new {@code UnimplementedAttribute} instance
-	 * @param info the info of the new {@code UnimplementedAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 * @param name the name associated with this {@code UnimplementedAttribute} instance
+	 * @param attributeNameIndex the value for the {@code attribute_name_index} item associated with this {@code UnimplementedAttribute} instance
+	 * @param info the values for the {@code info} item associated with this {@code UnimplementedAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than {@code 1}
 	 * @throws NullPointerException thrown if, and only if, either {@code name} or {@code info} are {@code null}
 	 */
 	public UnimplementedAttribute(final String name, final int attributeNameIndex, final byte[] info) {
@@ -75,7 +74,7 @@ public final class UnimplementedAttribute extends AttributeInfo {
 	 */
 	@Override
 	public UnimplementedAttribute copy() {
-		return new UnimplementedAttribute(getName(), getAttributeNameIndex(), this.info.clone());
+		return new UnimplementedAttribute(getName(), getAttributeNameIndex(), getInfo());
 	}
 	
 	/**
@@ -85,31 +84,16 @@ public final class UnimplementedAttribute extends AttributeInfo {
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("Unimplemented_attribute");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("name=" + getName());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_name_index=" + getAttributeNameIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_length=" + getAttributeLength());
-		stringBuilder.append(" ");
-		stringBuilder.append("info=" + Arrays.toString(this.info));
-		
-		final String toString = stringBuilder.toString();
-		
-		return toString;
+		return String.format("new UnimplementedAttribute(\"%s\", %s, new byte[] {})", getName(), Integer.toString(getAttributeNameIndex()));
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code UnimplementedAttribute}, and that {@code UnimplementedAttribute} instance is equal to this {@code UnimplementedAttribute} instance,
-	 * {@code false} otherwise.
+	 * Compares {@code object} to this {@code UnimplementedAttribute} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code UnimplementedAttribute}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code UnimplementedAttribute} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code UnimplementedAttribute}, and that {@code UnimplementedAttribute} instance is equal to this {@code UnimplementedAttribute} instance,
-	 * {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code UnimplementedAttribute} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code UnimplementedAttribute}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -117,13 +101,13 @@ public final class UnimplementedAttribute extends AttributeInfo {
 			return true;
 		} else if(!(object instanceof UnimplementedAttribute)) {
 			return false;
-		} else if(!Objects.equals(UnimplementedAttribute.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), UnimplementedAttribute.class.cast(object).getName())) {
 			return false;
-		} else if(UnimplementedAttribute.class.cast(object).getAttributeNameIndex() != getAttributeNameIndex()) {
+		} else if(getAttributeNameIndex() != UnimplementedAttribute.class.cast(object).getAttributeNameIndex()) {
 			return false;
-		} else if(UnimplementedAttribute.class.cast(object).getAttributeLength() != getAttributeLength()) {
+		} else if(getAttributeLength() != UnimplementedAttribute.class.cast(object).getAttributeLength()) {
 			return false;
-		} else if(!Arrays.equals(UnimplementedAttribute.class.cast(object).info, this.info)) {
+		} else if(!Arrays.equals(this.info, UnimplementedAttribute.class.cast(object).info)) {
 			return false;
 		} else {
 			return true;
@@ -131,18 +115,18 @@ public final class UnimplementedAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the {@code byte}s held by this {@code UnimplementedAttribute} instance.
+	 * Returns the values of the {@code info} item associated with this {@code UnimplementedAttribute} instance.
 	 * 
-	 * @return the {@code byte}s held by this {@code UnimplementedAttribute} instance
+	 * @return the values of the {@code info} item associated with this {@code UnimplementedAttribute} instance
 	 */
 	public byte[] getInfo() {
 		return this.info.clone();
 	}
 	
 	/**
-	 * Returns the attribute_length of this {@code UnimplementedAttribute} instance.
+	 * Returns the value of the {@code attribute_length} item associated with this {@code UnimplementedAttribute} instance.
 	 * 
-	 * @return the attribute_length of this {@code UnimplementedAttribute} instance
+	 * @return the value of the {@code attribute_length} item associated with this {@code UnimplementedAttribute} instance
 	 */
 	@Override
 	public int getAttributeLength() {
@@ -162,15 +146,15 @@ public final class UnimplementedAttribute extends AttributeInfo {
 	/**
 	 * Writes this {@code UnimplementedAttribute} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
@@ -186,14 +170,14 @@ public final class UnimplementedAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@code UnimplementedAttribute}s.
+	 * Returns a {@code List} with all {@code UnimplementedAttribute} instances in {@code node}.
 	 * <p>
-	 * All {@code UnimplementedAttribute}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code UnimplementedAttribute} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code UnimplementedAttribute}s
+	 * @return a {@code List} with all {@code UnimplementedAttribute} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<UnimplementedAttribute> filter(final Node node) {

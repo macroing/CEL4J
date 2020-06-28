@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -33,16 +32,28 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 
 /**
- * A {@code RuntimeInvisibleAnnotationsAttribute} denotes a RuntimeInvisibleAnnotations_attribute structure somewhere in a ClassFile structure.
+ * A {@code RuntimeInvisibleAnnotationsAttribute} represents a {@code RuntimeInvisibleAnnotations_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code RuntimeInvisibleAnnotations_attribute} structure has the following format:
+ * <pre>
+ * <code>
+ * RuntimeInvisibleAnnotations_attribute {
+ *     u2 attribute_name_index;
+ *     u4 attribute_length;
+ *     u2 num_annotations;
+ *     annotation[num_annotations] annotations;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	/**
-	 * The name of the RuntimeInvisibleAnnotations_attribute structure.
+	 * The name of the {@code RuntimeInvisibleAnnotations_attribute} structure.
 	 */
 	public static final String NAME = "RuntimeInvisibleAnnotations";
 	
@@ -55,10 +66,10 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	/**
 	 * Constructs a new {@code RuntimeInvisibleAnnotationsAttribute} instance.
 	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code RuntimeInvisibleAnnotationsAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 * @param attributeNameIndex the value for the {@code attribute_name_index} item associated with this {@code RuntimeInvisibleAnnotationsAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than {@code 1}
 	 */
 	public RuntimeInvisibleAnnotationsAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
@@ -67,11 +78,11 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns the annotations of this {@code RuntimeInvisibleAnnotationsAttribute} instance.
+	 * Returns a {@code List} with all currently added {@link Annotation} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code RuntimeInvisibleAnnotationsAttribute} instance.
 	 * 
-	 * @return the annotations of this {@code RuntimeInvisibleAnnotationsAttribute} instance
+	 * @return a {@code List} with all currently added {@code Annotation} instances
 	 */
 	public List<Annotation> getAnnotations() {
 		return new ArrayList<>(this.annotations);
@@ -86,7 +97,9 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	public RuntimeInvisibleAnnotationsAttribute copy() {
 		final RuntimeInvisibleAnnotationsAttribute runtimeInvisibleAnnotationsAttribute = new RuntimeInvisibleAnnotationsAttribute(getAttributeNameIndex());
 		
-		this.annotations.forEach(annotation -> runtimeInvisibleAnnotationsAttribute.addAnnotation(annotation.copy()));
+		for(final Annotation annotation : this.annotations) {
+			runtimeInvisibleAnnotationsAttribute.addAnnotation(annotation.copy());
+		}
 		
 		return runtimeInvisibleAnnotationsAttribute;
 	}
@@ -98,22 +111,7 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("RuntimeInvisibleAnnotations_attribute");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("name=" + getName());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_name_index=" + getAttributeNameIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_length=" + getAttributeLength());
-		stringBuilder.append(" ");
-		stringBuilder.append("num_annotations=" + getNumAnnotations());
-		
-		final String toString = stringBuilder.toString();
-		
-		return toString;
+		return String.format("new RuntimeInvisibleAnnotationsAttribute(%s)", Integer.toString(getAttributeNameIndex()));
 	}
 	
 	/**
@@ -129,7 +127,7 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	 * <ul>
 	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
 	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
-	 * <li>traverse its child {@code Node}s, if it has any.</li>
+	 * <li>traverse its child {@code Node} instances, if it has any.</li>
 	 * </ul>
 	 * 
 	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
@@ -157,12 +155,12 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code RuntimeInvisibleAnnotationsAttribute}, and that {@code RuntimeInvisibleAnnotationsAttribute} instance is equal to this
-	 * {@code RuntimeInvisibleAnnotationsAttribute} instance, {@code false} otherwise.
+	 * Compares {@code object} to this {@code RuntimeInvisibleAnnotationsAttribute} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code RuntimeInvisibleAnnotationsAttribute}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code RuntimeInvisibleAnnotationsAttribute} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code RuntimeInvisibleAnnotationsAttribute}, and that {@code RuntimeInvisibleAnnotationsAttribute} instance is equal to this
-	 * {@code RuntimeInvisibleAnnotationsAttribute} instance, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code RuntimeInvisibleAnnotationsAttribute} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code RuntimeInvisibleAnnotationsAttribute}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -170,13 +168,13 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 			return true;
 		} else if(!(object instanceof RuntimeInvisibleAnnotationsAttribute)) {
 			return false;
-		} else if(!Objects.equals(RuntimeInvisibleAnnotationsAttribute.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), RuntimeInvisibleAnnotationsAttribute.class.cast(object).getName())) {
 			return false;
-		} else if(RuntimeInvisibleAnnotationsAttribute.class.cast(object).getAttributeNameIndex() != getAttributeNameIndex()) {
+		} else if(getAttributeNameIndex() != RuntimeInvisibleAnnotationsAttribute.class.cast(object).getAttributeNameIndex()) {
 			return false;
-		} else if(RuntimeInvisibleAnnotationsAttribute.class.cast(object).getAttributeLength() != getAttributeLength()) {
+		} else if(getAttributeLength() != RuntimeInvisibleAnnotationsAttribute.class.cast(object).getAttributeLength()) {
 			return false;
-		} else if(RuntimeInvisibleAnnotationsAttribute.class.cast(object).getNumAnnotations() != getNumAnnotations()) {
+		} else if(getNumAnnotations() != RuntimeInvisibleAnnotationsAttribute.class.cast(object).getNumAnnotations()) {
 			return false;
 		} else if(!Objects.equals(RuntimeInvisibleAnnotationsAttribute.class.cast(object).annotations, this.annotations)) {
 			return false;
@@ -186,9 +184,9 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the attribute_length of this {@code RuntimeInvisibleAnnotationsAttribute} instance.
+	 * Returns the value of the {@code attribute_length} item associated with this {@code RuntimeInvisibleAnnotationsAttribute} instance.
 	 * 
-	 * @return the attribute_length of this {@code RuntimeInvisibleAnnotationsAttribute} instance
+	 * @return the value of the {@code attribute_length} item associated with this {@code RuntimeInvisibleAnnotationsAttribute} instance
 	 */
 	@Override
 	public int getAttributeLength() {
@@ -202,9 +200,9 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the num_annotations of this {@code RuntimeInvisibleAnnotationsAttribute} instance.
+	 * Returns the value of the {@code num_annotations} item associated with this {@code RuntimeInvisibleAnnotationsAttribute} instance.
 	 * 
-	 * @return the num_annotations of this {@code RuntimeInvisibleAnnotationsAttribute} instance
+	 * @return the value of the {@code num_annotations} item associated with this {@code RuntimeInvisibleAnnotationsAttribute} instance
 	 */
 	public int getNumAnnotations() {
 		return this.annotations.size();
@@ -221,7 +219,7 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Adds {@code annotation} to the annotations of this {@code RuntimeInvisibleAnnotationsAttribute} instance.
+	 * Adds {@code annotation} to this {@code RuntimeInvisibleAnnotationsAttribute} instance.
 	 * <p>
 	 * If {@code annotation} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
@@ -233,7 +231,7 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Removes {@code annotation} from the annotations of this {@code RuntimeInvisibleAnnotationsAttribute} instance.
+	 * Removes {@code annotation} from this {@code RuntimeInvisibleAnnotationsAttribute} instance.
 	 * <p>
 	 * If {@code annotation} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
@@ -247,15 +245,15 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	/**
 	 * Writes this {@code RuntimeInvisibleAnnotationsAttribute} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
@@ -275,14 +273,14 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@code RuntimeInvisibleAnnotationsAttribute}s.
+	 * Returns a {@code List} with all {@code RuntimeInvisibleAnnotationsAttribute} instances in {@code node}.
 	 * <p>
-	 * All {@code RuntimeInvisibleAnnotationsAttribute}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code RuntimeInvisibleAnnotationsAttribute} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code RuntimeInvisibleAnnotationsAttribute}s
+	 * @return a {@code List} with all {@code RuntimeInvisibleAnnotationsAttribute} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<RuntimeInvisibleAnnotationsAttribute> filter(final Node node) {
