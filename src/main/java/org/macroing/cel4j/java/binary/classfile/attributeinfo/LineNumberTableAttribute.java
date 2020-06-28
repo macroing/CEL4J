@@ -200,12 +200,7 @@ public final class LineNumberTableAttribute extends AttributeInfo {
 	 */
 	@Override
 	public int getAttributeLength() {
-		int attributeLength = 0;
-		
-		attributeLength += 2;
-		attributeLength += getLineNumberTableLength() * 4;
-		
-		return attributeLength;
+		return 2 + getLineNumberTableLength() * 4;
 	}
 	
 	/**

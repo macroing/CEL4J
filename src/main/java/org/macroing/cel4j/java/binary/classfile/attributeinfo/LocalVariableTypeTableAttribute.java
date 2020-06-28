@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -33,9 +32,21 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 
 /**
- * A {@code LocalVariableTypeTableAttribute} denotes a LocalVariableTypeTable_attribute structure somewhere in a ClassFile structure.
+ * A {@code LocalVariableTypeTableAttribute} represents a {@code LocalVariableTypeTable_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code LocalVariableTypeTable_attribute} structure has the following format:
+ * <pre>
+ * <code>
+ * LocalVariableTypeTable_attribute {
+ *     u2 attribute_name_index;
+ *     u4 attribute_length;
+ *     u2 local_variable_type_table_length;
+ *     local_variable_type[local_variable_type_table_length] local_variable_type_table;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
@@ -69,10 +80,10 @@ public final class LocalVariableTypeTableAttribute extends AttributeInfo {
 	/**
 	 * Constructs a new {@code LocalVariableTypeTableAttribute} instance.
 	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code LocalVariableTypeTableAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 * @param attributeNameIndex the value for the {@code attribute_name_index} item associated with this {@code LocalVariableTypeTableAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than {@code 1}
 	 */
 	public LocalVariableTypeTableAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
@@ -83,11 +94,11 @@ public final class LocalVariableTypeTableAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all currently added {@code LocalVariableType}s.
+	 * Returns a {@code List} with all currently added {@link LocalVariableType} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code LocalVariableTypeTableAttribute} instance.
 	 * 
-	 * @return a {@code List} with all currently added {@code LocalVariableType}s
+	 * @return a {@code List} with all currently added {@code LocalVariableType} instances
 	 */
 	public List<LocalVariableType> getLocalVariableTypeTable() {
 		return new ArrayList<>(this.localVariableTypeTable);
@@ -110,22 +121,7 @@ public final class LocalVariableTypeTableAttribute extends AttributeInfo {
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("LocalVariableTypeTable_attribute");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("name=" + getName());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_name_index=" + getAttributeNameIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_length=" + getAttributeLength());
-		stringBuilder.append(" ");
-		stringBuilder.append("local_variable_type_table_length=" + getLocalVariableTypeTableLength());
-		
-		final String toString = stringBuilder.toString();
-		
-		return toString;
+		return String.format("new LocalVariableTypeTableAttribute(%s)", Integer.toString(getAttributeNameIndex()));
 	}
 	
 	/**
@@ -141,7 +137,7 @@ public final class LocalVariableTypeTableAttribute extends AttributeInfo {
 	 * <ul>
 	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
 	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
-	 * <li>traverse its child {@code Node}s, if it has any.</li>
+	 * <li>traverse its child {@code Node} instances, if it has any.</li>
 	 * </ul>
 	 * 
 	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
@@ -169,12 +165,12 @@ public final class LocalVariableTypeTableAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code LocalVariableTypeTableAttribute}, and that {@code LocalVariableTypeTableAttribute} instance is equal to this
-	 * {@code LocalVariableTypeTableAttribute} instance, {@code false} otherwise.
+	 * Compares {@code object} to this {@code LocalVariableTypeTableAttribute} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code LocalVariableTypeTableAttribute}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code LocalVariableTypeTableAttribute} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code LocalVariableTypeTableAttribute}, and that {@code LocalVariableTypeTableAttribute} instance is equal to this
-	 * {@code LocalVariableTypeTableAttribute} instance, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code LocalVariableTypeTableAttribute} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code LocalVariableTypeTableAttribute}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -182,15 +178,15 @@ public final class LocalVariableTypeTableAttribute extends AttributeInfo {
 			return true;
 		} else if(!(object instanceof LocalVariableTypeTableAttribute)) {
 			return false;
-		} else if(!Objects.equals(LocalVariableTypeTableAttribute.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), LocalVariableTypeTableAttribute.class.cast(object).getName())) {
 			return false;
-		} else if(LocalVariableTypeTableAttribute.class.cast(object).getAttributeNameIndex() != getAttributeNameIndex()) {
+		} else if(getAttributeNameIndex() != LocalVariableTypeTableAttribute.class.cast(object).getAttributeNameIndex()) {
 			return false;
-		} else if(LocalVariableTypeTableAttribute.class.cast(object).getAttributeLength() != getAttributeLength()) {
+		} else if(getAttributeLength() != LocalVariableTypeTableAttribute.class.cast(object).getAttributeLength()) {
 			return false;
-		} else if(LocalVariableTypeTableAttribute.class.cast(object).getLocalVariableTypeTableLength() != getLocalVariableTypeTableLength()) {
+		} else if(getLocalVariableTypeTableLength() != LocalVariableTypeTableAttribute.class.cast(object).getLocalVariableTypeTableLength()) {
 			return false;
-		} else if(!Objects.equals(LocalVariableTypeTableAttribute.class.cast(object).localVariableTypeTable, this.localVariableTypeTable)) {
+		} else if(!Objects.equals(this.localVariableTypeTable, LocalVariableTypeTableAttribute.class.cast(object).localVariableTypeTable)) {
 			return false;
 		} else {
 			return true;
@@ -198,24 +194,19 @@ public final class LocalVariableTypeTableAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the attribute_length of this {@code LocalVariableTypeTableAttribute} instance.
+	 * Returns the value of the {@code attribute_length} item associated with this {@code LocalVariableTypeTableAttribute} instance.
 	 * 
-	 * @return the attribute_length of this {@code LocalVariableTypeTableAttribute} instance.
+	 * @return the value of the {@code attribute_length} item associated with this {@code LocalVariableTypeTableAttribute} instance
 	 */
 	@Override
 	public int getAttributeLength() {
-		int attributeLength = 0;
-		
-		attributeLength += 2;
-		attributeLength += getLocalVariableTypeTableLength() * 10;
-		
-		return attributeLength;
+		return 2 + getLocalVariableTypeTableLength() * 10;
 	}
 	
 	/**
-	 * Returns the local_variable_type_table_length of this {@code LocalVariableTypeTableAttribute} instance.
+	 * Returns the value of the {@code local_variable_type_table_length} item associated with this {@code LocalVariableTypeTableAttribute} instance.
 	 * 
-	 * @return the local_variable_type_table_length of this {@code LocalVariableTypeTableAttribute} instance.
+	 * @return the value of the {@code local_variable_type_table_length} item associated with this {@code LocalVariableTypeTableAttribute} instance
 	 */
 	public int getLocalVariableTypeTableLength() {
 		return this.localVariableTypeTable.size();
@@ -237,6 +228,7 @@ public final class LocalVariableTypeTableAttribute extends AttributeInfo {
 	 * If {@code localVariableType} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param localVariableType the {@link LocalVariableType} to add
+	 * @throws NullPointerException thrown if, and only if, {@code localVariableType} is {@code null}
 	 */
 	public void addLocalVariableType(final LocalVariableType localVariableType) {
 		this.localVariableTypeTable.add(Objects.requireNonNull(localVariableType, "localVariableType == null"));
@@ -248,6 +240,7 @@ public final class LocalVariableTypeTableAttribute extends AttributeInfo {
 	 * If {@code localVariableType} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param localVariableType the {@link LocalVariableType} to remove
+	 * @throws NullPointerException thrown if, and only if, {@code localVariableType} is {@code null}
 	 */
 	public void removeLocalVariableType(final LocalVariableType localVariableType) {
 		this.localVariableTypeTable.remove(Objects.requireNonNull(localVariableType, "localVariableType == null"));
