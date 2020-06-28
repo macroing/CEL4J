@@ -65,6 +65,20 @@ public final class UnimplementedAttribute extends AttributeInfo {
 		this.info = Objects.requireNonNull(info, "info == null").clone();
 	}
 	
+	/**
+	 * Constructs a new {@code UnimplementedAttribute} instance that is a copy of {@code unimplementedAttribute}.
+	 * <p>
+	 * If {@code unimplementedAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param unimplementedAttribute the {@code UnimplementedAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code unimplementedAttribute} is {@code null}
+	 */
+	public UnimplementedAttribute(final UnimplementedAttribute unimplementedAttribute) {
+		super(unimplementedAttribute.getName(), unimplementedAttribute.getAttributeNameIndex());
+		
+		this.info = unimplementedAttribute.getInfo();
+	}
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
@@ -74,7 +88,7 @@ public final class UnimplementedAttribute extends AttributeInfo {
 	 */
 	@Override
 	public UnimplementedAttribute copy() {
-		return new UnimplementedAttribute(getName(), getAttributeNameIndex(), getInfo());
+		return new UnimplementedAttribute(this);
 	}
 	
 	/**

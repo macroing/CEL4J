@@ -58,6 +58,18 @@ public final class DeprecatedAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Constructs a new {@code DeprecatedAttribute} instance that is a copy of {@code deprecatedAttribute}.
+	 * <p>
+	 * If {@code deprecatedAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param deprecatedAttribute the {@code DeprecatedAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code deprecatedAttribute} is {@code null}
+	 */
+	public DeprecatedAttribute(final DeprecatedAttribute deprecatedAttribute) {
+		super(NAME, deprecatedAttribute.getAttributeNameIndex());
+	}
+	
+	/**
 	 * Constructs a new {@code DeprecatedAttribute} instance.
 	 * <p>
 	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
@@ -78,7 +90,7 @@ public final class DeprecatedAttribute extends AttributeInfo {
 	 */
 	@Override
 	public DeprecatedAttribute copy() {
-		return new DeprecatedAttribute(getAttributeNameIndex());
+		return new DeprecatedAttribute(this);
 	}
 	
 	/**

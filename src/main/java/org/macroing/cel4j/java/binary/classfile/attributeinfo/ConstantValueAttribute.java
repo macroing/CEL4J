@@ -64,6 +64,20 @@ public final class ConstantValueAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Constructs a new {@code ConstantValueAttribute} instance that is a copy of {@code constantValueAttribute}.
+	 * <p>
+	 * If {@code constantValueAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param constantValueAttribute the {@code ConstantValueAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code constantValueAttribute} is {@code null}
+	 */
+	public ConstantValueAttribute(final ConstantValueAttribute constantValueAttribute) {
+		super(NAME, constantValueAttribute.getAttributeNameIndex());
+		
+		this.constantValueIndex = constantValueAttribute.constantValueIndex;
+	}
+	
+	/**
 	 * Constructs a new {@code ConstantValueAttribute} instance.
 	 * <p>
 	 * If either {@code attributeNameIndex} or {@code constantValueIndex} are less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
@@ -87,7 +101,7 @@ public final class ConstantValueAttribute extends AttributeInfo {
 	 */
 	@Override
 	public ConstantValueAttribute copy() {
-		return new ConstantValueAttribute(getAttributeNameIndex(), getConstantValueIndex());
+		return new ConstantValueAttribute(this);
 	}
 	
 	/**

@@ -56,6 +56,18 @@ public final class SyntheticAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Constructs a new {@code SyntheticAttribute} instance that is a copy of {@code syntheticAttribute}.
+	 * <p>
+	 * If {@code syntheticAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param syntheticAttribute the {@code SyntheticAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code syntheticAttribute} is {@code null}
+	 */
+	public SyntheticAttribute(final SyntheticAttribute syntheticAttribute) {
+		super(NAME, syntheticAttribute.getAttributeNameIndex());
+	}
+	
+	/**
 	 * Constructs a new {@code SyntheticAttribute} instance.
 	 * <p>
 	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
@@ -86,7 +98,7 @@ public final class SyntheticAttribute extends AttributeInfo {
 	 */
 	@Override
 	public SyntheticAttribute copy() {
-		return new SyntheticAttribute(getAttributeNameIndex());
+		return new SyntheticAttribute(this);
 	}
 	
 	/**

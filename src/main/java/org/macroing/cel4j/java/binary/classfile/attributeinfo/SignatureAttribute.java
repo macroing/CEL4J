@@ -66,6 +66,20 @@ public final class SignatureAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Constructs a new {@code SignatureAttribute} instance that is a copy of {@code signatureAttribute}.
+	 * <p>
+	 * If {@code signatureAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param signatureAttribute the {@code SignatureAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code signatureAttribute} is {@code null}
+	 */
+	public SignatureAttribute(final SignatureAttribute signatureAttribute) {
+		super(NAME, signatureAttribute.getAttributeNameIndex());
+		
+		this.signatureIndex = signatureAttribute.signatureIndex;
+	}
+	
+	/**
 	 * Constructs a new {@code SignatureAttribute} instance.
 	 * <p>
 	 * If either {@code attributeNameIndex} or {@code signatureIndex} are less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
@@ -89,7 +103,7 @@ public final class SignatureAttribute extends AttributeInfo {
 	 */
 	@Override
 	public SignatureAttribute copy() {
-		return new SignatureAttribute(getAttributeNameIndex(), getSignatureIndex());
+		return new SignatureAttribute(this);
 	}
 	
 	/**

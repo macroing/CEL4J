@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,45 +34,73 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 
 /**
- * A {@code MethodParametersAttribute} denotes a MethodParameters_attribute structure somewhere in a ClassFile structure.
+ * A {@code MethodParametersAttribute} represents a {@code MethodParameters_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code MethodParameters_attribute} structure has the following format:
+ * <pre>
+ * <code>
+ * MethodParameters_attribute {
+ *     u2 attribute_name_index;
+ *     u4 attribute_length;
+ *     u1 parameters_count;
+ *     parameter[parameters_count] parameters;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class MethodParametersAttribute extends AttributeInfo {
 	/**
-	 * The name of the MethodParameters_attribute structure.
+	 * The name of the {@code MethodParameters_attribute} structure.
 	 */
 	public static final String NAME = "MethodParameters";
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final List<Parameter> parameters = new ArrayList<>();
+	private final List<Parameter> parameters;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Constructs a new {@code MethodParametersAttribute} instance that is a copy of {@code methodParametersAttribute}.
+	 * <p>
+	 * If {@code methodParametersAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param methodParametersAttribute the {@code MethodParametersAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code methodParametersAttribute} is {@code null}
+	 */
+	public MethodParametersAttribute(final MethodParametersAttribute methodParametersAttribute) {
+		super(NAME, methodParametersAttribute.getAttributeNameIndex());
+		
+		this.parameters = methodParametersAttribute.parameters.stream().map(parameter -> parameter.copy()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+	}
+	
+	/**
 	 * Constructs a new {@code MethodParametersAttribute} instance.
 	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code MethodParametersAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 * @param attributeNameIndex the value for the {@code attribute_name_index} item associated with this {@code MethodParametersAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than {@code 1}
 	 */
 	public MethodParametersAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
+		
+		this.parameters = new ArrayList<>();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all currently added {@code Parameter}s.
+	 * Returns a {@code List} with all currently added {@link Parameter} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code MethodParametersAttribute} instance.
 	 * 
-	 * @return a {@code List} with all currently added {@code Parameter}s
+	 * @return a {@code List} with all currently added {@code Parameter} instances
 	 */
 	public List<Parameter> getParameters() {
 		return new ArrayList<>(this.parameters);
@@ -86,11 +113,7 @@ public final class MethodParametersAttribute extends AttributeInfo {
 	 */
 	@Override
 	public MethodParametersAttribute copy() {
-		final MethodParametersAttribute methodParametersAttribute = new MethodParametersAttribute(getAttributeNameIndex());
-		
-		this.parameters.forEach(parameter -> methodParametersAttribute.addParameter(parameter.copy()));
-		
-		return methodParametersAttribute;
+		return new MethodParametersAttribute(this);
 	}
 	
 	/**
@@ -100,20 +123,7 @@ public final class MethodParametersAttribute extends AttributeInfo {
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("MethodParameters_attribute");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("name=" + getName());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_name_index=" + getAttributeNameIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_length=" + getAttributeLength());
-		
-		final String toString = stringBuilder.toString();
-		
-		return toString;
+		return String.format("new MethodParametersAttribute(%s)", Integer.toString(getAttributeNameIndex()));
 	}
 	
 	/**
@@ -129,7 +139,7 @@ public final class MethodParametersAttribute extends AttributeInfo {
 	 * <ul>
 	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
 	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
-	 * <li>traverse its child {@code Node}s, if it has any.</li>
+	 * <li>traverse its child {@code Node} instances, if it has any.</li>
 	 * </ul>
 	 * 
 	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
@@ -157,12 +167,12 @@ public final class MethodParametersAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code MethodParametersAttribute}, and that {@code MethodParametersAttribute} instance is equal to this {@code MethodParametersAttribute}
-	 * instance, {@code false} otherwise.
+	 * Compares {@code object} to this {@code MethodParametersAttribute} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code MethodParametersAttribute}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code MethodParametersAttribute} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code MethodParametersAttribute}, and that {@code MethodParametersAttribute} instance is equal to this {@code MethodParametersAttribute}
-	 * instance, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code MethodParametersAttribute} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code MethodParametersAttribute}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -170,15 +180,15 @@ public final class MethodParametersAttribute extends AttributeInfo {
 			return true;
 		} else if(!(object instanceof MethodParametersAttribute)) {
 			return false;
-		} else if(!Objects.equals(MethodParametersAttribute.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), MethodParametersAttribute.class.cast(object).getName())) {
 			return false;
-		} else if(MethodParametersAttribute.class.cast(object).getAttributeNameIndex() != getAttributeNameIndex()) {
+		} else if(getAttributeNameIndex() != MethodParametersAttribute.class.cast(object).getAttributeNameIndex()) {
 			return false;
-		} else if(MethodParametersAttribute.class.cast(object).getAttributeLength() != getAttributeLength()) {
+		} else if(getAttributeLength() != MethodParametersAttribute.class.cast(object).getAttributeLength()) {
 			return false;
-		} else if(MethodParametersAttribute.class.cast(object).getParametersCount() != getParametersCount()) {
+		} else if(getParametersCount() != MethodParametersAttribute.class.cast(object).getParametersCount()) {
 			return false;
-		} else if(!Objects.equals(MethodParametersAttribute.class.cast(object).parameters, this.parameters)) {
+		} else if(!Objects.equals(this.parameters, MethodParametersAttribute.class.cast(object).parameters)) {
 			return false;
 		} else {
 			return true;
@@ -186,9 +196,9 @@ public final class MethodParametersAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the attribute_length of this {@code MethodParametersAttribute} instance.
+	 * Returns the value of the {@code attribute_length} item associated with this {@code MethodParametersAttribute} instance.
 	 * 
-	 * @return the attribute_length of this {@code MethodParametersAttribute} instance
+	 * @return the value of the {@code attribute_length} item associated with this {@code MethodParametersAttribute} instance
 	 */
 	@Override
 	public int getAttributeLength() {
@@ -196,9 +206,9 @@ public final class MethodParametersAttribute extends AttributeInfo {
 	}
 	
 	/**
-	 * Returns the parameters_count of this {@code MethodParametersAttribute} instance.
+	 * Returns the value of the {@code parameters_count} item associated with this {@code MethodParametersAttribute} instance.
 	 * 
-	 * @return the parameters_count of this {@code MethodParametersAttribute} instance
+	 * @return the value of the {@code parameters_count} item associated with this {@code MethodParametersAttribute} instance
 	 */
 	public int getParametersCount() {
 		return this.parameters.size();
@@ -219,7 +229,7 @@ public final class MethodParametersAttribute extends AttributeInfo {
 	 * <p>
 	 * If {@code parameter} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param parameter the {@code Parameter} to add
+	 * @param parameter the {@link Parameter} to add
 	 * @throws NullPointerException thrown if, and only if, {@code parameter} is {@code null}
 	 */
 	public void addParameter(final Parameter parameter) {
@@ -231,7 +241,7 @@ public final class MethodParametersAttribute extends AttributeInfo {
 	 * <p>
 	 * If {@code parameter} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param parameter the {@code Parameter} to remove
+	 * @param parameter the {@link Parameter} to remove
 	 * @throws NullPointerException thrown if, and only if, {@code parameter} is {@code null}
 	 */
 	public void removeParameter(final Parameter parameter) {

@@ -62,6 +62,20 @@ public final class SourceFileAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Constructs a new {@code SourceFileAttribute} instance that is a copy of {@code sourceFileAttribute}.
+	 * <p>
+	 * If {@code sourceFileAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param sourceFileAttribute the {@code SourceFileAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code sourceFileAttribute} is {@code null}
+	 */
+	public SourceFileAttribute(final SourceFileAttribute sourceFileAttribute) {
+		super(NAME, sourceFileAttribute.getAttributeNameIndex());
+		
+		this.sourceFileIndex = sourceFileAttribute.sourceFileIndex;
+	}
+	
+	/**
 	 * Constructs a new {@code SourceFileAttribute} instance.
 	 * <p>
 	 * If either {@code attributeNameIndex} or {@code sourceFileIndex} are less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
@@ -85,7 +99,7 @@ public final class SourceFileAttribute extends AttributeInfo {
 	 */
 	@Override
 	public SourceFileAttribute copy() {
-		return new SourceFileAttribute(getAttributeNameIndex(), getSourceFileIndex());
+		return new SourceFileAttribute(this);
 	}
 	
 	/**

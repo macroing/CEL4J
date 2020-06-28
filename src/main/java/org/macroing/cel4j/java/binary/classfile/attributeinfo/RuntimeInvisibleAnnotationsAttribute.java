@@ -59,9 +59,23 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final List<Annotation> annotations = new ArrayList<>();
+	private final List<Annotation> annotations;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Constructs a new {@code RuntimeInvisibleAnnotationsAttribute} instance that is a copy of {@code runtimeInvisibleAnnotationsAttribute}.
+	 * <p>
+	 * If {@code runtimeInvisibleAnnotationsAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param runtimeInvisibleAnnotationsAttribute the {@code RuntimeInvisibleAnnotationsAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code runtimeInvisibleAnnotationsAttribute} is {@code null}
+	 */
+	public RuntimeInvisibleAnnotationsAttribute(final RuntimeInvisibleAnnotationsAttribute runtimeInvisibleAnnotationsAttribute) {
+		super(NAME, runtimeInvisibleAnnotationsAttribute.getAttributeNameIndex());
+		
+		this.annotations = runtimeInvisibleAnnotationsAttribute.annotations.stream().map(annotation -> annotation.copy()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+	}
 	
 	/**
 	 * Constructs a new {@code RuntimeInvisibleAnnotationsAttribute} instance.
@@ -73,6 +87,8 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	 */
 	public RuntimeInvisibleAnnotationsAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
+		
+		this.annotations = new ArrayList<>();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,13 +111,7 @@ public final class RuntimeInvisibleAnnotationsAttribute extends AttributeInfo {
 	 */
 	@Override
 	public RuntimeInvisibleAnnotationsAttribute copy() {
-		final RuntimeInvisibleAnnotationsAttribute runtimeInvisibleAnnotationsAttribute = new RuntimeInvisibleAnnotationsAttribute(getAttributeNameIndex());
-		
-		for(final Annotation annotation : this.annotations) {
-			runtimeInvisibleAnnotationsAttribute.addAnnotation(annotation.copy());
-		}
-		
-		return runtimeInvisibleAnnotationsAttribute;
+		return new RuntimeInvisibleAnnotationsAttribute(this);
 	}
 	
 	/**

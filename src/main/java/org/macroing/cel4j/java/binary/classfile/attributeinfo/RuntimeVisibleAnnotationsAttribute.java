@@ -59,9 +59,23 @@ public final class RuntimeVisibleAnnotationsAttribute extends AttributeInfo {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final List<Annotation> annotations = new ArrayList<>();
+	private final List<Annotation> annotations;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Constructs a new {@code RuntimeVisibleAnnotationsAttribute} instance that is a copy of {@code runtimeVisibleAnnotationsAttribute}.
+	 * <p>
+	 * If {@code runtimeVisibleAnnotationsAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param runtimeVisibleAnnotationsAttribute the {@code RuntimeVisibleAnnotationsAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code runtimeVisibleAnnotationsAttribute} is {@code null}
+	 */
+	public RuntimeVisibleAnnotationsAttribute(final RuntimeVisibleAnnotationsAttribute runtimeVisibleAnnotationsAttribute) {
+		super(NAME, runtimeVisibleAnnotationsAttribute.getAttributeNameIndex());
+		
+		this.annotations = runtimeVisibleAnnotationsAttribute.annotations.stream().map(annotation -> annotation.copy()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+	}
 	
 	/**
 	 * Constructs a new {@code RuntimeVisibleAnnotationsAttribute} instance.
@@ -73,6 +87,8 @@ public final class RuntimeVisibleAnnotationsAttribute extends AttributeInfo {
 	 */
 	public RuntimeVisibleAnnotationsAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
+		
+		this.annotations = new ArrayList<>();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,13 +111,7 @@ public final class RuntimeVisibleAnnotationsAttribute extends AttributeInfo {
 	 */
 	@Override
 	public RuntimeVisibleAnnotationsAttribute copy() {
-		final RuntimeVisibleAnnotationsAttribute runtimeVisibleAnnotationsAttribute = new RuntimeVisibleAnnotationsAttribute(getAttributeNameIndex());
-		
-		for(final Annotation annotation : this.annotations) {
-			runtimeVisibleAnnotationsAttribute.addAnnotation(annotation.copy());
-		}
-		
-		return runtimeVisibleAnnotationsAttribute;
+		return new RuntimeVisibleAnnotationsAttribute(this);
 	}
 	
 	/**

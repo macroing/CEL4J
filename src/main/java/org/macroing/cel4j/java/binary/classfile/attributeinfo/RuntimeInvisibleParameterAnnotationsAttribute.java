@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -33,45 +32,73 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 
 /**
- * A {@code RuntimeInvisibleParameterAnnotationsAttribute} denotes a RuntimeInvisibleParameterAnnotations_attribute structure somewhere in a ClassFile structure.
+ * A {@code RuntimeInvisibleParameterAnnotationsAttribute} represents a {@code RuntimeInvisibleParameterAnnotations_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code RuntimeInvisibleParameterAnnotations_attribute} structure has the following format:
+ * <pre>
+ * <code>
+ * RuntimeInvisibleParameterAnnotations_attribute {
+ *     u2 attribute_name_index;
+ *     u4 attribute_length;
+ *     u1 num_parameters;
+ *     parameter_annotation[num_parameters] parameter_annotations;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class RuntimeInvisibleParameterAnnotationsAttribute extends AttributeInfo {
 	/**
-	 * The name of the RuntimeInvisibleParameterAnnotations_attribute structure.
+	 * The name of the {@code RuntimeInvisibleParameterAnnotations_attribute} structure.
 	 */
 	public static final String NAME = "RuntimeInvisibleParameterAnnotations";
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final List<ParameterAnnotation> parameterAnnotations = new ArrayList<>();
+	private final List<ParameterAnnotation> parameterAnnotations;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Constructs a new {@code RuntimeInvisibleParameterAnnotationsAttribute} instance that is a copy of {@code runtimeInvisibleParameterAnnotationsAttribute}.
+	 * <p>
+	 * If {@code runtimeInvisibleParameterAnnotationsAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param runtimeInvisibleParameterAnnotationsAttribute the {@code RuntimeInvisibleParameterAnnotationsAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code runtimeInvisibleParameterAnnotationsAttribute} is {@code null}
+	 */
+	public RuntimeInvisibleParameterAnnotationsAttribute(final RuntimeInvisibleParameterAnnotationsAttribute runtimeInvisibleParameterAnnotationsAttribute) {
+		super(NAME, runtimeInvisibleParameterAnnotationsAttribute.getAttributeNameIndex());
+		
+		this.parameterAnnotations = runtimeInvisibleParameterAnnotationsAttribute.parameterAnnotations.stream().map(parameterAnnotation -> parameterAnnotation.copy()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+	}
+	
+	/**
 	 * Constructs a new {@code RuntimeInvisibleParameterAnnotationsAttribute} instance.
 	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code RuntimeInvisibleParameterAnnotationsAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 * @param attributeNameIndex the value for the {@code attribute_name_index} item associated with this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than {@code 1}
 	 */
 	public RuntimeInvisibleParameterAnnotationsAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
+		
+		this.parameterAnnotations = new ArrayList<>();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns the annotations of this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance.
+	 * Returns a {@code List} with all currently added {@link ParameterAnnotation} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance.
 	 * 
-	 * @return the annotations of this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance
+	 * @return a {@code List} with all currently added {@code ParameterAnnotation} instances
 	 */
 	public List<ParameterAnnotation> getParameterAnnotations() {
 		return new ArrayList<>(this.parameterAnnotations);
@@ -84,11 +111,7 @@ public final class RuntimeInvisibleParameterAnnotationsAttribute extends Attribu
 	 */
 	@Override
 	public RuntimeInvisibleParameterAnnotationsAttribute copy() {
-		final RuntimeInvisibleParameterAnnotationsAttribute runtimeInvisibleParameterAnnotationsAttribute = new RuntimeInvisibleParameterAnnotationsAttribute(getAttributeNameIndex());
-		
-		this.parameterAnnotations.forEach(parameterAnnotation -> runtimeInvisibleParameterAnnotationsAttribute.addParameterAnnotation(parameterAnnotation.copy()));
-		
-		return runtimeInvisibleParameterAnnotationsAttribute;
+		return new RuntimeInvisibleParameterAnnotationsAttribute(this);
 	}
 	
 	/**
@@ -98,22 +121,7 @@ public final class RuntimeInvisibleParameterAnnotationsAttribute extends Attribu
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("RuntimeInvisibleParameterAnnotations_attribute");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("name=" + getName());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_name_index=" + getAttributeNameIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_length=" + getAttributeLength());
-		stringBuilder.append(" ");
-		stringBuilder.append("num_parameters=" + getNumParameters());
-		
-		final String toString = stringBuilder.toString();
-		
-		return toString;
+		return String.format("new RuntimeInvisibleParameterAnnotationsAttribute(%s)", Integer.toString(getAttributeNameIndex()));
 	}
 	
 	/**
@@ -129,7 +137,7 @@ public final class RuntimeInvisibleParameterAnnotationsAttribute extends Attribu
 	 * <ul>
 	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
 	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
-	 * <li>traverse its child {@code Node}s, if it has any.</li>
+	 * <li>traverse its child {@code Node} instances, if it has any.</li>
 	 * </ul>
 	 * 
 	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
@@ -157,12 +165,12 @@ public final class RuntimeInvisibleParameterAnnotationsAttribute extends Attribu
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code RuntimeInvisibleParameterAnnotationsAttribute}, and that {@code RuntimeInvisibleParameterAnnotationsAttribute} instance is equal to this
-	 * {@code RuntimeInvisibleParameterAnnotationsAttribute} instance, {@code false} otherwise.
+	 * Compares {@code object} to this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code RuntimeInvisibleParameterAnnotationsAttribute}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code RuntimeInvisibleParameterAnnotationsAttribute}, and that {@code RuntimeInvisibleParameterAnnotationsAttribute} instance is equal to this
-	 * {@code RuntimeInvisibleParameterAnnotationsAttribute} instance, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code RuntimeInvisibleParameterAnnotationsAttribute}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -170,15 +178,15 @@ public final class RuntimeInvisibleParameterAnnotationsAttribute extends Attribu
 			return true;
 		} else if(!(object instanceof RuntimeInvisibleParameterAnnotationsAttribute)) {
 			return false;
-		} else if(!Objects.equals(RuntimeInvisibleParameterAnnotationsAttribute.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), RuntimeInvisibleParameterAnnotationsAttribute.class.cast(object).getName())) {
 			return false;
-		} else if(RuntimeInvisibleParameterAnnotationsAttribute.class.cast(object).getAttributeNameIndex() != getAttributeNameIndex()) {
+		} else if(getAttributeNameIndex() != RuntimeInvisibleParameterAnnotationsAttribute.class.cast(object).getAttributeNameIndex()) {
 			return false;
-		} else if(RuntimeInvisibleParameterAnnotationsAttribute.class.cast(object).getAttributeLength() != getAttributeLength()) {
+		} else if(getAttributeLength() != RuntimeInvisibleParameterAnnotationsAttribute.class.cast(object).getAttributeLength()) {
 			return false;
-		} else if(RuntimeInvisibleParameterAnnotationsAttribute.class.cast(object).getNumParameters() != getNumParameters()) {
+		} else if(getNumParameters() != RuntimeInvisibleParameterAnnotationsAttribute.class.cast(object).getNumParameters()) {
 			return false;
-		} else if(!Objects.equals(RuntimeInvisibleParameterAnnotationsAttribute.class.cast(object).parameterAnnotations, this.parameterAnnotations)) {
+		} else if(!Objects.equals(this.parameterAnnotations, RuntimeInvisibleParameterAnnotationsAttribute.class.cast(object).parameterAnnotations)) {
 			return false;
 		} else {
 			return true;
@@ -186,9 +194,9 @@ public final class RuntimeInvisibleParameterAnnotationsAttribute extends Attribu
 	}
 	
 	/**
-	 * Returns the attribute_length of this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance.
+	 * Returns the value of the {@code attribute_length} item associated with this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance.
 	 * 
-	 * @return the attribute_length of this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance
+	 * @return the value of the {@code attribute_length} item associated with this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance
 	 */
 	@Override
 	public int getAttributeLength() {
@@ -202,9 +210,9 @@ public final class RuntimeInvisibleParameterAnnotationsAttribute extends Attribu
 	}
 	
 	/**
-	 * Returns the num_parameters of this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance.
+	 * Returns the value of the {@code num_parameters} item associated with this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance.
 	 * 
-	 * @return the num_parameters of this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance
+	 * @return the value of the {@code num_parameters} item associated with this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance
 	 */
 	public int getNumParameters() {
 		return this.parameterAnnotations.size();
@@ -221,7 +229,7 @@ public final class RuntimeInvisibleParameterAnnotationsAttribute extends Attribu
 	}
 	
 	/**
-	 * Adds {@code parameterAnnotation} to the parameter_annotations of this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance.
+	 * Adds {@code parameterAnnotation} to this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance.
 	 * <p>
 	 * If {@code parameterAnnotation} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
@@ -233,7 +241,7 @@ public final class RuntimeInvisibleParameterAnnotationsAttribute extends Attribu
 	}
 	
 	/**
-	 * Removes {@code parameterAnnotation} from the parameter_annotations of this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance.
+	 * Removes {@code parameterAnnotation} from this {@code RuntimeInvisibleParameterAnnotationsAttribute} instance.
 	 * <p>
 	 * If {@code parameterAnnotation} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 

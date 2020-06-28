@@ -64,6 +64,20 @@ public final class ExceptionsAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Constructs a new {@code ExceptionsAttribute} instance that is a copy of {@code exceptionsAttribute}.
+	 * <p>
+	 * If {@code exceptionsAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param exceptionsAttribute the {@code ExceptionsAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code exceptionsAttribute} is {@code null}
+	 */
+	public ExceptionsAttribute(final ExceptionsAttribute exceptionsAttribute) {
+		super(NAME, exceptionsAttribute.getAttributeNameIndex());
+		
+		this.exceptionIndexTable = exceptionsAttribute.exceptionIndexTable.stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+	}
+	
+	/**
 	 * Constructs a new {@code ExceptionsAttribute} instance.
 	 * <p>
 	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
@@ -86,13 +100,7 @@ public final class ExceptionsAttribute extends AttributeInfo {
 	 */
 	@Override
 	public ExceptionsAttribute copy() {
-		final ExceptionsAttribute exceptionsAttribute = new ExceptionsAttribute(getAttributeNameIndex());
-		
-		for(final int exceptionIndex : this.exceptionIndexTable) {
-			exceptionsAttribute.addExceptionIndex(exceptionIndex);
-		}
-		
-		return exceptionsAttribute;
+		return new ExceptionsAttribute(this);
 	}
 	
 	/**

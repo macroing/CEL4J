@@ -77,6 +77,24 @@ public final class CodeAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Constructs a new {@code CodeAttribute} instance that is a copy of {@code codeAttribute}.
+	 * <p>
+	 * If {@code codeAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param codeAttribute the {@code CodeAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code codeAttribute} is {@code null}
+	 */
+	public CodeAttribute(final CodeAttribute codeAttribute) {
+		super(NAME, codeAttribute.getAttributeNameIndex());
+		
+		this.attributeInfos = codeAttribute.attributeInfos.stream().map(attributeInfo -> attributeInfo.copy()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+		this.exceptionHandlers = codeAttribute.exceptionHandlers.stream().map(exceptionHandler -> exceptionHandler.copy()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+		this.instructions = codeAttribute.instructions.stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+		this.maxLocals = codeAttribute.maxLocals;
+		this.maxStack = codeAttribute.maxStack;
+	}
+	
+	/**
 	 * Constructs a new {@code CodeAttribute} instance.
 	 * <p>
 	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
@@ -140,24 +158,7 @@ public final class CodeAttribute extends AttributeInfo {
 	 */
 	@Override
 	public CodeAttribute copy() {
-		final
-		CodeAttribute codeAttribute = new CodeAttribute(getAttributeNameIndex());
-		codeAttribute.setMaxLocals(getMaxLocals());
-		codeAttribute.setMaxStack(getMaxStack());
-		
-		for(final AttributeInfo attributeInfo : this.attributeInfos) {
-			codeAttribute.addAttributeInfo(attributeInfo);
-		}
-		
-		for(final ExceptionHandler exceptionHandler : this.exceptionHandlers) {
-			codeAttribute.addExceptionHandler(exceptionHandler);
-		}
-		
-		for(final Instruction instruction : this.instructions) {
-			codeAttribute.addInstruction(instruction);
-		}
-		
-		return codeAttribute;
+		return new CodeAttribute(this);
 	}
 	
 	/**

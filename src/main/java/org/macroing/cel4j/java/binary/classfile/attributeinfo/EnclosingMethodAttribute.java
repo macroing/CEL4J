@@ -64,6 +64,21 @@ public final class EnclosingMethodAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Constructs a new {@code EnclosingMethodAttribute} instance that is a copy of {@code enclosingMethodAttribute}.
+	 * <p>
+	 * If {@code enclosingMethodAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param enclosingMethodAttribute the {@code EnclosingMethodAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code enclosingMethodAttribute} is {@code null}
+	 */
+	public EnclosingMethodAttribute(final EnclosingMethodAttribute enclosingMethodAttribute) {
+		super(NAME, enclosingMethodAttribute.getAttributeNameIndex());
+		
+		this.classIndex = enclosingMethodAttribute.classIndex;
+		this.methodIndex = enclosingMethodAttribute.methodIndex;
+	}
+	
+	/**
 	 * Constructs a new {@code EnclosingMethodAttribute} instance.
 	 * <p>
 	 * If either {@code attributeNameIndex} or {@code classIndex} are less than {@code 1}, or {@code methodIndex} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
@@ -89,7 +104,7 @@ public final class EnclosingMethodAttribute extends AttributeInfo {
 	 */
 	@Override
 	public EnclosingMethodAttribute copy() {
-		return new EnclosingMethodAttribute(getAttributeNameIndex(), getClassIndex(), getMethodIndex());
+		return new EnclosingMethodAttribute(this);
 	}
 	
 	/**

@@ -64,6 +64,20 @@ public final class StackMapTableAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Constructs a new {@code StackMapTableAttribute} instance that is a copy of {@code stackMapTableAttribute}.
+	 * <p>
+	 * If {@code stackMapTableAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param stackMapTableAttribute the {@code StackMapTableAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code stackMapTableAttribute} is {@code null}
+	 */
+	public StackMapTableAttribute(final StackMapTableAttribute stackMapTableAttribute) {
+		super(NAME, stackMapTableAttribute.getAttributeNameIndex());
+		
+		this.entries = stackMapTableAttribute.entries.stream().map(stackMapFrame -> stackMapFrame.copy()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+	}
+	
+	/**
 	 * Constructs a new {@code StackMapTableAttribute} instance.
 	 * <p>
 	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
@@ -97,13 +111,7 @@ public final class StackMapTableAttribute extends AttributeInfo {
 	 */
 	@Override
 	public StackMapTableAttribute copy() {
-		final StackMapTableAttribute stackMapTableAttribute = new StackMapTableAttribute(getAttributeNameIndex());
-		
-		for(final StackMapFrame entry : this.entries) {
-			stackMapTableAttribute.addEntry(entry.copy());
-		}
-		
-		return stackMapTableAttribute;
+		return new StackMapTableAttribute(this);
 	}
 	
 	/**

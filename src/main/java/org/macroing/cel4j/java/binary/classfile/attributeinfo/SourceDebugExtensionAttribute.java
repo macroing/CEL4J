@@ -61,6 +61,20 @@ public final class SourceDebugExtensionAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Constructs a new {@code SourceDebugExtensionAttribute} instance that is a copy of {@code sourceDebugExtensionAttribute}.
+	 * <p>
+	 * If {@code sourceDebugExtensionAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param sourceDebugExtensionAttribute the {@code SourceDebugExtensionAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code sourceDebugExtensionAttribute} is {@code null}
+	 */
+	public SourceDebugExtensionAttribute(final SourceDebugExtensionAttribute sourceDebugExtensionAttribute) {
+		super(NAME, sourceDebugExtensionAttribute.getAttributeNameIndex());
+		
+		this.debugExtension = sourceDebugExtensionAttribute.debugExtension;
+	}
+	
+	/**
 	 * Constructs a new {@code SourceDebugExtensionAttribute} instance.
 	 * <p>
 	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
@@ -87,7 +101,7 @@ public final class SourceDebugExtensionAttribute extends AttributeInfo {
 	 */
 	@Override
 	public SourceDebugExtensionAttribute copy() {
-		return new SourceDebugExtensionAttribute(getAttributeNameIndex(), getDebugExtension());
+		return new SourceDebugExtensionAttribute(this);
 	}
 	
 	/**

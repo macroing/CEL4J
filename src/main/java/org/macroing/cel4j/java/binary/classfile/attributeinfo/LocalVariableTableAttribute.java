@@ -42,15 +42,29 @@ import org.macroing.cel4j.node.NodeTraversalException;
  */
 public final class LocalVariableTableAttribute extends AttributeInfo {
 	/**
-	 * The name of the LocalVariableTable_attribute structure.
+	 * The name of the {@code LocalVariableTable_attribute} structure.
 	 */
 	public static final String NAME = "LocalVariableTable";
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final List<LocalVariable> localVariableTable = new ArrayList<>();
+	private final List<LocalVariable> localVariableTable;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Constructs a new {@code LocalVariableTableAttribute} instance that is a copy of {@code localVariableTableAttribute}.
+	 * <p>
+	 * If {@code localVariableTableAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param localVariableTableAttribute the {@code LocalVariableTableAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code localVariableTableAttribute} is {@code null}
+	 */
+	public LocalVariableTableAttribute(final LocalVariableTableAttribute localVariableTableAttribute) {
+		super(NAME, localVariableTableAttribute.getAttributeNameIndex());
+		
+		this.localVariableTable = localVariableTableAttribute.localVariableTable.stream().map(localVariable -> localVariable.copy()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+	}
 	
 	/**
 	 * Constructs a new {@code LocalVariableTableAttribute} instance.
@@ -62,6 +76,8 @@ public final class LocalVariableTableAttribute extends AttributeInfo {
 	 */
 	public LocalVariableTableAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
+		
+		this.localVariableTable = new ArrayList<>();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -84,11 +100,7 @@ public final class LocalVariableTableAttribute extends AttributeInfo {
 	 */
 	@Override
 	public LocalVariableTableAttribute copy() {
-		final LocalVariableTableAttribute localVariableTableAttribute = new LocalVariableTableAttribute(getAttributeNameIndex());
-		
-		this.localVariableTable.forEach(localVariable -> localVariableTableAttribute.addLocalVariable(localVariable.copy()));
-		
-		return localVariableTableAttribute;
+		return new LocalVariableTableAttribute(this);
 	}
 	
 	/**

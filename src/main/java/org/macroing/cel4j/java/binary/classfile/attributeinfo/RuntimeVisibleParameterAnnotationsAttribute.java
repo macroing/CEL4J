@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -33,45 +32,73 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 
 /**
- * A {@code RuntimeVisibleParameterAnnotationsAttribute} denotes a RuntimeVisibleParameterAnnotations_attribute structure somewhere in a ClassFile structure.
+ * A {@code RuntimeVisibleParameterAnnotationsAttribute} represents a {@code RuntimeVisibleParameterAnnotations_attribute} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * The {@code RuntimeVisibleParameterAnnotations_attribute} structure has the following format:
+ * <pre>
+ * <code>
+ * RuntimeVisibleParameterAnnotations_attribute {
+ *     u2 attribute_name_index;
+ *     u4 attribute_length;
+ *     u1 num_parameters;
+ *     parameter_annotation[num_parameters] parameter_annotations;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class RuntimeVisibleParameterAnnotationsAttribute extends AttributeInfo {
 	/**
-	 * The name of the RuntimeVisibleParameterAnnotations_attribute structure.
+	 * The name of the {@code RuntimeVisibleParameterAnnotations_attribute} structure.
 	 */
 	public static final String NAME = "RuntimeVisibleParameterAnnotations";
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final List<ParameterAnnotation> parameterAnnotations = new ArrayList<>();
+	private final List<ParameterAnnotation> parameterAnnotations;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Constructs a new {@code RuntimeVisibleParameterAnnotationsAttribute} instance that is a copy of {@code runtimeVisibleParameterAnnotationsAttribute}.
+	 * <p>
+	 * If {@code runtimeVisibleParameterAnnotationsAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param runtimeVisibleParameterAnnotationsAttribute the {@code RuntimeVisibleParameterAnnotationsAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code runtimeVisibleParameterAnnotationsAttribute} is {@code null}
+	 */
+	public RuntimeVisibleParameterAnnotationsAttribute(final RuntimeVisibleParameterAnnotationsAttribute runtimeVisibleParameterAnnotationsAttribute) {
+		super(NAME, runtimeVisibleParameterAnnotationsAttribute.getAttributeNameIndex());
+		
+		this.parameterAnnotations = runtimeVisibleParameterAnnotationsAttribute.parameterAnnotations.stream().map(parameterAnnotation -> parameterAnnotation.copy()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+	}
+	
+	/**
 	 * Constructs a new {@code RuntimeVisibleParameterAnnotationsAttribute} instance.
 	 * <p>
-	 * If {@code attributeNameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param attributeNameIndex the attribute_name_index of the new {@code RuntimeVisibleParameterAnnotationsAttribute} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than or equal to {@code 0}
+	 * @param attributeNameIndex the value for the {@code attribute_name_index} item associated with this {@code RuntimeVisibleParameterAnnotationsAttribute} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code attributeNameIndex} is less than {@code 1}
 	 */
 	public RuntimeVisibleParameterAnnotationsAttribute(final int attributeNameIndex) {
 		super(NAME, attributeNameIndex);
+		
+		this.parameterAnnotations = new ArrayList<>();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns the annotations of this {@code RuntimeVisibleParameterAnnotationsAttribute} instance.
+	 * Returns a {@code List} with all currently added {@link ParameterAnnotation} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code RuntimeVisibleParameterAnnotationsAttribute} instance.
 	 * 
-	 * @return the annotations of this {@code RuntimeVisibleParameterAnnotationsAttribute} instance
+	 * @return a {@code List} with all currently added {@code ParameterAnnotation} instances
 	 */
 	public List<ParameterAnnotation> getParameterAnnotations() {
 		return new ArrayList<>(this.parameterAnnotations);
@@ -84,11 +111,7 @@ public final class RuntimeVisibleParameterAnnotationsAttribute extends Attribute
 	 */
 	@Override
 	public RuntimeVisibleParameterAnnotationsAttribute copy() {
-		final RuntimeVisibleParameterAnnotationsAttribute runtimeVisibleParameterAnnotationsAttribute = new RuntimeVisibleParameterAnnotationsAttribute(getAttributeNameIndex());
-		
-		this.parameterAnnotations.forEach(parameterAnnotation -> runtimeVisibleParameterAnnotationsAttribute.addParameterAnnotation(parameterAnnotation.copy()));
-		
-		return runtimeVisibleParameterAnnotationsAttribute;
+		return new RuntimeVisibleParameterAnnotationsAttribute(this);
 	}
 	
 	/**
@@ -98,22 +121,7 @@ public final class RuntimeVisibleParameterAnnotationsAttribute extends Attribute
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("RuntimeVisibleParameterAnnotations_attribute");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("name=" + getName());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_name_index=" + getAttributeNameIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("attribute_length=" + getAttributeLength());
-		stringBuilder.append(" ");
-		stringBuilder.append("num_parameters=" + getNumParameters());
-		
-		final String toString = stringBuilder.toString();
-		
-		return toString;
+		return String.format("new RuntimeVisibleParameterAnnotationsAttribute(%s)", Integer.toString(getAttributeNameIndex()));
 	}
 	
 	/**
@@ -129,7 +137,7 @@ public final class RuntimeVisibleParameterAnnotationsAttribute extends Attribute
 	 * <ul>
 	 * <li>throw a {@code NullPointerException} if {@code nodeHierarchicalVisitor} is {@code null}.</li>
 	 * <li>throw a {@code NodeTraversalException} if {@code nodeHierarchicalVisitor} throws a {@code RuntimeException}.</li>
-	 * <li>traverse its child {@code Node}s, if it has any.</li>
+	 * <li>traverse its child {@code Node} instances, if it has any.</li>
 	 * </ul>
 	 * 
 	 * @param nodeHierarchicalVisitor the {@code NodeHierarchicalVisitor} to accept
@@ -157,12 +165,12 @@ public final class RuntimeVisibleParameterAnnotationsAttribute extends Attribute
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code RuntimeVisibleParameterAnnotationsAttribute}, and that {@code RuntimeVisibleParameterAnnotationsAttribute} instance is equal to this
-	 * {@code RuntimeVisibleParameterAnnotationsAttribute} instance, {@code false} otherwise.
+	 * Compares {@code object} to this {@code RuntimeVisibleParameterAnnotationsAttribute} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code RuntimeVisibleParameterAnnotationsAttribute}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code RuntimeVisibleParameterAnnotationsAttribute} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code RuntimeVisibleParameterAnnotationsAttribute}, and that {@code RuntimeVisibleParameterAnnotationsAttribute} instance is equal to this
-	 * {@code RuntimeVisibleParameterAnnotationsAttribute} instance, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code RuntimeVisibleParameterAnnotationsAttribute} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code RuntimeVisibleParameterAnnotationsAttribute}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -170,15 +178,15 @@ public final class RuntimeVisibleParameterAnnotationsAttribute extends Attribute
 			return true;
 		} else if(!(object instanceof RuntimeVisibleParameterAnnotationsAttribute)) {
 			return false;
-		} else if(!Objects.equals(RuntimeVisibleParameterAnnotationsAttribute.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), RuntimeVisibleParameterAnnotationsAttribute.class.cast(object).getName())) {
 			return false;
-		} else if(RuntimeVisibleParameterAnnotationsAttribute.class.cast(object).getAttributeNameIndex() != getAttributeNameIndex()) {
+		} else if(getAttributeNameIndex() != RuntimeVisibleParameterAnnotationsAttribute.class.cast(object).getAttributeNameIndex()) {
 			return false;
-		} else if(RuntimeVisibleParameterAnnotationsAttribute.class.cast(object).getAttributeLength() != getAttributeLength()) {
+		} else if(getAttributeLength() != RuntimeVisibleParameterAnnotationsAttribute.class.cast(object).getAttributeLength()) {
 			return false;
-		} else if(RuntimeVisibleParameterAnnotationsAttribute.class.cast(object).getNumParameters() != getNumParameters()) {
+		} else if(getNumParameters() != RuntimeVisibleParameterAnnotationsAttribute.class.cast(object).getNumParameters()) {
 			return false;
-		} else if(!Objects.equals(RuntimeVisibleParameterAnnotationsAttribute.class.cast(object).parameterAnnotations, this.parameterAnnotations)) {
+		} else if(!Objects.equals(this.parameterAnnotations, RuntimeVisibleParameterAnnotationsAttribute.class.cast(object).parameterAnnotations)) {
 			return false;
 		} else {
 			return true;
@@ -186,9 +194,9 @@ public final class RuntimeVisibleParameterAnnotationsAttribute extends Attribute
 	}
 	
 	/**
-	 * Returns the attribute_length of this {@code RuntimeVisibleParameterAnnotationsAttribute} instance.
+	 * Returns the value of the {@code attribute_length} item associated with this {@code RuntimeVisibleParameterAnnotationsAttribute} instance.
 	 * 
-	 * @return the attribute_length of this {@code RuntimeVisibleParameterAnnotationsAttribute} instance
+	 * @return the value of the {@code attribute_length} item associated with this {@code RuntimeVisibleParameterAnnotationsAttribute} instance
 	 */
 	@Override
 	public int getAttributeLength() {
@@ -202,9 +210,9 @@ public final class RuntimeVisibleParameterAnnotationsAttribute extends Attribute
 	}
 	
 	/**
-	 * Returns the num_parameters of this {@code RuntimeVisibleParameterAnnotationsAttribute} instance.
+	 * Returns the value of the {@code num_parameters} item associated with this {@code RuntimeVisibleParameterAnnotationsAttribute} instance.
 	 * 
-	 * @return the num_parameters of this {@code RuntimeVisibleParameterAnnotationsAttribute} instance
+	 * @return the value of the {@code num_parameters} item associated with this {@code RuntimeVisibleParameterAnnotationsAttribute} instance
 	 */
 	public int getNumParameters() {
 		return this.parameterAnnotations.size();
@@ -221,7 +229,7 @@ public final class RuntimeVisibleParameterAnnotationsAttribute extends Attribute
 	}
 	
 	/**
-	 * Adds {@code parameterAnnotation} to the parameter_annotations of this {@code RuntimeVisibleParameterAnnotationsAttribute} instance.
+	 * Adds {@code parameterAnnotation} to this {@code RuntimeVisibleParameterAnnotationsAttribute} instance.
 	 * <p>
 	 * If {@code parameterAnnotation} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
@@ -233,7 +241,7 @@ public final class RuntimeVisibleParameterAnnotationsAttribute extends Attribute
 	}
 	
 	/**
-	 * Removes {@code parameterAnnotation} from the parameter_annotations of this {@code RuntimeVisibleParameterAnnotationsAttribute} instance.
+	 * Removes {@code parameterAnnotation} from this {@code RuntimeVisibleParameterAnnotationsAttribute} instance.
 	 * <p>
 	 * If {@code parameterAnnotation} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 

@@ -64,6 +64,20 @@ public final class LineNumberTableAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Constructs a new {@code LineNumberTableAttribute} instance that is a copy of {@code lineNumberTableAttribute}.
+	 * <p>
+	 * If {@code lineNumberTableAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param lineNumberTableAttribute the {@code LineNumberTableAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code lineNumberTableAttribute} is {@code null}
+	 */
+	public LineNumberTableAttribute(final LineNumberTableAttribute lineNumberTableAttribute) {
+		super(NAME, lineNumberTableAttribute.getAttributeNameIndex());
+		
+		this.lineNumberTable = lineNumberTableAttribute.lineNumberTable.stream().map(lineNumber -> lineNumber.copy()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+	}
+	
+	/**
 	 * Constructs a new {@code LineNumberTableAttribute} instance.
 	 * <p>
 	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
@@ -86,13 +100,7 @@ public final class LineNumberTableAttribute extends AttributeInfo {
 	 */
 	@Override
 	public LineNumberTableAttribute copy() {
-		final LineNumberTableAttribute lineNumberTableAttribute = new LineNumberTableAttribute(getAttributeNameIndex());
-		
-		for(final LineNumber lineNumber : this.lineNumberTable) {
-			lineNumberTableAttribute.addLineNumber(lineNumber.copy());
-		}
-		
-		return lineNumberTableAttribute;
+		return new LineNumberTableAttribute(this);
 	}
 	
 	/**

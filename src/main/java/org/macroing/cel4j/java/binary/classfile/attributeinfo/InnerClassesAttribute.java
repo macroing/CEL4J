@@ -66,6 +66,20 @@ public final class InnerClassesAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Constructs a new {@code InnerClassesAttribute} instance that is a copy of {@code innerClassesAttribute}.
+	 * <p>
+	 * If {@code innerClassesAttribute} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param innerClassesAttribute the {@code InnerClassesAttribute} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code innerClassesAttribute} is {@code null}
+	 */
+	public InnerClassesAttribute(final InnerClassesAttribute innerClassesAttribute) {
+		super(NAME, innerClassesAttribute.getAttributeNameIndex());
+		
+		this.innerClasses = innerClassesAttribute.innerClasses.stream().map(innerClass -> innerClass.copy()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+	}
+	
+	/**
 	 * Constructs a new {@code InnerClassesAttribute} instance.
 	 * <p>
 	 * If {@code attributeNameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
@@ -88,13 +102,7 @@ public final class InnerClassesAttribute extends AttributeInfo {
 	 */
 	@Override
 	public InnerClassesAttribute copy() {
-		final InnerClassesAttribute innerClassesAttribute = new InnerClassesAttribute(getAttributeNameIndex());
-		
-		for(final InnerClass innerClass : this.innerClasses) {
-			innerClassesAttribute.addInnerClass(innerClass.copy());
-		}
-		
-		return innerClassesAttribute;
+		return new InnerClassesAttribute(this);
 	}
 	
 	/**
