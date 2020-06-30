@@ -27,9 +27,10 @@ import java.util.Objects;
 
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.util.ParameterArguments;
+import org.macroing.cel4j.util.Strings;
 
 /**
- * An {@code Instruction} that can be found as a part of any {@code CodeAttribute} instances.
+ * An {@code Instruction} represents an instruction in the {@code code} table item of a {@code Code_attribute} structure.
  * <p>
  * This class is immutable and therefore also thread-safe.
  * 
@@ -38,1027 +39,1027 @@ import org.macroing.cel4j.util.ParameterArguments;
  */
 public final class Instruction implements Node {
 	/**
-	 * The mnemonic for the instruction arraylength.
+	 * The mnemonic for the instruction {@code arraylength}.
 	 */
 	public static final String MNEMONIC_ARRAY_LENGTH = "arraylength";
 	
 	/**
-	 * The mnemonic for the instruction aaload.
+	 * The mnemonic for the instruction {@code aaload}.
 	 */
 	public static final String MNEMONIC_A_A_LOAD = "aaload";
 	
 	/**
-	 * The mnemonic for the instruction aastore.
+	 * The mnemonic for the instruction {@code aastore}.
 	 */
 	public static final String MNEMONIC_A_A_STORE = "aastore";
 	
 	/**
-	 * The mnemonic for the instruction aconst_null.
+	 * The mnemonic for the instruction {@code aconst_null}.
 	 */
 	public static final String MNEMONIC_A_CONST_NULL = "aconst_null";
 	
 	/**
-	 * The mnemonic for the instruction aload.
+	 * The mnemonic for the instruction {@code aload}.
 	 */
 	public static final String MNEMONIC_A_LOAD = "aload";
 	
 	/**
-	 * The mnemonic for the instruction aload_0.
+	 * The mnemonic for the instruction {@code aload_0}.
 	 */
 	public static final String MNEMONIC_A_LOAD_0 = "aload_0";
 	
 	/**
-	 * The mnemonic for the instruction aload_1.
+	 * The mnemonic for the instruction {@code aload_1}.
 	 */
 	public static final String MNEMONIC_A_LOAD_1 = "aload_1";
 	
 	/**
-	 * The mnemonic for the instruction aload_2.
+	 * The mnemonic for the instruction {@code aload_2}.
 	 */
 	public static final String MNEMONIC_A_LOAD_2 = "aload_2";
 	
 	/**
-	 * The mnemonic for the instruction aload_3.
+	 * The mnemonic for the instruction {@code aload_3}.
 	 */
 	public static final String MNEMONIC_A_LOAD_3 = "aload_3";
 	
 	/**
-	 * The mnemonic for the instruction anewarray.
+	 * The mnemonic for the instruction {@code anewarray}.
 	 */
 	public static final String MNEMONIC_A_NEW_ARRAY = "anewarray";
 	
 	/**
-	 * The mnemonic for the instruction areturn.
+	 * The mnemonic for the instruction {@code areturn}.
 	 */
 	public static final String MNEMONIC_A_RETURN = "areturn";
 	
 	/**
-	 * The mnemonic for the instruction astore.
+	 * The mnemonic for the instruction {@code astore}.
 	 */
 	public static final String MNEMONIC_A_STORE = "astore";
 	
 	/**
-	 * The mnemonic for the instruction astore_0.
+	 * The mnemonic for the instruction {@code astore_0}.
 	 */
 	public static final String MNEMONIC_A_STORE_0 = "astore_0";
 	
 	/**
-	 * The mnemonic for the instruction astore_1.
+	 * The mnemonic for the instruction {@code astore_1}.
 	 */
 	public static final String MNEMONIC_A_STORE_1 = "astore_1";
 	
 	/**
-	 * The mnemonic for the instruction astore_2.
+	 * The mnemonic for the instruction {@code astore_2}.
 	 */
 	public static final String MNEMONIC_A_STORE_2 = "astore_2";
 	
 	/**
-	 * The mnemonic for the instruction astore_3.
+	 * The mnemonic for the instruction {@code astore_3}.
 	 */
 	public static final String MNEMONIC_A_STORE_3 = "astore_3";
 	
 	/**
-	 * The mnemonic for the instruction athrow.
+	 * The mnemonic for the instruction {@code athrow}.
 	 */
 	public static final String MNEMONIC_A_THROW = "athrow";
 	
 	/**
-	 * The mnemonic for the instruction breakpoint.
+	 * The mnemonic for the instruction {@code breakpoint}.
 	 */
 	public static final String MNEMONIC_BREAK_POINT = "breakpoint";
 	
 	/**
-	 * The mnemonic for the instruction baload.
+	 * The mnemonic for the instruction {@code baload}.
 	 */
 	public static final String MNEMONIC_B_A_LOAD = "baload";
 	
 	/**
-	 * The mnemonic for the instruction bastore.
+	 * The mnemonic for the instruction {@code bastore}.
 	 */
 	public static final String MNEMONIC_B_A_STORE = "bastore";
 	
 	/**
-	 * The mnemonic for the instruction bipush.
+	 * The mnemonic for the instruction {@code bipush}.
 	 */
 	public static final String MNEMONIC_B_I_PUSH = "bipush";
 	
 	/**
-	 * The mnemonic for the instruction checkcast.
+	 * The mnemonic for the instruction {@code checkcast}.
 	 */
 	public static final String MNEMONIC_CHECK_CAST = "checkcast";
 	
 	/**
-	 * The mnemonic for the instruction caload.
+	 * The mnemonic for the instruction {@code caload}.
 	 */
 	public static final String MNEMONIC_C_A_LOAD = "caload";
 	
 	/**
-	 * The mnemonic for the instruction castore.
+	 * The mnemonic for the instruction {@code castore}.
 	 */
 	public static final String MNEMONIC_C_A_STORE = "castore";
 	
 	/**
-	 * The mnemonic for the instruction dup.
+	 * The mnemonic for the instruction {@code dup}.
 	 */
 	public static final String MNEMONIC_DUP = "dup";
 	
 	/**
-	 * The mnemonic for the instruction dup2.
+	 * The mnemonic for the instruction {@code dup2}.
 	 */
 	public static final String MNEMONIC_DUP_2 = "dup2";
 	
 	/**
-	 * The mnemonic for the instruction dup2_x1.
+	 * The mnemonic for the instruction {@code dup2_x1}.
 	 */
 	public static final String MNEMONIC_DUP_2_X_1 = "dup2_x1";
 	
 	/**
-	 * The mnemonic for the instruction dup2_x2.
+	 * The mnemonic for the instruction {@code dup2_x2}.
 	 */
 	public static final String MNEMONIC_DUP_2_X_2 = "dup2_x2";
 	
 	/**
-	 * The mnemonic for the instruction dup_x1.
+	 * The mnemonic for the instruction {@code dup_x1}.
 	 */
 	public static final String MNEMONIC_DUP_X_1 = "dup_x1";
 	
 	/**
-	 * The mnemonic for the instruction dup_x2.
+	 * The mnemonic for the instruction {@code dup_x2}.
 	 */
 	public static final String MNEMONIC_DUP_X_2 = "dup_x2";
 	
 	/**
-	 * The mnemonic for the instruction d2f.
+	 * The mnemonic for the instruction {@code d2f}.
 	 */
 	public static final String MNEMONIC_D_2_F = "d2f";
 	
 	/**
-	 * The mnemonic for the instruction d2i.
+	 * The mnemonic for the instruction {@code d2i}.
 	 */
 	public static final String MNEMONIC_D_2_I = "d2i";
 	
 	/**
-	 * The mnemonic for the instruction d2l.
+	 * The mnemonic for the instruction {@code d2l}.
 	 */
 	public static final String MNEMONIC_D_2_L = "d2l";
 	
 	/**
-	 * The mnemonic for the instruction dadd.
+	 * The mnemonic for the instruction {@code dadd}.
 	 */
 	public static final String MNEMONIC_D_ADD = "dadd";
 	
 	/**
-	 * The mnemonic for the instruction daload.
+	 * The mnemonic for the instruction {@code daload}.
 	 */
 	public static final String MNEMONIC_D_A_LOAD = "daload";
 	
 	/**
-	 * The mnemonic for the instruction dastore.
+	 * The mnemonic for the instruction {@code dastore}.
 	 */
 	public static final String MNEMONIC_D_A_STORE = "dastore";
 	
 	/**
-	 * The mnemonic for the instruction dcmpg.
+	 * The mnemonic for the instruction {@code dcmpg}.
 	 */
 	public static final String MNEMONIC_D_CMP_G = "dcmpg";
 	
 	/**
-	 * The mnemonic for the instruction dcmpl.
+	 * The mnemonic for the instruction {@code dcmpl}.
 	 */
 	public static final String MNEMONIC_D_CMP_L = "dcmpl";
 	
 	/**
-	 * The mnemonic for the instruction dconst_0.
+	 * The mnemonic for the instruction {@code dconst_0}.
 	 */
 	public static final String MNEMONIC_D_CONST_0 = "dconst_0";
 	
 	/**
-	 * The mnemonic for the instruction dconst_1.
+	 * The mnemonic for the instruction {@code dconst_1}.
 	 */
 	public static final String MNEMONIC_D_CONST_1 = "dconst_1";
 	
 	/**
-	 * The mnemonic for the instruction ddiv.
+	 * The mnemonic for the instruction {@code ddiv}.
 	 */
 	public static final String MNEMONIC_D_DIV = "ddiv";
 	
 	/**
-	 * The mnemonic for the instruction dload.
+	 * The mnemonic for the instruction {@code dload}.
 	 */
 	public static final String MNEMONIC_D_LOAD = "dload";
 	
 	/**
-	 * The mnemonic for the instruction dload_0.
+	 * The mnemonic for the instruction {@code dload_0}.
 	 */
 	public static final String MNEMONIC_D_LOAD_0 = "dload_0";
 	
 	/**
-	 * The mnemonic for the instruction dload_1.
+	 * The mnemonic for the instruction {@code dload_1}.
 	 */
 	public static final String MNEMONIC_D_LOAD_1 = "dload_1";
 	
 	/**
-	 * The mnemonic for the instruction dload_2.
+	 * The mnemonic for the instruction {@code dload_2}.
 	 */
 	public static final String MNEMONIC_D_LOAD_2 = "dload_2";
 	
 	/**
-	 * The mnemonic for the instruction dload_3.
+	 * The mnemonic for the instruction {@code dload_3}.
 	 */
 	public static final String MNEMONIC_D_LOAD_3 = "dload_3";
 	
 	/**
-	 * The mnemonic for the instruction dmul.
+	 * The mnemonic for the instruction {@code dmul}.
 	 */
 	public static final String MNEMONIC_D_MUL = "dmul";
 	
 	/**
-	 * The mnemonic for the instruction dneg.
+	 * The mnemonic for the instruction {@code dneg}.
 	 */
 	public static final String MNEMONIC_D_NEG = "dneg";
 	
 	/**
-	 * The mnemonic for the instruction drem.
+	 * The mnemonic for the instruction {@code drem}.
 	 */
 	public static final String MNEMONIC_D_REM = "drem";
 	
 	/**
-	 * The mnemonic for the instruction dreturn.
+	 * The mnemonic for the instruction {@code dreturn}.
 	 */
 	public static final String MNEMONIC_D_RETURN = "dreturn";
 	
 	/**
-	 * The mnemonic for the instruction dstore.
+	 * The mnemonic for the instruction {@code dstore}.
 	 */
 	public static final String MNEMONIC_D_STORE = "dstore";
 	
 	/**
-	 * The mnemonic for the instruction dstore_0.
+	 * The mnemonic for the instruction {@code dstore_0}.
 	 */
 	public static final String MNEMONIC_D_STORE_0 = "dstore_0";
 	
 	/**
-	 * The mnemonic for the instruction dstore_1.
+	 * The mnemonic for the instruction {@code dstore_1}.
 	 */
 	public static final String MNEMONIC_D_STORE_1 = "dstore_1";
 	
 	/**
-	 * The mnemonic for the instruction dstore_2.
+	 * The mnemonic for the instruction {@code dstore_2}.
 	 */
 	public static final String MNEMONIC_D_STORE_2 = "dstore_2";
 	
 	/**
-	 * The mnemonic for the instruction dstore_3.
+	 * The mnemonic for the instruction {@code dstore_3}.
 	 */
 	public static final String MNEMONIC_D_STORE_3 = "dstore_3";
 	
 	/**
-	 * The mnemonic for the instruction dsub.
+	 * The mnemonic for the instruction {@code dsub}.
 	 */
 	public static final String MNEMONIC_D_SUB = "dsub";
 	
 	/**
-	 * The mnemonic for the instruction f2d.
+	 * The mnemonic for the instruction {@code f2d}.
 	 */
 	public static final String MNEMONIC_F_2_D = "f2d";
 	
 	/**
-	 * The mnemonic for the instruction f2i.
+	 * The mnemonic for the instruction {@code f2i}.
 	 */
 	public static final String MNEMONIC_F_2_I = "f2i";
 	
 	/**
-	 * The mnemonic for the instruction f2l.
+	 * The mnemonic for the instruction {@code f2l}.
 	 */
 	public static final String MNEMONIC_F_2_L = "f2l";
 	
 	/**
-	 * The mnemonic for the instruction fadd.
+	 * The mnemonic for the instruction {@code fadd}.
 	 */
 	public static final String MNEMONIC_F_ADD = "fadd";
 	
 	/**
-	 * The mnemonic for the instruction faload.
+	 * The mnemonic for the instruction {@code faload}.
 	 */
 	public static final String MNEMONIC_F_A_LOAD = "faload";
 	
 	/**
-	 * The mnemonic for the instruction fastore.
+	 * The mnemonic for the instruction {@code fastore}.
 	 */
 	public static final String MNEMONIC_F_A_STORE = "fastore";
 	
 	/**
-	 * The mnemonic for the instruction fcmpg.
+	 * The mnemonic for the instruction {@code fcmpg}.
 	 */
 	public static final String MNEMONIC_F_CMP_G = "fcmpg";
 	
 	/**
-	 * The mnemonic for the instruction fcmpl.
+	 * The mnemonic for the instruction {@code fcmpl}.
 	 */
 	public static final String MNEMONIC_F_CMP_L = "fcmpl";
 	
 	/**
-	 * The mnemonic for the instruction fconst_0.
+	 * The mnemonic for the instruction {@code fconst_0}.
 	 */
 	public static final String MNEMONIC_F_CONST_0 = "fconst_0";
 	
 	/**
-	 * The mnemonic for the instruction fconst_1.
+	 * The mnemonic for the instruction {@code fconst_1}.
 	 */
 	public static final String MNEMONIC_F_CONST_1 = "fconst_1";
 	
 	/**
-	 * The mnemonic for the instruction fconst_2.
+	 * The mnemonic for the instruction {@code fconst_2}.
 	 */
 	public static final String MNEMONIC_F_CONST_2 = "fconst_2";
 	
 	/**
-	 * The mnemonic for the instruction fdiv.
+	 * The mnemonic for the instruction {@code fdiv}.
 	 */
 	public static final String MNEMONIC_F_DIV = "fdiv";
 	
 	/**
-	 * The mnemonic for the instruction fload.
+	 * The mnemonic for the instruction {@code fload}.
 	 */
 	public static final String MNEMONIC_F_LOAD = "fload";
 	
 	/**
-	 * The mnemonic for the instruction fload_0.
+	 * The mnemonic for the instruction {@code fload_0}.
 	 */
 	public static final String MNEMONIC_F_LOAD_0 = "fload_0";
 	
 	/**
-	 * The mnemonic for the instruction fload_1.
+	 * The mnemonic for the instruction {@code fload_1}.
 	 */
 	public static final String MNEMONIC_F_LOAD_1 = "fload_1";
 	
 	/**
-	 * The mnemonic for the instruction fload_2.
+	 * The mnemonic for the instruction {@code fload_2}.
 	 */
 	public static final String MNEMONIC_F_LOAD_2 = "fload_2";
 	
 	/**
-	 * The mnemonic for the instruction fload_3.
+	 * The mnemonic for the instruction {@code fload_3}.
 	 */
 	public static final String MNEMONIC_F_LOAD_3 = "fload_3";
 	
 	/**
-	 * The mnemonic for the instruction fmul.
+	 * The mnemonic for the instruction {@code fmul}.
 	 */
 	public static final String MNEMONIC_F_MUL = "fmul";
 	
 	/**
-	 * The mnemonic for the instruction fneg.
+	 * The mnemonic for the instruction {@code fneg}.
 	 */
 	public static final String MNEMONIC_F_NEG = "fneg";
 	
 	/**
-	 * The mnemonic for the instruction frem.
+	 * The mnemonic for the instruction {@code frem}.
 	 */
 	public static final String MNEMONIC_F_REM = "frem";
 	
 	/**
-	 * The mnemonic for the instruction freturn.
+	 * The mnemonic for the instruction {@code freturn}.
 	 */
 	public static final String MNEMONIC_F_RETURN = "freturn";
 	
 	/**
-	 * The mnemonic for the instruction fstore.
+	 * The mnemonic for the instruction {@code fstore}.
 	 */
 	public static final String MNEMONIC_F_STORE = "fstore";
 	
 	/**
-	 * The mnemonic for the instruction fstore_0.
+	 * The mnemonic for the instruction {@code fstore_0}.
 	 */
 	public static final String MNEMONIC_F_STORE_0 = "fstore_0";
 	
 	/**
-	 * The mnemonic for the instruction fstore_1.
+	 * The mnemonic for the instruction {@code fstore_1}.
 	 */
 	public static final String MNEMONIC_F_STORE_1 = "fstore_1";
 	
 	/**
-	 * The mnemonic for the instruction fstore_2.
+	 * The mnemonic for the instruction {@code fstore_2}.
 	 */
 	public static final String MNEMONIC_F_STORE_2 = "fstore_2";
 	
 	/**
-	 * The mnemonic for the instruction fstore_3.
+	 * The mnemonic for the instruction {@code fstore_3}.
 	 */
 	public static final String MNEMONIC_F_STORE_3 = "fstore_3";
 	
 	/**
-	 * The mnemonic for the instruction fsub.
+	 * The mnemonic for the instruction {@code fsub}.
 	 */
 	public static final String MNEMONIC_F_SUB = "fsub";
 	
 	/**
-	 * The mnemonic for the instruction getfield.
+	 * The mnemonic for the instruction {@code getfield}.
 	 */
 	public static final String MNEMONIC_GET_FIELD = "getfield";
 	
 	/**
-	 * The mnemonic for the instruction getstatic.
+	 * The mnemonic for the instruction {@code getstatic}.
 	 */
 	public static final String MNEMONIC_GET_STATIC = "getstatic";
 	
 	/**
-	 * The mnemonic for the instruction goto.
+	 * The mnemonic for the instruction {@code goto}.
 	 */
 	public static final String MNEMONIC_GO_TO = "goto";
 	
 	/**
-	 * The mnemonic for the instruction goto_w.
+	 * The mnemonic for the instruction {@code goto_w}.
 	 */
 	public static final String MNEMONIC_GO_TO_W = "goto_w";
 	
 	/**
-	 * The mnemonic for the instruction if_acmpeg.
+	 * The mnemonic for the instruction {@code if_acmpeg}.
 	 */
 	public static final String MNEMONIC_IF_A_CMP_EQ = "if_acmpeq";
 	
 	/**
-	 * The mnemonic for the instruction if_acmpne.
+	 * The mnemonic for the instruction {@code if_acmpne}.
 	 */
 	public static final String MNEMONIC_IF_A_CMP_N_E = "if_acmpne";
 	
 	/**
-	 * The mnemonic for the instruction ifeq.
+	 * The mnemonic for the instruction {@code ifeq}.
 	 */
 	public static final String MNEMONIC_IF_EQ = "ifeq";
 	
 	/**
-	 * The mnemonic for the instruction ifge.
+	 * The mnemonic for the instruction {@code ifge}.
 	 */
 	public static final String MNEMONIC_IF_G_E = "ifge";
 	
 	/**
-	 * The mnemonic for the instruction ifgt.
+	 * The mnemonic for the instruction {@code ifgt}.
 	 */
 	public static final String MNEMONIC_IF_G_T = "ifgt";
 	
 	/**
-	 * The mnemonic for the instruction if_icmpeq.
+	 * The mnemonic for the instruction {@code if_icmpeq}.
 	 */
 	public static final String MNEMONIC_IF_I_CMP_EQ = "if_icmpeq";
 	
 	/**
-	 * The mnemonic for the instruction if_icmpge.
+	 * The mnemonic for the instruction {@code if_icmpge}.
 	 */
 	public static final String MNEMONIC_IF_I_CMP_G_E = "if_icmpge";
 	
 	/**
-	 * The mnemonic for the instruction if_icmpgt.
+	 * The mnemonic for the instruction {@code if_icmpgt}.
 	 */
 	public static final String MNEMONIC_IF_I_CMP_G_T = "if_icmpgt";
 	
 	/**
-	 * The mnemonic for the instruction if_icmple.
+	 * The mnemonic for the instruction {@code if_icmple}.
 	 */
 	public static final String MNEMONIC_IF_I_CMP_L_E = "if_icmple";
 	
 	/**
-	 * The mnemonic for the instruction if_icmplt.
+	 * The mnemonic for the instruction {@code if_icmplt}.
 	 */
 	public static final String MNEMONIC_IF_I_CMP_L_T = "if_icmplt";
 	
 	/**
-	 * The mnemonic for the instruction if_icmpne.
+	 * The mnemonic for the instruction {@code if_icmpne}.
 	 */
 	public static final String MNEMONIC_IF_I_CMP_N_E = "if_icmpne";
 	
 	/**
-	 * The mnemonic for the instruction ifle.
+	 * The mnemonic for the instruction {@code ifle}.
 	 */
 	public static final String MNEMONIC_IF_L_E = "ifle";
 	
 	/**
-	 * The mnemonic for the instruction iflt.
+	 * The mnemonic for the instruction {@code iflt}.
 	 */
 	public static final String MNEMONIC_IF_L_T = "iflt";
 	
 	/**
-	 * The mnemonic for the instruction ifnonnull.
+	 * The mnemonic for the instruction {@code ifnonnull}.
 	 */
 	public static final String MNEMONIC_IF_NON_NULL = "ifnonnull";
 	
 	/**
-	 * The mnemonic for the instruction ifnull.
+	 * The mnemonic for the instruction {@code ifnull}.
 	 */
 	public static final String MNEMONIC_IF_NULL = "ifnull";
 	
 	/**
-	 * The mnemonic for the instruction ifne.
+	 * The mnemonic for the instruction {@code ifne}.
 	 */
 	public static final String MNEMONIC_IF_N_E = "ifne";
 	
 	/**
-	 * The mnemonic for the instruction impdep1.
+	 * The mnemonic for the instruction {@code impdep1}.
 	 */
 	public static final String MNEMONIC_IMP_DEP_1 = "impdep1";
 	
 	/**
-	 * The mnemonic for the instruction impdep2.
+	 * The mnemonic for the instruction {@code impdep2}.
 	 */
 	public static final String MNEMONIC_IMP_DEP_2 = "impdep2";
 	
 	/**
-	 * The mnemonic for the instruction instanceof.
+	 * The mnemonic for the instruction {@code instanceof}.
 	 */
 	public static final String MNEMONIC_INSTANCE_OF = "instanceof";
 	
 	/**
-	 * The mnemonic for the instruction invokedynamic.
+	 * The mnemonic for the instruction {@code invokedynamic}.
 	 */
 	public static final String MNEMONIC_INVOKE_DYNAMIC = "invokedynamic";
 	
 	/**
-	 * The mnemonic for the instruction invokeinterface.
+	 * The mnemonic for the instruction {@code invokeinterface}.
 	 */
 	public static final String MNEMONIC_INVOKE_INTERFACE = "invokeinterface";
 	
 	/**
-	 * The mnemonic for the instruction invokespecial.
+	 * The mnemonic for the instruction {@code invokespecial}.
 	 */
 	public static final String MNEMONIC_INVOKE_SPECIAL = "invokespecial";
 	
 	/**
-	 * The mnemonic for the instruction invokestatic.
+	 * The mnemonic for the instruction {@code invokestatic}.
 	 */
 	public static final String MNEMONIC_INVOKE_STATIC = "invokestatic";
 	
 	/**
-	 * The mnemonic for the instruction invokevirtual.
+	 * The mnemonic for the instruction {@code invokevirtual}.
 	 */
 	public static final String MNEMONIC_INVOKE_VIRTUAL = "invokevirtual";
 	
 	/**
-	 * The mnemonic for the instruction i2b.
+	 * The mnemonic for the instruction {@code i2b}.
 	 */
 	public static final String MNEMONIC_I_2_B = "i2b";
 	
 	/**
-	 * The mnemonic for the instruction i2c.
+	 * The mnemonic for the instruction {@code i2c}.
 	 */
 	public static final String MNEMONIC_I_2_C = "i2c";
 	
 	/**
-	 * The mnemonic for the instruction i2d.
+	 * The mnemonic for the instruction {@code i2d}.
 	 */
 	public static final String MNEMONIC_I_2_D = "i2d";
 	
 	/**
-	 * The mnemonic for the instruction i2f.
+	 * The mnemonic for the instruction {@code i2f}.
 	 */
 	public static final String MNEMONIC_I_2_F = "i2f";
 	
 	/**
-	 * The mnemonic for the instruction i2l.
+	 * The mnemonic for the instruction {@code i2l}.
 	 */
 	public static final String MNEMONIC_I_2_L = "i2l";
 	
 	/**
-	 * The mnemonic for the instruction i2s.
+	 * The mnemonic for the instruction {@code i2s}.
 	 */
 	public static final String MNEMONIC_I_2_S = "i2s";
 	
 	/**
-	 * The mnemonic for the instruction iadd.
+	 * The mnemonic for the instruction {@code iadd}.
 	 */
 	public static final String MNEMONIC_I_ADD = "iadd";
 	
 	/**
-	 * The mnemonic for the instruction iand.
+	 * The mnemonic for the instruction {@code iand}.
 	 */
 	public static final String MNEMONIC_I_AND = "iand";
 	
 	/**
-	 * The mnemonic for the instruction iaload.
+	 * The mnemonic for the instruction {@code iaload}.
 	 */
 	public static final String MNEMONIC_I_A_LOAD = "iaload";
 	
 	/**
-	 * The mnemonic for the instruction iastore.
+	 * The mnemonic for the instruction {@code iastore}.
 	 */
 	public static final String MNEMONIC_I_A_STORE = "iastore";
 	
 	/**
-	 * The mnemonic for the instruction iconst_0.
+	 * The mnemonic for the instruction {@code iconst_0}.
 	 */
 	public static final String MNEMONIC_I_CONST_0 = "iconst_0";
 	
 	/**
-	 * The mnemonic for the instruction iconst_1.
+	 * The mnemonic for the instruction {@code iconst_1}.
 	 */
 	public static final String MNEMONIC_I_CONST_1 = "iconst_1";
 	
 	/**
-	 * The mnemonic for the instruction iconst_2.
+	 * The mnemonic for the instruction {@code iconst_2}.
 	 */
 	public static final String MNEMONIC_I_CONST_2 = "iconst_2";
 	
 	/**
-	 * The mnemonic for the instruction iconst_3.
+	 * The mnemonic for the instruction {@code iconst_3}.
 	 */
 	public static final String MNEMONIC_I_CONST_3 = "iconst_3";
 	
 	/**
-	 * The mnemonic for the instruction iconst_4.
+	 * The mnemonic for the instruction {@code iconst_4}.
 	 */
 	public static final String MNEMONIC_I_CONST_4 = "iconst_4";
 	
 	/**
-	 * The mnemonic for the instruction iconst_5.
+	 * The mnemonic for the instruction {@code iconst_5}.
 	 */
 	public static final String MNEMONIC_I_CONST_5 = "iconst_5";
 	
 	/**
-	 * The mnemonic for the instruction iconst_m1.
+	 * The mnemonic for the instruction {@code iconst_m1}.
 	 */
 	public static final String MNEMONIC_I_CONST_M1 = "iconst_m1";
 	
 	/**
-	 * The mnemonic for the instruction idiv.
+	 * The mnemonic for the instruction {@code idiv}.
 	 */
 	public static final String MNEMONIC_I_DIV = "idiv";
 	
 	/**
-	 * The mnemonic for the instruction iinc.
+	 * The mnemonic for the instruction {@code iinc}.
 	 */
 	public static final String MNEMONIC_I_INC = "iinc";
 	
 	/**
-	 * The mnemonic for the instruction iload.
+	 * The mnemonic for the instruction {@code iload}.
 	 */
 	public static final String MNEMONIC_I_LOAD = "iload";
 	
 	/**
-	 * The mnemonic for the instruction iload_0.
+	 * The mnemonic for the instruction {@code iload_0}.
 	 */
 	public static final String MNEMONIC_I_LOAD_0 = "iload_0";
 	
 	/**
-	 * The mnemonic for the instruction iload_1.
+	 * The mnemonic for the instruction {@code iload_1}.
 	 */
 	public static final String MNEMONIC_I_LOAD_1 = "iload_1";
 	
 	/**
-	 * The mnemonic for the instruction iload_2.
+	 * The mnemonic for the instruction {@code iload_2}.
 	 */
 	public static final String MNEMONIC_I_LOAD_2 = "iload_2";
 	
 	/**
-	 * The mnemonic for the instruction iload_3.
+	 * The mnemonic for the instruction {@code iload_3}.
 	 */
 	public static final String MNEMONIC_I_LOAD_3 = "iload_3";
 	
 	/**
-	 * The mnemonic for the instruction imul.
+	 * The mnemonic for the instruction {@code imul}.
 	 */
 	public static final String MNEMONIC_I_MUL = "imul";
 	
 	/**
-	 * The mnemonic for the instruction ineg.
+	 * The mnemonic for the instruction {@code ineg}.
 	 */
 	public static final String MNEMONIC_I_NEG = "ineg";
 	
 	/**
-	 * The mnemonic for the instruction ior.
+	 * The mnemonic for the instruction {@code ior}.
 	 */
 	public static final String MNEMONIC_I_OR = "ior";
 	
 	/**
-	 * The mnemonic for the instruction irem.
+	 * The mnemonic for the instruction {@code irem}.
 	 */
 	public static final String MNEMONIC_I_REM = "irem";
 	
 	/**
-	 * The mnemonic for the instruction ireturn.
+	 * The mnemonic for the instruction {@code ireturn}.
 	 */
 	public static final String MNEMONIC_I_RETURN = "ireturn";
 	
 	/**
-	 * The mnemonic for the instruction ishl.
+	 * The mnemonic for the instruction {@code ishl}.
 	 */
 	public static final String MNEMONIC_I_SH_L = "ishl";
 	
 	/**
-	 * The mnemonic for the instruction ishr.
+	 * The mnemonic for the instruction {@code ishr}.
 	 */
 	public static final String MNEMONIC_I_SH_R = "ishr";
 	
 	/**
-	 * The mnemonic for the instruction istore.
+	 * The mnemonic for the instruction {@code istore}.
 	 */
 	public static final String MNEMONIC_I_STORE = "istore";
 	
 	/**
-	 * The mnemonic for the instruction istore_0.
+	 * The mnemonic for the instruction {@code istore_0}.
 	 */
 	public static final String MNEMONIC_I_STORE_0 = "istore_0";
 	
 	/**
-	 * The mnemonic for the instruction istore_1.
+	 * The mnemonic for the instruction {@code istore_1}.
 	 */
 	public static final String MNEMONIC_I_STORE_1 = "istore_1";
 	
 	/**
-	 * The mnemonic for the instruction istore_2.
+	 * The mnemonic for the instruction {@code istore_2}.
 	 */
 	public static final String MNEMONIC_I_STORE_2 = "istore_2";
 	
 	/**
-	 * The mnemonic for the instruction istore_3.
+	 * The mnemonic for the instruction {@code istore_3}.
 	 */
 	public static final String MNEMONIC_I_STORE_3 = "istore_3";
 	
 	/**
-	 * The mnemonic for the instruction isub.
+	 * The mnemonic for the instruction {@code isub}.
 	 */
 	public static final String MNEMONIC_I_SUB = "isub";
 	
 	/**
-	 * The mnemonic for the instruction iushr.
+	 * The mnemonic for the instruction {@code iushr}.
 	 */
 	public static final String MNEMONIC_I_U_SH_R = "iushr";
 	
 	/**
-	 * The mnemonic for the instruction ixor.
+	 * The mnemonic for the instruction {@code ixor}.
 	 */
 	public static final String MNEMONIC_I_XOR = "ixor";
 	
 	/**
-	 * The mnemonic for the instruction jsr.
+	 * The mnemonic for the instruction {@code jsr}.
 	 */
 	public static final String MNEMONIC_J_S_R = "jsr";
 	
 	/**
-	 * The mnemonic for the instruction jsr_w.
+	 * The mnemonic for the instruction {@code jsr_w}.
 	 */
 	public static final String MNEMONIC_J_S_R_W = "jsr_w";
 	
 	/**
-	 * The mnemonic for the instruction lookupswitch.
+	 * The mnemonic for the instruction {@code lookupswitch}.
 	 */
 	public static final String MNEMONIC_LOOKUP_SWITCH = "lookupswitch";
 	
 	/**
-	 * The mnemonic for the instruction l2d.
+	 * The mnemonic for the instruction {@code l2d}.
 	 */
 	public static final String MNEMONIC_L_2_D = "l2d";
 	
 	/**
-	 * The mnemonic for the instruction l2f.
+	 * The mnemonic for the instruction {@code l2f}.
 	 */
 	public static final String MNEMONIC_L_2_F = "l2f";
 	
 	/**
-	 * The mnemonic for the instruction l2i.
+	 * The mnemonic for the instruction {@code l2i}.
 	 */
 	public static final String MNEMONIC_L_2_I = "l2i";
 	
 	/**
-	 * The mnemonic for the instruction ladd.
+	 * The mnemonic for the instruction {@code ladd}.
 	 */
 	public static final String MNEMONIC_L_ADD = "ladd";
 	
 	/**
-	 * The mnemonic for the instruction land.
+	 * The mnemonic for the instruction {@code land}.
 	 */
 	public static final String MNEMONIC_L_AND = "land";
 	
 	/**
-	 * The mnemonic for the instruction laload.
+	 * The mnemonic for the instruction {@code laload}.
 	 */
 	public static final String MNEMONIC_L_A_LOAD = "laload";
 	
 	/**
-	 * The mnemonic for the instruction lastore.
+	 * The mnemonic for the instruction {@code lastore}.
 	 */
 	public static final String MNEMONIC_L_A_STORE = "lastore";
 	
 	/**
-	 * The mnemonic for the instruction lcmp.
+	 * The mnemonic for the instruction {@code lcmp}.
 	 */
 	public static final String MNEMONIC_L_CMP = "lcmp";
 	
 	/**
-	 * The mnemonic for the instruction lconst_0.
+	 * The mnemonic for the instruction {@code lconst_0}.
 	 */
 	public static final String MNEMONIC_L_CONST_0 = "lconst_0";
 	
 	/**
-	 * The mnemonic for the instruction lconst_1.
+	 * The mnemonic for the instruction {@code lconst_1}.
 	 */
 	public static final String MNEMONIC_L_CONST_1 = "lconst_1";
 	
 	/**
-	 * The mnemonic for the instruction ldiv.
+	 * The mnemonic for the instruction {@code ldiv}.
 	 */
 	public static final String MNEMONIC_L_DIV = "ldiv";
 	
 	/**
-	 * The mnemonic for the instruction ldc.
+	 * The mnemonic for the instruction {@code ldc}.
 	 */
 	public static final String MNEMONIC_L_D_C = "ldc";
 	
 	/**
-	 * The mnemonic for the instruction ldc2_w.
+	 * The mnemonic for the instruction {@code ldc2_w}.
 	 */
 	public static final String MNEMONIC_L_D_C_2_W = "ldc2_w";
 	
 	/**
-	 * The mnemonic for the instruction ldc_w.
+	 * The mnemonic for the instruction {@code ldc_w}.
 	 */
 	public static final String MNEMONIC_L_D_C_W = "ldc_w";
 	
 	/**
-	 * The mnemonic for the instruction lload.
+	 * The mnemonic for the instruction {@code lload}.
 	 */
 	public static final String MNEMONIC_L_LOAD = "lload";
 	
 	/**
-	 * The mnemonic for the instruction lload_0.
+	 * The mnemonic for the instruction {@code lload_0}.
 	 */
 	public static final String MNEMONIC_L_LOAD_0 = "lload_0";
 	
 	/**
-	 * The mnemonic for the instruction lload_1.
+	 * The mnemonic for the instruction {@code lload_1}.
 	 */
 	public static final String MNEMONIC_L_LOAD_1 = "lload_1";
 	
 	/**
-	 * The mnemonic for the instruction lload_2.
+	 * The mnemonic for the instruction {@code lload_2}.
 	 */
 	public static final String MNEMONIC_L_LOAD_2 = "lload_2";
 	
 	/**
-	 * The mnemonic for the instruction lload_3.
+	 * The mnemonic for the instruction {@code lload_3}.
 	 */
 	public static final String MNEMONIC_L_LOAD_3 = "lload_3";
 	
 	/**
-	 * The mnemonic for the instruction lmul.
+	 * The mnemonic for the instruction {@code lmul}.
 	 */
 	public static final String MNEMONIC_L_MUL = "lmul";
 	
 	/**
-	 * The mnemonic for the instruction lneg.
+	 * The mnemonic for the instruction {@code lneg}.
 	 */
 	public static final String MNEMONIC_L_NEG = "lneg";
 	
 	/**
-	 * The mnemonic for the instruction lor.
+	 * The mnemonic for the instruction {@code lor}.
 	 */
 	public static final String MNEMONIC_L_OR = "lor";
 	
 	/**
-	 * The mnemonic for the instruction lrem.
+	 * The mnemonic for the instruction {@code lrem}.
 	 */
 	public static final String MNEMONIC_L_REM = "lrem";
 	
 	/**
-	 * The mnemonic for the instruction lreturn.
+	 * The mnemonic for the instruction {@code lreturn}.
 	 */
 	public static final String MNEMONIC_L_RETURN = "lreturn";
 	
 	/**
-	 * The mnemonic for the instruction lshl.
+	 * The mnemonic for the instruction {@code lshl}.
 	 */
 	public static final String MNEMONIC_L_SH_L = "lshl";
 	
 	/**
-	 * The mnemonic for the instruction lshr.
+	 * The mnemonic for the instruction {@code lshr}.
 	 */
 	public static final String MNEMONIC_L_SH_R = "lshr";
 	
 	/**
-	 * The mnemonic for the instruction lstore.
+	 * The mnemonic for the instruction {@code lstore}.
 	 */
 	public static final String MNEMONIC_L_STORE = "lstore";
 	
 	/**
-	 * The mnemonic for the instruction lstore_0.
+	 * The mnemonic for the instruction {@code lstore_0}.
 	 */
 	public static final String MNEMONIC_L_STORE_0 = "lstore_0";
 	
 	/**
-	 * The mnemonic for the instruction lstore_1.
+	 * The mnemonic for the instruction {@code lstore_1}.
 	 */
 	public static final String MNEMONIC_L_STORE_1 = "lstore_1";
 	
 	/**
-	 * The mnemonic for the instruction lstore_2.
+	 * The mnemonic for the instruction {@code lstore_2}.
 	 */
 	public static final String MNEMONIC_L_STORE_2 = "lstore_2";
 	
 	/**
-	 * The mnemonic for the instruction lstore_3.
+	 * The mnemonic for the instruction {@code lstore_3}.
 	 */
 	public static final String MNEMONIC_L_STORE_3 = "lstore_3";
 	
 	/**
-	 * The mnemonic for the instruction lsub.
+	 * The mnemonic for the instruction {@code lsub}.
 	 */
 	public static final String MNEMONIC_L_SUB = "lsub";
 	
 	/**
-	 * The mnemonic for the instruction lushr.
+	 * The mnemonic for the instruction {@code lushr}.
 	 */
 	public static final String MNEMONIC_L_U_SH_R = "lushr";
 	
 	/**
-	 * The mnemonic for the instruction lxor.
+	 * The mnemonic for the instruction {@code lxor}.
 	 */
 	public static final String MNEMONIC_L_XOR = "lxor";
 	
 	/**
-	 * The mnemonic for the instruction monitorenter.
+	 * The mnemonic for the instruction {@code monitorenter}.
 	 */
 	public static final String MNEMONIC_MONITOR_ENTER = "monitorenter";
 	
 	/**
-	 * The mnemonic for the instruction monitorexit.
+	 * The mnemonic for the instruction {@code monitorexit}.
 	 */
 	public static final String MNEMONIC_MONITOR_EXIT = "monitorexit";
 	
 	/**
-	 * The mnemonic for the instruction multianewarray.
+	 * The mnemonic for the instruction {@code multianewarray}.
 	 */
 	public static final String MNEMONIC_MULTI_A_NEW_ARRAY = "multianewarray";
 	
 	/**
-	 * The mnemonic for the instruction new.
+	 * The mnemonic for the instruction {@code new}.
 	 */
 	public static final String MNEMONIC_NEW = "new";
 	
 	/**
-	 * The mnemonic for the instruction newarray.
+	 * The mnemonic for the instruction {@code newarray}.
 	 */
 	public static final String MNEMONIC_NEW_ARRAY = "newarray";
 	
 	/**
-	 * The mnemonic for the instruction nop.
+	 * The mnemonic for the instruction {@code nop}.
 	 */
 	public static final String MNEMONIC_NOP = "nop";
 	
 	/**
-	 * The mnemonic for the instruction pop.
+	 * The mnemonic for the instruction {@code pop}.
 	 */
 	public static final String MNEMONIC_POP = "pop";
 	
 	/**
-	 * The mnemonic for the instruction pop2.
+	 * The mnemonic for the instruction {@code pop2}.
 	 */
 	public static final String MNEMONIC_POP_2 = "pop2";
 	
 	/**
-	 * The mnemonic for the instruction putfield.
+	 * The mnemonic for the instruction {@code putfield}.
 	 */
 	public static final String MNEMONIC_PUT_FIELD = "putfield";
 	
 	/**
-	 * The mnemonic for the instruction putstatic.
+	 * The mnemonic for the instruction {@code putstatic}.
 	 */
 	public static final String MNEMONIC_PUT_STATIC = "putstatic";
 	
 	/**
-	 * The mnemonic for the instruction ret.
+	 * The mnemonic for the instruction {@code ret}.
 	 */
 	public static final String MNEMONIC_RET = "ret";
 	
 	/**
-	 * The mnemonic for the instruction return.
+	 * The mnemonic for the instruction {@code return}.
 	 */
 	public static final String MNEMONIC_RETURN = "return";
 	
 	/**
-	 * The mnemonic for the instruction swap.
+	 * The mnemonic for the instruction {@code swap}.
 	 */
 	public static final String MNEMONIC_SWAP = "swap";
 	
 	/**
-	 * The mnemonic for the instruction saload.
+	 * The mnemonic for the instruction {@code saload}.
 	 */
 	public static final String MNEMONIC_S_A_LOAD = "saload";
 	
 	/**
-	 * The mnemonic for the instruction sastore.
+	 * The mnemonic for the instruction {@code sastore}.
 	 */
 	public static final String MNEMONIC_S_A_STORE = "sastore";
 	
 	/**
-	 * The mnemonic for the instruction sipush.
+	 * The mnemonic for the instruction {@code sipush}.
 	 */
 	public static final String MNEMONIC_S_I_PUSH = "sipush";
 	
 	/**
-	 * The mnemonic for the instruction tableswitch.
+	 * The mnemonic for the instruction {@code tableswitch}.
 	 */
 	public static final String MNEMONIC_TABLE_SWITCH = "tableswitch";
 	
 	/**
-	 * The mnemonic for the instruction wide.
+	 * The mnemonic for the instruction {@code wide}.
 	 */
 	public static final String MNEMONIC_WIDE = "wide";
 	
@@ -2846,30 +2847,14 @@ public final class Instruction implements Node {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private Instruction(final int opcode, final String mnemonic, final int... operands) {
+	private Instruction(final int opcode, final int padding, final String mnemonic, final int... operands) {
 		this.opcode = opcode;
-		this.mnemonic = mnemonic;
-		this.operands = operands;
-		this.padding = 0;
-	}
-	
-	private Instruction(final int padding, final int opcode, final String mnemonic, final int... operands) {
 		this.padding = padding;
-		this.opcode = opcode;
 		this.mnemonic = mnemonic;
 		this.operands = operands;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns a copy of this {@code Instruction} instance.
-	 * 
-	 * @return a copy of this {@code Instruction} instance
-	 */
-	public Instruction copy() {
-		return new Instruction(this.padding, this.opcode, this.mnemonic, this.operands.clone());
-	}
 	
 	/**
 	 * Returns a {@code String} with the mnemonic for this {@code Instruction} instance.
@@ -2887,13 +2872,16 @@ public final class Instruction implements Node {
 	 */
 	@Override
 	public String toString() {
-		return String.format("Instruction: [Mnemonic=%s], [Opcode=%s], [Operands=%s]", getMnemonic(), Integer.toString(this.opcode), Arrays.toString(this.operands));
+		return String.format("Instruction.valueOf(%s, \"%s\", new int[] {%s})", Integer.toString(getOpcode()), getMnemonic(), Strings.toString(getOperands(), true));
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code Instruction}, and that {@code Instruction} instance is equal to this {@code Instruction} instance, {@code false} otherwise.
+	 * Compares {@code object} to this {@code Instruction} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code Instruction}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code Instruction}, and that {@code Instruction} instance is equal to this {@code Instruction} instance, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code Instruction} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code Instruction}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -2901,11 +2889,11 @@ public final class Instruction implements Node {
 			return true;
 		} else if(!(object instanceof Instruction)) {
 			return false;
-		} else if(Instruction.class.cast(object).opcode != this.opcode) {
+		} else if(getOpcode() != Instruction.class.cast(object).getOpcode()) {
 			return false;
-		} else if(!Objects.equals(Instruction.class.cast(object).mnemonic, this.mnemonic)) {
+		} else if(!Objects.equals(getMnemonic(), Instruction.class.cast(object).getMnemonic())) {
 			return false;
-		} else if(!Arrays.equals(Instruction.class.cast(object).operands, this.operands)) {
+		} else if(!Arrays.equals(this.operands, Instruction.class.cast(object).operands)) {
 			return false;
 		} else {
 			return true;
@@ -3086,18 +3074,18 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, this {@code Instruction} is a load instruction, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, this {@code Instruction} is a {@code load} instruction, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, this {@code Instruction} is a load instruction, {@code false} otherwise
+	 * @return {@code true} if, and only if, this {@code Instruction} is a {@code load} instruction, {@code false} otherwise
 	 */
 	public boolean isLoad() {
 		return isALoad() || isDLoad() || isFLoad() || isILoad();
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, this {@code Instruction} is a wide instruction, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, this {@code Instruction} is a {@code wide} instruction, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, this {@code Instruction} is a wide instruction, {@code false} otherwise
+	 * @return {@code true} if, and only if, this {@code Instruction} is a {@code wide} instruction, {@code false} otherwise
 	 */
 	public boolean isWide() {
 		return getOpcode() == OPCODE_WIDE;
@@ -3292,12 +3280,12 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns the index of this {@code Instruction} if it is a load instruction.
+	 * Returns the index of this {@code Instruction} if it is a {@code load} instruction.
 	 * <p>
-	 * If this {@code Instruction} is not a load instruction, an {@code IllegalStateException} will be thrown.
+	 * If this {@code Instruction} is not a {@code load} instruction, an {@code IllegalStateException} will be thrown.
 	 * 
-	 * @return the index of this {@code Instruction} if it is a load instruction
-	 * @throws IllegalStateException thrown if, and only if, this {@code Instruction} is not a load instruction
+	 * @return the index of this {@code Instruction} if it is a {@code load} instruction
+	 * @throws IllegalStateException thrown if, and only if, this {@code Instruction} is not a {@code load} instruction
 	 */
 	public int getLoadIndex() {
 		if(isALoad()) {
@@ -3354,12 +3342,12 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns the opcode that was assigned as an operand to this {@code Instruction} if it is a wide instruction.
+	 * Returns the opcode that was assigned as an operand to this {@code Instruction} if it is a {@code wide} instruction.
 	 * <p>
-	 * If this {@code Instruction} is not a wide instruction, an {@code IllegalStateException} will be thrown.
+	 * If this {@code Instruction} is not a {@code wide} instruction, an {@code IllegalStateException} will be thrown.
 	 * 
-	 * @return the opcode that was assigned as an operand to this {@code Instruction} if it is a wide instruction
-	 * @throws IllegalStateException thrown if, and only if, this {@code Instruction} is not a wide instruction
+	 * @return the opcode that was assigned as an operand to this {@code Instruction} if it is a {@code wide} instruction
+	 * @throws IllegalStateException thrown if, and only if, this {@code Instruction} is not a {@code wide} instruction
 	 */
 	public int getWideOpcode() {
 		if(isWide()) {
@@ -3376,7 +3364,7 @@ public final class Instruction implements Node {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(Integer.valueOf(this.opcode), this.mnemonic, Integer.valueOf(Arrays.hashCode(this.operands)));
+		return Objects.hash(Integer.valueOf(getOpcode()), getMnemonic(), Integer.valueOf(Arrays.hashCode(this.operands)));
 	}
 	
 	/**
@@ -3464,19 +3452,19 @@ public final class Instruction implements Node {
 	/**
 	 * Writes this {@code Instruction} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	public void write(final DataOutput dataOutput) {
 		try {
-			dataOutput.writeByte(this.opcode);
+			dataOutput.writeByte(getOpcode());
 			
 			for(final int operand : this.operands) {
 				dataOutput.writeByte(operand);
@@ -4136,7 +4124,7 @@ public final class Instruction implements Node {
 	 * @throws NullPointerException thrown if, and only if, {@code operands} is {@code null}
 	 */
 	public static Instruction getLookupSwitch(final int padding, final int... operands) {
-		return new Instruction(ParameterArguments.requireRange(padding, 0, 3), OPCODE_LOOKUP_SWITCH, MNEMONIC_LOOKUP_SWITCH, ParameterArguments.requireRange(operands, Byte.MIN_VALUE, Byte.MAX_VALUE));
+		return new Instruction(OPCODE_LOOKUP_SWITCH, ParameterArguments.requireRange(padding, 0, 3), MNEMONIC_LOOKUP_SWITCH, ParameterArguments.requireRange(operands, Byte.MIN_VALUE, Byte.MAX_VALUE));
 	}
 	
 	/**
@@ -4254,7 +4242,7 @@ public final class Instruction implements Node {
 	 * @throws NullPointerException thrown if, and only if, {@code operands} is {@code null}
 	 */
 	public static Instruction getTableSwitch(final int padding, final int... operands) {
-		return new Instruction(ParameterArguments.requireRange(padding, 0, 3), OPCODE_TABLE_SWITCH, MNEMONIC_TABLE_SWITCH, ParameterArguments.requireRange(operands, Byte.MIN_VALUE, Byte.MAX_VALUE));
+		return new Instruction(OPCODE_TABLE_SWITCH, ParameterArguments.requireRange(padding, 0, 3), MNEMONIC_TABLE_SWITCH, ParameterArguments.requireRange(operands, Byte.MIN_VALUE, Byte.MAX_VALUE));
 	}
 	
 	/**
@@ -4343,6 +4331,6 @@ public final class Instruction implements Node {
 	 * @throws NullPointerException thrown if, and only if, either {@code mnemonic} or {@code operands} are {@code null}
 	 */
 	public static Instruction valueOf(final int opcode, final String mnemonic, final int... operands) {
-		return new Instruction(ParameterArguments.requireRange(opcode, 0, 255), Objects.requireNonNull(mnemonic, "mnemonic == null"), operands.clone());
+		return new Instruction(ParameterArguments.requireRange(opcode, 0, 255), 0, Objects.requireNonNull(mnemonic, "mnemonic == null"), operands.clone());
 	}
 }

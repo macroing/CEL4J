@@ -21,16 +21,28 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code LocalVariableType} denotes a local_variable_type structure somewhere in a LocalVariableTypeTable_attribute structure.
+ * A {@code LocalVariableType} represents an entry in the {@code local_variable_type_table} item of the {@code LocalVariableTypeTable_attribute} structure.
  * <p>
- * This class is not thread-safe.
+ * This class is mutable and not thread-safe.
+ * <p>
+ * Each entry has the following format:
+ * <pre>
+ * <code>
+ * {
+ *     u2 start_pc;
+ *     u2 length;
+ *     u2 name_index;
+ *     u2 signature_index;
+ *     u2 index;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
@@ -47,21 +59,51 @@ public final class LocalVariableType implements Node {
 	/**
 	 * Constructs a new {@code LocalVariableType} instance.
 	 * <p>
-	 * If either {@code nameIndex} or {@code signatureIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new LocalVariableType(0, 0, 1, 1, 0);
+	 * }
+	 * </pre>
+	 */
+	public LocalVariableType() {
+		this(0, 0, 1, 1, 0);
+	}
+	
+	/**
+	 * Constructs a new {@code LocalVariableType} instance that is a copy of {@code localVariableType}.
+	 * <p>
+	 * If {@code localVariableType} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param startPC the start_pc
-	 * @param length the length
-	 * @param nameIndex the name_index
-	 * @param signatureIndex the signature_index
-	 * @param index the index
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code nameIndex} or {@code signatureIndex} are less than or equal to {@code 0}
+	 * @param localVariableType the {@code LocalVariableType} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code localVariableType} is {@code null}
+	 */
+	public LocalVariableType(final LocalVariableType localVariableType) {
+		this.startPC = localVariableType.startPC;
+		this.length = localVariableType.length;
+		this.nameIndex = localVariableType.nameIndex;
+		this.signatureIndex = localVariableType.signatureIndex;
+		this.index = localVariableType.index;
+	}
+	
+	/**
+	 * Constructs a new {@code LocalVariableType} instance.
+	 * <p>
+	 * If either {@code startPC}, {@code length} or {@code index} are less than {@code 0}, or {@code nameIndex} or {@code signatureIndex} are less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param startPC the value for the {@code start_pc} item associated with this {@code LocalVariableType} instance
+	 * @param length the value for the {@code length} item associated with this {@code LocalVariableType} instance
+	 * @param nameIndex the value for the {@code name_index} item associated with this {@code LocalVariableType} instance
+	 * @param signatureIndex the value for the {@code signature_index} item associated with this {@code LocalVariableType} instance
+	 * @param index the value for the {@code index} item associated with this {@code LocalVariableType} instance
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code startPC}, {@code length} or {@code index} are less than {@code 0}, or {@code nameIndex} or {@code signatureIndex} are less than {@code 1}
 	 */
 	public LocalVariableType(final int startPC, final int length, final int nameIndex, final int signatureIndex, final int index) {
-		this.startPC = startPC;
-		this.length = length;
-		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE);
-		this.signatureIndex = ParameterArguments.requireRange(signatureIndex, 1, Integer.MAX_VALUE);
-		this.index = index;
+		this.startPC = ParameterArguments.requireRange(startPC, 0, Integer.MAX_VALUE, "startPC");
+		this.length = ParameterArguments.requireRange(length, 0, Integer.MAX_VALUE, "length");
+		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE, "nameIndex");
+		this.signatureIndex = ParameterArguments.requireRange(signatureIndex, 1, Integer.MAX_VALUE, "signatureIndex");
+		this.index = ParameterArguments.requireRange(index, 0, Integer.MAX_VALUE, "index");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,7 +114,7 @@ public final class LocalVariableType implements Node {
 	 * @return a copy of this {@code LocalVariableType} instance
 	 */
 	public LocalVariableType copy() {
-		return new LocalVariableType(this.startPC, this.length, this.nameIndex, this.signatureIndex, this.index);
+		return new LocalVariableType(this);
 	}
 	
 	/**
@@ -82,33 +124,16 @@ public final class LocalVariableType implements Node {
 	 */
 	@Override
 	public String toString() {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("local_variable_type");
-		stringBuilder.append(":");
-		stringBuilder.append(" ");
-		stringBuilder.append("start_pc=" + getStartPC());
-		stringBuilder.append(" ");
-		stringBuilder.append("length=" + getLength());
-		stringBuilder.append(" ");
-		stringBuilder.append("name_index=" + getNameIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("signature_index=" + getSignatureIndex());
-		stringBuilder.append(" ");
-		stringBuilder.append("index=" + getIndex());
-		
-		final String toString = stringBuilder.toString();
-		
-		return toString;
+		return String.format("new LocalVariableType(%s, %s, %s, %s, %s)", Integer.toString(getStartPC()), Integer.toString(getLength()), Integer.toString(getNameIndex()), Integer.toString(getSignatureIndex()), Integer.toString(getIndex()));
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code LocalVariableType}, and that {@code LocalVariableType} instance is equal to this {@code LocalVariableType} instance, {@code false}
-	 * otherwise.
+	 * Compares {@code object} to this {@code LocalVariableType} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code LocalVariableType}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code LocalVariableType} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code LocalVariableType}, and that {@code LocalVariableType} instance is equal to this {@code LocalVariableType} instance, {@code false}
-	 * otherwise
+	 * @param object the {@code Object} to compare to this {@code LocalVariableType} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code LocalVariableType}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -116,15 +141,15 @@ public final class LocalVariableType implements Node {
 			return true;
 		} else if(!(object instanceof LocalVariableType)) {
 			return false;
-		} else if(LocalVariableType.class.cast(object).getStartPC() != getStartPC()) {
+		} else if(getStartPC() != LocalVariableType.class.cast(object).getStartPC()) {
 			return false;
-		} else if(LocalVariableType.class.cast(object).getLength() != getLength()) {
+		} else if(getLength() != LocalVariableType.class.cast(object).getLength()) {
 			return false;
-		} else if(LocalVariableType.class.cast(object).getNameIndex() != getNameIndex()) {
+		} else if(getNameIndex() != LocalVariableType.class.cast(object).getNameIndex()) {
 			return false;
-		} else if(LocalVariableType.class.cast(object).getSignatureIndex() != getSignatureIndex()) {
+		} else if(getSignatureIndex() != LocalVariableType.class.cast(object).getSignatureIndex()) {
 			return false;
-		} else if(LocalVariableType.class.cast(object).getIndex() != getIndex()) {
+		} else if(getIndex() != LocalVariableType.class.cast(object).getIndex()) {
 			return false;
 		} else {
 			return true;
@@ -132,45 +157,45 @@ public final class LocalVariableType implements Node {
 	}
 	
 	/**
-	 * Returns the index of this {@code LocalVariableType} instance.
+	 * Returns the value for the {@code index} item associated with this {@code LocalVariableType} instance.
 	 * 
-	 * @return the index of this {@code LocalVariableType} instance.
+	 * @return the value for the {@code index} item associated with this {@code LocalVariableType} instance
 	 */
 	public int getIndex() {
 		return this.index;
 	}
 	
 	/**
-	 * Returns the length of this {@code LocalVariableType} instance.
+	 * Returns the value for the {@code length} item associated with this {@code LocalVariableType} instance.
 	 * 
-	 * @return the length of this {@code LocalVariableType} instance.
+	 * @return the value for the {@code length} item associated with this {@code LocalVariableType} instance
 	 */
 	public int getLength() {
 		return this.length;
 	}
 	
 	/**
-	 * Returns the name_index of this {@code LocalVariableType} instance.
+	 * Returns the value for the {@code name_index} item associated with this {@code LocalVariableType} instance.
 	 * 
-	 * @return the name_index of this {@code LocalVariableType} instance.
+	 * @return the value for the {@code name_index} item associated with this {@code LocalVariableType} instance
 	 */
 	public int getNameIndex() {
 		return this.nameIndex;
 	}
 	
 	/**
-	 * Returns the signature_index of this {@code LocalVariableType} instance.
+	 * Returns the value for the {@code signature_index} item associated with this {@code LocalVariableType} instance.
 	 * 
-	 * @return the signature_index of this {@code LocalVariableType} instance.
+	 * @return the value for the {@code signature_index} item associated with this {@code LocalVariableType} instance
 	 */
 	public int getSignatureIndex() {
 		return this.signatureIndex;
 	}
 	
 	/**
-	 * Returns the start_pc of this {@code LocalVariableType} instance.
+	 * Returns the value for the {@code start_pc} item associated with this {@code LocalVariableType} instance.
 	 * 
-	 * @return the start_pc of this {@code LocalVariableType} instance.
+	 * @return the value for the {@code start_pc} item associated with this {@code LocalVariableType} instance
 	 */
 	public int getStartPC() {
 		return this.startPC;
@@ -187,54 +212,63 @@ public final class LocalVariableType implements Node {
 	}
 	
 	/**
-	 * Sets the index for this {@code LocalVariableType} instance.
+	 * Sets {@code index} as the value for the {@code index} item associated with this {@code LocalVariableType} instance.
+	 * <p>
+	 * If {@code index} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param index the new index
+	 * @param index the value for the {@code index} item associated with this {@code LocalVariableType} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0}
 	 */
 	public void setIndex(final int index) {
-		this.index = index;
+		this.index = ParameterArguments.requireRange(index, 0, Integer.MAX_VALUE, "index");
 	}
 	
 	/**
-	 * Sets the length for this {@code LocalVariableType} instance.
+	 * Sets {@code length} as the value for the {@code length} item associated with this {@code LocalVariableType} instance.
+	 * <p>
+	 * If {@code length} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param length the new length
+	 * @param length the value for the {@code length} item associated with this {@code LocalVariableType} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code length} is less than {@code 0}
 	 */
 	public void setLength(final int length) {
-		this.length = length;
+		this.length = ParameterArguments.requireRange(length, 0, Integer.MAX_VALUE, "length");
 	}
 	
 	/**
-	 * Sets the name_index for this {@code LocalVariableType} instance.
+	 * Sets {@code nameIndex} as the value for the {@code name_index} item associated with this {@code LocalVariableType} instance.
 	 * <p>
-	 * If {@code nameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code nameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param nameIndex the new name_index
-	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than or equal to {@code 0}
+	 * @param nameIndex the value for the {@code name_index} item associated with this {@code LocalVariableType} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than {@code 1}
 	 */
 	public void setNameIndex(final int nameIndex) {
-		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE);
+		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE, "nameIndex");
 	}
 	
 	/**
-	 * Sets the signature_index for this {@code LocalVariableType} instance.
+	 * Sets {@code signatureIndex} as the value for the {@code signature_index} item associated with this {@code LocalVariableType} instance.
 	 * <p>
-	 * If {@code signatureIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code signatureIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param signatureIndex the new signature_index
-	 * @throws IllegalArgumentException thrown if, and only if, {@code signatureIndex} is less than or equal to {@code 0}
+	 * @param signatureIndex the value for the {@code signature_index} item associated with this {@code LocalVariableType} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code signatureIndex} is less than {@code 1}
 	 */
 	public void setSignatureIndex(final int signatureIndex) {
-		this.signatureIndex = ParameterArguments.requireRange(signatureIndex, 1, Integer.MAX_VALUE);
+		this.signatureIndex = ParameterArguments.requireRange(signatureIndex, 1, Integer.MAX_VALUE, "signatureIndex");
 	}
 	
 	/**
-	 * Sets the start_pc for this {@code LocalVariableType} instance.
+	 * Sets {@code startPC} as the value for the {@code start_pc} item associated with this {@code LocalVariableType} instance.
+	 * <p>
+	 * If {@code startPC} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param startPC the new start_pc
+	 * @param startPC the value for the {@code start_pc} item associated with this {@code LocalVariableType} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code startPC} is less than {@code 0}
 	 */
 	public void setStartPC(final int startPC) {
-		this.startPC = startPC;
+		this.startPC = ParameterArguments.requireRange(startPC, 0, Integer.MAX_VALUE, "startPC");
 	}
 	
 	/**

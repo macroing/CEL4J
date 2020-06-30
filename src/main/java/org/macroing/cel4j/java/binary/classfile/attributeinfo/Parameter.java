@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.node.Node;
@@ -37,17 +36,17 @@ import org.macroing.cel4j.util.ParameterArguments;
  */
 public final class Parameter implements Node {
 	/**
-	 * This field represents ACC_FINAL in the access_flags element of a parameter structure.
+	 * The value for the access flag {@code ACC_FINAL} in the {@code access_flags} item.
 	 */
 	public static final int ACC_FINAL = 0x0010;
 	
 	/**
-	 * This field represents ACC_MANDATED in the access_flags element of a parameter structure.
+	 * The value for the access flag {@code ACC_MANDATED} in the {@code access_flags} item.
 	 */
 	public static final int ACC_MANDATED = 0x8000;
 	
 	/**
-	 * This field represents ACC_SYNTHETIC in the access_flags element of a parameter structure.
+	 * The value for the access flag {@code ACC_SYNTHETIC} in the {@code access_flags} item.
 	 */
 	public static final int ACC_SYNTHETIC = 0x1000;
 	
@@ -60,9 +59,41 @@ public final class Parameter implements Node {
 	
 	/**
 	 * Constructs a new {@code Parameter} instance.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new Parameter(0);
+	 * }
+	 * </pre>
 	 */
 	public Parameter() {
-		this.nameIndex = 1;
+		this(0);
+	}
+	
+	/**
+	 * Constructs a new {@code Parameter} instance that is a copy of {@code parameter}.
+	 * <p>
+	 * If {@code parameter} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param parameter the {@code Parameter} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code parameter} is {@code null}
+	 */
+	public Parameter(final Parameter parameter) {
+		this.nameIndex = parameter.nameIndex;
+		this.accessFlags = parameter.accessFlags;
+	}
+	
+	/**
+	 * Constructs a new {@code Parameter} instance.
+	 * <p>
+	 * If {@code nameIndex} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param nameIndex the value for the {@code name_index} item associated with this {@code Parameter} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than {@code 0}
+	 */
+	public Parameter(final int nameIndex) {
+		this.nameIndex = ParameterArguments.requireRange(nameIndex, 0, Integer.MAX_VALUE, "nameIndex");
 		this.accessFlags = 0;
 	}
 	
@@ -74,19 +105,16 @@ public final class Parameter implements Node {
 	 * @return a copy of this {@code Parameter} instance
 	 */
 	public Parameter copy() {
-		final
-		Parameter parameter = new Parameter();
-		parameter.accessFlags = this.accessFlags;
-		parameter.nameIndex = this.nameIndex;
-		
-		return parameter;
+		return new Parameter(this);
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code Parameter}, and that {@code Parameter} instance is equal to this {@code Parameter} instance, {@code false} otherwise.
+	 * Compares {@code object} to this {@code Parameter} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code Parameter}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code Parameter} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code Parameter}, and that {@code Parameter} instance is equal to this {@code Parameter} instance, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code Parameter} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code Parameter}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -94,9 +122,9 @@ public final class Parameter implements Node {
 			return true;
 		} else if(!(object instanceof Parameter)) {
 			return false;
-		} else if(this.nameIndex != Parameter.class.cast(object).nameIndex) {
+		} else if(getNameIndex() != Parameter.class.cast(object).getNameIndex()) {
 			return false;
-		} else if(this.accessFlags != Parameter.class.cast(object).accessFlags) {
+		} else if(getAccessFlags() != Parameter.class.cast(object).getAccessFlags()) {
 			return false;
 		} else {
 			return true;
@@ -104,36 +132,36 @@ public final class Parameter implements Node {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_FINAL is set in the access_flags item of this {@code Parameter} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_FINAL} is set in the {@code access_flags} item associated with this {@code Parameter} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_FINAL is set in the access_flags item of this {@code Parameter} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_FINAL} is set in the {@code access_flags} item associated with this {@code Parameter} instance, {@code false} otherwise
 	 */
 	public boolean isFinal() {
-		return (this.accessFlags & ACC_FINAL) != 0;
+		return (getAccessFlags() & ACC_FINAL) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_MANDATED is set in the access_flags item of this {@code Parameter} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_MANDATED} is set in the {@code access_flags} item associated with this {@code Parameter} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_MANDATED is set in the access_flags item of this {@code Parameter} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_MANDATED} is set in the {@code access_flags} item associated with this {@code Parameter} instance, {@code false} otherwise
 	 */
 	public boolean isMandated() {
-		return (this.accessFlags & ACC_MANDATED) != 0;
+		return (getAccessFlags() & ACC_MANDATED) != 0;
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, ACC_SYNTHETIC is set in the access_flags item of this {@code Parameter} instance, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code ACC_SYNTHETIC} is set in the {@code access_flags} item associated with this {@code Parameter} instance, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, ACC_SYNTHETIC is set in the access_flags item of this {@code Parameter} instance, {@code false} otherwise
+	 * @return {@code true} if, and only if, {@code ACC_SYNTHETIC} is set in the {@code access_flags} item associated with this {@code Parameter} instance, {@code false} otherwise
 	 */
 	public boolean isSynthetic() {
-		return (this.accessFlags & ACC_SYNTHETIC) != 0;
+		return (getAccessFlags() & ACC_SYNTHETIC) != 0;
 	}
 	
 	/**
-	 * Returns the access_flags element of this {@code Parameter} instance.
+	 * Returns the value for the {@code access_flags} item associated with this {@code Parameter} instance.
 	 * 
-	 * @return the access_flags element of this {@code Parameter} instance
+	 * @return the value for the {@code access_flags} item associated with this {@code Parameter} instance
 	 */
 	public int getAccessFlags() {
 		return this.accessFlags;
@@ -150,9 +178,9 @@ public final class Parameter implements Node {
 	}
 	
 	/**
-	 * Returns the name_index element of this {@code Parameter} instance.
+	 * Returns the value for the {@code name_index} item associated with this {@code Parameter} instance.
 	 * 
-	 * @return the name_index element of this {@code Parameter} instance
+	 * @return the value for the {@code name_index} item associated with this {@code Parameter} instance
 	 */
 	public int getNameIndex() {
 		return this.nameIndex;
@@ -169,9 +197,9 @@ public final class Parameter implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_FINAL.
+	 * Adds or removes the access flag {@code ACC_FINAL}.
 	 * 
-	 * @param isFinal {@code true} to add the access flag ACC_FINAL
+	 * @param isFinal {@code true} if, and only if, the access flag {@code ACC_FINAL} should be added, {@code false} otherwise
 	 */
 	public void setFinal(final boolean isFinal) {
 		if(isFinal) {
@@ -182,9 +210,9 @@ public final class Parameter implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_MANDATED.
+	 * Adds or removes the access flag {@code ACC_MANDATED}.
 	 * 
-	 * @param isMandated {@code true} to add the access flag ACC_MANDATED
+	 * @param isMandated {@code true} if, and only if, the access flag {@code ACC_MANDATED} should be added, {@code false} otherwise
 	 */
 	public void setMandated(final boolean isMandated) {
 		if(isMandated) {
@@ -195,11 +223,11 @@ public final class Parameter implements Node {
 	}
 	
 	/**
-	 * Sets the name_index element of this {@code Parameter} instance.
+	 * Sets {@code nameIndex} as the value for the {@code name_index} item associated with this {@code Parameter} instance.
 	 * <p>
 	 * If {@code nameIndex} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param nameIndex the new name_index element
+	 * @param nameIndex the value for the {@code name_index} item associated with this {@code Parameter} instance
 	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than {@code 0}
 	 */
 	public void setNameIndex(final int nameIndex) {
@@ -207,9 +235,9 @@ public final class Parameter implements Node {
 	}
 	
 	/**
-	 * Adds or removes the access flag ACC_SYNTHETIC.
+	 * Adds or removes the access flag {@code ACC_SYNTHETIC}.
 	 * 
-	 * @param isSynthetic {@code true} to add the access flag ACC_SYNTHETIC
+	 * @param isSynthetic {@code true} if, and only if, the access flag {@code ACC_SYNTHETIC} should be added, {@code false} otherwise
 	 */
 	public void setSynthetic(final boolean isSynthetic) {
 		if(isSynthetic) {
@@ -234,8 +262,8 @@ public final class Parameter implements Node {
 	 */
 	public void write(final DataOutput dataOutput) {
 		try {
-			dataOutput.writeShort(this.nameIndex);
-			dataOutput.writeShort(this.accessFlags);
+			dataOutput.writeShort(getNameIndex());
+			dataOutput.writeShort(getAccessFlags());
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}

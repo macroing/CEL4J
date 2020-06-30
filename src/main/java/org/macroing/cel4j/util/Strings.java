@@ -452,6 +452,27 @@ public final class Strings {
 		}
 	}
 	
+	/**
+	 * Returns a {@code String} representation of {@code array}.
+	 * <p>
+	 * If {@code array} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param array an {@code int} array
+	 * @param isHex {@code true} if, and only if, the {@code int} values should be converted to hexadecimal, {@code false} otherwise
+	 * @return a {@code String} representation of {@code array}
+	 * @throws NullPointerException thrown if, and only if, {@code array} is {@code null}
+	 */
+	public static String toString(final int[] array, final boolean isHex) {
+		final StringBuilder stringBuilder = new StringBuilder();
+		
+		for(int i = 0; i < array.length; i++) {
+			stringBuilder.append(i > 0 ? ", " : "");
+			stringBuilder.append(isHex ? Integer.toHexString(array[i]).toUpperCase() : Integer.toString(array[i]));
+		}
+		
+		return stringBuilder.toString();
+	}
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private static String doConvertUnicodeEscapeSequences(final char[] oldCharacters) {
