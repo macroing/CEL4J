@@ -38,6 +38,7 @@ import org.macroing.cel4j.java.binary.classfile.attributeinfo.LineNumberTableAtt
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.LocalVariableTableAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.LocalVariableTypeTableAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.MethodParametersAttribute;
+import org.macroing.cel4j.java.binary.classfile.attributeinfo.NestHostAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.RuntimeInvisibleAnnotationsAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.RuntimeInvisibleParameterAnnotationsAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.RuntimeVisibleAnnotationsAttribute;
@@ -69,6 +70,7 @@ final class AttributeInfoReaderImpl implements AttributeInfoReader {
 		this.attributeInfoReaders.put(LocalVariableTableAttribute.NAME, new LocalVariableTableAttributeReader());
 		this.attributeInfoReaders.put(LocalVariableTypeTableAttribute.NAME, new LocalVariableTypeTableAttributeReader());
 		this.attributeInfoReaders.put(MethodParametersAttribute.NAME, new MethodParametersAttributeReader());
+		this.attributeInfoReaders.put(NestHostAttribute.NAME, new NestHostAttributeReader());
 		this.attributeInfoReaders.put(RuntimeInvisibleAnnotationsAttribute.NAME, new RuntimeInvisibleAnnotationsAttributeReader());
 		this.attributeInfoReaders.put(RuntimeInvisibleParameterAnnotationsAttribute.NAME, new RuntimeInvisibleParameterAnnotationsAttributeReader());
 		this.attributeInfoReaders.put(RuntimeVisibleAnnotationsAttribute.NAME, new RuntimeVisibleAnnotationsAttributeReader());
