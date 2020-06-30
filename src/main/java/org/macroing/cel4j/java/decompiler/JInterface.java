@@ -109,7 +109,7 @@ final class JInterface extends JType {
 		final String packageName = getPackageName();
 		final String modifiers = Strings.optional(getModifiers(), "", " ", " ", modifier -> modifier.getKeyword());
 		final String simpleName = getSimpleName();
-		final String typeParameters = doGenerateTypeParameters(decompilerConfiguration, typesToImport, getTypeParameters(), getPackageName());
+		final String typeParameters = doGenerateTypeParameters(decompilerConfiguration, typesToImport, getTypeParameters());
 		final String extendsClause = doGenerateExtendsClause(decompilerConfiguration, getInterfaces(), typesToImport, getClassSignature(), getPackageName());
 		
 		final List<JField> jFields = getFields();
@@ -469,7 +469,7 @@ final class JInterface extends JType {
 		return stringBuilder.toString();
 	}
 	
-	private static String doGenerateTypeParameters(final DecompilerConfiguration decompilerConfiguration, final List<JType> typesToImport, final Optional<TypeParameters> optionalTypeParameters, final String packageName) {
+	private static String doGenerateTypeParameters(final DecompilerConfiguration decompilerConfiguration, final List<JType> typesToImport, final Optional<TypeParameters> optionalTypeParameters) {
 		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();

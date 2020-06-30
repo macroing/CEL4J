@@ -162,6 +162,7 @@ final class JInnerType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	@SuppressWarnings("unused")
 	private void doDecompileJAnnotation(final DecompilerConfiguration decompilerConfiguration, final Document document, final JAnnotation jAnnotation) {
 //		TODO: Implement!
 	}
@@ -171,7 +172,7 @@ final class JInnerType {
 		
 		final String modifiers = Strings.optional(getModifiers(), "", " ", " ", modifier -> modifier.getKeyword());
 		final String simpleName = getSimpleName();
-		final String typeParameters = doGenerateTypeParameters(decompilerConfiguration, jClass.getTypesToImport(), jClass.getTypeParameters(), jClass.getPackageName());
+		final String typeParameters = doGenerateTypeParameters(decompilerConfiguration, jClass.getTypesToImport(), jClass.getTypeParameters());
 		final String extendsClause = doGenerateExtendsClause(decompilerConfiguration, jClass);
 		final String implementsClause = doGenerateImplementsClause(decompilerConfiguration, jClass.getInterfaces(), jClass.getClassSignature(), jClass.getPackageName());
 		
@@ -253,10 +254,12 @@ final class JInnerType {
 		document.linef("}");
 	}
 	
+	@SuppressWarnings("unused")
 	private void doDecompileJEnum(final DecompilerConfiguration decompilerConfiguration, final Document document, final JEnum jEnum) {
 //		TODO: Implement!
 	}
 	
+	@SuppressWarnings("unused")
 	private void doDecompileJInterface(final DecompilerConfiguration decompilerConfiguration, final Document document, final JInterface jInterface) {
 //		TODO: Implement!
 	}
@@ -329,7 +332,7 @@ final class JInnerType {
 		return stringBuilder.toString();
 	}
 	
-	private static String doGenerateTypeParameters(final DecompilerConfiguration decompilerConfiguration, final List<JType> typesToImport, final Optional<TypeParameters> optionalTypeParameters, final String packageName) {
+	private static String doGenerateTypeParameters(final DecompilerConfiguration decompilerConfiguration, final List<JType> typesToImport, final Optional<TypeParameters> optionalTypeParameters) {
 		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();

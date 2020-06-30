@@ -100,7 +100,7 @@ public final class JSONParser {
 				final JSONArray jSONArray = new JSONArray();
 				
 				while(true) {
-					final JSONType jSONType = doParseJSONType(jSONParserContext, jSONParserContext.mark());
+					final JSONType jSONType = doParseJSONType(jSONParserContext);
 					
 					if(jSONType == null) {
 						break;
@@ -236,7 +236,7 @@ public final class JSONParser {
 						final String text0 = jSONToken0.getText();
 						
 						if(name0.equals(NAME_SEPARATOR) && text0.equals(":")) {
-							final JSONType jSONType = doParseJSONType(jSONParserContext, index0);
+							final JSONType jSONType = doParseJSONType(jSONParserContext);
 							
 							if(jSONType == null) {
 								break;
@@ -301,7 +301,7 @@ public final class JSONParser {
 		return null;
 	}
 	
-	private static JSONType doParseJSONType(final JSONParserContext jSONParserContext, final int index) {
+	private static JSONType doParseJSONType(final JSONParserContext jSONParserContext) {
 		final JSONArray jSONArray = doParseJSONArray(jSONParserContext, jSONParserContext.mark());
 		
 		if(jSONArray != null) {

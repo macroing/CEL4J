@@ -146,10 +146,12 @@ final class Instructions {
 		return "";
 	}
 	
+	@SuppressWarnings("unused")
 	private static String doToString(final ClassFile classFile, final ConstantDoubleInfo constantDoubleInfo) {
 		return Double.toString(constantDoubleInfo.getDouble());
 	}
 	
+	@SuppressWarnings("unused")
 	private static String doToString(final ClassFile classFile, final ConstantDynamicInfo constantDynamicInfo) {
 		return "";
 	}
@@ -164,10 +166,12 @@ final class Instructions {
 		return className + "." + fieldName;
 	}
 	
+	@SuppressWarnings("unused")
 	private static String doToString(final ClassFile classFile, final ConstantFloatInfo constantFloatInfo) {
 		return Float.toString(constantFloatInfo.getFloat());
 	}
 	
+	@SuppressWarnings("unused")
 	private static String doToString(final ClassFile classFile, final ConstantIntegerInfo constantIntegerInfo) {
 		return Integer.toString(constantIntegerInfo.getInt());
 	}
@@ -184,14 +188,17 @@ final class Instructions {
 		return methodName.equals("<init>") ? className + method : className + "." + methodName + method;
 	}
 	
+	@SuppressWarnings("unused")
 	private static String doToString(final ClassFile classFile, final ConstantInvokeDynamicInfo constantInvokeDynamicInfo) {
 		return "";
 	}
 	
+	@SuppressWarnings("unused")
 	private static String doToString(final ClassFile classFile, final ConstantLongInfo constantLongInfo) {
 		return Long.toString(constantLongInfo.getLong());
 	}
 	
+	@SuppressWarnings("unused")
 	private static String doToString(final ClassFile classFile, final ConstantMethodHandleInfo constantMethodHandleInfo) {
 		return "";
 	}
@@ -208,18 +215,22 @@ final class Instructions {
 		return methodName.equals("<init>") ? className + method : className + "." + methodName + method;
 	}
 	
+	@SuppressWarnings("unused")
 	private static String doToString(final ClassFile classFile, final ConstantMethodTypeInfo constantMethodTypeInfo) {
 		return "";
 	}
 	
+	@SuppressWarnings("unused")
 	private static String doToString(final ClassFile classFile, final ConstantModuleInfo constantModuleInfo) {
 		return "";
 	}
 	
+	@SuppressWarnings("unused")
 	private static String doToString(final ClassFile classFile, final ConstantNameAndTypeInfo constantNameAndTypeInfo) {
 		return "";
 	}
 	
+	@SuppressWarnings("unused")
 	private static String doToString(final ClassFile classFile, final ConstantPackageInfo constantPackageInfo) {
 		return "";
 	}
@@ -228,6 +239,7 @@ final class Instructions {
 		return "\"" + ConstantUTF8Info.findByStringIndex(classFile, constantStringInfo).getString() + "\"";
 	}
 	
+	@SuppressWarnings("unused")
 	private static String doToString(final ClassFile classFile, final ConstantUTF8Info constantUTF8Info) {
 		return constantUTF8Info.getString();
 	}

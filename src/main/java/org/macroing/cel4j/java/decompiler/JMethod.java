@@ -252,7 +252,7 @@ final class JMethod {
 				
 				final ParameterDescriptor parameterDescriptor = parameterDescriptors.get(i);
 				
-				final JType type = JType.valueOf(doGetParameterTypeName(this.classFile, parameterDescriptor));
+				final JType type = JType.valueOf(doGetParameterTypeName(parameterDescriptor));
 				
 				final int nameIndex = parameter.getNameIndex();
 				
@@ -266,7 +266,7 @@ final class JMethod {
 			for(int i = 0; i < parameterDescriptors.size(); i++) {
 				final ParameterDescriptor parameterDescriptor = parameterDescriptors.get(i);
 				
-				final JType type = JType.valueOf(doGetParameterTypeName(this.classFile, parameterDescriptor));
+				final JType type = JType.valueOf(doGetParameterTypeName(parameterDescriptor));
 				
 				final String name = jLocalVariableNameGenerator.generateLocalVariableName(type, i);
 				
@@ -564,7 +564,7 @@ final class JMethod {
 		return Names.filterPackageNames(jPackageNameFilter, jMethod.getReturnType().getName(), jMethod.getReturnType().isInnerType());
 	}
 	
-	private static String doGetParameterTypeName(final ClassFile classFile, final ParameterDescriptor parameterDescriptor) {
+	private static String doGetParameterTypeName(final ParameterDescriptor parameterDescriptor) {
 		final String externalForm = parameterDescriptor.toExternalForm();
 		final String internalForm = parameterDescriptor.toInternalForm();
 		final String parameterTypeName = internalForm.indexOf('[') >= 0 ? internalForm.replace('/', '.') : externalForm;
