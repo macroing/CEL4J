@@ -26,6 +26,7 @@ import java.util.Objects;
 
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
+import org.macroing.cel4j.java.binary.classfile.attributeinfo.AnnotationDefaultAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.CodeAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.ConstantValueAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.DeprecatedAttribute;
@@ -55,6 +56,7 @@ final class AttributeInfoReaderImpl implements AttributeInfoReader {
 	
 	public AttributeInfoReaderImpl() {
 		this.attributeInfoReaders = new HashMap<>();
+		this.attributeInfoReaders.put(AnnotationDefaultAttribute.NAME, new AnnotationDefaultAttributeReader());
 		this.attributeInfoReaders.put(CodeAttribute.NAME, new CodeAttributeReader());
 		this.attributeInfoReaders.put(ConstantValueAttribute.NAME, new ConstantValueAttributeReader());
 		this.attributeInfoReaders.put(DeprecatedAttribute.NAME, new DeprecatedAttributeReader());

@@ -2,6 +2,7 @@
 
 	CEL4J Java Binary:
 
+		* ADD:			Add the AnnotationDefaultAttribute class.
 		* CHANGE:		Update Javadocs.
 
 	CEL4J Utilities:
