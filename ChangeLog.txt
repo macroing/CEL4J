@@ -2,6 +2,7 @@
 
 	CEL4J Java Binary:
 
+		* ADD:			Add the ModuleMainClassAttribute class.
 		* ADD:			Add the NestHostAttribute class.
 		* ADD:			Add the toByteArray() method to the ClassFile class and the read(byte[]) method to the ClassFileReader class.
 		* ADD:			Add the BootstrapMethod and BootstrapMethodsAttribute classes.
