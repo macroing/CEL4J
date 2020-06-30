@@ -47,7 +47,7 @@ final class AnnotationDefaultAttributeReader implements AttributeInfoReader {
 		try {
 			return new AnnotationDefaultAttribute(attributeNameIndex, doReadElementValue(dataInput));
 		} catch(final IOException | IllegalArgumentException e) {
-			throw new AttributeInfoReaderException("Unable to read AnnotationDefault_attribute_attribute", e);
+			throw new AttributeInfoReaderException("Unable to read AnnotationDefault_attribute", e);
 		}
 	}
 	

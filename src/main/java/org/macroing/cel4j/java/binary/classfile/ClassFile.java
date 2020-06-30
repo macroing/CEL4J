@@ -18,6 +18,7 @@
  */
 package org.macroing.cel4j.java.binary.classfile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -1331,6 +1332,24 @@ public final class ClassFile implements Node {
 		this.methodInfos.set(index, Objects.requireNonNull(methodInfo, "methodInfo == null"));
 		
 		return true;
+	}
+	
+	/**
+	 * Returns a {@code byte} array representation of this {@code ClassFile} instance.
+	 * <p>
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * 
+	 * @return a {@code byte} array representation of this {@code ClassFile} instance
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
+	 */
+	public byte[] toByteArray() {
+		try(final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(); final DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream)) {
+			write(dataOutputStream);
+			
+			return byteArrayOutputStream.toByteArray();
+		} catch(final IOException e) {
+			throw new UncheckedIOException(e);
+		}
 	}
 	
 	/**

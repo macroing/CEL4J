@@ -18,6 +18,7 @@
  */
 package org.macroing.cel4j.java.binary.reader;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.File;
@@ -156,6 +157,27 @@ public final class ClassFileReader {
 		return doReadClassFile(Objects.requireNonNull(className, "className == null"));
 	}
 	
+	/**
+	 * Reads the byte sequence provided by {@code bytes} into a {@link ClassFile} instance.
+	 * <p>
+	 * Returns a {@code ClassFile} instance.
+	 * <p>
+	 * If {@code bytes} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If the {@code ClassFile} cannot be read, a {@code ClassFileReaderException} will be thrown.
+	 * 
+	 * @param bytes the byte sequence to read a {@code ClassFile} instance from
+	 * @return a {@code ClassFile} instance
+	 * @throws ClassFileReaderException thrown if, and only if, the {@code ClassFile} cannot be read
+	 * @throws NullPointerException thrown if, and only if, {@code bytes} is {@code null}
+	 */
+	public ClassFile read(final byte[] bytes) {
+		doReloadAttributeInfoReaders();
+		doReloadCPInfoReaders();
+		
+		return doReadClassFile(Objects.requireNonNull(bytes, "bytes == null"));
+	}
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private AttributeInfo doReadAttributeInfo(final DataInput dataInput, final ClassFile classFile) {
@@ -246,6 +268,14 @@ public final class ClassFileReader {
 			return doReadClassFile(Class.forName(className));
 		} catch(final ClassNotFoundException e) {
 			throw new ClassFileReaderException(e);
+		}
+	}
+	
+	private ClassFile doReadClassFile(final byte[] bytes) {
+		try(final DataInputStream dataInputStream = new DataInputStream(new ByteArrayInputStream(bytes))) {
+			return doReadClassFile(dataInputStream, "new byte[] {...}");
+		} catch(final IOException e) {
+			throw new ClassFileReaderException("Unable to read ClassFile: new byte[] {...}", e);
 		}
 	}
 	

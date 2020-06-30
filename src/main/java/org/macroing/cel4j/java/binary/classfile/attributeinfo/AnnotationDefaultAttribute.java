@@ -21,9 +21,12 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.List;
 import java.util.Objects;
 
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
+import org.macroing.cel4j.node.Node;
+import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 
@@ -243,5 +246,22 @@ public final class AnnotationDefaultAttribute extends AttributeInfo {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns a {@code List} with all {@code AnnotationDefaultAttribute} instances in {@code node}.
+	 * <p>
+	 * All {@code AnnotationDefaultAttribute} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * <p>
+	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param node the {@link Node} to start traversal from
+	 * @return a {@code List} with all {@code AnnotationDefaultAttribute} instances in {@code node}
+	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
+	 */
+	public static List<AnnotationDefaultAttribute> filter(final Node node) {
+		return NodeFilter.filter(node, NodeFilter.any(), AnnotationDefaultAttribute.class);
 	}
 }
