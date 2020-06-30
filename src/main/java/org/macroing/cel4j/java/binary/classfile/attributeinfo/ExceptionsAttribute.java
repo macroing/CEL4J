@@ -160,12 +160,7 @@ public final class ExceptionsAttribute extends AttributeInfo {
 	 */
 	@Override
 	public int getAttributeLength() {
-		int attributeLength = 0;
-		
-		attributeLength += 2;
-		attributeLength += getNumberOfExceptions() * 2;
-		
-		return attributeLength;
+		return 2 + getNumberOfExceptions() * 2;
 	}
 	
 	/**
@@ -196,7 +191,7 @@ public final class ExceptionsAttribute extends AttributeInfo {
 	 * @throws IllegalArgumentException thrown if, and only if, {@code exceptionIndex} is less than {@code 1}
 	 */
 	public void addExceptionIndex(final int exceptionIndex) {
-		this.exceptionIndexTable.add(Integer.valueOf(ParameterArguments.requireRange(exceptionIndex, 1, Integer.MAX_VALUE)));
+		this.exceptionIndexTable.add(Integer.valueOf(ParameterArguments.requireRange(exceptionIndex, 1, Integer.MAX_VALUE, "exceptionIndex")));
 	}
 	
 	/**
@@ -208,7 +203,7 @@ public final class ExceptionsAttribute extends AttributeInfo {
 	 * @throws IllegalArgumentException thrown if, and only if, {@code exceptionIndex} is less than {@code 1}
 	 */
 	public void removeExceptionIndex(final int exceptionIndex) {
-		this.exceptionIndexTable.remove(Integer.valueOf(ParameterArguments.requireRange(exceptionIndex, 1, Integer.MAX_VALUE)));
+		this.exceptionIndexTable.remove(Integer.valueOf(ParameterArguments.requireRange(exceptionIndex, 1, Integer.MAX_VALUE, "exceptionIndex")));
 	}
 	
 	/**

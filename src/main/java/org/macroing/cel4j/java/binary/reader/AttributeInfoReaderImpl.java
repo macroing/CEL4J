@@ -39,7 +39,9 @@ import org.macroing.cel4j.java.binary.classfile.attributeinfo.LocalVariableTable
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.LocalVariableTypeTableAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.MethodParametersAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.ModuleMainClassAttribute;
+import org.macroing.cel4j.java.binary.classfile.attributeinfo.ModulePackagesAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.NestHostAttribute;
+import org.macroing.cel4j.java.binary.classfile.attributeinfo.NestMembersAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.RuntimeInvisibleAnnotationsAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.RuntimeInvisibleParameterAnnotationsAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.RuntimeVisibleAnnotationsAttribute;
@@ -72,7 +74,9 @@ final class AttributeInfoReaderImpl implements AttributeInfoReader {
 		this.attributeInfoReaders.put(LocalVariableTypeTableAttribute.NAME, new LocalVariableTypeTableAttributeReader());
 		this.attributeInfoReaders.put(MethodParametersAttribute.NAME, new MethodParametersAttributeReader());
 		this.attributeInfoReaders.put(ModuleMainClassAttribute.NAME, new ModuleMainClassAttributeReader());
+		this.attributeInfoReaders.put(ModulePackagesAttribute.NAME, new ModulePackagesAttributeReader());
 		this.attributeInfoReaders.put(NestHostAttribute.NAME, new NestHostAttributeReader());
+		this.attributeInfoReaders.put(NestMembersAttribute.NAME, new NestMembersAttributeReader());
 		this.attributeInfoReaders.put(RuntimeInvisibleAnnotationsAttribute.NAME, new RuntimeInvisibleAnnotationsAttributeReader());
 		this.attributeInfoReaders.put(RuntimeInvisibleParameterAnnotationsAttribute.NAME, new RuntimeInvisibleParameterAnnotationsAttributeReader());
 		this.attributeInfoReaders.put(RuntimeVisibleAnnotationsAttribute.NAME, new RuntimeVisibleAnnotationsAttributeReader());
