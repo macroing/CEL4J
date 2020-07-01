@@ -35,6 +35,7 @@ import org.macroing.cel4j.java.binary.classfile.attributeinfo.Instruction;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.MethodParametersAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.DeprecatedAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.Parameter;
+import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.java.binary.classfile.descriptor.MethodDescriptor;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ParameterDescriptor;
 import org.macroing.cel4j.java.binary.classfile.signature.JavaTypeSignature;
@@ -202,7 +203,7 @@ final class JConstructor {
 				
 				final int nameIndex = parameter.getNameIndex();
 				
-				final String name = nameIndex != 0 ? this.classFile.getCPInfo(nameIndex).toString() : jLocalVariableNameGenerator.generateLocalVariableName(type, i);
+				final String name = nameIndex != 0 ? this.classFile.getCPInfo(nameIndex, ConstantUTF8Info.class).getString() : jLocalVariableNameGenerator.generateLocalVariableName(type, i);
 				
 				final boolean isFinal = parameter.isFinal();
 				

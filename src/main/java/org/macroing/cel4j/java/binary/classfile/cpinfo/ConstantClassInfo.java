@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.cpinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.List;
 import java.util.Objects;
 
@@ -34,23 +33,33 @@ import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code ConstantClassInfo} denotes a CONSTANT_Class_info structure in the constant_pool of a ClassFile structure.
+ * A {@code ConstantClassInfo} represents a {@code CONSTANT_Class_info} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * The CONSTANT_Class_info structure was added to Java in version 1.0.2.
+ * This class is mutable and not thread-safe.
  * <p>
- * This class is not thread-safe.
+ * The {@code CONSTANT_Class_info} structure was added to Java in version 1.0.2 and can be found in the {@code constant_pool} table item of a {@code ClassFile} structure.
+ * <p>
+ * The {@code CONSTANT_Class_info} structure has the following format:
+ * <pre>
+ * <code>
+ * CONSTANT_Class_info {
+ *     u1 tag;
+ *     u2 name_index;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class ConstantClassInfo extends CPInfo {
 	/**
-	 * The name of the CONSTANT_Class_info structure.
+	 * The name of the {@code CONSTANT_Class_info} structure.
 	 */
 	public static final String NAME = "CONSTANT_Class";
 	
 	/**
-	 * The tag for CONSTANT_Class.
+	 * The tag for the {@code CONSTANT_Class_info} structure.
 	 */
 	public static final int TAG = 7;
 	
@@ -61,12 +70,26 @@ public final class ConstantClassInfo extends CPInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Constructs a new {@code ConstantClassInfo}.
+	 * Constructs a new {@code ConstantClassInfo} instance that is a copy of {@code constantClassInfo}.
 	 * <p>
-	 * If {@code nameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code constantClassInfo} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param nameIndex the name_index of the new {@code ConstantClassInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than or equal to {@code 0}
+	 * @param constantClassInfo the {@code ConstantClassInfo} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code constantClassInfo} is {@code null}
+	 */
+	public ConstantClassInfo(final ConstantClassInfo constantClassInfo) {
+		super(NAME, TAG, 1);
+		
+		this.nameIndex = constantClassInfo.nameIndex;
+	}
+	
+	/**
+	 * Constructs a new {@code ConstantClassInfo} instance.
+	 * <p>
+	 * If {@code nameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param nameIndex the value for the {@code name_index} item associated with this {@code ConstantClassInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than {@code 1}
 	 */
 	public ConstantClassInfo(final int nameIndex) {
 		super(NAME, TAG, 1);
@@ -83,7 +106,7 @@ public final class ConstantClassInfo extends CPInfo {
 	 */
 	@Override
 	public ConstantClassInfo copy() {
-		return new ConstantClassInfo(this.nameIndex);
+		return new ConstantClassInfo(this);
 	}
 	
 	/**
@@ -93,16 +116,16 @@ public final class ConstantClassInfo extends CPInfo {
 	 */
 	@Override
 	public String toString() {
-		return String.format("CONSTANT_Class_info: name_index=%s", Integer.toString(this.nameIndex));
+		return String.format("new ConstantClassInfo(%s)", Integer.toString(getNameIndex()));
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantClassInfo}, and that {@code ConstantClassInfo} instance is equal to this {@code ConstantClassInfo} instance, {@code false}
-	 * otherwise.
+	 * Compares {@code object} to this {@code ConstantClassInfo} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantClassInfo}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code ConstantClassInfo} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantClassInfo}, and that {@code ConstantClassInfo} instance is equal to this {@code ConstantClassInfo} instance, {@code false}
-	 * otherwise
+	 * @param object the {@code Object} to compare to this {@code ConstantClassInfo} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantClassInfo}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -110,13 +133,13 @@ public final class ConstantClassInfo extends CPInfo {
 			return true;
 		} else if(!(object instanceof ConstantClassInfo)) {
 			return false;
-		} else if(!Objects.equals(ConstantClassInfo.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), ConstantClassInfo.class.cast(object).getName())) {
 			return false;
-		} else if(ConstantClassInfo.class.cast(object).getTag() != getTag()) {
+		} else if(getTag() != ConstantClassInfo.class.cast(object).getTag()) {
 			return false;
-		} else if(ConstantClassInfo.class.cast(object).getConstantPoolEntryCount() != getConstantPoolEntryCount()) {
+		} else if(getConstantPoolEntryCount() != ConstantClassInfo.class.cast(object).getConstantPoolEntryCount()) {
 			return false;
-		} else if(ConstantClassInfo.class.cast(object).nameIndex != this.nameIndex) {
+		} else if(getNameIndex() != ConstantClassInfo.class.cast(object).getNameIndex()) {
 			return false;
 		} else {
 			return true;
@@ -124,9 +147,9 @@ public final class ConstantClassInfo extends CPInfo {
 	}
 	
 	/**
-	 * Returns the name_index of this {@code ConstantClassInfo} instance.
+	 * Returns the value of the {@code name_index} item associated with this {@code ConstantClassInfo} instance.
 	 * 
-	 * @return the name_index of this {@code ConstantClassInfo} instance
+	 * @return the value of the {@code name_index} item associated with this {@code ConstantClassInfo} instance
 	 */
 	public int getNameIndex() {
 		return this.nameIndex;
@@ -143,35 +166,35 @@ public final class ConstantClassInfo extends CPInfo {
 	}
 	
 	/**
-	 * Sets a new name_index for this {@code ConstantClassInfo} instance.
+	 * Sets {@code nameIndex} as the value for the {@code name_index} item associated with this {@code ConstantClassInfo} instance.
 	 * <p>
-	 * If {@code nameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code nameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param nameIndex the new name_index for this {@code ConstantClassInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than or equal to {@code 0}
+	 * @param nameIndex the value for the {@code name_index} item associated with this {@code ConstantClassInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than {@code 1}
 	 */
 	public void setNameIndex(final int nameIndex) {
-		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE);
+		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE, "nameIndex");
 	}
 	
 	/**
 	 * Writes this {@code ConstantClassInfo} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
 		try {
 			dataOutput.writeByte(getTag());
-			dataOutput.writeShort(this.nameIndex);
+			dataOutput.writeShort(getNameIndex());
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
@@ -180,7 +203,7 @@ public final class ConstantClassInfo extends CPInfo {
 	/**
 	 * Writes this {@code ConstantClassInfo} to {@code document}.
 	 * <p>
-	 * If {@code document} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param document the {@link Document} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
@@ -198,7 +221,7 @@ public final class ConstantClassInfo extends CPInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns the {@code ConstantClassInfo} that is located on the index {@code constantFieldRefInfo.getClassIndex()} in the constant_pool table of {@code classFile}.
+	 * Returns the {@code ConstantClassInfo} that is located on the index {@code constantFieldRefInfo.getClassIndex()} in the {@code constant_pool} table item of {@code classFile}.
 	 * <p>
 	 * If either {@code classFile} or {@code constantFieldRefInfo} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
@@ -209,7 +232,7 @@ public final class ConstantClassInfo extends CPInfo {
 	 * 
 	 * @param classFile the {@code ClassFile} instance that contains a {@code ConstantFieldRefInfo} instance that is equal to {@code constantFieldRefInfo}
 	 * @param constantFieldRefInfo the {@code ConstantFieldRefInfo} instance that contains the class_index
-	 * @return the {@code ConstantClassInfo} that is located on the index {@code constantFieldRefInfo.getClassIndex()} in the constant_pool table of {@code classFile}
+	 * @return the {@code ConstantClassInfo} that is located on the index {@code constantFieldRefInfo.getClassIndex()} in the {@code constant_pool} table item of {@code classFile}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain a {@code ConstantFieldRefInfo} instance that is equal to {@code constantFieldRefInfo}, or the {@code CPInfo} on the index
 	 *                                  {@code constantFieldRefInfo.getClassIndex()} is not a {@code ConstantClassInfo} instance
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code constantFieldRefInfo.getClassIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
@@ -220,7 +243,7 @@ public final class ConstantClassInfo extends CPInfo {
 	}
 	
 	/**
-	 * Returns the {@code ConstantClassInfo} that is located on the index {@code constantInterfaceMethodRefInfo.getClassIndex()} in the constant_pool table of {@code classFile}.
+	 * Returns the {@code ConstantClassInfo} that is located on the index {@code constantInterfaceMethodRefInfo.getClassIndex()} in the {@code constant_pool} table item of {@code classFile}.
 	 * <p>
 	 * If either {@code classFile} or {@code constantInterfaceMethodRefInfo} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
@@ -231,7 +254,7 @@ public final class ConstantClassInfo extends CPInfo {
 	 * 
 	 * @param classFile the {@code ClassFile} instance that contains a {@code ConstantInterfaceMethodRefInfo} instance that is equal to {@code constantInterfaceMethodRefInfo}
 	 * @param constantInterfaceMethodRefInfo the {@code ConstantInterfaceMethodRefInfo} instance that contains the class_index
-	 * @return the {@code ConstantClassInfo} that is located on the index {@code constantInterfaceMethodRefInfo.getClassIndex()} in the constant_pool table of {@code classFile}
+	 * @return the {@code ConstantClassInfo} that is located on the index {@code constantInterfaceMethodRefInfo.getClassIndex()} in the {@code constant_pool} table item of {@code classFile}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain a {@code ConstantInterfaceMethodRefInfo} instance that is equal to {@code constantInterfaceMethodRefInfo}, or the {@code CPInfo} on the index
 	 *                                  {@code constantInterfaceMethodRefInfo.getClassIndex()} is not a {@code ConstantClassInfo} instance
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code constantInterfaceMethodRefInfo.getClassIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
@@ -242,7 +265,7 @@ public final class ConstantClassInfo extends CPInfo {
 	}
 	
 	/**
-	 * Returns the {@code ConstantClassInfo} that is located on the index {@code constantMethodRefInfo.getClassIndex()} in the constant_pool table of {@code classFile}.
+	 * Returns the {@code ConstantClassInfo} that is located on the index {@code constantMethodRefInfo.getClassIndex()} in the {@code constant_pool} table item of {@code classFile}.
 	 * <p>
 	 * If either {@code classFile} or {@code constantMethodRefInfo} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
@@ -253,7 +276,7 @@ public final class ConstantClassInfo extends CPInfo {
 	 * 
 	 * @param classFile the {@code ClassFile} instance that contains a {@code ConstantMethodRefInfo} instance that is equal to {@code constantMethodRefInfo}
 	 * @param constantMethodRefInfo the {@code ConstantMethodRefInfo} instance that contains the class_index
-	 * @return the {@code ConstantClassInfo} that is located on the index {@code constantMethodRefInfo.getClassIndex()} in the constant_pool table of {@code classFile}
+	 * @return the {@code ConstantClassInfo} that is located on the index {@code constantMethodRefInfo.getClassIndex()} in the {@code constant_pool} table item of {@code classFile}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain a {@code ConstantMethodRefInfo} instance that is equal to {@code constantMethodRefInfo}, or the {@code CPInfo} on the index
 	 *                                  {@code constantMethodRefInfo.getClassIndex()} is not a {@code ConstantClassInfo} instance
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code constantMethodRefInfo.getClassIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
@@ -264,14 +287,14 @@ public final class ConstantClassInfo extends CPInfo {
 	}
 	
 	/**
-	 * Returns a {@code List} with all {@code ConstantClassInfo}s.
+	 * Returns a {@code List} with all {@code ConstantClassInfo} instances in {@code node}.
 	 * <p>
-	 * All {@code ConstantClassInfo}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code ConstantClassInfo} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code ConstantClassInfo}s
+	 * @return a {@code List} with all {@code ConstantClassInfo} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<ConstantClassInfo> filter(final Node node) {

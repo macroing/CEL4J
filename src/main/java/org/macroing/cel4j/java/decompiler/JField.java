@@ -130,9 +130,9 @@ final class JField {
 			final CPInfo cPInfo = this.classFile.getCPInfo(constantValueIndex);
 			
 			if(cPInfo instanceof ConstantDoubleInfo) {
-				return Optional.of(Double.valueOf(ConstantDoubleInfo.class.cast(cPInfo).getDouble()));
+				return Optional.of(Double.valueOf(ConstantDoubleInfo.class.cast(cPInfo).getDoubleValue()));
 			} else if(cPInfo instanceof ConstantFloatInfo) {
-				return Optional.of(Float.valueOf(ConstantFloatInfo.class.cast(cPInfo).getFloat()));
+				return Optional.of(Float.valueOf(ConstantFloatInfo.class.cast(cPInfo).getFloatValue()));
 			} else if(cPInfo instanceof ConstantIntegerInfo) {
 				return Optional.of(Integer.valueOf(ConstantIntegerInfo.class.cast(cPInfo).getInt()));
 			} else if(cPInfo instanceof ConstantLongInfo) {

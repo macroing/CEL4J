@@ -148,7 +148,7 @@ final class Instructions {
 	
 	@SuppressWarnings("unused")
 	private static String doToString(final ClassFile classFile, final ConstantDoubleInfo constantDoubleInfo) {
-		return Double.toString(constantDoubleInfo.getDouble());
+		return Double.toString(constantDoubleInfo.getDoubleValue());
 	}
 	
 	@SuppressWarnings("unused")
@@ -168,7 +168,7 @@ final class Instructions {
 	
 	@SuppressWarnings("unused")
 	private static String doToString(final ClassFile classFile, final ConstantFloatInfo constantFloatInfo) {
-		return Float.toString(constantFloatInfo.getFloat());
+		return Float.toString(constantFloatInfo.getFloatValue());
 	}
 	
 	@SuppressWarnings("unused")

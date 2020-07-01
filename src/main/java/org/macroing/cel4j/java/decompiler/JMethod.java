@@ -256,7 +256,7 @@ final class JMethod {
 				
 				final int nameIndex = parameter.getNameIndex();
 				
-				final String name = nameIndex != 0 ? this.classFile.getCPInfo(nameIndex).toString() : jLocalVariableNameGenerator.generateLocalVariableName(type, i);
+				final String name = nameIndex != 0 ? this.classFile.getCPInfo(nameIndex, ConstantUTF8Info.class).getString() : jLocalVariableNameGenerator.generateLocalVariableName(type, i);
 				
 				final boolean isFinal = parameter.isFinal();
 				

@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.cpinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.List;
 import java.util.Objects;
 
@@ -32,41 +31,65 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.util.Document;
 
 /**
- * A {@code ConstantFloatInfo} denotes a CONSTANT_Float_info structure in the constant_pool of a ClassFile structure.
+ * A {@code ConstantFloatInfo} represents a {@code CONSTANT_Float_info} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * The CONSTANT_Float_info structure was added to Java in version 1.0.2.
+ * This class is mutable and not thread-safe.
  * <p>
- * This class is not thread-safe.
+ * The {@code CONSTANT_Float_info} structure was added to Java in version 1.0.2 and can be found in the {@code constant_pool} table item of a {@code ClassFile} structure.
+ * <p>
+ * The {@code CONSTANT_Float_info} structure has the following format:
+ * <pre>
+ * <code>
+ * CONSTANT_Float_info {
+ *     u1 tag;
+ *     u4 bytes;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class ConstantFloatInfo extends CPInfo {
 	/**
-	 * The name of the CONSTANT_Float_info structure.
+	 * The name of the {@code CONSTANT_Float_info} structure.
 	 */
 	public static final String NAME = "CONSTANT_Float";
 	
 	/**
-	 * The tag for CONSTANT_Float.
+	 * The tag for the {@code CONSTANT_Float_info} structure.
 	 */
 	public static final int TAG = 4;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private float value;
+	private float floatValue;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Constructs a new {@code ConstantFloatInfo}.
+	 * Constructs a new {@code ConstantFloatInfo} instance that is a copy of {@code constantFloatInfo}.
+	 * <p>
+	 * If {@code constantFloatInfo} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param value the {@code float} representation of the new {@code ConstantFloatInfo} instance
+	 * @param constantFloatInfo the {@code ConstantFloatInfo} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code constantFloatInfo} is {@code null}
 	 */
-	public ConstantFloatInfo(final float value) {
+	public ConstantFloatInfo(final ConstantFloatInfo constantFloatInfo) {
 		super(NAME, TAG, 1);
 		
-		this.value = value;
+		this.floatValue = constantFloatInfo.floatValue;
+	}
+	
+	/**
+	 * Constructs a new {@code ConstantFloatInfo} instance.
+	 * 
+	 * @param floatValue the {@code float} value for the {@code bytes} item associated with this {@code ConstantFloatInfo} instance
+	 */
+	public ConstantFloatInfo(final float floatValue) {
+		super(NAME, TAG, 1);
+		
+		this.floatValue = floatValue;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +101,7 @@ public final class ConstantFloatInfo extends CPInfo {
 	 */
 	@Override
 	public ConstantFloatInfo copy() {
-		return new ConstantFloatInfo(this.value);
+		return new ConstantFloatInfo(this);
 	}
 	
 	/**
@@ -88,16 +111,16 @@ public final class ConstantFloatInfo extends CPInfo {
 	 */
 	@Override
 	public String toString() {
-		return Float.toString(this.value);
+		return String.format("new ConstantFloatInfo(%s)", Float.toString(getFloatValue()));
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantFloatInfo}, and that {@code ConstantFloatInfo} instance is equal to this {@code ConstantFloatInfo} instance, {@code false}
-	 * otherwise.
+	 * Compares {@code object} to this {@code ConstantFloatInfo} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantFloatInfo}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code ConstantFloatInfo} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantFloatInfo}, and that {@code ConstantFloatInfo} instance is equal to this {@code ConstantFloatInfo} instance, {@code false}
-	 * otherwise
+	 * @param object the {@code Object} to compare to this {@code ConstantFloatInfo} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantFloatInfo}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -105,13 +128,13 @@ public final class ConstantFloatInfo extends CPInfo {
 			return true;
 		} else if(!(object instanceof ConstantFloatInfo)) {
 			return false;
-		} else if(!Objects.equals(ConstantFloatInfo.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), ConstantFloatInfo.class.cast(object).getName())) {
 			return false;
-		} else if(ConstantFloatInfo.class.cast(object).getTag() != getTag()) {
+		} else if(getTag() != ConstantFloatInfo.class.cast(object).getTag()) {
 			return false;
-		} else if(ConstantFloatInfo.class.cast(object).getConstantPoolEntryCount() != getConstantPoolEntryCount()) {
+		} else if(getConstantPoolEntryCount() != ConstantFloatInfo.class.cast(object).getConstantPoolEntryCount()) {
 			return false;
-		} else if(Float.compare(ConstantFloatInfo.class.cast(object).value, this.value) != 0) {
+		} else if(Float.compare(getFloatValue(), ConstantFloatInfo.class.cast(object).getFloatValue()) != 0) {
 			return false;
 		} else {
 			return true;
@@ -119,12 +142,12 @@ public final class ConstantFloatInfo extends CPInfo {
 	}
 	
 	/**
-	 * Returns a {@code float} representation of this {@code ConstantFloatInfo} instance.
+	 * Returns the {@code float} value for the {@code bytes} item associated with this {@code ConstantFloatInfo} instance.
 	 * 
-	 * @return a {@code float} representation of this {@code ConstantFloatInfo} instance
+	 * @return the {@code float} value for the {@code bytes} item associated with this {@code ConstantFloatInfo} instance
 	 */
-	public float getFloat() {
-		return this.value;
+	public float getFloatValue() {
+		return this.floatValue;
 	}
 	
 	/**
@@ -134,36 +157,41 @@ public final class ConstantFloatInfo extends CPInfo {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(getName(), Integer.valueOf(getTag()), Integer.valueOf(getConstantPoolEntryCount()), Float.valueOf(this.value));
+		return Objects.hash(getName(), Integer.valueOf(getTag()), Integer.valueOf(getConstantPoolEntryCount()), Float.valueOf(getFloatValue()));
 	}
 	
 	/**
 	 * Sets a new {@code float} representation for this {@code ConstantFloatInfo} instance.
 	 * 
-	 * @param value the new {@code float} representation
+	 * @param floatValue the new {@code float} representation
 	 */
-	public void setFloat(final float value) {
-		this.value = value;
+	/**
+	 * Sets {@code floatValue} as the {@code float} value for the {@code bytes} item associated with this {@code ConstantFloatInfo} instance.
+	 * 
+	 * @param floatValue the {@code float} value for the {@code bytes} item associated with this {@code ConstantFloatInfo} instance
+	 */
+	public void setFloatValue(final float floatValue) {
+		this.floatValue = floatValue;
 	}
 	
 	/**
 	 * Writes this {@code ConstantFloatInfo} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
 		try {
 			dataOutput.writeByte(getTag());
-			dataOutput.writeFloat(this.value);
+			dataOutput.writeFloat(getFloatValue());
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
@@ -172,7 +200,7 @@ public final class ConstantFloatInfo extends CPInfo {
 	/**
 	 * Writes this {@code ConstantFloatInfo} to {@code document}.
 	 * <p>
-	 * If {@code document} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param document the {@link Document} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
@@ -182,7 +210,7 @@ public final class ConstantFloatInfo extends CPInfo {
 		document.linef("%s_info = {", getName());
 		document.indent();
 		document.linef("u1 tag = %s;", Integer.toString(getTag()));
-		document.linef("float value = %f;", Float.valueOf(getFloat()));
+		document.linef("float value = %f;", Float.valueOf(getFloatValue()));
 		document.outdent();
 		document.linef("};");
 	}
@@ -190,14 +218,14 @@ public final class ConstantFloatInfo extends CPInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@code ConstantFloatInfo}s.
+	 * Returns a {@code List} with all {@code ConstantFloatInfo} instances in {@code node}.
 	 * <p>
-	 * All {@code ConstantFloatInfo}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code ConstantFloatInfo} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code ConstantFloatInfo}s
+	 * @return a {@code List} with all {@code ConstantFloatInfo} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<ConstantFloatInfo> filter(final Node node) {
