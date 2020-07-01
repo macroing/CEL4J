@@ -18,7 +18,6 @@
  */
 package org.macroing.cel4j.php.model;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -545,7 +544,17 @@ public final class PMethod implements Comparable<PMethod> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code PMethod} that represents a get-method in a class.
+	 * <p>
+	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param name the name of the method
+	 * @param type the return type of the method, which may be {@code null}
+	 * @param isNullable {@code true} if, and only if, the method may return {@code null}, {@code false} otherwise
+	 * @return a {@code PMethod} that represents a get-method in a class
+	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 */
 	public static PMethod newClassMethodGet(final String name, final PType type, final boolean isNullable) {
 		final String nameCamelCaseModified = Strings.formatCamelCaseModified(name);
 		final String nameCamelCase = Strings.formatCamelCase(name);
@@ -556,12 +565,20 @@ public final class PMethod implements Comparable<PMethod> {
 		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("get" + nameCamelCase);
-		pMethod.setReturnType(new PReturnType(type, isNullable));
+		pMethod.setReturnType(type != null ? new PReturnType(type, isNullable) : null);
 		
 		return pMethod;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code PMethod} that represents a has-method in a class.
+	 * <p>
+	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param name the name of the method
+	 * @return a {@code PMethod} that represents a has-method in a class
+	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 */
 	public static PMethod newClassMethodHas(final String name) {
 		final String nameCamelCaseModified = Strings.formatCamelCaseModified(name);
 		final String nameCamelCase = Strings.formatCamelCase(name);
@@ -577,7 +594,18 @@ public final class PMethod implements Comparable<PMethod> {
 		return pMethod;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code PMethod} that represents a set-method in a class.
+	 * <p>
+	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param name the name of the method
+	 * @param type the parameter argument type of the method, which may be {@code null}
+	 * @param value the parameter argument value of the method, which may be {@code null}
+	 * @param isNullable {@code true} if, and only if, the parameter argument may be {@code null}, {@code false} otherwise
+	 * @return a {@code PMethod} that represents a get-method in a class
+	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 */
 	public static PMethod newClassMethodSet(final String name, final PType type, final PValue value, final boolean isNullable) {
 		final String nameCamelCaseModified = Strings.formatCamelCaseModified(name);
 		final String nameCamelCase = Strings.formatCamelCase(name);
@@ -594,7 +622,17 @@ public final class PMethod implements Comparable<PMethod> {
 		return pMethod;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code PMethod} that represents a method in an interface.
+	 * <p>
+	 * If either {@code name}, {@code parameterArguments} or one of its elements are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param name the name of the method
+	 * @param parameterArguments the {@link PParameterArgument} instances for the method
+	 * @param returnType the {@link PReturnType} for the method, which may be {@code null}
+	 * @return a {@code PMethod} that represents a method in an interface
+	 * @throws NullPointerException thrown if, and only if, either {@code name}, {@code parameterArguments} or one of its elements are {@code null}
+	 */
 	public static PMethod newInterfaceMethod(final String name, final PParameterArgument[] parameterArguments, final PReturnType returnType) {
 		final
 		PMethod pMethod = new PMethod();
@@ -609,7 +647,17 @@ public final class PMethod implements Comparable<PMethod> {
 		return pMethod;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code PMethod} that represents a get-method in an interface.
+	 * <p>
+	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param name the name of the method
+	 * @param type the return type of the method, which may be {@code null}
+	 * @param isNullable {@code true} if, and only if, the method may return {@code null}, {@code false} otherwise
+	 * @return a {@code PMethod} that represents a get-method in an interface
+	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 */
 	public static PMethod newInterfaceMethodGet(final String name, final PType type, final boolean isNullable) {
 		final String nameCamelCase = Strings.formatCamelCase(name);
 		
@@ -622,7 +670,15 @@ public final class PMethod implements Comparable<PMethod> {
 		return pMethod;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code PMethod} that represents a has-method in an interface.
+	 * <p>
+	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param name the name of the method
+	 * @return a {@code PMethod} that represents a has-method in an interface
+	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 */
 	public static PMethod newInterfaceMethodHas(final String name) {
 		final String nameCamelCase = Strings.formatCamelCase(name);
 		
@@ -635,7 +691,18 @@ public final class PMethod implements Comparable<PMethod> {
 		return pMethod;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code PMethod} that represents a set-method in an interface.
+	 * <p>
+	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param name the name of the method
+	 * @param type the parameter argument type of the method, which may be {@code null}
+	 * @param value the parameter argument value of the method, which may be {@code null}
+	 * @param isNullable {@code true} if, and only if, the parameter argument may be {@code null}, {@code false} otherwise
+	 * @return a {@code PMethod} that represents a get-method in an interface
+	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 */
 	public static PMethod newInterfaceMethodSet(final String name, final PType type, final PValue value, final boolean isNullable) {
 		final String nameCamelCaseModified = Strings.formatCamelCaseModified(name);
 		final String nameCamelCase = Strings.formatCamelCase(name);

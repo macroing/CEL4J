@@ -18,7 +18,6 @@
  */
 package org.macroing.cel4j.php.model;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -316,53 +315,113 @@ public final class PClass {
 		return (this.accessFlags & ACCESS_FLAG_FINAL) != 0;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds {@code pConst} to this {@code PClass} instance, if absent.
+	 * <p>
+	 * If {@code pConst} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param pConst the {@link PConst} to add
+	 * @throws NullPointerException thrown if, and only if, {@code pConst} is {@code null}
+	 */
 	public void addConst(final PConst pConst) {
 		if(!doContainsConstByName(Objects.requireNonNull(pConst, "pConst == null"))) {
 			this.consts.add(pConst);
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds {@code field} to this {@code PClass} instance, if absent.
+	 * <p>
+	 * If {@code field} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param field the {@link PField} to add
+	 * @throws NullPointerException thrown if, and only if, {@code field} is {@code null}
+	 */
 	public void addField(final PField field) {
 		if(!doContainsFieldByName(Objects.requireNonNull(field, "field == null"))) {
 			this.fields.add(field);
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds {@code implementedInterface} to this {@code PClass} instance.
+	 * <p>
+	 * If {@code implementedInterface} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param implementedInterface the name of the implemented interface to add
+	 * @throws NullPointerException thrown if, and only if, {@code implementedInterface} is {@code null}
+	 */
 	public void addImplementedInterface(final String implementedInterface) {
 		this.implementedInterfaces.add(Objects.requireNonNull(implementedInterface, "implementedInterface == null"));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds {@code method} to this {@code PClass} instance, if absent.
+	 * <p>
+	 * If {@code method} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param method the {@link PMethod} to add
+	 * @throws NullPointerException thrown if, and only if, {@code method} is {@code null}
+	 */
 	public void addMethod(final PMethod method) {
 		if(!doContainsMethodByName(Objects.requireNonNull(method, "method == null"))) {
 			this.methods.add(method);
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Removes {@code pConst} from this {@code PClass} instance, if present.
+	 * <p>
+	 * If {@code pConst} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param pConst the {@link PConst} to remove
+	 * @throws NullPointerException thrown if, and only if, {@code pConst} is {@code null}
+	 */
 	public void removeConst(final PConst pConst) {
 		this.consts.remove(Objects.requireNonNull(pConst, "pConst == null"));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Removes {@code field} from this {@code PClass} instance, if present.
+	 * <p>
+	 * If {@code field} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param field the {@link PField} to remove
+	 * @throws NullPointerException thrown if, and only if, {@code field} is {@code null}
+	 */
 	public void removeField(final PField field) {
 		this.fields.remove(Objects.requireNonNull(field, "field == null"));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Removes {@code implementedInterface} from this {@code PClass} instance.
+	 * <p>
+	 * If {@code implementedInterface} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param implementedInterface the name of the implemented interface to remove
+	 * @throws NullPointerException thrown if, and only if, {@code implementedInterface} is {@code null}
+	 */
 	public void removeImplementedInterface(final String implementedInterface) {
 		this.implementedInterfaces.remove(Objects.requireNonNull(implementedInterface, "implementedInterface == null"));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Removes {@code method} from this {@code PClass} instance, if present.
+	 * <p>
+	 * If {@code method} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param method the {@link PMethod} to remove
+	 * @throws NullPointerException thrown if, and only if, {@code method} is {@code null}
+	 */
 	public void removeMethod(final PMethod method) {
 		this.methods.remove(Objects.requireNonNull(method, "method == null"));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds or removes the abstract access modifier for this {@code PClass} instance.
+	 * 
+	 * @param isAbstract {@code true} if, and only if, this {@code PClass} is abstract, {@code false} otherwise
+	 */
 	public void setAbstract(final boolean isAbstract) {
 		if(isAbstract) {
 			this.accessFlags |= ACCESS_FLAG_ABSTRACT;
@@ -372,17 +431,29 @@ public final class PClass {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Sets the optional constructor for this {@code PClass} instance.
+	 * 
+	 * @param constructor a {@link PConstructor} that may be {@code null}
+	 */
 	public void setConstructor(final PConstructor constructor) {
 		this.constructor = constructor;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Sets the optional name of the extended class for this {@code PClass} instance.
+	 * 
+	 * @param extendedClass a {@code String} that may be {@code null}
+	 */
 	public void setExtendedClass(final String extendedClass) {
 		this.extendedClass = extendedClass;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds or removes the final access modifier for this {@code PClass} instance.
+	 * 
+	 * @param isFinal {@code true} if, and only if, this {@code PClass} is final, {@code false} otherwise
+	 */
 	public void setFinal(final boolean isFinal) {
 		if(isFinal) {
 			this.accessFlags &= ~ACCESS_FLAG_ABSTRACT;

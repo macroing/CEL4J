@@ -18,7 +18,6 @@
  */
 package org.macroing.cel4j.php.model;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -34,7 +33,14 @@ import java.util.stream.Collectors;
 
 import org.macroing.cel4j.util.Document;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code PDocument} represents a PHP document.
+ * <p>
+ * This class is mutable and not thread-safe.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class PDocument {
 	private final List<PClass> classes;
 	private final List<PInterface> interfaces;
@@ -256,80 +262,165 @@ public final class PDocument {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} with all {@link PClass} instances that are currently added to this {@code PDocument} instance.
+	 * 
+	 * @return a {@code List} with all {@code PClass} instances that are currently added to this {@code PDocument} instance
+	 */
 	public List<PClass> getClasses() {
 		return new ArrayList<>(this.classes);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} with all {@link PInterface} instances that are currently added to this {@code PDocument} instance.
+	 * 
+	 * @return a {@code List} with all {@code PInterface} instances that are currently added to this {@code PDocument} instance
+	 */
 	public List<PInterface> getInterfaces() {
 		return new ArrayList<>(this.interfaces);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} with all uses that are currently added to this {@code PDocument} instance.
+	 * 
+	 * @return a {@code List} with all uses that are currently added to this {@code PDocument} instance
+	 */
 	public List<String> getUses() {
 		return new ArrayList<>(this.uses);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the {@link PBlock} instance that is associated with this {@code PDocument} instance.
+	 * 
+	 * @return the {@code PBlock} instance that is associated with this {@code PDocument} instance
+	 */
 	public PBlock getBlock() {
 		return this.block;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the namespace associated with this {@code PDocument} instance.
+	 * 
+	 * @return the namespace associated with this {@code PDocument} instance
+	 */
 	public String getNamespace() {
 		return this.namespace;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns {@code true} if, and only if, this {@code PDocument} instance should generate a comment at the top, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code PDocument} instance should generate a comment at the top, {@code false} otherwise
+	 */
 	public boolean isGeneratingComment() {
 		return this.isGeneratingComment;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds {@code pClass} to this {@code PDocument} instance.
+	 * <p>
+	 * If {@code pClass} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param pClass the {@link PClass} to add
+	 * @throws NullPointerException thrown if, and only if, {@code pClass} is {@code null}
+	 */
 	public void addClass(final PClass pClass) {
 		this.classes.add(Objects.requireNonNull(pClass, "pClass == null"));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds {@code pInterface} to this {@code PDocument} instance.
+	 * <p>
+	 * If {@code pInterface} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param pInterface the {@link PInterface} to add
+	 * @throws NullPointerException thrown if, and only if, {@code pInterface} is {@code null}
+	 */
 	public void addInterface(final PInterface pInterface) {
 		this.interfaces.add(Objects.requireNonNull(pInterface, "pInterface == null"));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds {@code use} to this {@code PDocument} instance.
+	 * <p>
+	 * If {@code use} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param use the use to add
+	 * @throws NullPointerException thrown if, and only if, {@code use} is {@code null}
+	 */
 	public void addUse(final String use) {
 		this.uses.add(Objects.requireNonNull(use, "use == null"));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Removes {@code pClass} from this {@code PDocument} instance.
+	 * <p>
+	 * If {@code pClass} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param pClass the {@link PClass} to remove
+	 * @throws NullPointerException thrown if, and only if, {@code pClass} is {@code null}
+	 */
 	public void removeClass(final PClass pClass) {
 		this.classes.remove(Objects.requireNonNull(pClass, "pClass == null"));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Removes {@code pInterface} from this {@code PDocument} instance.
+	 * <p>
+	 * If {@code pInterface} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param pInterface the {@link PInterface} to remove
+	 * @throws NullPointerException thrown if, and only if, {@code pInterface} is {@code null}
+	 */
 	public void removeInterface(final PInterface pInterface) {
 		this.interfaces.remove(Objects.requireNonNull(pInterface, "pInterface == null"));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Removes {@code use} from this {@code PDocument} instance.
+	 * <p>
+	 * If {@code use} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param use the use to remove
+	 * @throws NullPointerException thrown if, and only if, {@code use} is {@code null}
+	 */
 	public void removeUse(final String use) {
 		this.uses.remove(Objects.requireNonNull(use, "use == null"));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Sets whether or not this {@code PDocument} instance should generate a comment at the top.
+	 * 
+	 * @param isGeneratingComment {@code true} if, and only if, this {@code PDocument} instance should generate a comment at the top, {@code false} otherwise
+	 */
 	public void setGeneratingComment(final boolean isGeneratingComment) {
 		this.isGeneratingComment = isGeneratingComment;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Sets the namespace for this {@code PDocument} instance.
+	 * <p>
+	 * If {@code namespace} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param namespace the namespace for this {@code PDocument} instance
+	 * @throws NullPointerException thrown if, and only if, {@code namespace} is {@code null}
+	 */
 	public void setNamespace(final String namespace) {
 		this.namespace = Objects.requireNonNull(namespace, "namespace == null");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a namespace by joining all names in {@code names}.
+	 * <p>
+	 * If {@code names} or any of its elements are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param names the names to join
+	 * @return a namespace by joining all names in {@code names}
+	 * @throws NullPointerException thrown if, and only if, {@code names} or any of its elements are {@code null}
+	 */
 	public static String toNamespace(final String... names) {
-		return Arrays.asList(names).stream().filter(name -> !name.isEmpty()).collect(Collectors.joining("\\"));
+		return Arrays.asList(Objects.requireNonNull(names, "names == null")).stream().filter(name -> !name.isEmpty()).collect(Collectors.joining("\\"));
 	}
 }
