@@ -28,7 +28,14 @@ import java.util.stream.Collectors;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code PMethod} represents a method and can be added to a {@link PClass} or a {@link PInterface}.
+ * <p>
+ * This class is mutable and not thread-safe.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class PMethod implements Comparable<PMethod> {
 	private static final int ACCESS_FLAG_ABSTRACT = 0x0400;
 	private static final int ACCESS_FLAG_FINAL = 0x0010;
@@ -36,6 +43,8 @@ public final class PMethod implements Comparable<PMethod> {
 	private static final int ACCESS_FLAG_PROTECTED = 0x0004;
 	private static final int ACCESS_FLAG_PUBLIC = 0x0001;
 	private static final int ACCESS_FLAG_STATIC = 0x0008;
+	private static final int ENCLOSED_BY_CLASS = 1;
+	private static final int ENCLOSED_BY_INTERFACE = 2;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -43,9 +52,8 @@ public final class PMethod implements Comparable<PMethod> {
 	private final PBlock block;
 	private PReturnType returnType;
 	private String name;
-	private boolean isEnclosedByClass;
-	private boolean isEnclosedByInterface;
 	private int accessFlags;
+	private int enclosedBy;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -57,9 +65,8 @@ public final class PMethod implements Comparable<PMethod> {
 		this.block = new PBlock();
 		this.returnType = null;
 		this.name = "name";
-		this.isEnclosedByClass = true;
-		this.isEnclosedByInterface = false;
 		this.accessFlags = ACCESS_FLAG_PUBLIC;
+		this.enclosedBy = ENCLOSED_BY_CLASS;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -271,7 +278,7 @@ public final class PMethod implements Comparable<PMethod> {
 	 * @return {@code true} if, and only if, this {@code PMethod} instance is enclosed by a class, {@code false} otherwise
 	 */
 	public boolean isEnclosedByClass() {
-		return this.isEnclosedByClass;
+		return this.enclosedBy == ENCLOSED_BY_CLASS;
 	}
 	
 	/**
@@ -280,7 +287,7 @@ public final class PMethod implements Comparable<PMethod> {
 	 * @return {@code true} if, and only if, this {@code PMethod} instance is enclosed by an interface, {@code false} otherwise
 	 */
 	public boolean isEnclosedByInterface() {
-		return this.isEnclosedByInterface;
+		return this.enclosedBy == ENCLOSED_BY_INTERFACE;
 	}
 	
 	/**
@@ -389,17 +396,35 @@ public final class PMethod implements Comparable<PMethod> {
 		return this.name.compareTo(method.name);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds {@code parameterArgument} to this {@code PMethod} instance.
+	 * <p>
+	 * If {@code parameterArgument} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param parameterArgument the {@link PParameterArgument} to add
+	 * @throws NullPointerException thrown if, and only if, {@code parameterArgument} is {@code null}
+	 */
 	public void addParameterArgument(final PParameterArgument parameterArgument) {
 		this.parameterArguments.add(Objects.requireNonNull(parameterArgument, "parameterArgument == null"));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Removes {@code parameterArgument} from this {@code PMethod} instance.
+	 * <p>
+	 * If {@code parameterArgument} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param parameterArgument the {@link PParameterArgument} to remove
+	 * @throws NullPointerException thrown if, and only if, {@code parameterArgument} is {@code null}
+	 */
 	public void removeParameterArgument(final PParameterArgument parameterArgument) {
 		this.parameterArguments.remove(Objects.requireNonNull(parameterArgument, "parameterArgument == null"));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds or removes the abstract access modifier for this {@code PMethod} instance.
+	 * 
+	 * @param isAbstract {@code true} if, and only if, this {@code PMethod} is abstract, {@code false} otherwise
+	 */
 	public void setAbstract(final boolean isAbstract) {
 		if(isAbstract) {
 			this.accessFlags |= ACCESS_FLAG_ABSTRACT;
@@ -411,19 +436,25 @@ public final class PMethod implements Comparable<PMethod> {
 		}
 	}
 	
-//	TODO: Add Javadocs!
-	public void setEnclosedByClass(final boolean isEnclosedByClass) {
-		this.isEnclosedByClass = isEnclosedByClass;
-		this.isEnclosedByInterface = isEnclosedByClass ? false : this.isEnclosedByInterface;
+	/**
+	 * Sets this {@code PMethod} instance to be enclosed by a class.
+	 */
+	public void setEnclosedByClass() {
+		this.enclosedBy = ENCLOSED_BY_CLASS;
 	}
 	
-//	TODO: Add Javadocs!
-	public void setEnclosedByInterface(final boolean isEnclosedByInterface) {
-		this.isEnclosedByClass = isEnclosedByInterface ? false : this.isEnclosedByClass;
-		this.isEnclosedByInterface = isEnclosedByInterface;
+	/**
+	 * Sets this {@code PMethod} instance to be enclosed by an interface.
+	 */
+	public void setEnclosedByInterface() {
+		this.enclosedBy = ENCLOSED_BY_INTERFACE;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds or removes the final access modifier for this {@code PMethod} instance.
+	 * 
+	 * @param isFinal {@code true} if, and only if, this {@code PMethod} is final, {@code false} otherwise
+	 */
 	public void setFinal(final boolean isFinal) {
 		if(isFinal) {
 			this.accessFlags &= ~ACCESS_FLAG_ABSTRACT;
@@ -433,12 +464,23 @@ public final class PMethod implements Comparable<PMethod> {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Sets {@code name} as the name for this {@code PMethod} instance.
+	 * <p>
+	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param name the name for this {@code PMethod} instance
+	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 */
 	public void setName(final String name) {
 		this.name = Objects.requireNonNull(name, "name == null");
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds or removes the private access modifier for this {@code PMethod} instance.
+	 * 
+	 * @param isPrivate {@code true} if, and only if, this {@code PMethod} is private, {@code false} otherwise
+	 */
 	public void setPrivate(final boolean isPrivate) {
 		if(isPrivate) {
 			this.accessFlags |= ACCESS_FLAG_PRIVATE;
@@ -449,7 +491,11 @@ public final class PMethod implements Comparable<PMethod> {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds or removes the protected access modifier for this {@code PMethod} instance.
+	 * 
+	 * @param isProtected {@code true} if, and only if, this {@code PMethod} is protected, {@code false} otherwise
+	 */
 	public void setProtected(final boolean isProtected) {
 		if(isProtected) {
 			this.accessFlags &= ~ACCESS_FLAG_PRIVATE;
@@ -460,7 +506,11 @@ public final class PMethod implements Comparable<PMethod> {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds or removes the public access modifier for this {@code PMethod} instance.
+	 * 
+	 * @param isPublic {@code true} if, and only if, this {@code PMethod} is public, {@code false} otherwise
+	 */
 	public void setPublic(final boolean isPublic) {
 		if(isPublic) {
 			this.accessFlags &= ~ACCESS_FLAG_PRIVATE;
@@ -471,12 +521,20 @@ public final class PMethod implements Comparable<PMethod> {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Sets the optional return type for this {@code PMethod} instance.
+	 * 
+	 * @param returnType a {@link PReturnType} that may be {@code null}
+	 */
 	public void setReturnType(final PReturnType returnType) {
 		this.returnType = returnType;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds or removes the static access modifier for this {@code PMethod} instance.
+	 * 
+	 * @param isStatic {@code true} if, and only if, this {@code PMethod} is static, {@code false} otherwise
+	 */
 	public void setStatic(final boolean isStatic) {
 		if(isStatic) {
 			this.accessFlags |= ACCESS_FLAG_STATIC;
@@ -495,7 +553,7 @@ public final class PMethod implements Comparable<PMethod> {
 		final
 		PMethod pMethod = new PMethod();
 		pMethod.getBlock().addLinef("return $this->%s;", nameCamelCaseModified);
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("get" + nameCamelCase);
 		pMethod.setReturnType(new PReturnType(type, isNullable));
@@ -511,7 +569,7 @@ public final class PMethod implements Comparable<PMethod> {
 		final
 		PMethod pMethod = new PMethod();
 		pMethod.getBlock().addLinef("return $this->%s !== null;", nameCamelCaseModified);
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("has" + nameCamelCase);
 		pMethod.setReturnType(new PReturnType(PType.BOOL));
@@ -528,7 +586,7 @@ public final class PMethod implements Comparable<PMethod> {
 		PMethod pMethod = new PMethod();
 		pMethod.addParameterArgument(new PParameterArgument(nameCamelCaseModified, type, value, isNullable));
 		pMethod.getBlock().addLinef("$this->%s = $%s;", nameCamelCaseModified, nameCamelCaseModified);
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("set" + nameCamelCase);
 		pMethod.setReturnType(new PReturnType(PType.VOID, false));
@@ -540,7 +598,7 @@ public final class PMethod implements Comparable<PMethod> {
 	public static PMethod newInterfaceMethod(final String name, final PParameterArgument[] parameterArguments, final PReturnType returnType) {
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.setEnclosedByInterface(true);
+		pMethod.setEnclosedByInterface();
 		pMethod.setName(name);
 		pMethod.setReturnType(returnType);
 		
@@ -557,7 +615,7 @@ public final class PMethod implements Comparable<PMethod> {
 		
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.setEnclosedByInterface(true);
+		pMethod.setEnclosedByInterface();
 		pMethod.setName("get" + nameCamelCase);
 		pMethod.setReturnType(type != null ? new PReturnType(type, isNullable) : null);
 		
@@ -570,7 +628,7 @@ public final class PMethod implements Comparable<PMethod> {
 		
 		final
 		PMethod pMethod = new PMethod();
-		pMethod.setEnclosedByInterface(true);
+		pMethod.setEnclosedByInterface();
 		pMethod.setName("has" + nameCamelCase);
 		pMethod.setReturnType(new PReturnType(PType.BOOL));
 		
@@ -585,14 +643,25 @@ public final class PMethod implements Comparable<PMethod> {
 		final
 		PMethod pMethod = new PMethod();
 		pMethod.addParameterArgument(new PParameterArgument(nameCamelCaseModified, type, value, isNullable));
-		pMethod.setEnclosedByInterface(true);
+		pMethod.setEnclosedByInterface();
 		pMethod.setName("set" + nameCamelCase);
 		pMethod.setReturnType(new PReturnType(PType.VOID, false));
 		
 		return pMethod;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Checks if {@code methodA} is in a different group than {@code methodB}.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code methodA} is in a different group than {@code methodB}, {@code false} otherwise.
+	 * <p>
+	 * If either {@code methodA} or {@code methodB} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param methodA a {@link PMethod} instance
+	 * @param methodB a {@code PMethod} instance
+	 * @return {@code true} if, and only if, {@code methodA} is in a different group than {@code methodB}, {@code false} otherwise
+	 * @throws NullPointerException thrown if, and only if, either {@code methodA} or {@code methodB} are {@code null}
+	 */
 	public static boolean isInDifferentGroups(final PMethod methodA, final PMethod methodB) {
 		if(methodA.isStatic() != methodB.isStatic()) {
 			return true;

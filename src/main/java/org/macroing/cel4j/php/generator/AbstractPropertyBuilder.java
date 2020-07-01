@@ -371,7 +371,7 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
 		pMethod.addParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
 		pMethod.getBlock().addLinef("return array_key_exists($key, $array) ? (is_array($array[$key]) ? %s::parseArray($array[$key]) : null) : null;", typeNameCamelCase);
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("doParse" + typeNameCamelCase);
 		pMethod.setPrivate(true);
@@ -387,7 +387,7 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
 		pMethod.addParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
 		pMethod.getBlock().addLine("return array_key_exists($key, $array) ? (is_array($array[$key]) ? $array[$key] : null) : null;");
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("doParseArray");
 		pMethod.setPrivate(true);
@@ -403,7 +403,7 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
 		pMethod.addParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
 		pMethod.getBlock().addLine("return array_key_exists($key, $array) ? ($array[$key] !== null ? boolval($array[$key]) : null) : null;");
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("doParseBool");
 		pMethod.setPrivate(true);
@@ -419,7 +419,7 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
 		pMethod.addParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
 		pMethod.getBlock().addLine("return array_key_exists($key, $array) ? ($array[$key] !== null ? floatval($array[$key]) : null) : null;");
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("doParseFloat");
 		pMethod.setPrivate(true);
@@ -435,7 +435,7 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
 		pMethod.addParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
 		pMethod.getBlock().addLine("return array_key_exists($key, $array) ? ($array[$key] !== null ? intval($array[$key]) : null) : null;");
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("doParseInt");
 		pMethod.setPrivate(true);
@@ -451,7 +451,7 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
 		pMethod.addParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
 		pMethod.getBlock().addLine("return null;");
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("doParseObject");
 		pMethod.setPrivate(true);
@@ -467,7 +467,7 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		pMethod.addParameterArgument(new PParameterArgument("array", PType.ARRAY, null, false));
 		pMethod.addParameterArgument(new PParameterArgument("key", PType.STRING, null, false));
 		pMethod.getBlock().addLine("return array_key_exists($key, $array) ? ($array[$key] !== null ? strval($array[$key]) : null) : null;");
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("doParseString");
 		pMethod.setPrivate(true);
@@ -496,7 +496,7 @@ public abstract class AbstractPropertyBuilder implements PropertyBuilder {
 		PMethod pMethod = new PMethod();
 		pMethod.addParameterArgument(new PParameterArgument(nameCamelCaseModified, type, PValue.NULL, true));
 		pMethod.getBlock().addLinef("return ($this->%s = $%s) === $%s;", nameCamelCaseModified, nameCamelCaseModified, nameCamelCaseModified);
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("set" + nameCamelCase);
 		pMethod.setReturnType(new PReturnType(PType.BOOL, false));

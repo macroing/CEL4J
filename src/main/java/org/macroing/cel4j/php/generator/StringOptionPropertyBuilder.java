@@ -132,7 +132,7 @@ final class StringOptionPropertyBuilder extends AbstractPropertyBuilder {
 		pMethod.getBlock().addLine("} else {");
 		pMethod.getBlock().addLine("	return $oldString;");
 		pMethod.getBlock().addLine("}");
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("doUpdateStringByOption");
 		pMethod.setPrivate(true);
@@ -155,7 +155,7 @@ final class StringOptionPropertyBuilder extends AbstractPropertyBuilder {
 		PMethod pMethod = new PMethod();
 		pMethod.addParameterArgument(new PParameterArgument(nameCamelCaseModified, type, PValue.NULL, true));
 		pMethod.getBlock().addLinef("return ($this->%s = self::doUpdateStringByOption($%s, $this->%s, %s)) === $%s;", nameCamelCaseModified, nameCamelCaseModified, nameCamelCaseModified, stringOptionsArray, nameCamelCaseModified);
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("set" + nameCamelCase);
 		pMethod.setReturnType(new PReturnType(PType.BOOL, false));

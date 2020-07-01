@@ -18,7 +18,6 @@
  */
 package org.macroing.cel4j.php.model;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,14 +25,23 @@ import java.util.Objects;
 
 import org.macroing.cel4j.util.Document;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code PInterface} represents an interface and can be added to a {@link PDocument}.
+ * <p>
+ * This class is mutable and not thread-safe.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class PInterface {
 	private final List<PMethod> methods;
 	private String name;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Constructs a new {@code PInterface} instance.
+	 */
 	public PInterface() {
 		this.methods = new ArrayList<>();
 		this.name = "MyInterface";
@@ -41,12 +49,35 @@ public final class PInterface {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Writes this {@code PInterface} instance to a {@link Document}.
+	 * <p>
+	 * Returns the {@code Document} that was written to.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * pInterface.write(new Document());
+	 * }
+	 * </pre>
+	 * 
+	 * @return the {@code Document} that was written to
+	 */
 	public Document write() {
 		return write(new Document());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Writes this {@code PInterface} instance to a {@link Document}.
+	 * <p>
+	 * Returns the {@code Document} that was written to.
+	 * <p>
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param document the {@code Document} to write to
+	 * @return the {@code Document} that was written to
+	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
+	 */
 	public Document write(final Document document) {
 		final List<PMethod> methods = getMethods();
 		
@@ -76,32 +107,63 @@ public final class PInterface {
 		return document;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} with all {@link PMethod} instances that are currently added to this {@code PInterface} instance.
+	 * 
+	 * @return a {@code List} with all {@code PMethod} instances that are currently added to this {@code PInterface} instance
+	 */
 	public List<PMethod> getMethods() {
 		return new ArrayList<>(this.methods);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the name associated with this {@code PInterface} instance.
+	 * 
+	 * @return the name associated with this {@code PInterface} instance
+	 */
 	public String getName() {
 		return this.name;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds {@code method} to this {@code PInterface} instance.
+	 * <p>
+	 * If {@code method} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param method the {@link PMethod} to add
+	 * @throws NullPointerException thrown if, and only if, {@code method} is {@code null}
+	 */
 	public void addMethod(final PMethod method) {
 		this.methods.add(Objects.requireNonNull(method, "method == null"));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Removes {@code method} from this {@code PInterface} instance.
+	 * <p>
+	 * If {@code method} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param method the {@link PMethod} to remove
+	 * @throws NullPointerException thrown if, and only if, {@code method} is {@code null}
+	 */
 	public void removeMethod(final PMethod method) {
 		this.methods.remove(Objects.requireNonNull(method, "method == null"));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Sets {@code name} as the name for this {@code PInterface} instance.
+	 * <p>
+	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param name the name for this {@code PInterface} instance
+	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 */
 	public void setName(final String name) {
 		this.name = Objects.requireNonNull(name, "name == null");
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Sorts this {@code PInterface} instance.
+	 */
 	public void sort() {
 		Collections.sort(this.methods);
 	}

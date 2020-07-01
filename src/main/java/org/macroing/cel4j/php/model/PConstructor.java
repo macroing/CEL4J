@@ -18,7 +18,6 @@
  */
 package org.macroing.cel4j.php.model;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +25,14 @@ import java.util.stream.Collectors;
 
 import org.macroing.cel4j.util.Document;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code PConstructor} represents a constructor and can be added to a {@link PClass}.
+ * <p>
+ * This class is mutable and not thread-safe.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class PConstructor {
 	private final List<PParameterArgument> parameterArguments;
 	private final PBlock block;
@@ -37,7 +43,9 @@ public final class PConstructor {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Constructs a new {@code PConstructor} instance.
+	 */
 	public PConstructor() {
 		this.parameterArguments = new ArrayList<>();
 		this.block = new PBlock();
@@ -49,12 +57,35 @@ public final class PConstructor {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Writes this {@code PConstructor} instance to a {@link Document}.
+	 * <p>
+	 * Returns the {@code Document} that was written to.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * pConstructor.write(new Document());
+	 * }
+	 * </pre>
+	 * 
+	 * @return the {@code Document} that was written to
+	 */
 	public Document write() {
 		return write(new Document());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Writes this {@code PConstructor} instance to a {@link Document}.
+	 * <p>
+	 * Returns the {@code Document} that was written to.
+	 * <p>
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param document the {@code Document} to write to
+	 * @return the {@code Document} that was written to
+	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
+	 */
 	public Document write(final Document document) {
 		final PBlock block = this.block;
 		
@@ -73,17 +104,29 @@ public final class PConstructor {
 		return document;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code List} with all {@link PParameterArgument} instances that are currently added to this {@code PConstructor} instance.
+	 * 
+	 * @return a {@code List} with all {@code PParameterArgument} instances that are currently added to this {@code PConstructor} instance
+	 */
 	public List<PParameterArgument> getParameterArguments() {
 		return new ArrayList<>(this.parameterArguments);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the {@link PBlock} instance that is associated with this {@code PConstructor} instance.
+	 * 
+	 * @return the {@code PBlock} instance that is associated with this {@code PConstructor} instance
+	 */
 	public PBlock getBlock() {
 		return this.block;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns {@code true} if, and only if, this {@code PConstructor} instance can be called without any parameter arguments specified, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code PConstructor} instance can be called without any parameter arguments specified, {@code false} otherwise
+	 */
 	public boolean isDefaultCallable() {
 		boolean isDefaultCallable = true;
 		
@@ -96,56 +139,102 @@ public final class PConstructor {
 		return isDefaultCallable;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns {@code true} if, and only if, this {@code PConstructor} instance represents a final constructor, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code PConstructor} instance represents a final constructor, {@code false} otherwise
+	 */
 	public boolean isFinal() {
 		return this.isFinal;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns {@code true} if, and only if, this {@code PConstructor} instance represents a private constructor, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code PConstructor} instance represents a private constructor, {@code false} otherwise
+	 */
 	public boolean isPrivate() {
 		return this.isPrivate;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns {@code true} if, and only if, this {@code PConstructor} instance represents a protected constructor, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code PConstructor} instance represents a protected constructor, {@code false} otherwise
+	 */
 	public boolean isProtected() {
 		return this.isProtected;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns {@code true} if, and only if, this {@code PConstructor} instance represents a public constructor, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code PConstructor} instance represents a public constructor, {@code false} otherwise
+	 */
 	public boolean isPublic() {
 		return this.isPublic;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds {@code parameterArgument} to this {@code PConstructor} instance.
+	 * <p>
+	 * If {@code parameterArgument} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param parameterArgument the {@link PParameterArgument} to add
+	 * @throws NullPointerException thrown if, and only if, {@code parameterArgument} is {@code null}
+	 */
 	public void addParameterArgument(final PParameterArgument parameterArgument) {
 		this.parameterArguments.add(Objects.requireNonNull(parameterArgument, "parameterArgument == null"));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Removes {@code parameterArgument} from this {@code PConstructor} instance.
+	 * <p>
+	 * If {@code parameterArgument} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param parameterArgument the {@link PParameterArgument} to remove
+	 * @throws NullPointerException thrown if, and only if, {@code parameterArgument} is {@code null}
+	 */
 	public void removeParameterArgument(final PParameterArgument parameterArgument) {
 		this.parameterArguments.remove(Objects.requireNonNull(parameterArgument, "parameterArgument == null"));
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds or removes the final access modifier for this {@code PConstructor} instance.
+	 * 
+	 * @param isFinal {@code true} if, and only if, this {@code PConstructor} is final, {@code false} otherwise
+	 */
 	public void setFinal(final boolean isFinal) {
 		this.isFinal = isFinal;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds or removes the private access modifier for this {@code PConstructor} instance.
+	 * 
+	 * @param isPrivate {@code true} if, and only if, this {@code PConstructor} is private, {@code false} otherwise
+	 */
 	public void setPrivate(final boolean isPrivate) {
 		this.isPrivate = isPrivate;
 		this.isProtected = isPrivate ? false : this.isProtected;
 		this.isPublic = isPrivate ? false : this.isPublic;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds or removes the protected access modifier for this {@code PConstructor} instance.
+	 * 
+	 * @param isProtected {@code true} if, and only if, this {@code PConstructor} is protected, {@code false} otherwise
+	 */
 	public void setProtected(final boolean isProtected) {
 		this.isPrivate = isProtected ? false : this.isPrivate;
 		this.isProtected = isProtected;
 		this.isPublic = isProtected ? false : this.isPublic;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Adds or removes the public access modifier for this {@code PConstructor} instance.
+	 * 
+	 * @param isPublic {@code true} if, and only if, this {@code PConstructor} is public, {@code false} otherwise
+	 */
 	public void setPublic(final boolean isPublic) {
 		this.isPrivate = isPublic ? false : this.isPrivate;
 		this.isProtected = isPublic ? false : this.isProtected;

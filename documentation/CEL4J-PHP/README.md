@@ -41,7 +41,7 @@ public class ModelExample {
         PMethod pMethod = new PMethod();
         pMethod.addParameterArgument(new PParameterArgument("name", PType.STRING, PValue.valueOf("you")));
         pMethod.getBlock().addLine("echo sprintf('Hello %s!', $name);");
-        pMethod.setEnclosedByClass(true);
+        pMethod.setEnclosedByClass();
         pMethod.setFinal(true);
         pMethod.setName("greet");
         pMethod.setPublic(true);

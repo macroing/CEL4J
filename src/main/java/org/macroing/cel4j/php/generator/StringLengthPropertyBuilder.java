@@ -103,7 +103,7 @@ final class StringLengthPropertyBuilder extends AbstractPropertyBuilder {
 		pMethod.getBlock().addLine("} else {");
 		pMethod.getBlock().addLine("	return $oldString;");
 		pMethod.getBlock().addLine("}");
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("doUpdateStringByLength");
 		pMethod.setPrivate(true);
@@ -124,7 +124,7 @@ final class StringLengthPropertyBuilder extends AbstractPropertyBuilder {
 		PMethod pMethod = new PMethod();
 		pMethod.addParameterArgument(new PParameterArgument(nameCamelCaseModified, type, PValue.NULL, true));
 		pMethod.getBlock().addLinef("return ($this->%s = self::doUpdateStringByLength($%s, $this->%s, %s, %s)) === $%s;", nameCamelCaseModified, nameCamelCaseModified, nameCamelCaseModified, Integer.toString(minimumLength), Integer.toString(maximumLength), nameCamelCaseModified);
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("set" + nameCamelCase);
 		pMethod.setReturnType(new PReturnType(PType.BOOL, false));

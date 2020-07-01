@@ -4,6 +4,11 @@
 
 		* CHANGE:		Update Javadocs.
 
+	CEL4J PHP:
+
+		* CHANGE:		Change the signatures of the methods setEnclosedByClass(boolean) and setEnclosedByInterface(boolean) of the PMethod class to setEnclosedByClass() and setEnclosedByInterface().
+		* CHANGE:		Update Javadocs.
+
 2020-06-30  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:

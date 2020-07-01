@@ -98,7 +98,7 @@ final class StringRegexPropertyBuilder extends AbstractPropertyBuilder {
 		pMethod.getBlock().addLine("} else {");
 		pMethod.getBlock().addLine("	return $oldString;");
 		pMethod.getBlock().addLine("}");
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("doUpdateStringByRegex");
 		pMethod.setPrivate(true);
@@ -119,7 +119,7 @@ final class StringRegexPropertyBuilder extends AbstractPropertyBuilder {
 		PMethod pMethod = new PMethod();
 		pMethod.addParameterArgument(new PParameterArgument(nameCamelCaseModified, type, PValue.NULL, true));
 		pMethod.getBlock().addLinef("return ($this->%s = self::doUpdateStringByRegex($%s, $this->%s, '%s')) === $%s;", nameCamelCaseModified, nameCamelCaseModified, nameCamelCaseModified, pattern, nameCamelCaseModified);
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("set" + nameCamelCase);
 		pMethod.setReturnType(new PReturnType(PType.BOOL, false));

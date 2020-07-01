@@ -103,7 +103,7 @@ final class IntRangePropertyBuilder extends AbstractPropertyBuilder {
 		pMethod.getBlock().addLine("} else {");
 		pMethod.getBlock().addLine("	return $oldInt;");
 		pMethod.getBlock().addLine("}");
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("doUpdateIntByRange");
 		pMethod.setPrivate(true);
@@ -124,7 +124,7 @@ final class IntRangePropertyBuilder extends AbstractPropertyBuilder {
 		PMethod pMethod = new PMethod();
 		pMethod.addParameterArgument(new PParameterArgument(nameCamelCaseModified, type, PValue.NULL, true));
 		pMethod.getBlock().addLinef("return ($this->%s = self::doUpdateIntByRange($%s, $this->%s, %s, %s)) === $%s;", nameCamelCaseModified, nameCamelCaseModified, nameCamelCaseModified, Integer.toString(minimumValue), Integer.toString(maximumValue), nameCamelCaseModified);
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("set" + nameCamelCase);
 		pMethod.setReturnType(new PReturnType(PType.BOOL, false));

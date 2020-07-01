@@ -308,7 +308,7 @@ public final class Model {
 		
 		pMethod.getBlock().addLinef("");
 		pMethod.getBlock().addLinef("return $%s;", nameCamelCaseModified);
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("copy");
 		pMethod.setPublic(true);
@@ -343,7 +343,7 @@ public final class Model {
 		
 		pMethod.getBlock().addLinef("");
 		pMethod.getBlock().addLinef("return $%s;", nameCamelCaseModified);
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("parseArray");
 		pMethod.setPublic(true);
@@ -360,7 +360,7 @@ public final class Model {
 		PMethod pMethod = new PMethod();
 		pMethod.addParameterArgument(new PParameterArgument("stringJSON", PType.STRING, null, false));
 		pMethod.getBlock().addLine("return self::parseArray(json_decode($stringJSON, true));");
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("parseJSON");
 		pMethod.setPublic(true);
@@ -386,7 +386,7 @@ public final class Model {
 			}
 		}
 		
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("set");
 		pMethod.setPublic(true);
@@ -415,7 +415,7 @@ public final class Model {
 		
 		pMethod.getBlock().addLine("");
 		pMethod.getBlock().addLine("return $array;");
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("toArray");
 		pMethod.setPublic(true);
@@ -430,7 +430,7 @@ public final class Model {
 		pMethod.addParameterArgument(new PParameterArgument("isIncludingNull", PType.BOOL, PValue.valueOf(false), false));
 		pMethod.addParameterArgument(new PParameterArgument("isPrettyPrinting", PType.BOOL, PValue.valueOf(false), false));
 		pMethod.getBlock().addLine("return $isPrettyPrinting ? json_encode($this->toArray($isIncludingNull), JSON_PRETTY_PRINT) : json_encode($this->toArray($isIncludingNull));");
-		pMethod.setEnclosedByClass(true);
+		pMethod.setEnclosedByClass();
 		pMethod.setFinal(true);
 		pMethod.setName("toJSON");
 		pMethod.setPublic(true);
