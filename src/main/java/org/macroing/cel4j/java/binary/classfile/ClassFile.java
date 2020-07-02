@@ -494,7 +494,7 @@ public final class ClassFile implements Node {
 	public Document write(final Document document) {
 		document.linef("ClassFile = {");
 		document.indent();
-		document.linef("u4 magic = %s;", Integer.toString(getMagic()));
+		document.linef("u4 magic = 0x%s;", Integer.toHexString(getMagic()).toUpperCase());
 		document.linef("u2 minor_version = %s;", Integer.toString(getMinorVersion()));
 		document.linef("u2 major_version = %s;", Integer.toString(getMajorVersion()));
 		document.linef("u2 constant_pool_count = %s;", Integer.toString(getCPInfoCount()));

@@ -94,7 +94,7 @@ public final class ConstantClassInfo extends CPInfo {
 	public ConstantClassInfo(final int nameIndex) {
 		super(NAME, TAG, 1);
 		
-		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE);
+		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE, "nameIndex");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

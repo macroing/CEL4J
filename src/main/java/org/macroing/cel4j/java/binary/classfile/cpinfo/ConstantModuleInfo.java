@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.cpinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.List;
 import java.util.Objects;
 
@@ -33,23 +32,33 @@ import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code ConstantModuleInfo} denotes a CONSTANT_Module_info structure in the constant_pool of a ClassFile structure.
+ * A {@code ConstantModuleInfo} represents a {@code CONSTANT_Module_info} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * The CONSTANT_Module_info structure was added to Java in version 9.
+ * This class is mutable and not thread-safe.
  * <p>
- * This class is not thread-safe.
+ * The {@code CONSTANT_Module_info} structure was added to Java in version 9 and can be found in the {@code constant_pool} table item of a {@code ClassFile} structure.
+ * <p>
+ * The {@code CONSTANT_Module_info} structure has the following format:
+ * <pre>
+ * <code>
+ * CONSTANT_Module_info {
+ *     u1 tag;
+ *     u2 name_index;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class ConstantModuleInfo extends CPInfo {
 	/**
-	 * The name of the CONSTANT_Module_info structure.
+	 * The name of the {@code CONSTANT_Module_info} structure.
 	 */
 	public static final String NAME = "CONSTANT_Module";
 	
 	/**
-	 * The tag for CONSTANT_Module.
+	 * The tag for the {@code CONSTANT_Module_info} structure.
 	 */
 	public static final int TAG = 19;
 	
@@ -60,17 +69,31 @@ public final class ConstantModuleInfo extends CPInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Constructs a new {@code ConstantModuleInfo}.
+	 * Constructs a new {@code ConstantModuleInfo} instance that is a copy of {@code constantModuleInfo}.
 	 * <p>
-	 * If {@code nameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code constantModuleInfo} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param nameIndex the name_index of the new {@code ConstantModuleInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than or equal to {@code 0}
+	 * @param constantModuleInfo the {@code ConstantModuleInfo} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code constantModuleInfo} is {@code null}
+	 */
+	public ConstantModuleInfo(final ConstantModuleInfo constantModuleInfo) {
+		super(NAME, TAG, 1);
+		
+		this.nameIndex = constantModuleInfo.nameIndex;
+	}
+	
+	/**
+	 * Constructs a new {@code ConstantModuleInfo} instance.
+	 * <p>
+	 * If {@code nameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param nameIndex the value for the {@code name_index} item associated with this {@code ConstantModuleInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than {@code 1}
 	 */
 	public ConstantModuleInfo(final int nameIndex) {
 		super(NAME, TAG, 1);
 		
-		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE);
+		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE, "nameIndex");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,7 +105,7 @@ public final class ConstantModuleInfo extends CPInfo {
 	 */
 	@Override
 	public ConstantModuleInfo copy() {
-		return new ConstantModuleInfo(this.nameIndex);
+		return new ConstantModuleInfo(this);
 	}
 	
 	/**
@@ -92,14 +115,16 @@ public final class ConstantModuleInfo extends CPInfo {
 	 */
 	@Override
 	public String toString() {
-		return String.format("CONSTANT_Module_info: name_index=%s", Integer.toString(this.nameIndex));
+		return String.format("new ConstantModuleInfo(%s)", Integer.toString(getNameIndex()));
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantModuleInfo}, and that {@code ConstantModuleInfo} instance is equal to this {@code ConstantModuleInfo} instance, {@code false} otherwise.
+	 * Compares {@code object} to this {@code ConstantModuleInfo} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantModuleInfo}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code ConstantModuleInfo} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantModuleInfo}, and that {@code ConstantModuleInfo} instance is equal to this {@code ConstantModuleInfo} instance, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code ConstantModuleInfo} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantModuleInfo}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -107,13 +132,13 @@ public final class ConstantModuleInfo extends CPInfo {
 			return true;
 		} else if(!(object instanceof ConstantModuleInfo)) {
 			return false;
-		} else if(!Objects.equals(ConstantModuleInfo.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), ConstantModuleInfo.class.cast(object).getName())) {
 			return false;
-		} else if(ConstantModuleInfo.class.cast(object).getTag() != getTag()) {
+		} else if(getTag() != ConstantModuleInfo.class.cast(object).getTag()) {
 			return false;
-		} else if(ConstantModuleInfo.class.cast(object).getConstantPoolEntryCount() != getConstantPoolEntryCount()) {
+		} else if(getConstantPoolEntryCount() != ConstantModuleInfo.class.cast(object).getConstantPoolEntryCount()) {
 			return false;
-		} else if(ConstantModuleInfo.class.cast(object).nameIndex != this.nameIndex) {
+		} else if(getNameIndex() != ConstantModuleInfo.class.cast(object).getNameIndex()) {
 			return false;
 		} else {
 			return true;
@@ -121,9 +146,9 @@ public final class ConstantModuleInfo extends CPInfo {
 	}
 	
 	/**
-	 * Returns the name_index of this {@code ConstantModuleInfo} instance.
+	 * Returns the value of the {@code name_index} item associated with this {@code ConstantModuleInfo} instance.
 	 * 
-	 * @return the name_index of this {@code ConstantModuleInfo} instance
+	 * @return the value of the {@code name_index} item associated with this {@code ConstantModuleInfo} instance
 	 */
 	public int getNameIndex() {
 		return this.nameIndex;
@@ -140,35 +165,35 @@ public final class ConstantModuleInfo extends CPInfo {
 	}
 	
 	/**
-	 * Sets a new name_index for this {@code ConstantModuleInfo} instance.
+	 * Sets {@code nameIndex} as the value for the {@code name_index} item associated with this {@code ConstantModuleInfo} instance.
 	 * <p>
-	 * If {@code nameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code nameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param nameIndex the new name_index for this {@code ConstantModuleInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than or equal to {@code 0}
+	 * @param nameIndex the value for the {@code name_index} item associated with this {@code ConstantModuleInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than {@code 1}
 	 */
 	public void setNameIndex(final int nameIndex) {
-		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE);
+		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE, "nameIndex");
 	}
 	
 	/**
 	 * Writes this {@code ConstantModuleInfo} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
 		try {
 			dataOutput.writeByte(getTag());
-			dataOutput.writeShort(this.nameIndex);
+			dataOutput.writeShort(getNameIndex());
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
@@ -177,7 +202,7 @@ public final class ConstantModuleInfo extends CPInfo {
 	/**
 	 * Writes this {@code ConstantModuleInfo} to {@code document}.
 	 * <p>
-	 * If {@code document} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param document the {@link Document} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
@@ -195,14 +220,14 @@ public final class ConstantModuleInfo extends CPInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@code ConstantModuleInfo}s.
+	 * Returns a {@code List} with all {@code ConstantModuleInfo} instances in {@code node}.
 	 * <p>
-	 * All {@code ConstantModuleInfo}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code ConstantModuleInfo} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code ConstantModuleInfo}s
+	 * @return a {@code List} with all {@code ConstantModuleInfo} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<ConstantModuleInfo> filter(final Node node) {

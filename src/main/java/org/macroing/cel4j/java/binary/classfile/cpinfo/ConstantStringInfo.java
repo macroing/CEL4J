@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.cpinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.List;
 import java.util.Objects;
 
@@ -33,23 +32,33 @@ import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code ConstantStringInfo} denotes a CONSTANT_String_info structure in the constant_pool of a ClassFile structure.
+ * A {@code ConstantStringInfo} represents a {@code CONSTANT_String_info} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * The CONSTANT_String_info structure was added to Java in version 1.0.2.
+ * This class is mutable and not thread-safe.
  * <p>
- * This class is not thread-safe.
+ * The {@code CONSTANT_String_info} structure was added to Java in version 1.0.2 and can be found in the {@code constant_pool} table item of a {@code ClassFile} structure.
+ * <p>
+ * The {@code CONSTANT_String_info} structure has the following format:
+ * <pre>
+ * <code>
+ * CONSTANT_String_info {
+ *     u1 tag;
+ *     u2 string_index;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class ConstantStringInfo extends CPInfo {
 	/**
-	 * The name of the CONSTANT_String_info structure.
+	 * The name of the {@code CONSTANT_String_info} structure.
 	 */
 	public static final String NAME = "CONSTANT_String";
 	
 	/**
-	 * The tag for CONSTANT_String.
+	 * The tag for the {@code CONSTANT_String_info} structure.
 	 */
 	public static final int TAG = 8;
 	
@@ -60,17 +69,31 @@ public final class ConstantStringInfo extends CPInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Constructs a new {@code ConstantStringInfo}.
+	 * Constructs a new {@code ConstantStringInfo} instance that is a copy of {@code constantStringInfo}.
 	 * <p>
-	 * If {@code stringIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code constantStringInfo} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param stringIndex the string_index of the new {@code ConstantStringInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code stringIndex} is less than or equal to {@code 0}
+	 * @param constantStringInfo the {@code ConstantStringInfo} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code constantStringInfo} is {@code null}
+	 */
+	public ConstantStringInfo(final ConstantStringInfo constantStringInfo) {
+		super(NAME, TAG, 1);
+		
+		this.stringIndex = constantStringInfo.stringIndex;
+	}
+	
+	/**
+	 * Constructs a new {@code ConstantStringInfo} instance.
+	 * <p>
+	 * If {@code stringIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param stringIndex the value for the {@code string_index} item associated with this {@code ConstantStringInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code stringIndex} is less than {@code 1}
 	 */
 	public ConstantStringInfo(final int stringIndex) {
 		super(NAME, TAG, 1);
 		
-		this.stringIndex = ParameterArguments.requireRange(stringIndex, 1, Integer.MAX_VALUE);
+		this.stringIndex = ParameterArguments.requireRange(stringIndex, 1, Integer.MAX_VALUE, "stringIndex");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,7 +105,7 @@ public final class ConstantStringInfo extends CPInfo {
 	 */
 	@Override
 	public ConstantStringInfo copy() {
-		return new ConstantStringInfo(this.stringIndex);
+		return new ConstantStringInfo(this);
 	}
 	
 	/**
@@ -92,16 +115,16 @@ public final class ConstantStringInfo extends CPInfo {
 	 */
 	@Override
 	public String toString() {
-		return String.format("CONSTANT_String_info: string_index=%s", Integer.toString(this.stringIndex));
+		return String.format("new ConstantStringInfo(%s)", Integer.toString(getStringIndex()));
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantStringInfo}, and that {@code ConstantStringInfo} instance is equal to this {@code ConstantStringInfo} instance, {@code false}
-	 * otherwise.
+	 * Compares {@code object} to this {@code ConstantStringInfo} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantStringInfo}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code ConstantStringInfo} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantStringInfo}, and that {@code ConstantStringInfo} instance is equal to this {@code ConstantStringInfo} instance, {@code false}
-	 * otherwise
+	 * @param object the {@code Object} to compare to this {@code ConstantStringInfo} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantStringInfo}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -109,13 +132,13 @@ public final class ConstantStringInfo extends CPInfo {
 			return true;
 		} else if(!(object instanceof ConstantStringInfo)) {
 			return false;
-		} else if(!Objects.equals(ConstantStringInfo.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), ConstantStringInfo.class.cast(object).getName())) {
 			return false;
-		} else if(ConstantStringInfo.class.cast(object).getTag() != getTag()) {
+		} else if(getTag() != ConstantStringInfo.class.cast(object).getTag()) {
 			return false;
-		} else if(ConstantStringInfo.class.cast(object).getConstantPoolEntryCount() != getConstantPoolEntryCount()) {
+		} else if(getConstantPoolEntryCount() != ConstantStringInfo.class.cast(object).getConstantPoolEntryCount()) {
 			return false;
-		} else if(ConstantStringInfo.class.cast(object).stringIndex != this.stringIndex) {
+		} else if(getStringIndex() != ConstantStringInfo.class.cast(object).getStringIndex()) {
 			return false;
 		} else {
 			return true;
@@ -123,9 +146,9 @@ public final class ConstantStringInfo extends CPInfo {
 	}
 	
 	/**
-	 * Returns the string_index of this {@code ConstantStringInfo} instance.
+	 * Returns the value of the {@code string_index} item associated with this {@code ConstantStringInfo} instance.
 	 * 
-	 * @return the string_index of this {@code ConstantStringInfo} instance
+	 * @return the value of the {@code string_index} item associated with this {@code ConstantStringInfo} instance
 	 */
 	public int getStringIndex() {
 		return this.stringIndex;
@@ -138,39 +161,39 @@ public final class ConstantStringInfo extends CPInfo {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(getName(), Integer.valueOf(getTag()), Integer.valueOf(getConstantPoolEntryCount()), Integer.valueOf(this.stringIndex));
+		return Objects.hash(getName(), Integer.valueOf(getTag()), Integer.valueOf(getConstantPoolEntryCount()), Integer.valueOf(getStringIndex()));
 	}
 	
 	/**
-	 * Sets a new string_index for this {@code ConstantStringInfo} instance.
+	 * Sets {@code stringIndex} as the value for the {@code string_index} item associated with this {@code ConstantStringInfo} instance.
 	 * <p>
-	 * If {@code stringIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code stringIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param stringIndex the new string_index for this {@code ConstantStringInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code stringIndex} is less than or equal to {@code 0}
+	 * @param stringIndex the value for the {@code string_index} item associated with this {@code ConstantStringInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code stringIndex} is less than {@code 1}
 	 */
 	public void setStringIndex(final int stringIndex) {
-		this.stringIndex = ParameterArguments.requireRange(stringIndex, 1, Integer.MAX_VALUE);
+		this.stringIndex = ParameterArguments.requireRange(stringIndex, 1, Integer.MAX_VALUE, "stringIndex");
 	}
 	
 	/**
 	 * Writes this {@code ConstantStringInfo} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
 		try {
 			dataOutput.writeByte(getTag());
-			dataOutput.writeShort(this.stringIndex);
+			dataOutput.writeShort(getStringIndex());
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
@@ -179,7 +202,7 @@ public final class ConstantStringInfo extends CPInfo {
 	/**
 	 * Writes this {@code ConstantStringInfo} to {@code document}.
 	 * <p>
-	 * If {@code document} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param document the {@link Document} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
@@ -197,14 +220,14 @@ public final class ConstantStringInfo extends CPInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@code ConstantStringInfo}s.
+	 * Returns a {@code List} with all {@code ConstantStringInfo} instances in {@code node}.
 	 * <p>
-	 * All {@code ConstantStringInfo}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code ConstantStringInfo} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code ConstantStringInfo}s
+	 * @return a {@code List} with all {@code ConstantStringInfo} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<ConstantStringInfo> filter(final Node node) {

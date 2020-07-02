@@ -91,7 +91,7 @@ public final class ConstantUTF8Info extends CPInfo {
 	 * @throws NullPointerException thrown if, and only if, {@code constantUTF8Info} is {@code null}
 	 */
 	public ConstantUTF8Info(final ConstantUTF8Info constantUTF8Info) {
-		super(NAME, TAG, 2);
+		super(NAME, TAG, 1);
 		
 		this.stringValue = constantUTF8Info.stringValue;
 	}
