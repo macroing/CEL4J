@@ -488,7 +488,7 @@ final class JClass extends JType {
 		final List<JConstructor> constructors = this.constructors;
 		
 		for(final MethodInfo methodInfo : classFile.getMethodInfos()) {
-			final String name = ConstantUTF8Info.findByNameIndex(classFile, methodInfo).getString();
+			final String name = ConstantUTF8Info.findByNameIndex(classFile, methodInfo).getStringValue();
 			
 			if(name.equals("<init>")) {
 				constructors.add(new JConstructor(classFile, methodInfo, this));
@@ -536,7 +536,7 @@ final class JClass extends JType {
 		final List<JInterface> interfaces = this.interfaces;
 		
 		for(final int interfaceIndex : interfaceIndices) {
-			final String interfaceNameInternalForm = ConstantUTF8Info.findByNameIndex(classFile, classFile.getCPInfo(interfaceIndex, ConstantClassInfo.class)).getString();
+			final String interfaceNameInternalForm = ConstantUTF8Info.findByNameIndex(classFile, classFile.getCPInfo(interfaceIndex, ConstantClassInfo.class)).getStringValue();
 			final String interfaceNameExternalForm = ClassName.parseClassName(interfaceNameInternalForm).toExternalForm();
 			
 			interfaces.add(JInterface.valueOf(interfaceNameExternalForm));
@@ -549,7 +549,7 @@ final class JClass extends JType {
 		final List<JMethod> methods = this.methods;
 		
 		for(final MethodInfo methodInfo : classFile.getMethodInfos()) {
-			final String name = ConstantUTF8Info.findByNameIndex(classFile, methodInfo).getString();
+			final String name = ConstantUTF8Info.findByNameIndex(classFile, methodInfo).getStringValue();
 			
 			if(!name.equals("<clinit>") && !name.equals("<init>")) {
 				methods.add(new JMethod(classFile, methodInfo, this));

@@ -129,7 +129,7 @@ final class Instructions {
 	private static String doToString(final ClassFile classFile, final ConstantClassInfo constantClassInfo) {
 		final ConstantUTF8Info constantUTF8Info = ConstantUTF8Info.findByNameIndex(classFile, constantClassInfo);
 		
-		final String string = constantUTF8Info.getString();
+		final String string = constantUTF8Info.getStringValue();
 		
 		try {
 			return ClassName.parseClassName(string).toExternalForm();
@@ -160,8 +160,8 @@ final class Instructions {
 		final ConstantUTF8Info constantUTF8Info0 = ConstantUTF8Info.findByNameIndexByClassIndex(classFile, constantFieldRefInfo);
 		final ConstantUTF8Info constantUTF8Info1 = ConstantUTF8Info.findByNameIndexByNameAndTypeIndex(classFile, constantFieldRefInfo);
 		
-		final String className = ClassName.parseClassName(constantUTF8Info0.getString()).toExternalForm();
-		final String fieldName = constantUTF8Info1.getString();
+		final String className = ClassName.parseClassName(constantUTF8Info0.getStringValue()).toExternalForm();
+		final String fieldName = constantUTF8Info1.getStringValue();
 		
 		return className + "." + fieldName;
 	}
@@ -173,7 +173,7 @@ final class Instructions {
 	
 	@SuppressWarnings("unused")
 	private static String doToString(final ClassFile classFile, final ConstantIntegerInfo constantIntegerInfo) {
-		return Integer.toString(constantIntegerInfo.getInt());
+		return Integer.toString(constantIntegerInfo.getIntValue());
 	}
 	
 	private static String doToString(final ClassFile classFile, final ConstantInterfaceMethodRefInfo constantInterfaceMethodRefInfo) {
@@ -181,9 +181,9 @@ final class Instructions {
 		final ConstantUTF8Info constantUTF8Info1 = ConstantUTF8Info.findByNameIndexByNameAndTypeIndex(classFile, constantInterfaceMethodRefInfo);
 		final ConstantUTF8Info constantUTF8Info2 = ConstantUTF8Info.findByDescriptorIndexByNameAndTypeIndex(classFile, constantInterfaceMethodRefInfo);
 		
-		final String className = ClassName.parseClassName(constantUTF8Info0.getString()).toExternalForm();
-		final String methodName = constantUTF8Info1.getString();
-		final String method = "(" + Strings.optional(MethodDescriptor.parseMethodDescriptor(constantUTF8Info2.getString()).getParameterDescriptors().stream().map(parameterDescriptor -> parameterDescriptor.toExternalForm()).collect(Collectors.toList())) + ")";
+		final String className = ClassName.parseClassName(constantUTF8Info0.getStringValue()).toExternalForm();
+		final String methodName = constantUTF8Info1.getStringValue();
+		final String method = "(" + Strings.optional(MethodDescriptor.parseMethodDescriptor(constantUTF8Info2.getStringValue()).getParameterDescriptors().stream().map(parameterDescriptor -> parameterDescriptor.toExternalForm()).collect(Collectors.toList())) + ")";
 		
 		return methodName.equals("<init>") ? className + method : className + "." + methodName + method;
 	}
@@ -195,7 +195,7 @@ final class Instructions {
 	
 	@SuppressWarnings("unused")
 	private static String doToString(final ClassFile classFile, final ConstantLongInfo constantLongInfo) {
-		return Long.toString(constantLongInfo.getLong());
+		return Long.toString(constantLongInfo.getLongValue());
 	}
 	
 	@SuppressWarnings("unused")
@@ -208,9 +208,9 @@ final class Instructions {
 		final ConstantUTF8Info constantUTF8Info1 = ConstantUTF8Info.findByNameIndexByNameAndTypeIndex(classFile, constantMethodRefInfo);
 		final ConstantUTF8Info constantUTF8Info2 = ConstantUTF8Info.findByDescriptorIndexByNameAndTypeIndex(classFile, constantMethodRefInfo);
 		
-		final String className = ClassName.parseClassName(constantUTF8Info0.getString()).toExternalForm();
-		final String methodName = constantUTF8Info1.getString();
-		final String method = "(" + Strings.optional(MethodDescriptor.parseMethodDescriptor(constantUTF8Info2.getString()).getParameterDescriptors().stream().map(parameterDescriptor -> parameterDescriptor.toExternalForm()).collect(Collectors.toList())) + ")";
+		final String className = ClassName.parseClassName(constantUTF8Info0.getStringValue()).toExternalForm();
+		final String methodName = constantUTF8Info1.getStringValue();
+		final String method = "(" + Strings.optional(MethodDescriptor.parseMethodDescriptor(constantUTF8Info2.getStringValue()).getParameterDescriptors().stream().map(parameterDescriptor -> parameterDescriptor.toExternalForm()).collect(Collectors.toList())) + ")";
 		
 		return methodName.equals("<init>") ? className + method : className + "." + methodName + method;
 	}
@@ -236,12 +236,12 @@ final class Instructions {
 	}
 	
 	private static String doToString(final ClassFile classFile, final ConstantStringInfo constantStringInfo) {
-		return "\"" + ConstantUTF8Info.findByStringIndex(classFile, constantStringInfo).getString() + "\"";
+		return "\"" + ConstantUTF8Info.findByStringIndex(classFile, constantStringInfo).getStringValue() + "\"";
 	}
 	
 	@SuppressWarnings("unused")
 	private static String doToString(final ClassFile classFile, final ConstantUTF8Info constantUTF8Info) {
-		return constantUTF8Info.getString();
+		return constantUTF8Info.getStringValue();
 	}
 	
 	private static String doToStringGetField(final ClassFile classFile, final Instruction instruction) {

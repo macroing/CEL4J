@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.cpinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.List;
 import java.util.Objects;
 
@@ -32,41 +31,65 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.util.Document;
 
 /**
- * A {@code ConstantIntegerInfo} denotes a CONSTANT_Integer_info structure in the constant_pool of a ClassFile structure.
+ * A {@code ConstantIntegerInfo} represents a {@code CONSTANT_Integer_info} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * The CONSTANT_Integer_info structure was added to Java in version 1.0.2.
+ * This class is mutable and not thread-safe.
  * <p>
- * This class is not thread-safe.
+ * The {@code CONSTANT_Integer_info} structure was added to Java in version 1.0.2 and can be found in the {@code constant_pool} table item of a {@code ClassFile} structure.
+ * <p>
+ * The {@code CONSTANT_Integer_info} structure has the following format:
+ * <pre>
+ * <code>
+ * CONSTANT_Integer_info {
+ *     u1 tag;
+ *     u4 bytes;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class ConstantIntegerInfo extends CPInfo {
 	/**
-	 * The name of the CONSTANT_Integer_info structure.
+	 * The name of the {@code CONSTANT_Integer_info} structure.
 	 */
 	public static final String NAME = "CONSTANT_Integer";
 	
 	/**
-	 * The tag for CONSTANT_Integer.
+	 * The tag for the {@code CONSTANT_Integer_info} structure.
 	 */
 	public static final int TAG = 3;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private int value;
+	private int intValue;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Constructs a new {@code ConstantIntegerInfo}.
+	 * Constructs a new {@code ConstantIntegerInfo} instance that is a copy of {@code constantIntegerInfo}.
+	 * <p>
+	 * If {@code constantIntegerInfo} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param value the {@code int} representation of the new {@code ConstantIntegerInfo} instance
+	 * @param constantIntegerInfo the {@code ConstantIntegerInfo} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code constantIntegerInfo} is {@code null}
 	 */
-	public ConstantIntegerInfo(final int value) {
+	public ConstantIntegerInfo(final ConstantIntegerInfo constantIntegerInfo) {
 		super(NAME, TAG, 1);
 		
-		this.value = value;
+		this.intValue = constantIntegerInfo.intValue;
+	}
+	
+	/**
+	 * Constructs a new {@code ConstantIntegerInfo} instance.
+	 * 
+	 * @param intValue the {@code int} value for the {@code bytes} item associated with this {@code ConstantIntegerInfo} instance
+	 */
+	public ConstantIntegerInfo(final int intValue) {
+		super(NAME, TAG, 1);
+		
+		this.intValue = intValue;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +101,7 @@ public final class ConstantIntegerInfo extends CPInfo {
 	 */
 	@Override
 	public ConstantIntegerInfo copy() {
-		return new ConstantIntegerInfo(this.value);
+		return new ConstantIntegerInfo(this);
 	}
 	
 	/**
@@ -88,16 +111,16 @@ public final class ConstantIntegerInfo extends CPInfo {
 	 */
 	@Override
 	public String toString() {
-		return Integer.toString(this.value);
+		return String.format("new ConstantIntegerInfo(%s)", Integer.toString(getIntValue()));
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantIntegerInfo}, and that {@code ConstantIntegerInfo} instance is equal to this {@code ConstantIntegerInfo} instance, {@code false}
-	 * otherwise.
+	 * Compares {@code object} to this {@code ConstantIntegerInfo} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantIntegerInfo}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code ConstantIntegerInfo} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantIntegerInfo}, and that {@code ConstantIntegerInfo} instance is equal to this {@code ConstantIntegerInfo} instance, {@code false}
-	 * otherwise
+	 * @param object the {@code Object} to compare to this {@code ConstantIntegerInfo} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantIntegerInfo}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -105,13 +128,13 @@ public final class ConstantIntegerInfo extends CPInfo {
 			return true;
 		} else if(!(object instanceof ConstantIntegerInfo)) {
 			return false;
-		} else if(!Objects.equals(ConstantIntegerInfo.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), ConstantIntegerInfo.class.cast(object).getName())) {
 			return false;
-		} else if(ConstantIntegerInfo.class.cast(object).getTag() != getTag()) {
+		} else if(getTag() != ConstantIntegerInfo.class.cast(object).getTag()) {
 			return false;
-		} else if(ConstantIntegerInfo.class.cast(object).getConstantPoolEntryCount() != getConstantPoolEntryCount()) {
+		} else if(getConstantPoolEntryCount() != ConstantIntegerInfo.class.cast(object).getConstantPoolEntryCount()) {
 			return false;
-		} else if(ConstantIntegerInfo.class.cast(object).value != this.value) {
+		} else if(getIntValue() != ConstantIntegerInfo.class.cast(object).getIntValue()) {
 			return false;
 		} else {
 			return true;
@@ -125,45 +148,45 @@ public final class ConstantIntegerInfo extends CPInfo {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(getName(), Integer.valueOf(getTag()), Integer.valueOf(getConstantPoolEntryCount()), Integer.valueOf(this.value));
+		return Objects.hash(getName(), Integer.valueOf(getTag()), Integer.valueOf(getConstantPoolEntryCount()), Integer.valueOf(getIntValue()));
 	}
 	
 	/**
-	 * Returns an {@code int} representation of this {@code ConstantIntegerInfo} instance.
+	 * Returns the {@code int} value for the {@code bytes} item associated with this {@code ConstantIntegerInfo} instance.
 	 * 
-	 * @return an {@code int} representation of this {@code ConstantIntegerInfo} instance
+	 * @return the {@code int} value for the {@code bytes} item associated with this {@code ConstantIntegerInfo} instance
 	 */
-	public int getInt() {
-		return this.value;
+	public int getIntValue() {
+		return this.intValue;
 	}
 	
 	/**
-	 * Sets a new {@code int} representation for this {@code ConstantIntegerInfo} instance.
+	 * Sets {@code intValue} as the {@code int} value for the {@code bytes} item associated with this {@code ConstantIntegerInfo} instance.
 	 * 
-	 * @param value the new {@code int} representation
+	 * @param intValue the {@code int} value for the {@code bytes} item associated with this {@code ConstantIntegerInfo} instance
 	 */
-	public void setInt(final int value) {
-		this.value = value;
+	public void setIntValue(final int intValue) {
+		this.intValue = intValue;
 	}
 	
 	/**
 	 * Writes this {@code ConstantIntegerInfo} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
 		try {
 			dataOutput.writeByte(getTag());
-			dataOutput.writeInt(this.value);
+			dataOutput.writeInt(getIntValue());
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
@@ -172,7 +195,7 @@ public final class ConstantIntegerInfo extends CPInfo {
 	/**
 	 * Writes this {@code ConstantIntegerInfo} to {@code document}.
 	 * <p>
-	 * If {@code document} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param document the {@link Document} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
@@ -182,7 +205,7 @@ public final class ConstantIntegerInfo extends CPInfo {
 		document.linef("%s_info = {", getName());
 		document.indent();
 		document.linef("u1 tag = %s;", Integer.toString(getTag()));
-		document.linef("int value = %s;", Integer.toString(getInt()));
+		document.linef("int value = %s;", Integer.toString(getIntValue()));
 		document.outdent();
 		document.linef("};");
 	}
@@ -190,14 +213,14 @@ public final class ConstantIntegerInfo extends CPInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@code ConstantIntegerInfo}s.
+	 * Returns a {@code List} with all {@code ConstantIntegerInfo} instances in {@code node}.
 	 * <p>
-	 * All {@code ConstantIntegerInfo}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code ConstantIntegerInfo} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code ConstantIntegerInfo}s
+	 * @return a {@code List} with all {@code ConstantIntegerInfo} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<ConstantIntegerInfo> filter(final Node node) {

@@ -161,11 +161,6 @@ public final class ConstantFloatInfo extends CPInfo {
 	}
 	
 	/**
-	 * Sets a new {@code float} representation for this {@code ConstantFloatInfo} instance.
-	 * 
-	 * @param floatValue the new {@code float} representation
-	 */
-	/**
 	 * Sets {@code floatValue} as the {@code float} value for the {@code bytes} item associated with this {@code ConstantFloatInfo} instance.
 	 * 
 	 * @param floatValue the {@code float} value for the {@code bytes} item associated with this {@code ConstantFloatInfo} instance

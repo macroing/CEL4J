@@ -117,7 +117,7 @@ final class AttributeInfoReaderImpl implements AttributeInfoReader {
 			final CPInfo cPInfo = constantPool.get(attributeNameIndex);
 			
 			if(cPInfo instanceof ConstantUTF8Info) {
-				name = ConstantUTF8Info.class.cast(cPInfo).getString();
+				name = ConstantUTF8Info.class.cast(cPInfo).getStringValue();
 			}
 		}
 		

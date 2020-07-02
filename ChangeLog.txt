@@ -1,7 +1,18 @@
+2020-07-02  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Binary:
+
+		* CHANGE:		Change the signatures of the methods getString() and setString(String) in the class ConstantUTF8Info to getStringValue() and setStringValue(String), respectively.
+		* CHANGE:		Change the signatures of the methods getLong() and setLong(long) in the class ConstantLongInfo to getLongValue() and setLongValue(long), respectively.
+		* CHANGE:		Change the signatures of the methods getInt() and setInt(int) in the class ConstantIntegerInfo to getIntValue() and setIntValue(int), respectively.
+		* CHANGE:		Update Javadocs.
+
 2020-07-01  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
+		* CHANGE:		Change the signatures of the methods getFloat() and setFloat(float) in the class ConstantFloatInfo to getFloatValue() and setFloatValue(float), respectively.
+		* CHANGE:		Change the signatures of the methods getDouble() and setDouble(double) in the class ConstantDoubleInfo to getDoubleValue() and setDoubleValue(double), respectively.
 		* CHANGE:		Update Javadocs.
 
 	CEL4J PHP:

@@ -134,11 +134,11 @@ final class JField {
 			} else if(cPInfo instanceof ConstantFloatInfo) {
 				return Optional.of(Float.valueOf(ConstantFloatInfo.class.cast(cPInfo).getFloatValue()));
 			} else if(cPInfo instanceof ConstantIntegerInfo) {
-				return Optional.of(Integer.valueOf(ConstantIntegerInfo.class.cast(cPInfo).getInt()));
+				return Optional.of(Integer.valueOf(ConstantIntegerInfo.class.cast(cPInfo).getIntValue()));
 			} else if(cPInfo instanceof ConstantLongInfo) {
-				return Optional.of(Long.valueOf(ConstantLongInfo.class.cast(cPInfo).getLong()));
+				return Optional.of(Long.valueOf(ConstantLongInfo.class.cast(cPInfo).getLongValue()));
 			} else if(cPInfo instanceof ConstantStringInfo) {
-				return Optional.of(ConstantUTF8Info.findByStringIndex(this.classFile, ConstantStringInfo.class.cast(cPInfo)).getString());
+				return Optional.of(ConstantUTF8Info.findByStringIndex(this.classFile, ConstantStringInfo.class.cast(cPInfo)).getStringValue());
 			}
 		}
 		
@@ -146,7 +146,7 @@ final class JField {
 	}
 	
 	public String getName() {
-		return ConstantUTF8Info.findByNameIndex(this.classFile, this.fieldInfo).getString();
+		return ConstantUTF8Info.findByNameIndex(this.classFile, this.fieldInfo).getStringValue();
 	}
 	
 	@Override

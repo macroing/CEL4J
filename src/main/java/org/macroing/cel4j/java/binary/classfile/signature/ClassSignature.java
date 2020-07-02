@@ -248,8 +248,8 @@ public final class ClassSignature implements Signature {
 	 * <p>
 	 * If {@code classFile} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, the {@link CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getString()} method
-	 * of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * If, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, the {@link CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getStringValue()}
+	 * method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
 	 * If, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an
 	 * {@code IndexOutOfBoundsException} will be thrown.
@@ -257,7 +257,7 @@ public final class ClassSignature implements Signature {
 	 * @param classFile a {@link ClassFile} instance
 	 * @return an {@code Optional} of type {@code ClassSignature}
 	 * @throws IllegalArgumentException thrown if, and only if, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, the {@code CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a
-	 *                                  {@code ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
+	 *                                  {@code ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
 	 * @throws IndexOutOfBoundsException thrown if, and only if, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to
 	 *                                   {@code classFile.getCPInfoCount()}
 	 * @throws NullPointerException thrown if, and only if, {@code classFile} is {@code null}

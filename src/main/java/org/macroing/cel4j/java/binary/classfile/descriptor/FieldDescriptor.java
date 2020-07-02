@@ -59,8 +59,8 @@ public interface FieldDescriptor extends Node {
 	 * <p>
 	 * If either {@code classFile} or {@code fieldInfo} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code classFile} does not contain a {@link FieldInfo} instance that is equal to {@code fieldInfo}, the {@link CPInfo} on the index {@code fieldInfo.getDescriptorIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getString()}
-	 * method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code classFile} does not contain a {@link FieldInfo} instance that is equal to {@code fieldInfo}, the {@link CPInfo} on the index {@code fieldInfo.getDescriptorIndex()} is not a {@link ConstantUTF8Info} instance, or the
+	 * {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
 	 * If {@code fieldInfo.getDescriptorIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
@@ -68,12 +68,12 @@ public interface FieldDescriptor extends Node {
 	 * @param fieldInfo a {@code FieldInfo} instance
 	 * @return a {@code FieldDescriptor} instance
 	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain a {@code FieldInfo} instance that is equal to {@code fieldInfo}, the {@code CPInfo} on the index {@code fieldInfo.getDescriptorIndex()} is not a
-	 *                                  {@code ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
+	 *                                  {@code ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code fieldInfo.getDescriptorIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
 	 * @throws NullPointerException thrown if, and only if, either {@code classFile} or {@code fieldInfo} are {@code null}
 	 */
 	static FieldDescriptor parseFieldDescriptor(final ClassFile classFile, final FieldInfo fieldInfo) {
-		return parseFieldDescriptor(ConstantUTF8Info.findByDescriptorIndex(classFile, fieldInfo).getString());
+		return parseFieldDescriptor(ConstantUTF8Info.findByDescriptorIndex(classFile, fieldInfo).getStringValue());
 	}
 	
 	/**
@@ -83,21 +83,21 @@ public interface FieldDescriptor extends Node {
 	 * <p>
 	 * If either {@code classFile} or {@code localVariable} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If the {@link CPInfo} on the index {@code localVariable.getDescriptorIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an
-	 * {@code IllegalArgumentException} will be thrown.
+	 * If the {@link CPInfo} on the index {@code localVariable.getDescriptorIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed,
+	 * an {@code IllegalArgumentException} will be thrown.
 	 * <p>
 	 * If {@code localVariable.getDescriptorIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param classFile a {@link ClassFile} instance
 	 * @param localVariable a {@link LocalVariable} instance
 	 * @return a {@code FieldDescriptor} instance
-	 * @throws IllegalArgumentException thrown if, and only if, the {@code CPInfo} on the index {@code localVariable.getDescriptorIndex()} is not a {@code ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info}
-	 *                                  instance returns a {@code String} that is malformed
+	 * @throws IllegalArgumentException thrown if, and only if, the {@code CPInfo} on the index {@code localVariable.getDescriptorIndex()} is not a {@code ConstantUTF8Info} instance, or the {@code getStringValue()} method of the
+	 *                                  {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code localVariable.getDescriptorIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
 	 * @throws NullPointerException thrown if, and only if, either {@code classFile} or {@code localVariable} are {@code null}
 	 */
 	static FieldDescriptor parseFieldDescriptor(final ClassFile classFile, final LocalVariable localVariable) {
-		return parseFieldDescriptor(classFile.getCPInfo(localVariable.getDescriptorIndex(), ConstantUTF8Info.class).getString());
+		return parseFieldDescriptor(classFile.getCPInfo(localVariable.getDescriptorIndex(), ConstantUTF8Info.class).getStringValue());
 	}
 	
 	/**
@@ -125,7 +125,7 @@ public interface FieldDescriptor extends Node {
 	 * <p>
 	 * If {@code classFile} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If, for any {@code FieldInfo} {@code fieldInfo} in {@code classFile}, the {@link CPInfo} on the index {@code fieldInfo.getDescriptorIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getString()} method of the
+	 * If, for any {@code FieldInfo} {@code fieldInfo} in {@code classFile}, the {@link CPInfo} on the index {@code fieldInfo.getDescriptorIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getStringValue()} method of the
 	 * {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
 	 * If, for any {@code FieldInfo} {@code fieldInfo} in {@code classFile}, {@code fieldInfo.getDescriptorIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be
@@ -134,7 +134,7 @@ public interface FieldDescriptor extends Node {
 	 * @param classFile a {@link ClassFile} instance
 	 * @return a {@code List} with all {@code FieldDescriptor} instances that were parsed from all {@code FieldInfo} instances in {@code classFile}
 	 * @throws IllegalArgumentException thrown if, and only if, for any {@code FieldInfo} {@code fieldInfo} in {@code classFile}, the {@code CPInfo} on the index {@code fieldInfo.getDescriptorIndex()} is not a {@code ConstantUTF8Info} instance, or the
-	 *                                  {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
+	 *                                  {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
 	 * @throws IndexOutOfBoundsException thrown if, and only if, for any {@code FieldInfo} {@code fieldInfo} in {@code classFile}, {@code fieldInfo.getDescriptorIndex()} is less than {@code 0}, or greater than or equal to
 	 *                                   {@code classFile.getCPInfoCount()}
 	 * @throws NullPointerException thrown if, and only if, {@code classFile} is {@code null}

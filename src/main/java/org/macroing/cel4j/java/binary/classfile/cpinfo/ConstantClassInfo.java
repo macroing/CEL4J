@@ -231,7 +231,7 @@ public final class ConstantClassInfo extends CPInfo {
 	 * If {@code constantFieldRefInfo.getClassIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param classFile the {@code ClassFile} instance that contains a {@code ConstantFieldRefInfo} instance that is equal to {@code constantFieldRefInfo}
-	 * @param constantFieldRefInfo the {@code ConstantFieldRefInfo} instance that contains the class_index
+	 * @param constantFieldRefInfo the {@code ConstantFieldRefInfo} instance that contains the {@code class_index}
 	 * @return the {@code ConstantClassInfo} that is located on the index {@code constantFieldRefInfo.getClassIndex()} in the {@code constant_pool} table item of {@code classFile}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain a {@code ConstantFieldRefInfo} instance that is equal to {@code constantFieldRefInfo}, or the {@code CPInfo} on the index
 	 *                                  {@code constantFieldRefInfo.getClassIndex()} is not a {@code ConstantClassInfo} instance
@@ -253,7 +253,7 @@ public final class ConstantClassInfo extends CPInfo {
 	 * If {@code constantInterfaceMethodRefInfo.getClassIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param classFile the {@code ClassFile} instance that contains a {@code ConstantInterfaceMethodRefInfo} instance that is equal to {@code constantInterfaceMethodRefInfo}
-	 * @param constantInterfaceMethodRefInfo the {@code ConstantInterfaceMethodRefInfo} instance that contains the class_index
+	 * @param constantInterfaceMethodRefInfo the {@code ConstantInterfaceMethodRefInfo} instance that contains the {@code class_index}
 	 * @return the {@code ConstantClassInfo} that is located on the index {@code constantInterfaceMethodRefInfo.getClassIndex()} in the {@code constant_pool} table item of {@code classFile}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain a {@code ConstantInterfaceMethodRefInfo} instance that is equal to {@code constantInterfaceMethodRefInfo}, or the {@code CPInfo} on the index
 	 *                                  {@code constantInterfaceMethodRefInfo.getClassIndex()} is not a {@code ConstantClassInfo} instance
@@ -275,7 +275,7 @@ public final class ConstantClassInfo extends CPInfo {
 	 * If {@code constantMethodRefInfo.getClassIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param classFile the {@code ClassFile} instance that contains a {@code ConstantMethodRefInfo} instance that is equal to {@code constantMethodRefInfo}
-	 * @param constantMethodRefInfo the {@code ConstantMethodRefInfo} instance that contains the class_index
+	 * @param constantMethodRefInfo the {@code ConstantMethodRefInfo} instance that contains the {@code class_index}
 	 * @return the {@code ConstantClassInfo} that is located on the index {@code constantMethodRefInfo.getClassIndex()} in the {@code constant_pool} table item of {@code classFile}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain a {@code ConstantMethodRefInfo} instance that is equal to {@code constantMethodRefInfo}, or the {@code CPInfo} on the index
 	 *                                  {@code constantMethodRefInfo.getClassIndex()} is not a {@code ConstantClassInfo} instance

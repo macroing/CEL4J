@@ -144,9 +144,9 @@ public final class ClassName implements Node {
 	 * <p>
 	 * If the {@code String} indirectly referred to by {@code classFile.getSuperClass()} cannot be retrieved, or it is malformed, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
-	 * In order to retrieve the {@code String} to parse, {@code classFile.getSuperClass()} must point to a valid index in the constant_pool table. The {@link CPInfo} at that index must be a {@link ConstantClassInfo} instance. The method
-	 * {@code getNameIndex()} of the {@code ConstantClassInfo} instance must also point to a valid index in the constant_pool table. The {@code CPInfo} at this index must be a {@link ConstantUTF8Info} instance. The method {@code getString()} of the
-	 * {@code ConstantUTF8Info} instance must return a {@code String} that is not malformed.
+	 * In order to retrieve the {@code String} to parse, {@code classFile.getSuperClass()} must point to a valid index in the {@code constant_pool} table item. The {@link CPInfo} at that index must be a {@link ConstantClassInfo} instance. The method
+	 * {@code getNameIndex()} of the {@code ConstantClassInfo} instance must also point to a valid index in the {@code constant_pool} table item. The {@code CPInfo} at this index must be a {@link ConstantUTF8Info} instance. The method
+	 * {@code getStringValue()} of the {@code ConstantUTF8Info} instance must return a {@code String} that is not malformed.
 	 * 
 	 * @param classFile a {@link ClassFile}
 	 * @return a {@code ClassName} instance
@@ -154,7 +154,7 @@ public final class ClassName implements Node {
 	 * @throws NullPointerException thrown if, and only if, {@code classFile} is {@code null}
 	 */
 	public static ClassName parseClassNameSuperClass(final ClassFile classFile) {
-		return parseClassName(classFile.getCPInfo(classFile.getCPInfo(classFile.getSuperClass(), ConstantClassInfo.class).getNameIndex(), ConstantUTF8Info.class).getString());
+		return parseClassName(classFile.getCPInfo(classFile.getCPInfo(classFile.getSuperClass(), ConstantClassInfo.class).getNameIndex(), ConstantUTF8Info.class).getStringValue());
 	}
 	
 	/**
@@ -166,9 +166,9 @@ public final class ClassName implements Node {
 	 * <p>
 	 * If the {@code String} indirectly referred to by {@code classFile.getThisClass()} cannot be retrieved, or it is malformed, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
-	 * In order to retrieve the {@code String} to parse, {@code classFile.getThisClass()} must point to a valid index in the constant_pool table. The {@link CPInfo} at that index must be a {@link ConstantClassInfo} instance. The method
-	 * {@code getNameIndex()} of the {@code ConstantClassInfo} instance must also point to a valid index in the constant_pool table. The {@code CPInfo} at this index must be a {@link ConstantUTF8Info} instance. The method {@code getString()} of the
-	 * {@code ConstantUTF8Info} instance must return a {@code String} that is not malformed.
+	 * In order to retrieve the {@code String} to parse, {@code classFile.getThisClass()} must point to a valid index in the {@code constant_pool} table item. The {@link CPInfo} at that index must be a {@link ConstantClassInfo} instance. The method
+	 * {@code getNameIndex()} of the {@code ConstantClassInfo} instance must also point to a valid index in the {@code constant_pool} table item. The {@code CPInfo} at this index must be a {@link ConstantUTF8Info} instance. The method
+	 * {@code getStringValue()} of the {@code ConstantUTF8Info} instance must return a {@code String} that is not malformed.
 	 * 
 	 * @param classFile a {@link ClassFile}
 	 * @return a {@code ClassName} instance
@@ -176,6 +176,6 @@ public final class ClassName implements Node {
 	 * @throws NullPointerException thrown if, and only if, {@code classFile} is {@code null}
 	 */
 	public static ClassName parseClassNameThisClass(final ClassFile classFile) {
-		return parseClassName(classFile.getCPInfo(classFile.getCPInfo(classFile.getThisClass(), ConstantClassInfo.class).getNameIndex(), ConstantUTF8Info.class).getString());
+		return parseClassName(classFile.getCPInfo(classFile.getCPInfo(classFile.getThisClass(), ConstantClassInfo.class).getNameIndex(), ConstantUTF8Info.class).getStringValue());
 	}
 }

@@ -44,7 +44,7 @@ final class JInnerType {
 	JInnerType(final ClassFile classFile, final InnerClass innerClass) {
 		this.classFile = Objects.requireNonNull(classFile, "classFile == null");
 		this.innerClass = Objects.requireNonNull(innerClass, "innerClass == null");
-		this.type = JType.valueOf(ClassName.parseClassName(classFile.getCPInfo(classFile.getCPInfo(innerClass.getInnerClassInfoIndex(), ConstantClassInfo.class).getNameIndex(), ConstantUTF8Info.class).getString()).toExternalForm());
+		this.type = JType.valueOf(ClassName.parseClassName(classFile.getCPInfo(classFile.getCPInfo(innerClass.getInnerClassInfoIndex(), ConstantClassInfo.class).getNameIndex(), ConstantUTF8Info.class).getStringValue()).toExternalForm());
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -105,7 +105,7 @@ final class JInnerType {
 	}
 	
 	public String getSimpleName() {
-		return this.innerClass.getInnerNameIndex() != 0 ? this.classFile.getCPInfo(this.innerClass.getInnerNameIndex(), ConstantUTF8Info.class).getString() : "";
+		return this.innerClass.getInnerNameIndex() != 0 ? this.classFile.getCPInfo(this.innerClass.getInnerNameIndex(), ConstantUTF8Info.class).getStringValue() : "";
 	}
 	
 	@Override

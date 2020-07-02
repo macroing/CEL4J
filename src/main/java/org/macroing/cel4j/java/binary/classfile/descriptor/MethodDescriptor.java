@@ -191,7 +191,7 @@ public final class MethodDescriptor implements Node {
 	 * <p>
 	 * If {@code classFile} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If, for any {@code MethodInfo} {@code methodInfo} in {@code classFile}, the {@link CPInfo} on the index {@code methodInfo.getDescriptorIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getString()} method of the
+	 * If, for any {@code MethodInfo} {@code methodInfo} in {@code classFile}, the {@link CPInfo} on the index {@code methodInfo.getDescriptorIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getStringValue()} method of the
 	 * {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
 	 * If, for any {@code MethodInfo} {@code methodInfo} in {@code classFile}, {@code methodInfo.getDescriptorIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be
@@ -200,7 +200,7 @@ public final class MethodDescriptor implements Node {
 	 * @param classFile a {@link ClassFile} instance
 	 * @return a {@code List} with all {@code MethodDescriptor} instances that were parsed from all {@code MethodInfo} instances in {@code classFile}
 	 * @throws IllegalArgumentException thrown if, and only if, for any {@code MethodInfo} {@code methodInfo} in {@code classFile}, the {@code CPInfo} on the index {@code methodInfo.getDescriptorIndex()} is not a {@code ConstantUTF8Info} instance, or
-	 *                                  the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
+	 *                                  the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
 	 * @throws IndexOutOfBoundsException thrown if, and only if, for any {@code MethodInfo} {@code methodInfo} in {@code classFile}, {@code methodInfo.getDescriptorIndex()} is less than {@code 0}, or greater than or equal to
 	 *                                   {@code classFile.getCPInfoCount()}
 	 * @throws NullPointerException thrown if, and only if, {@code classFile} is {@code null}
@@ -217,7 +217,7 @@ public final class MethodDescriptor implements Node {
 	 * If either {@code classFile} or {@code methodInfo} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
 	 * If {@code classFile} does not contain a {@link MethodInfo} instance that is equal to {@code methodInfo}, the {@link CPInfo} on the index {@code methodInfo.getDescriptorIndex()} is not a {@link ConstantUTF8Info} instance, or the
-	 * {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
 	 * If {@code methodInfo.getDescriptorIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
@@ -225,12 +225,12 @@ public final class MethodDescriptor implements Node {
 	 * @param methodInfo a {@code MethodInfo} instance
 	 * @return a {@code MethodDescriptor} instance
 	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain a {@code MethodInfo} instance that is equal to {@code methodInfo}, the {@code CPInfo} on the index {@code methodInfo.getDescriptorIndex()} is not a
-	 *                                  {@code ConstantUTF8Info} instance, or the {@code getString()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
+	 *                                  {@code ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code methodInfo.getDescriptorIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
 	 * @throws NullPointerException thrown if, and only if, either {@code classFile} or {@code methodInfo} are {@code null}
 	 */
 	public static MethodDescriptor parseMethodDescriptor(final ClassFile classFile, final MethodInfo methodInfo) {
-		return parseMethodDescriptor(ConstantUTF8Info.findByDescriptorIndex(classFile, methodInfo).getString());
+		return parseMethodDescriptor(ConstantUTF8Info.findByDescriptorIndex(classFile, methodInfo).getStringValue());
 	}
 	
 	/**

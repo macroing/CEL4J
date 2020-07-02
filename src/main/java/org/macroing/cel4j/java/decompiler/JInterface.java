@@ -389,7 +389,7 @@ final class JInterface extends JType {
 		final List<Integer> interfaceIndices = this.associatedClassFile.getInterfaces();
 		
 		for(final int interfaceIndex : interfaceIndices) {
-			final String interfaceNameInternalForm = ConstantUTF8Info.findByNameIndex(this.associatedClassFile, this.associatedClassFile.getCPInfo(interfaceIndex, ConstantClassInfo.class)).getString();
+			final String interfaceNameInternalForm = ConstantUTF8Info.findByNameIndex(this.associatedClassFile, this.associatedClassFile.getCPInfo(interfaceIndex, ConstantClassInfo.class)).getStringValue();
 			final String interfaceNameExternalForm = ClassName.parseClassName(interfaceNameInternalForm).toExternalForm();
 			
 			this.interfaces.add(JInterface.valueOf(interfaceNameExternalForm));
@@ -398,7 +398,7 @@ final class JInterface extends JType {
 	
 	private void doInitializeMethods() {
 		for(final MethodInfo methodInfo : this.associatedClassFile.getMethodInfos()) {
-			final String name = ConstantUTF8Info.findByNameIndex(this.associatedClassFile, methodInfo).getString();
+			final String name = ConstantUTF8Info.findByNameIndex(this.associatedClassFile, methodInfo).getStringValue();
 			
 			if(!name.equals("<clinit>") && !name.equals("<init>")) {
 				this.methods.add(new JMethod(this.associatedClassFile, methodInfo, this));
