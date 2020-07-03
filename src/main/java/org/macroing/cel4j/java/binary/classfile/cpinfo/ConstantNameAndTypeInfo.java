@@ -34,23 +34,34 @@ import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code ConstantNameAndTypeInfo} denotes a CONSTANT_NameAndType_info structure in the constant_pool of a ClassFile structure.
+ * A {@code ConstantNameAndTypeInfo} represents a {@code CONSTANT_NameAndType_info} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * The CONSTANT_NameAndType_info structure was added to Java in version 1.0.2.
+ * This class is mutable and not thread-safe.
  * <p>
- * This class is not thread-safe.
+ * The {@code CONSTANT_NameAndType_info} structure was added to Java in version 1.0.2 and can be found in the {@code constant_pool} table item of a {@code ClassFile} structure.
+ * <p>
+ * The {@code CONSTANT_NameAndType_info} structure has the following format:
+ * <pre>
+ * <code>
+ * CONSTANT_NameAndType_info {
+ *     u1 tag;
+ *     u2 name_index;
+ *     u2 descriptor_index;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class ConstantNameAndTypeInfo extends CPInfo {
 	/**
-	 * The name of the CONSTANT_NameAndType_info structure.
+	 * The name of the {@code CONSTANT_NameAndType_info} structure.
 	 */
 	public static final String NAME = "CONSTANT_NameAndType";
 	
 	/**
-	 * The tag for CONSTANT_NameAndType.
+	 * The tag for the {@code CONSTANT_NameAndType_info} structure.
 	 */
 	public static final int TAG = 12;
 	
@@ -73,8 +84,8 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	public ConstantNameAndTypeInfo(final int nameIndex, final int descriptorIndex) {
 		super(NAME, TAG, 1);
 		
-		this.descriptorIndex = ParameterArguments.requireRange(descriptorIndex, 1, Integer.MAX_VALUE);
-		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE);
+		this.descriptorIndex = ParameterArguments.requireRange(descriptorIndex, 1, Integer.MAX_VALUE, "descriptorIndex");
+		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE, "nameIndex");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -165,7 +176,7 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	 * @throws IllegalArgumentException thrown if, and only if, {@code descriptorIndex} is less than or equal to {@code 0}
 	 */
 	public void setDescriptorIndex(final int descriptorIndex) {
-		this.descriptorIndex = ParameterArguments.requireRange(descriptorIndex, 1, Integer.MAX_VALUE);
+		this.descriptorIndex = ParameterArguments.requireRange(descriptorIndex, 1, Integer.MAX_VALUE, "descriptorIndex");
 	}
 	
 	/**
@@ -177,28 +188,28 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than or equal to {@code 0}
 	 */
 	public void setNameIndex(final int nameIndex) {
-		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE);
+		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE, "nameIndex");
 	}
 	
 	/**
 	 * Writes this {@code ConstantNameAndTypeInfo} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
 		try {
 			dataOutput.writeByte(getTag());
-			dataOutput.writeShort(this.nameIndex);
-			dataOutput.writeShort(this.descriptorIndex);
+			dataOutput.writeShort(getNameIndex());
+			dataOutput.writeShort(getDescriptorIndex());
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
@@ -207,7 +218,7 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	/**
 	 * Writes this {@code ConstantNameAndTypeInfo} to {@code document}.
 	 * <p>
-	 * If {@code document} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param document the {@link Document} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
@@ -226,7 +237,7 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns the {@code ConstantNameAndTypeInfo} that is located on the index {@code constantFieldRefInfo.getNameAndTypeIndex()} in the constant_pool table of {@code classFile}.
+	 * Returns the {@code ConstantNameAndTypeInfo} that is located on the index {@code constantFieldRefInfo.getNameAndTypeIndex()} in the {@code constant_pool} table item of {@code classFile}.
 	 * <p>
 	 * If either {@code classFile} or {@code constantFieldRefInfo} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
@@ -236,8 +247,8 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	 * If {@code constantFieldRefInfo.getNameAndTypeIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param classFile the {@code ClassFile} instance that contains a {@code ConstantFieldRefInfo} instance that is equal to {@code constantFieldRefInfo}
-	 * @param constantFieldRefInfo the {@code ConstantFieldRefInfo} instance that contains the name_and_type_index
-	 * @return the {@code ConstantNameAndTypeInfo} that is located on the index {@code constantFieldRefInfo.getNameAndTypeIndex()} in the constant_pool table of {@code classFile}
+	 * @param constantFieldRefInfo the {@code ConstantFieldRefInfo} instance that contains the {@code name_and_type_index}
+	 * @return the {@code ConstantNameAndTypeInfo} that is located on the index {@code constantFieldRefInfo.getNameAndTypeIndex()} in the {@code constant_pool} table item of {@code classFile}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain a {@code ConstantFieldRefInfo} instance that is equal to {@code constantFieldRefInfo}, or the {@code CPInfo} on the index
 	 *                                  {@code constantFieldRefInfo.getNameAndTypeIndex()} is not a {@code ConstantNameAndTypeInfo} instance
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code constantFieldRefInfo.getNameAndTypeIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
@@ -248,7 +259,7 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	}
 	
 	/**
-	 * Returns the {@code ConstantNameAndTypeInfo} that is located on the index {@code constantInterfaceMethodRefInfo.getNameAndTypeIndex()} in the constant_pool table of {@code classFile}.
+	 * Returns the {@code ConstantNameAndTypeInfo} that is located on the index {@code constantInterfaceMethodRefInfo.getNameAndTypeIndex()} in the {@code constant_pool} table item of {@code classFile}.
 	 * <p>
 	 * If either {@code classFile} or {@code constantInterfaceMethodRefInfo} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
@@ -258,8 +269,8 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	 * If {@code constantInterfaceMethodRefInfo.getNameAndTypeIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param classFile the {@code ClassFile} instance that contains a {@code ConstantInterfaceMethodRefInfo} instance that is equal to {@code constantInterfaceMethodRefInfo}
-	 * @param constantInterfaceMethodRefInfo the {@code ConstantInterfaceMethodRefInfo} instance that contains the name_and_type_index
-	 * @return the {@code ConstantNameAndTypeInfo} that is located on the index {@code constantInterfaceMethodRefInfo.getNameAndTypeIndex()} in the constant_pool table of {@code classFile}
+	 * @param constantInterfaceMethodRefInfo the {@code ConstantInterfaceMethodRefInfo} instance that contains the {@code name_and_type_index}
+	 * @return the {@code ConstantNameAndTypeInfo} that is located on the index {@code constantInterfaceMethodRefInfo.getNameAndTypeIndex()} in the {@code constant_pool} table item of {@code classFile}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain a {@code ConstantInterfaceMethodRefInfo} instance that is equal to {@code constantInterfaceMethodRefInfo}, or the {@code CPInfo} on the index
 	 *                                  {@code constantInterfaceMethodRefInfo.getNameAndTypeIndex()} is not a {@code ConstantNameAndTypeInfo} instance
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code constantInterfaceMethodRefInfo.getNameAndTypeIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
@@ -270,7 +281,7 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	}
 	
 	/**
-	 * Returns the {@code ConstantNameAndTypeInfo} that is located on the index {@code constantMethodRefInfo.getNameAndTypeIndex()} in the constant_pool table of {@code classFile}.
+	 * Returns the {@code ConstantNameAndTypeInfo} that is located on the index {@code constantMethodRefInfo.getNameAndTypeIndex()} in the {@code constant_pool} table item of {@code classFile}.
 	 * <p>
 	 * If either {@code classFile} or {@code constantMethodRefInfo} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
@@ -280,8 +291,8 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	 * If {@code constantMethodRefInfo.getNameAndTypeIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param classFile the {@code ClassFile} instance that contains a {@code ConstantMethodRefInfo} instance that is equal to {@code constantMethodRefInfo}
-	 * @param constantMethodRefInfo the {@code ConstantMethodRefInfo} instance that contains the name_and_type_index
-	 * @return the {@code ConstantNameAndTypeInfo} that is located on the index {@code constantMethodRefInfo.getNameAndTypeIndex()} in the constant_pool table of {@code classFile}
+	 * @param constantMethodRefInfo the {@code ConstantMethodRefInfo} instance that contains the {@code name_and_type_index}
+	 * @return the {@code ConstantNameAndTypeInfo} that is located on the index {@code constantMethodRefInfo.getNameAndTypeIndex()} in the {@code constant_pool} table item of {@code classFile}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain a {@code ConstantMethodRefInfo} instance that is equal to {@code constantMethodRefInfo}, or the {@code CPInfo} on the index
 	 *                                  {@code constantMethodRefInfo.getNameAndTypeIndex()} is not a {@code ConstantNameAndTypeInfo} instance
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code constantMethodRefInfo.getNameAndTypeIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
@@ -292,14 +303,14 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	}
 	
 	/**
-	 * Returns a {@code List} with all {@code ConstantNameAndTypeInfo}s.
+	 * Returns a {@code List} with all {@code ConstantNameAndTypeInfo} instances in {@code node}.
 	 * <p>
-	 * All {@code ConstantNameAndTypeInfo}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code ConstantNameAndTypeInfo} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code ConstantNameAndTypeInfo}s
+	 * @return a {@code List} with all {@code ConstantNameAndTypeInfo} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<ConstantNameAndTypeInfo> filter(final Node node) {

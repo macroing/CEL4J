@@ -33,23 +33,33 @@ import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code ConstantMethodTypeInfo} denotes a CONSTANT_MethodType_info structure in the constant_pool of a ClassFile structure.
+ * A {@code ConstantMethodTypeInfo} represents a {@code CONSTANT_MethodType_info} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * The CONSTANT_MethodType_info structure was added to Java in version 7.
+ * This class is mutable and not thread-safe.
  * <p>
- * This class is not thread-safe.
+ * The {@code CONSTANT_MethodType_info} structure was added to Java in version 7 and can be found in the {@code constant_pool} table item of a {@code ClassFile} structure.
+ * <p>
+ * The {@code CONSTANT_MethodType_info} structure has the following format:
+ * <pre>
+ * <code>
+ * CONSTANT_MethodType_info {
+ *     u1 tag;
+ *     u2 descriptor_index;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class ConstantMethodTypeInfo extends CPInfo {
 	/**
-	 * The name of the CONSTANT_MethodType_info structure.
+	 * The name of the {@code CONSTANT_MethodType_info} structure.
 	 */
 	public static final String NAME = "CONSTANT_MethodType";
 	
 	/**
-	 * The tag for CONSTANT_MethodType.
+	 * The tag for the {@code CONSTANT_MethodType_info} structure.
 	 */
 	public static final int TAG = 16;
 	
@@ -70,7 +80,7 @@ public final class ConstantMethodTypeInfo extends CPInfo {
 	public ConstantMethodTypeInfo(final int descriptorIndex) {
 		super(NAME, TAG, 1);
 		
-		this.descriptorIndex = ParameterArguments.requireRange(descriptorIndex, 1, Integer.MAX_VALUE);
+		this.descriptorIndex = ParameterArguments.requireRange(descriptorIndex, 1, Integer.MAX_VALUE, "descriptorIndex");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -150,27 +160,27 @@ public final class ConstantMethodTypeInfo extends CPInfo {
 	 * @throws IllegalArgumentException thrown if, and only if, {@code descriptorIndex} is less than or equal to {@code 0}
 	 */
 	public void setDescriptorIndex(final int descriptorIndex) {
-		this.descriptorIndex = ParameterArguments.requireRange(descriptorIndex, 1, Integer.MAX_VALUE);
+		this.descriptorIndex = ParameterArguments.requireRange(descriptorIndex, 1, Integer.MAX_VALUE, "descriptorIndex");
 	}
 	
 	/**
 	 * Writes this {@code ConstantMethodTypeInfo} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
 		try {
 			dataOutput.writeByte(getTag());
-			dataOutput.writeShort(this.descriptorIndex);
+			dataOutput.writeShort(getDescriptorIndex());
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
@@ -179,7 +189,7 @@ public final class ConstantMethodTypeInfo extends CPInfo {
 	/**
 	 * Writes this {@code ConstantMethodTypeInfo} to {@code document}.
 	 * <p>
-	 * If {@code document} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param document the {@link Document} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
@@ -197,14 +207,14 @@ public final class ConstantMethodTypeInfo extends CPInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@code ConstantMethodTypeInfo}s.
+	 * Returns a {@code List} with all {@code ConstantMethodTypeInfo} instances in {@code node}.
 	 * <p>
-	 * All {@code ConstantMethodTypeInfo}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code ConstantMethodTypeInfo} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code ConstantMethodTypeInfo}s
+	 * @return a {@code List} with all {@code ConstantMethodTypeInfo} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<ConstantMethodTypeInfo> filter(final Node node) {

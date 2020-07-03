@@ -33,68 +33,79 @@ import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code ConstantMethodHandleInfo} denotes a CONSTANT_MethodHandle_info structure in the constant_pool of a ClassFile structure.
+ * A {@code ConstantMethodHandleInfo} represents a {@code CONSTANT_MethodHandle_info} structure as defined by the Java Virtual Machine Specifications.
  * <p>
- * The CONSTANT_MethodHandle_info structure was added to Java in version 7.
+ * This class is mutable and not thread-safe.
  * <p>
- * This class is not thread-safe.
+ * The {@code CONSTANT_MethodHandle_info} structure was added to Java in version 7 and can be found in the {@code constant_pool} table item of a {@code ClassFile} structure.
+ * <p>
+ * The {@code CONSTANT_MethodHandle_info} structure has the following format:
+ * <pre>
+ * <code>
+ * CONSTANT_MethodHandle_info {
+ *     u1 tag;
+ *     u1 reference_kind;
+ *     u2 reference_index;
+ * }
+ * </code>
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class ConstantMethodHandleInfo extends CPInfo {
 	/**
-	 * The name of the CONSTANT_MethodHandle_info structure.
+	 * The name of the {@code CONSTANT_MethodHandle_info} structure.
 	 */
 	public static final String NAME = "CONSTANT_MethodHandle";
 	
 	/**
-	 * An {@code int} denoting REF_getField.
+	 * A value that represents {@code REF_getField}.
 	 */
 	public static final int REF_GET_FIELD = 1;
 	
 	/**
-	 * An {@code int} denoting REF_getStatic.
+	 * A value that represents {@code REF_getStatic}.
 	 */
 	public static final int REF_GET_STATIC = 2;
 	
 	/**
-	 * An {@code int} denoting REF_invokeInterface.
+	 * A value that represents {@code REF_invokeInterface}.
 	 */
 	public static final int REF_INVOKE_INTERFACE = 9;
 	
 	/**
-	 * An {@code int} denoting REF_invokeSpecial.
+	 * A value that represents {@code REF_invokeSpecial}.
 	 */
 	public static final int REF_INVOKE_SPECIAL = 7;
 	
 	/**
-	 * An {@code int} denoting REF_invokeStatic.
+	 * A value that represents {@code REF_invokeStatic}.
 	 */
 	public static final int REF_INVOKE_STATIC = 6;
 	
 	/**
-	 * An {@code int} denoting REF_invokeVirtual.
+	 * A value that represents {@code REF_invokeVirtual}.
 	 */
 	public static final int REF_INVOKE_VIRTUAL = 5;
 	
 	/**
-	 * An {@code int} denoting REF_newInvokeSpecial.
+	 * A value that represents {@code REF_newInvokeSpecial}.
 	 */
 	public static final int REF_NEW_INVOKE_SPECIAL = 8;
 	
 	/**
-	 * An {@code int} denoting REF_putField.
+	 * A value that represents {@code REF_putField}.
 	 */
 	public static final int REF_PUT_FIELD = 3;
 	
 	/**
-	 * An {@code int} denoting REF_putStatic.
+	 * A value that represents {@code REF_putStatic}.
 	 */
 	public static final int REF_PUT_STATIC = 4;
 	
 	/**
-	 * The tag for CONSTANT_MethodHandle.
+	 * The tag for the {@code CONSTANT_MethodHandle_info} structure.
 	 */
 	public static final int TAG = 15;
 	
@@ -117,8 +128,8 @@ public final class ConstantMethodHandleInfo extends CPInfo {
 	public ConstantMethodHandleInfo(final int referenceKind, final int referenceIndex) {
 		super(NAME, TAG, 1);
 		
-		this.referenceIndex = ParameterArguments.requireRange(referenceIndex, 1, Integer.MAX_VALUE);
-		this.referenceKind = ParameterArguments.requireRange(referenceKind, 0, Integer.MAX_VALUE);
+		this.referenceIndex = ParameterArguments.requireRange(referenceIndex, 1, Integer.MAX_VALUE, "referenceIndex");
+		this.referenceKind = ParameterArguments.requireRange(referenceKind, 0, Integer.MAX_VALUE, "referenceKind");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -209,7 +220,7 @@ public final class ConstantMethodHandleInfo extends CPInfo {
 	 * @throws IllegalArgumentException thrown if, and only if, {@code referenceIndex} is less than or equal to {@code 0}
 	 */
 	public void setReferenceIndex(final int referenceIndex) {
-		this.referenceIndex = ParameterArguments.requireRange(referenceIndex, 1, Integer.MAX_VALUE);
+		this.referenceIndex = ParameterArguments.requireRange(referenceIndex, 1, Integer.MAX_VALUE, "referenceIndex");
 	}
 	
 	/**
@@ -221,28 +232,28 @@ public final class ConstantMethodHandleInfo extends CPInfo {
 	 * @throws IllegalArgumentException thrown if, and only if, {@code referenceKind} is less than {@code 0}
 	 */
 	public void setReferenceKind(final int referenceKind) {
-		this.referenceKind = ParameterArguments.requireRange(referenceKind, 0, Integer.MAX_VALUE);
+		this.referenceKind = ParameterArguments.requireRange(referenceKind, 0, Integer.MAX_VALUE, "referenceKind");
 	}
 	
 	/**
 	 * Writes this {@code ConstantMethodHandleInfo} to {@code dataOutput}.
 	 * <p>
-	 * If {@code dataOutput} is an {@code OutputStream} (or any other type of stream), this method will not close it.
-	 * <p>
 	 * If {@code dataOutput} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If an I/O-error occurs, an {@code UncheckedIOException} will be thrown.
+	 * If an {@code IOException} is caught, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * This method does not close {@code dataOutput}.
 	 * 
 	 * @param dataOutput the {@code DataOutput} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code dataOutput} is {@code null}
-	 * @throws UncheckedIOException thrown if, and only if, an I/O-error occurs
+	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	@Override
 	public void write(final DataOutput dataOutput) {
 		try {
 			dataOutput.writeByte(getTag());
-			dataOutput.writeByte(this.referenceKind);
-			dataOutput.writeShort(this.referenceIndex);
+			dataOutput.writeByte(getReferenceKind());
+			dataOutput.writeShort(getReferenceIndex());
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
@@ -251,7 +262,7 @@ public final class ConstantMethodHandleInfo extends CPInfo {
 	/**
 	 * Writes this {@code ConstantMethodHandleInfo} to {@code document}.
 	 * <p>
-	 * If {@code document} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param document the {@link Document} to write to
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
@@ -270,14 +281,14 @@ public final class ConstantMethodHandleInfo extends CPInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@code ConstantMethodHandleInfo}s.
+	 * Returns a {@code List} with all {@code ConstantMethodHandleInfo} instances in {@code node}.
 	 * <p>
-	 * All {@code ConstantMethodHandleInfo}s are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
+	 * All {@code ConstantMethodHandleInfo} instances are found by traversing {@code node} using a simple {@link NodeHierarchicalVisitor} implementation.
 	 * <p>
 	 * If {@code node} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param node the {@link Node} to start traversal from
-	 * @return a {@code List} with all {@code ConstantMethodHandleInfo}s
+	 * @return a {@code List} with all {@code ConstantMethodHandleInfo} instances in {@code node}
 	 * @throws NullPointerException thrown if, and only if, {@code node} is {@code null}
 	 */
 	public static List<ConstantMethodHandleInfo> filter(final Node node) {
