@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.cpinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.List;
 import java.util.Objects;
 
@@ -73,13 +72,28 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Constructs a new {@code ConstantNameAndTypeInfo}.
+	 * Constructs a new {@code ConstantNameAndTypeInfo} instance that is a copy of {@code constantNameAndTypeInfo}.
 	 * <p>
-	 * If either {@code nameIndex} or {@code descriptorIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code constantNameAndTypeInfo} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param nameIndex the name_index of the new {@code ConstantNameAndTypeInfo} instance
-	 * @param descriptorIndex the descriptor_index of the new {@code ConstantNameAndTypeInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code nameIndex} or {@code descriptorIndex} are less than or equal to {@code 0}
+	 * @param constantNameAndTypeInfo the {@code ConstantNameAndTypeInfo} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code constantNameAndTypeInfo} is {@code null}
+	 */
+	public ConstantNameAndTypeInfo(final ConstantNameAndTypeInfo constantNameAndTypeInfo) {
+		super(NAME, TAG, 1);
+		
+		this.descriptorIndex = constantNameAndTypeInfo.descriptorIndex;
+		this.nameIndex = constantNameAndTypeInfo.nameIndex;
+	}
+	
+	/**
+	 * Constructs a new {@code ConstantNameAndTypeInfo} instance.
+	 * <p>
+	 * If either {@code nameIndex} or {@code descriptorIndex} are less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param nameIndex the value for the {@code name_index} item associated with this {@code ConstantNameAndTypeInfo} instance
+	 * @param descriptorIndex the value for the {@code descriptor_index} item associated with this {@code ConstantNameAndTypeInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code nameIndex} or {@code descriptorIndex} are less than {@code 1}
 	 */
 	public ConstantNameAndTypeInfo(final int nameIndex, final int descriptorIndex) {
 		super(NAME, TAG, 1);
@@ -97,7 +111,7 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	 */
 	@Override
 	public ConstantNameAndTypeInfo copy() {
-		return new ConstantNameAndTypeInfo(this.nameIndex, this.descriptorIndex);
+		return new ConstantNameAndTypeInfo(this);
 	}
 	
 	/**
@@ -107,16 +121,16 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	 */
 	@Override
 	public String toString() {
-		return String.format("CONSTANT_NameAndType_info: name_index=%s, descriptor_index=%s", Integer.toString(this.nameIndex), Integer.toString(this.descriptorIndex));
+		return String.format("new ConstantNameAndTypeInfo(%s, %s)", Integer.toString(getNameIndex()), Integer.toString(getDescriptorIndex()));
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantNameAndTypeInfo}, and that {@code ConstantNameAndTypeInfo} instance is equal to this {@code ConstantNameAndTypeInfo} instance,
-	 * {@code false} otherwise.
+	 * Compares {@code object} to this {@code ConstantNameAndTypeInfo} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantNameAndTypeInfo}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code ConstantNameAndTypeInfo} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantNameAndTypeInfo}, and that {@code ConstantNameAndTypeInfo} instance is equal to this {@code ConstantNameAndTypeInfo} instance,
-	 * {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code ConstantNameAndTypeInfo} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantNameAndTypeInfo}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -124,15 +138,15 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 			return true;
 		} else if(!(object instanceof ConstantNameAndTypeInfo)) {
 			return false;
-		} else if(!Objects.equals(ConstantNameAndTypeInfo.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), ConstantNameAndTypeInfo.class.cast(object).getName())) {
 			return false;
-		} else if(ConstantNameAndTypeInfo.class.cast(object).getTag() != getTag()) {
+		} else if(getTag() != ConstantNameAndTypeInfo.class.cast(object).getTag()) {
 			return false;
-		} else if(ConstantNameAndTypeInfo.class.cast(object).getConstantPoolEntryCount() != getConstantPoolEntryCount()) {
+		} else if(getConstantPoolEntryCount() != ConstantNameAndTypeInfo.class.cast(object).getConstantPoolEntryCount()) {
 			return false;
-		} else if(ConstantNameAndTypeInfo.class.cast(object).nameIndex != this.nameIndex) {
+		} else if(getNameIndex() != ConstantNameAndTypeInfo.class.cast(object).getNameIndex()) {
 			return false;
-		} else if(ConstantNameAndTypeInfo.class.cast(object).descriptorIndex != this.descriptorIndex) {
+		} else if(getDescriptorIndex() != ConstantNameAndTypeInfo.class.cast(object).getDescriptorIndex()) {
 			return false;
 		} else {
 			return true;
@@ -140,18 +154,18 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	}
 	
 	/**
-	 * Returns the descriptor_index of this {@code ConstantNameAndTypeInfo} instance.
+	 * Returns the value of the {@code descriptor_index} item associated with this {@code ConstantNameAndTypeInfo} instance.
 	 * 
-	 * @return the descriptor_index of this {@code ConstantNameAndTypeInfo} instance
+	 * @return the value of the {@code descriptor_index} item associated with this {@code ConstantNameAndTypeInfo} instance
 	 */
 	public int getDescriptorIndex() {
 		return this.descriptorIndex;
 	}
 	
 	/**
-	 * Returns the name_index of this {@code ConstantNameAndTypeInfo} instance.
+	 * Returns the value of the {@code name_index} item associated with this {@code ConstantNameAndTypeInfo} instance.
 	 * 
-	 * @return the name_index of this {@code ConstantNameAndTypeInfo} instance
+	 * @return the value of the {@code name_index} item associated with this {@code ConstantNameAndTypeInfo} instance
 	 */
 	public int getNameIndex() {
 		return this.nameIndex;
@@ -164,28 +178,28 @@ public final class ConstantNameAndTypeInfo extends CPInfo {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(getName(), Integer.valueOf(getTag()), Integer.valueOf(getConstantPoolEntryCount()), Integer.valueOf(this.nameIndex), Integer.valueOf(this.descriptorIndex));
+		return Objects.hash(getName(), Integer.valueOf(getTag()), Integer.valueOf(getConstantPoolEntryCount()), Integer.valueOf(getNameIndex()), Integer.valueOf(getDescriptorIndex()));
 	}
 	
 	/**
-	 * Sets a new descriptor_index for this {@code ConstantNameAndTypeInfo} instance.
+	 * Sets {@code descriptorIndex} as the value for the {@code descriptor_index} item associated with this {@code ConstantNameAndTypeInfo} instance.
 	 * <p>
-	 * If {@code descriptorIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code descriptorIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param descriptorIndex the new descriptor_index for this {@code ConstantNameAndTypeInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code descriptorIndex} is less than or equal to {@code 0}
+	 * @param descriptorIndex the value for the {@code descriptor_index} item associated with this {@code ConstantNameAndTypeInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code descriptorIndex} is less than {@code 1}
 	 */
 	public void setDescriptorIndex(final int descriptorIndex) {
 		this.descriptorIndex = ParameterArguments.requireRange(descriptorIndex, 1, Integer.MAX_VALUE, "descriptorIndex");
 	}
 	
 	/**
-	 * Sets a new name_index for this {@code ConstantNameAndTypeInfo} instance.
+	 * Sets {@code nameIndex} as the value for the {@code name_index} item associated with this {@code ConstantNameAndTypeInfo} instance.
 	 * <p>
-	 * If {@code nameIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code nameIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param nameIndex the new name_index for this {@code ConstantNameAndTypeInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than or equal to {@code 0}
+	 * @param nameIndex the value for the {@code name_index} item associated with this {@code ConstantNameAndTypeInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code nameIndex} is less than {@code 1}
 	 */
 	public void setNameIndex(final int nameIndex) {
 		this.nameIndex = ParameterArguments.requireRange(nameIndex, 1, Integer.MAX_VALUE, "nameIndex");

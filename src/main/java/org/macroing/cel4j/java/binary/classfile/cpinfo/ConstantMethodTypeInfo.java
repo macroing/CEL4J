@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.cpinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.List;
 import java.util.Objects;
 
@@ -70,12 +69,26 @@ public final class ConstantMethodTypeInfo extends CPInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Constructs a new {@code ConstantMethodTypeInfo}.
+	 * Constructs a new {@code ConstantMethodTypeInfo} instance that is a copy of {@code constantMethodTypeInfo}.
 	 * <p>
-	 * If {@code descriptorIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code constantMethodTypeInfo} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param descriptorIndex the descriptor_index of the new {@code ConstantMethodTypeInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code descriptorIndex} is less than or equal to {@code 0}
+	 * @param constantMethodTypeInfo the {@code ConstantMethodTypeInfo} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code constantMethodTypeInfo} is {@code null}
+	 */
+	public ConstantMethodTypeInfo(final ConstantMethodTypeInfo constantMethodTypeInfo) {
+		super(NAME, TAG, 1);
+		
+		this.descriptorIndex = constantMethodTypeInfo.descriptorIndex;
+	}
+	
+	/**
+	 * Constructs a new {@code ConstantMethodTypeInfo} instance.
+	 * <p>
+	 * If {@code descriptorIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param descriptorIndex the value for the {@code descriptor_index} item associated with this {@code ConstantMethodTypeInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code descriptorIndex} is less than {@code 1}
 	 */
 	public ConstantMethodTypeInfo(final int descriptorIndex) {
 		super(NAME, TAG, 1);
@@ -92,7 +105,7 @@ public final class ConstantMethodTypeInfo extends CPInfo {
 	 */
 	@Override
 	public ConstantMethodTypeInfo copy() {
-		return new ConstantMethodTypeInfo(this.descriptorIndex);
+		return new ConstantMethodTypeInfo(this);
 	}
 	
 	/**
@@ -102,16 +115,16 @@ public final class ConstantMethodTypeInfo extends CPInfo {
 	 */
 	@Override
 	public String toString() {
-		return String.format("CONSTANT_MethodType_info: descriptor_index=%s", Integer.toString(this.descriptorIndex));
+		return String.format("new ConstantMethodTypeInfo(%s)", Integer.toString(getDescriptorIndex()));
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantMethodTypeInfo}, and that {@code ConstantMethodTypeInfo} instance is equal to this {@code ConstantMethodTypeInfo} instance,
-	 * {@code false} otherwise.
+	 * Compares {@code object} to this {@code ConstantMethodTypeInfo} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantMethodTypeInfo}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code ConstantMethodTypeInfo} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantMethodTypeInfo}, and that {@code ConstantMethodTypeInfo} instance is equal to this {@code ConstantMethodTypeInfo} instance,
-	 * {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code ConstantMethodTypeInfo} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantMethodTypeInfo}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -119,13 +132,13 @@ public final class ConstantMethodTypeInfo extends CPInfo {
 			return true;
 		} else if(!(object instanceof ConstantMethodTypeInfo)) {
 			return false;
-		} else if(!Objects.equals(ConstantMethodTypeInfo.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), ConstantMethodTypeInfo.class.cast(object).getName())) {
 			return false;
-		} else if(ConstantMethodTypeInfo.class.cast(object).getTag() != getTag()) {
+		} else if(getTag() != ConstantMethodTypeInfo.class.cast(object).getTag()) {
 			return false;
-		} else if(ConstantMethodTypeInfo.class.cast(object).getConstantPoolEntryCount() != getConstantPoolEntryCount()) {
+		} else if(getConstantPoolEntryCount() != ConstantMethodTypeInfo.class.cast(object).getConstantPoolEntryCount()) {
 			return false;
-		} else if(ConstantMethodTypeInfo.class.cast(object).descriptorIndex != this.descriptorIndex) {
+		} else if(getDescriptorIndex() != ConstantMethodTypeInfo.class.cast(object).getDescriptorIndex()) {
 			return false;
 		} else {
 			return true;
@@ -133,9 +146,9 @@ public final class ConstantMethodTypeInfo extends CPInfo {
 	}
 	
 	/**
-	 * Returns the descriptor_index of this {@code ConstantMethodTypeInfo} instance.
+	 * Returns the value of the {@code descriptor_index} item associated with this {@code ConstantMethodTypeInfo} instance.
 	 * 
-	 * @return the descriptor_index of this {@code ConstantMethodTypeInfo} instance
+	 * @return the value of the {@code descriptor_index} item associated with this {@code ConstantMethodTypeInfo} instance
 	 */
 	public int getDescriptorIndex() {
 		return this.descriptorIndex;
@@ -148,16 +161,16 @@ public final class ConstantMethodTypeInfo extends CPInfo {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(getName(), Integer.valueOf(getTag()), Integer.valueOf(getConstantPoolEntryCount()), Integer.valueOf(this.descriptorIndex));
+		return Objects.hash(getName(), Integer.valueOf(getTag()), Integer.valueOf(getConstantPoolEntryCount()), Integer.valueOf(getDescriptorIndex()));
 	}
 	
 	/**
-	 * Sets a new descriptor_index for this {@code ConstantMethodTypeInfo} instance.
+	 * Sets {@code descriptorIndex} as the value for the {@code descriptor_index} item associated with this {@code ConstantMethodTypeInfo} instance.
 	 * <p>
-	 * If {@code descriptorIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code descriptorIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param descriptorIndex the new descriptor_index for this {@code ConstantMethodTypeInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code descriptorIndex} is less than or equal to {@code 0}
+	 * @param descriptorIndex the value for the {@code descriptor_index} item associated with this {@code ConstantMethodTypeInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code descriptorIndex} is less than {@code 1}
 	 */
 	public void setDescriptorIndex(final int descriptorIndex) {
 		this.descriptorIndex = ParameterArguments.requireRange(descriptorIndex, 1, Integer.MAX_VALUE, "descriptorIndex");

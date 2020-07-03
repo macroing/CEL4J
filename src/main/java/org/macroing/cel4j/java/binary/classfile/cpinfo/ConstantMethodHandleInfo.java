@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.cpinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.List;
 import java.util.Objects;
 
@@ -117,13 +116,28 @@ public final class ConstantMethodHandleInfo extends CPInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Constructs a new {@code ConstantMethodHandleInfo}.
+	 * Constructs a new {@code ConstantMethodHandleInfo} instance that is a copy of {@code constantMethodHandleInfo}.
 	 * <p>
-	 * If {@code referenceKind} is less than {@code 0}, or {@code referenceIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code constantMethodHandleInfo} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param referenceKind the reference_kind for the new {@code ConstantMethodHandleInfo} instance
-	 * @param referenceIndex the reference_index for the new {@code ConstantMethodHandleInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code referenceKind} is less than {@code 0}, or {@code referenceIndex} is less than or equal to {@code 0}
+	 * @param constantMethodHandleInfo the {@code ConstantMethodHandleInfo} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code constantMethodHandleInfo} is {@code null}
+	 */
+	public ConstantMethodHandleInfo(final ConstantMethodHandleInfo constantMethodHandleInfo) {
+		super(NAME, TAG, 1);
+		
+		this.referenceIndex = constantMethodHandleInfo.referenceIndex;
+		this.referenceKind = constantMethodHandleInfo.referenceKind;
+	}
+	
+	/**
+	 * Constructs a new {@code ConstantMethodHandleInfo} instance.
+	 * <p>
+	 * If {@code referenceKind} is less than {@code 0}, or {@code referenceIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param referenceKind the value for the {@code reference_kind} item associated with this {@code ConstantMethodHandleInfo} instance
+	 * @param referenceIndex the value for the {@code reference_index} item associated with this {@code ConstantMethodHandleInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code referenceKind} is less than {@code 0}, or {@code referenceIndex} is less than {@code 1}
 	 */
 	public ConstantMethodHandleInfo(final int referenceKind, final int referenceIndex) {
 		super(NAME, TAG, 1);
@@ -141,7 +155,7 @@ public final class ConstantMethodHandleInfo extends CPInfo {
 	 */
 	@Override
 	public ConstantMethodHandleInfo copy() {
-		return new ConstantMethodHandleInfo(this.referenceIndex, this.referenceKind);
+		return new ConstantMethodHandleInfo(this);
 	}
 	
 	/**
@@ -151,16 +165,16 @@ public final class ConstantMethodHandleInfo extends CPInfo {
 	 */
 	@Override
 	public String toString() {
-		return String.format("CONSTANT_MethodHandle_info: reference_kind=%s, reference_index=%s", Integer.toString(this.referenceKind), Integer.toString(this.referenceIndex));
+		return String.format("new ConstantMethodHandleInfo(%s, %s)", Integer.toString(getReferenceKind()), Integer.toString(getReferenceIndex()));
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantMethodHandleInfo}, and that {@code ConstantMethodHandleInfo} instance is equal to this {@code ConstantMethodHandleInfo} instance,
-	 * {@code false} otherwise.
+	 * Compares {@code object} to this {@code ConstantMethodHandleInfo} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantMethodHandleInfo}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code ConstantMethodHandleInfo} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantMethodHandleInfo}, and that {@code ConstantMethodHandleInfo} instance is equal to this {@code ConstantMethodHandleInfo} instance,
-	 * {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code ConstantMethodHandleInfo} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantMethodHandleInfo}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -168,15 +182,15 @@ public final class ConstantMethodHandleInfo extends CPInfo {
 			return true;
 		} else if(!(object instanceof ConstantMethodHandleInfo)) {
 			return false;
-		} else if(!Objects.equals(ConstantMethodHandleInfo.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), ConstantMethodHandleInfo.class.cast(object).getName())) {
 			return false;
-		} else if(ConstantMethodHandleInfo.class.cast(object).getTag() != getTag()) {
+		} else if(getTag() != ConstantMethodHandleInfo.class.cast(object).getTag()) {
 			return false;
-		} else if(ConstantMethodHandleInfo.class.cast(object).getConstantPoolEntryCount() != getConstantPoolEntryCount()) {
+		} else if(getConstantPoolEntryCount() != ConstantMethodHandleInfo.class.cast(object).getConstantPoolEntryCount()) {
 			return false;
-		} else if(ConstantMethodHandleInfo.class.cast(object).referenceKind != this.referenceKind) {
+		} else if(getReferenceKind() != ConstantMethodHandleInfo.class.cast(object).getReferenceKind()) {
 			return false;
-		} else if(ConstantMethodHandleInfo.class.cast(object).referenceIndex != this.referenceIndex) {
+		} else if(getReferenceIndex() != ConstantMethodHandleInfo.class.cast(object).getReferenceIndex()) {
 			return false;
 		} else {
 			return true;
@@ -184,18 +198,18 @@ public final class ConstantMethodHandleInfo extends CPInfo {
 	}
 	
 	/**
-	 * Returns the reference_index of this {@code ConstantMethodHandleInfo} instance.
+	 * Returns the value of the {@code reference_index} item associated with this {@code ConstantMethodHandleInfo} instance.
 	 * 
-	 * @return the reference_index of this {@code ConstantMethodHandleInfo} instance
+	 * @return the value of the {@code reference_index} item associated with this {@code ConstantMethodHandleInfo} instance
 	 */
 	public int getReferenceIndex() {
 		return this.referenceIndex;
 	}
 	
 	/**
-	 * Returns the reference_kind of this {@code ConstantMethodHandleInfo} instance.
+	 * Returns the value of the {@code reference_kind} item associated with this {@code ConstantMethodHandleInfo} instance.
 	 * 
-	 * @return the reference_kind of this {@code ConstantMethodHandleInfo} instance
+	 * @return the value of the {@code reference_kind} item associated with this {@code ConstantMethodHandleInfo} instance
 	 */
 	public int getReferenceKind() {
 		return this.referenceKind;
@@ -208,27 +222,27 @@ public final class ConstantMethodHandleInfo extends CPInfo {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(getName(), Integer.valueOf(getTag()), Integer.valueOf(getConstantPoolEntryCount()), Integer.valueOf(this.referenceKind), Integer.valueOf(this.referenceIndex));
+		return Objects.hash(getName(), Integer.valueOf(getTag()), Integer.valueOf(getConstantPoolEntryCount()), Integer.valueOf(getReferenceKind()), Integer.valueOf(getReferenceIndex()));
 	}
 	
 	/**
-	 * Sets a new reference_index for this {@code ConstantMethodHandleInfo} instance.
+	 * Sets {@code referenceIndex} as the value for the {@code reference_index} item associated with this {@code ConstantMethodHandleInfo} instance.
 	 * <p>
-	 * If {@code referenceIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code referenceIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param referenceIndex the new reference_index for this {@code ConstantMethodHandleInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code referenceIndex} is less than or equal to {@code 0}
+	 * @param referenceIndex the value for the {@code reference_index} item associated with this {@code ConstantMethodHandleInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code referenceIndex} is less than {@code 1}
 	 */
 	public void setReferenceIndex(final int referenceIndex) {
 		this.referenceIndex = ParameterArguments.requireRange(referenceIndex, 1, Integer.MAX_VALUE, "referenceIndex");
 	}
 	
 	/**
-	 * Sets a new reference_kind for this {@code ConstantMethodHandleInfo} instance.
+	 * Sets {@code referenceKind} as the value for the {@code reference_kind} item associated with this {@code ConstantMethodHandleInfo} instance.
 	 * <p>
 	 * If {@code referenceKind} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param referenceKind the new reference_kind for this {@code ConstantMethodHandleInfo} instance
+	 * @param referenceKind the value for the {@code reference_kind} item associated with this {@code ConstantMethodHandleInfo} instance
 	 * @throws IllegalArgumentException thrown if, and only if, {@code referenceKind} is less than {@code 0}
 	 */
 	public void setReferenceKind(final int referenceKind) {

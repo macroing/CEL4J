@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.cpinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.List;
 import java.util.Objects;
 
@@ -72,13 +71,28 @@ public final class ConstantInvokeDynamicInfo extends CPInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Constructs a new {@code ConstantInvokeDynamicInfo}.
+	 * Constructs a new {@code ConstantInvokeDynamicInfo} instance that is a copy of {@code constantInvokeDynamicInfo}.
 	 * <p>
-	 * If {@code bootstrapMethodAttrIndex} is less than {@code 0}, or {@code nameAndTypeIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code constantInvokeDynamicInfo} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param bootstrapMethodAttrIndex the bootstrap_method_attr_index of the  new {@code ConstantInvokeDynamicInfo} instance
-	 * @param nameAndTypeIndex the name_and_type_index of the new {@code ConstantInvokeDynamicInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code bootstrapMethodAttrIndex} is less than {@code 0}, or {@code nameAndTypeIndex} is less than or equal to {@code 0}
+	 * @param constantInvokeDynamicInfo the {@code ConstantInvokeDynamicInfo} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code constantInvokeDynamicInfo} is {@code null}
+	 */
+	public ConstantInvokeDynamicInfo(final ConstantInvokeDynamicInfo constantInvokeDynamicInfo) {
+		super(NAME, TAG, 1);
+		
+		this.bootstrapMethodAttrIndex = constantInvokeDynamicInfo.bootstrapMethodAttrIndex;
+		this.nameAndTypeIndex = constantInvokeDynamicInfo.nameAndTypeIndex;
+	}
+	
+	/**
+	 * Constructs a new {@code ConstantInvokeDynamicInfo} instance.
+	 * <p>
+	 * If {@code bootstrapMethodAttrIndex} is less than {@code 0}, or {@code nameAndTypeIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param bootstrapMethodAttrIndex the value for the {@code bootstrap_method_attr_index} item associated with this {@code ConstantInvokeDynamicInfo} instance
+	 * @param nameAndTypeIndex the value for the {@code name_and_type_index} item associated with this {@code ConstantInvokeDynamicInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code bootstrapMethodAttrIndex} is less than {@code 0}, or {@code nameAndTypeIndex} is less than {@code 1}
 	 */
 	public ConstantInvokeDynamicInfo(final int bootstrapMethodAttrIndex, final int nameAndTypeIndex) {
 		super(NAME, TAG, 1);
@@ -96,7 +110,7 @@ public final class ConstantInvokeDynamicInfo extends CPInfo {
 	 */
 	@Override
 	public ConstantInvokeDynamicInfo copy() {
-		return new ConstantInvokeDynamicInfo(this.bootstrapMethodAttrIndex, this.nameAndTypeIndex);
+		return new ConstantInvokeDynamicInfo(this);
 	}
 	
 	/**
@@ -106,16 +120,16 @@ public final class ConstantInvokeDynamicInfo extends CPInfo {
 	 */
 	@Override
 	public String toString() {
-		return String.format("CONSTANT_InvokeDynamic_info: bootstrap_method_attr_index=%s, name_and_type_index=%s", Integer.toString(this.bootstrapMethodAttrIndex), Integer.toString(this.nameAndTypeIndex));
+		return String.format("new ConstantInvokeDynamicInfo(%s, %s)", Integer.toString(getBootstrapMethodAttrIndex()), Integer.toString(getNameAndTypeIndex()));
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantInvokeDynamicInfo}, and that {@code ConstantInvokeDynamicInfo} instance is equal to this {@code ConstantInvokeDynamicInfo}
-	 * instance, {@code false} otherwise.
+	 * Compares {@code object} to this {@code ConstantInvokeDynamicInfo} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantInvokeDynamicInfo}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code ConstantInvokeDynamicInfo} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantInvokeDynamicInfo}, and that {@code ConstantInvokeDynamicInfo} instance is equal to this {@code ConstantInvokeDynamicInfo}
-	 * instance, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code ConstantInvokeDynamicInfo} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantInvokeDynamicInfo}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -123,15 +137,15 @@ public final class ConstantInvokeDynamicInfo extends CPInfo {
 			return true;
 		} else if(!(object instanceof ConstantInvokeDynamicInfo)) {
 			return false;
-		} else if(!Objects.equals(ConstantInvokeDynamicInfo.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), ConstantInvokeDynamicInfo.class.cast(object).getName())) {
 			return false;
-		} else if(ConstantInvokeDynamicInfo.class.cast(object).getTag() != getTag()) {
+		} else if(getTag() != ConstantInvokeDynamicInfo.class.cast(object).getTag()) {
 			return false;
-		} else if(ConstantInvokeDynamicInfo.class.cast(object).getConstantPoolEntryCount() != getConstantPoolEntryCount()) {
+		} else if(getConstantPoolEntryCount() != ConstantInvokeDynamicInfo.class.cast(object).getConstantPoolEntryCount()) {
 			return false;
-		} else if(ConstantInvokeDynamicInfo.class.cast(object).bootstrapMethodAttrIndex != this.bootstrapMethodAttrIndex) {
+		} else if(getBootstrapMethodAttrIndex() != ConstantInvokeDynamicInfo.class.cast(object).getBootstrapMethodAttrIndex()) {
 			return false;
-		} else if(ConstantInvokeDynamicInfo.class.cast(object).nameAndTypeIndex != this.nameAndTypeIndex) {
+		} else if(getNameAndTypeIndex() != ConstantInvokeDynamicInfo.class.cast(object).getNameAndTypeIndex()) {
 			return false;
 		} else {
 			return true;
@@ -139,18 +153,18 @@ public final class ConstantInvokeDynamicInfo extends CPInfo {
 	}
 	
 	/**
-	 * Returns the bootstrap_method_attr_index of this {@code ConstantInvokeDynamicInfo} instance.
+	 * Returns the value of the {@code bootstrap_method_attr_index} item associated with this {@code ConstantInvokeDynamicInfo} instance.
 	 * 
-	 * @return the bootstrap_method_attr_index of this {@code ConstantInvokeDynamicInfo} instance
+	 * @return the value of the {@code bootstrap_method_attr_index} item associated with this {@code ConstantInvokeDynamicInfo} instance
 	 */
 	public int getBootstrapMethodAttrIndex() {
 		return this.bootstrapMethodAttrIndex;
 	}
 	
 	/**
-	 * Returns the name_and_type_index of this {@code ConstantInvokeDynamicInfo} instance.
+	 * Returns the value of the {@code name_and_type_index} item associated with this {@code ConstantInvokeDynamicInfo} instance.
 	 * 
-	 * @return the name_and_type_index of this {@code ConstantInvokeDynamicInfo} instance
+	 * @return the value of the {@code name_and_type_index} item associated with this {@code ConstantInvokeDynamicInfo} instance
 	 */
 	public int getNameAndTypeIndex() {
 		return this.nameAndTypeIndex;
@@ -163,15 +177,15 @@ public final class ConstantInvokeDynamicInfo extends CPInfo {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(getName(), Integer.valueOf(getTag()), Integer.valueOf(getConstantPoolEntryCount()), Integer.valueOf(this.bootstrapMethodAttrIndex), Integer.valueOf(this.nameAndTypeIndex));
+		return Objects.hash(getName(), Integer.valueOf(getTag()), Integer.valueOf(getConstantPoolEntryCount()), Integer.valueOf(getBootstrapMethodAttrIndex()), Integer.valueOf(getNameAndTypeIndex()));
 	}
 	
 	/**
-	 * Sets a new bootstrap_method_attr_index for this {@code ConstantInvokeDynamicInfo} instance.
+	 * Sets {@code bootstrapMethodAttrIndex} as the value for the {@code bootstrap_method_attr_index} item associated with this {@code ConstantInvokeDynamicInfo} instance.
 	 * <p>
 	 * If {@code bootstrapMethodAttrIndex} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param bootstrapMethodAttrIndex the new bootstrap_method_attr_index for this {@code ConstantInvokeDynamicInfo} instance
+	 * @param bootstrapMethodAttrIndex the value for the {@code bootstrap_method_attr_index} item associated with this {@code ConstantInvokeDynamicInfo} instance
 	 * @throws IllegalArgumentException thrown if, and only if, {@code bootstrapMethodAttrIndex} is less than {@code 0}
 	 */
 	public void setBootstrapMethodAttrIndex(final int bootstrapMethodAttrIndex) {
@@ -179,12 +193,12 @@ public final class ConstantInvokeDynamicInfo extends CPInfo {
 	}
 	
 	/**
-	 * Sets a new name_and_type_index for this {@code ConstantInvokeDynamicInfo} instance.
+	 * Sets {@code nameAndTypeIndex} as the value for the {@code name_and_type_index} item associated with this {@code ConstantInvokeDynamicInfo} instance.
 	 * <p>
-	 * If {@code nameAndTypeIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code nameAndTypeIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param nameAndTypeIndex the new name_and_type_index for this {@code ConstantInvokeDynamicInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code nameAndTypeIndex} is less than or equal to {@code 0}
+	 * @param nameAndTypeIndex the value for the {@code name_and_type_index} item associated with this {@code ConstantInvokeDynamicInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code nameAndTypeIndex} is less than {@code 1}
 	 */
 	public void setNameAndTypeIndex(final int nameAndTypeIndex) {
 		this.nameAndTypeIndex = ParameterArguments.requireRange(nameAndTypeIndex, 1, Integer.MAX_VALUE, "nameAndTypeIndex");

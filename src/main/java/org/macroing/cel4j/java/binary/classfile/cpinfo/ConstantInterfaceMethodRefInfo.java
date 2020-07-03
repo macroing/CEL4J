@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.cpinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.List;
 import java.util.Objects;
 
@@ -72,13 +71,28 @@ public final class ConstantInterfaceMethodRefInfo extends CPInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Constructs a new {@code ConstantInterfaceMethodRefInfo}.
+	 * Constructs a new {@code ConstantInterfaceMethodRefInfo} instance that is a copy of {@code constantInterfaceMethodRefInfo}.
 	 * <p>
-	 * If either {@code classIndex} or {@code nameAndTypeIndex} are less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code constantInterfaceMethodRefInfo} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param classIndex the class_index for the new {@code ConstantInterfaceMethodRefInfo} instance
-	 * @param nameAndTypeIndex the name_and_type_index for the new {@code ConstantInterfaceMethodRefInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code classIndex} or {@code nameAndTypeIndex} are less than or equal to {@code 0}
+	 * @param constantInterfaceMethodRefInfo the {@code ConstantInterfaceMethodRefInfo} instance to copy
+	 * @throws NullPointerException thrown if, and only if, {@code constantInterfaceMethodRefInfo} is {@code null}
+	 */
+	public ConstantInterfaceMethodRefInfo(final ConstantInterfaceMethodRefInfo constantInterfaceMethodRefInfo) {
+		super(NAME, TAG, 1);
+		
+		this.classIndex = constantInterfaceMethodRefInfo.classIndex;
+		this.nameAndTypeIndex = constantInterfaceMethodRefInfo.nameAndTypeIndex;
+	}
+	
+	/**
+	 * Constructs a new {@code ConstantInterfaceMethodRefInfo} instance.
+	 * <p>
+	 * If either {@code classIndex} or {@code nameAndTypeIndex} are less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param classIndex the value for the {@code class_index} item associated with this {@code ConstantInterfaceMethodRefInfo} instance
+	 * @param nameAndTypeIndex the value for the {@code name_and_type_index} item associated with this {@code ConstantInterfaceMethodRefInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code classIndex} or {@code nameAndTypeIndex} are less than {@code 1}
 	 */
 	public ConstantInterfaceMethodRefInfo(final int classIndex, final int nameAndTypeIndex) {
 		super(NAME, TAG, 1);
@@ -96,7 +110,7 @@ public final class ConstantInterfaceMethodRefInfo extends CPInfo {
 	 */
 	@Override
 	public ConstantInterfaceMethodRefInfo copy() {
-		return new ConstantInterfaceMethodRefInfo(this.classIndex, this.nameAndTypeIndex);
+		return new ConstantInterfaceMethodRefInfo(this);
 	}
 	
 	/**
@@ -106,16 +120,16 @@ public final class ConstantInterfaceMethodRefInfo extends CPInfo {
 	 */
 	@Override
 	public String toString() {
-		return String.format("CONSTANT_InterfaceMethodref_info: class_index=%s, name_and_type_index=%s", Integer.toString(this.classIndex), Integer.toString(this.nameAndTypeIndex));
+		return String.format("new ConstantInterfaceMethodRefInfo(%s, %s)", Integer.toString(getClassIndex()), Integer.toString(getNameAndTypeIndex()));
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantInterfaceMethodRefInfo}, and that {@code ConstantInterfaceMethodRefInfo} instance is equal to this
-	 * {@code ConstantInterfaceMethodRefInfo} instance, {@code false} otherwise.
+	 * Compares {@code object} to this {@code ConstantInterfaceMethodRefInfo} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code ConstantInterfaceMethodRefInfo}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object an {@code Object} to compare to this {@code ConstantInterfaceMethodRefInfo} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantInterfaceMethodRefInfo}, and that {@code ConstantInterfaceMethodRefInfo} instance is equal to this
-	 * {@code ConstantInterfaceMethodRefInfo} instance, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code ConstantInterfaceMethodRefInfo} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code ConstantInterfaceMethodRefInfo}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
@@ -123,15 +137,15 @@ public final class ConstantInterfaceMethodRefInfo extends CPInfo {
 			return true;
 		} else if(!(object instanceof ConstantInterfaceMethodRefInfo)) {
 			return false;
-		} else if(!Objects.equals(ConstantInterfaceMethodRefInfo.class.cast(object).getName(), getName())) {
+		} else if(!Objects.equals(getName(), ConstantInterfaceMethodRefInfo.class.cast(object).getName())) {
 			return false;
-		} else if(ConstantInterfaceMethodRefInfo.class.cast(object).getTag() != getTag()) {
+		} else if(getTag() != ConstantInterfaceMethodRefInfo.class.cast(object).getTag()) {
 			return false;
-		} else if(ConstantInterfaceMethodRefInfo.class.cast(object).getConstantPoolEntryCount() != getConstantPoolEntryCount()) {
+		} else if(getConstantPoolEntryCount() != ConstantInterfaceMethodRefInfo.class.cast(object).getConstantPoolEntryCount()) {
 			return false;
-		} else if(ConstantInterfaceMethodRefInfo.class.cast(object).classIndex != this.classIndex) {
+		} else if(getClassIndex() != ConstantInterfaceMethodRefInfo.class.cast(object).getClassIndex()) {
 			return false;
-		} else if(ConstantInterfaceMethodRefInfo.class.cast(object).nameAndTypeIndex != this.nameAndTypeIndex) {
+		} else if(getNameAndTypeIndex() != ConstantInterfaceMethodRefInfo.class.cast(object).getNameAndTypeIndex()) {
 			return false;
 		} else {
 			return true;
@@ -139,18 +153,18 @@ public final class ConstantInterfaceMethodRefInfo extends CPInfo {
 	}
 	
 	/**
-	 * Returns the class_index of this {@code ConstantInterfaceMethodRefInfo} instance.
+	 * Returns the value of the {@code class_index} item associated with this {@code ConstantInterfaceMethodRefInfo} instance.
 	 * 
-	 * @return the class_index of this {@code ConstantInterfaceMethodRefInfo} instance
+	 * @return the value of the {@code class_index} item associated with this {@code ConstantInterfaceMethodRefInfo} instance
 	 */
 	public int getClassIndex() {
 		return this.classIndex;
 	}
 	
 	/**
-	 * Returns the name_and_type_index of this {@code ConstantInterfaceMethodRefInfo} instance.
+	 * Returns the value of the {@code name_and_type_index} item associated with this {@code ConstantInterfaceMethodRefInfo} instance.
 	 * 
-	 * @return the name_and_type_index of this {@code ConstantInterfaceMethodRefInfo} instance
+	 * @return the value of the {@code name_and_type_index} item associated with this {@code ConstantInterfaceMethodRefInfo} instance
 	 */
 	public int getNameAndTypeIndex() {
 		return this.nameAndTypeIndex;
@@ -163,28 +177,28 @@ public final class ConstantInterfaceMethodRefInfo extends CPInfo {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(getName(), Integer.valueOf(getTag()), Integer.valueOf(getConstantPoolEntryCount()), Integer.valueOf(this.classIndex), Integer.valueOf(this.nameAndTypeIndex));
+		return Objects.hash(getName(), Integer.valueOf(getTag()), Integer.valueOf(getConstantPoolEntryCount()), Integer.valueOf(getClassIndex()), Integer.valueOf(getNameAndTypeIndex()));
 	}
 	
 	/**
-	 * Sets a new class_index for this {@code ConstantInterfaceMethodRefInfo} instance.
+	 * Sets {@code classIndex} as the value for the {@code class_index} item associated with this {@code ConstantInterfaceMethodRefInfo} instance.
 	 * <p>
-	 * If {@code classIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code classIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param classIndex the new class_index for this {@code ConstantInterfaceMethodRefInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code classIndex} is less than or equal to {@code 0}
+	 * @param classIndex the value for the {@code class_index} item associated with this {@code ConstantInterfaceMethodRefInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code classIndex} is less than {@code 1}
 	 */
 	public void setClassIndex(final int classIndex) {
 		this.classIndex = ParameterArguments.requireRange(classIndex, 1, Integer.MAX_VALUE, "classIndex");
 	}
 	
 	/**
-	 * Sets a new name_and_type_index for this {@code ConstantInterfaceMethodRefInfo} instance.
+	 * Sets {@code nameAndTypeIndex} as the value for the {@code name_and_type_index} item associated with this {@code ConstantInterfaceMethodRefInfo} instance.
 	 * <p>
-	 * If {@code nameAndTypeIndex} is less than or equal to {@code 0}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code nameAndTypeIndex} is less than {@code 1}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param nameAndTypeIndex the new name_and_type_index for this {@code ConstantInterfaceMethodRefInfo} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code nameAndTypeIndex} is less than or equal to {@code 0}
+	 * @param nameAndTypeIndex the value for the {@code name_and_type_index} item associated with this {@code ConstantInterfaceMethodRefInfo} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code nameAndTypeIndex} is less than {@code 1}
 	 */
 	public void setNameAndTypeIndex(final int nameAndTypeIndex) {
 		this.nameAndTypeIndex = ParameterArguments.requireRange(nameAndTypeIndex, 1, Integer.MAX_VALUE, "nameAndTypeIndex");
