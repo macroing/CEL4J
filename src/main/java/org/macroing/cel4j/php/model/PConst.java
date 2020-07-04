@@ -24,6 +24,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.macroing.cel4j.util.Document;
+import org.macroing.cel4j.util.Documentable;
 
 /**
  * A {@code PConst} represents a const and can be added to a {@link PClass}.
@@ -33,7 +34,7 @@ import org.macroing.cel4j.util.Document;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class PConst implements Comparable<PConst> {
+public final class PConst implements Comparable<PConst>, Documentable {
 	private static final int ACCESS_FLAG_PRIVATE = 0x0002;
 	private static final int ACCESS_FLAG_PROTECTED = 0x0004;
 	private static final int ACCESS_FLAG_PUBLIC = 0x0001;
@@ -64,9 +65,9 @@ public final class PConst implements Comparable<PConst> {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Writes this {@code PConst} instance to a {@link Document}.
+	 * Writes this {@code PConst} to a {@link Document}.
 	 * <p>
-	 * Returns the {@code Document} that was written to.
+	 * Returns the {@code Document}.
 	 * <p>
 	 * Calling this method is equivalent to the following:
 	 * <pre>
@@ -75,16 +76,17 @@ public final class PConst implements Comparable<PConst> {
 	 * }
 	 * </pre>
 	 * 
-	 * @return the {@code Document} that was written to
+	 * @return the {@code Document}
 	 */
+	@Override
 	public Document write() {
 		return write(new Document());
 	}
 	
 	/**
-	 * Writes this {@code PConst} instance to a {@link Document}.
+	 * Writes this {@code PConst} to {@code document}.
 	 * <p>
-	 * Returns the {@code Document} that was written to.
+	 * Returns {@code document}.
 	 * <p>
 	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
@@ -95,24 +97,25 @@ public final class PConst implements Comparable<PConst> {
 	 * }
 	 * </pre>
 	 * 
-	 * @param document the {@code Document} to write to
-	 * @return the {@code Document} that was written to
+	 * @param document the {@link Document} to write to
+	 * @return {@code document}
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
 	 */
+	@Override
 	public Document write(final Document document) {
 		return write(document, this.name.length());
 	}
 	
 	/**
-	 * Writes this {@code PConst} instance to a {@link Document}.
+	 * Writes this {@code PConst} to {@code document}.
 	 * <p>
-	 * Returns the {@code Document} that was written to.
+	 * Returns {@code document}.
 	 * <p>
 	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param document the {@code Document} to write to
 	 * @param maximumNameLength the maximum name length, used when aligning all {@code JConst} instances
-	 * @return the {@code Document} that was written to
+	 * @return {@code document}
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
 	 */
 	public Document write(final Document document, final int maximumNameLength) {

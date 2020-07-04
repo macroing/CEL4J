@@ -67,6 +67,41 @@ public final class ConstantUnreachableInfo extends CPInfo {
 	}
 	
 	/**
+	 * Writes this {@code ConstantUnreachableInfo} to a {@link Document}.
+	 * <p>
+	 * Returns the {@code Document}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * constantUnreachableInfo.write(new Document());
+	 * }
+	 * </pre>
+	 * 
+	 * @return the {@code Document}
+	 */
+	@Override
+	public Document write() {
+		return write(new Document());
+	}
+	
+	/**
+	 * Writes this {@code ConstantUnreachableInfo} to {@code document}.
+	 * <p>
+	 * Returns {@code document}.
+	 * <p>
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param document the {@link Document} to write to
+	 * @return {@code document}
+	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
+	 */
+	@Override
+	public Document write(final Document document) {
+		return Objects.requireNonNull(document, "document == null");
+	}
+	
+	/**
 	 * Returns a {@code String} representation of this {@code ConstantUnreachableInfo} instance.
 	 * 
 	 * @return a {@code String} representation of this {@code ConstantUnreachableInfo} instance
@@ -127,18 +162,5 @@ public final class ConstantUnreachableInfo extends CPInfo {
 	@Override
 	public void write(final DataOutput dataOutput) {
 		Objects.requireNonNull(dataOutput, "dataOutput == null");
-	}
-	
-	/**
-	 * Writes this {@code ConstantUnreachableInfo} to {@code document}.
-	 * <p>
-	 * If {@code document} is {@code null}, a {@code NullPointerException} may be thrown. But no guarantees can be made.
-	 * 
-	 * @param document the {@link Document} to write to
-	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
-	 */
-	@Override
-	public void write(final Document document) {
-		Objects.requireNonNull(document, "document == null");
 	}
 }

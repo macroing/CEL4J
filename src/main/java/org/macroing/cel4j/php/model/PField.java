@@ -24,6 +24,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.macroing.cel4j.util.Document;
+import org.macroing.cel4j.util.Documentable;
 
 /**
  * A {@code PField} represents a field and can be added to a {@link PClass}.
@@ -33,7 +34,7 @@ import org.macroing.cel4j.util.Document;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class PField implements Comparable<PField> {
+public final class PField implements Comparable<PField>, Documentable {
 	private static final int ACCESS_FLAG_PRIVATE = 0x0002;
 	private static final int ACCESS_FLAG_PROTECTED = 0x0004;
 	private static final int ACCESS_FLAG_PUBLIC = 0x0001;
@@ -57,9 +58,9 @@ public final class PField implements Comparable<PField> {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Writes this {@code PField} instance to a {@link Document}.
+	 * Writes this {@code PField} to a {@link Document}.
 	 * <p>
-	 * Returns the {@code Document} that was written to.
+	 * Returns the {@code Document}.
 	 * <p>
 	 * Calling this method is equivalent to the following:
 	 * <pre>
@@ -68,23 +69,25 @@ public final class PField implements Comparable<PField> {
 	 * }
 	 * </pre>
 	 * 
-	 * @return the {@code Document} that was written to
+	 * @return the {@code Document}
 	 */
+	@Override
 	public Document write() {
 		return write(new Document());
 	}
 	
 	/**
-	 * Writes this {@code PField} instance to a {@link Document}.
+	 * Writes this {@code PField} to {@code document}.
 	 * <p>
-	 * Returns the {@code Document} that was written to.
+	 * Returns {@code document}.
 	 * <p>
 	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param document the {@code Document} to write to
-	 * @return the {@code Document} that was written to
+	 * @param document the {@link Document} to write to
+	 * @return {@code document}
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
 	 */
+	@Override
 	public Document write(final Document document) {
 		final String accessModifiers = getAccessModifiersAsString("", " ");
 		final String name = getName();

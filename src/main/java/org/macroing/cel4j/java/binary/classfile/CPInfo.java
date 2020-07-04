@@ -23,7 +23,7 @@ import java.io.UncheckedIOException;
 import java.util.Objects;
 
 import org.macroing.cel4j.node.Node;
-import org.macroing.cel4j.util.Document;
+import org.macroing.cel4j.util.Documentable;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
@@ -44,7 +44,7 @@ import org.macroing.cel4j.util.ParameterArguments;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public abstract class CPInfo implements Node {
+public abstract class CPInfo implements Documentable, Node {
 	private final String name;
 	private final int constantPoolEntryCount;
 	private final int tag;
@@ -120,14 +120,4 @@ public abstract class CPInfo implements Node {
 	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
 	public abstract void write(final DataOutput dataOutput);
-	
-	/**
-	 * Writes this {@code CPInfo} to {@code document}.
-	 * <p>
-	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param document the {@link Document} to write to
-	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
-	 */
-	public abstract void write(final Document document);
 }

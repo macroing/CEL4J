@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.macroing.cel4j.util.Document;
+import org.macroing.cel4j.util.Documentable;
 
 /**
  * A {@code PBlock} represents a simple abstraction for a block in PHP source code.
@@ -41,7 +42,7 @@ import org.macroing.cel4j.util.Document;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class PBlock {
+public final class PBlock implements Documentable {
 	private final List<Line> lines;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,9 +57,9 @@ public final class PBlock {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Writes this {@code PBlock} instance to a {@link Document}.
+	 * Writes this {@code PBlock} to a {@link Document}.
 	 * <p>
-	 * Returns the {@code Document} that was written to.
+	 * Returns the {@code Document}.
 	 * <p>
 	 * Calling this method is equivalent to the following:
 	 * <pre>
@@ -67,23 +68,25 @@ public final class PBlock {
 	 * }
 	 * </pre>
 	 * 
-	 * @return the {@code Document} that was written to
+	 * @return the {@code Document}
 	 */
+	@Override
 	public Document write() {
 		return write(new Document());
 	}
 	
 	/**
-	 * Writes this {@code PBlock} instance to a {@link Document}.
+	 * Writes this {@code PBlock} to {@code document}.
 	 * <p>
-	 * Returns the {@code Document} that was written to.
+	 * Returns {@code document}.
 	 * <p>
 	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param document the {@code Document} to write to
-	 * @return the {@code Document} that was written to
+	 * @param document the {@link Document} to write to
+	 * @return {@code document}
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
 	 */
+	@Override
 	public Document write(final Document document) {
 		Objects.requireNonNull(document, "document == null");
 		

@@ -32,6 +32,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.macroing.cel4j.util.Document;
+import org.macroing.cel4j.util.Documentable;
 
 /**
  * A {@code PDocument} represents a PHP document.
@@ -41,7 +42,7 @@ import org.macroing.cel4j.util.Document;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class PDocument {
+public final class PDocument implements Documentable {
 	private final List<PClass> classes;
 	private final List<PInterface> interfaces;
 	private final List<String> uses;
@@ -66,9 +67,9 @@ public final class PDocument {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Writes this {@code PDocument} instance to a {@link Document}.
+	 * Writes this {@code PDocument} to a {@link Document}.
 	 * <p>
-	 * Returns the {@code Document} that was written to.
+	 * Returns the {@code Document}.
 	 * <p>
 	 * Calling this method is equivalent to the following:
 	 * <pre>
@@ -77,16 +78,17 @@ public final class PDocument {
 	 * }
 	 * </pre>
 	 * 
-	 * @return the {@code Document} that was written to
+	 * @return the {@code Document}
 	 */
+	@Override
 	public Document write() {
 		return write(new Document());
 	}
 	
 	/**
-	 * Writes this {@code PDocument} instance to a {@link Document}.
+	 * Writes this {@code PDocument} to {@code document}.
 	 * <p>
-	 * Returns the {@code Document} that was written to.
+	 * Returns {@code document}.
 	 * <p>
 	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
@@ -97,24 +99,25 @@ public final class PDocument {
 	 * }
 	 * </pre>
 	 * 
-	 * @param document the {@code Document} to write to
-	 * @return the {@code Document} that was written to
+	 * @param document the {@link Document} to write to
+	 * @return {@code document}
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
 	 */
+	@Override
 	public Document write(final Document document) {
 		return write(document, false);
 	}
 	
 	/**
-	 * Writes this {@code PDocument} instance to a {@link Document}.
+	 * Writes this {@code PDocument} to {@code document}.
 	 * <p>
-	 * Returns the {@code Document} that was written to.
+	 * Returns {@code document}.
 	 * <p>
 	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param document the {@code Document} to write to
 	 * @param isAligningConsts {@code true} if, and only if, all {@link PConst} instances should be aligned, {@code false} otherwise
-	 * @return the {@code Document} that was written to
+	 * @return {@code document}
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
 	 */
 	public Document write(final Document document, final boolean isAligningConsts) {
@@ -211,7 +214,7 @@ public final class PDocument {
 	/**
 	 * Writes this {@code PDocument} instance to a {@link Document} and the file represented by {@code file}.
 	 * <p>
-	 * Returns the {@code Document} that was written to.
+	 * Returns the {@code Document}.
 	 * <p>
 	 * If {@code file} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
@@ -225,7 +228,7 @@ public final class PDocument {
 	 * </pre>
 	 * 
 	 * @param file the {@code File} to write to
-	 * @return the {@code Document} that was written to
+	 * @return the {@code Document}
 	 * @throws NullPointerException thrown if, and only if, {@code file} is {@code null}
 	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */
@@ -236,7 +239,7 @@ public final class PDocument {
 	/**
 	 * Writes this {@code PDocument} instance to a {@link Document} and the file represented by {@code file}.
 	 * <p>
-	 * Returns the {@code Document} that was written to.
+	 * Returns the {@code Document}.
 	 * <p>
 	 * If {@code file} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
@@ -244,7 +247,7 @@ public final class PDocument {
 	 * 
 	 * @param file the {@code File} to write to
 	 * @param isAligningConsts {@code true} if, and only if, all {@link PConst} instances should be aligned, {@code false} otherwise
-	 * @return the {@code Document} that was written to
+	 * @return the {@code Document}
 	 * @throws NullPointerException thrown if, and only if, {@code file} is {@code null}
 	 * @throws UncheckedIOException thrown if, and only if, an {@code IOException} is caught
 	 */

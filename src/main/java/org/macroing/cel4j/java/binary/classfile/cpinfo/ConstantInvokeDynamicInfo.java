@@ -114,6 +114,49 @@ public final class ConstantInvokeDynamicInfo extends CPInfo {
 	}
 	
 	/**
+	 * Writes this {@code ConstantInvokeDynamicInfo} to a {@link Document}.
+	 * <p>
+	 * Returns the {@code Document}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * constantInvokeDynamicInfo.write(new Document());
+	 * }
+	 * </pre>
+	 * 
+	 * @return the {@code Document}
+	 */
+	@Override
+	public Document write() {
+		return write(new Document());
+	}
+	
+	/**
+	 * Writes this {@code ConstantInvokeDynamicInfo} to {@code document}.
+	 * <p>
+	 * Returns {@code document}.
+	 * <p>
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param document the {@link Document} to write to
+	 * @return {@code document}
+	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
+	 */
+	@Override
+	public Document write(final Document document) {
+		document.linef("%s_info = {", getName());
+		document.indent();
+		document.linef("u1 tag = %s;", Integer.toString(getTag()));
+		document.linef("u2 bootstrap_method_attr_index = %s;", Integer.toString(getBootstrapMethodAttrIndex()));
+		document.linef("u2 name_and_type_index = %s;", Integer.toString(getNameAndTypeIndex()));
+		document.outdent();
+		document.linef("};");
+		
+		return document;
+	}
+	
+	/**
 	 * Returns a {@code String} representation of this {@code ConstantInvokeDynamicInfo} instance.
 	 * 
 	 * @return a {@code String} representation of this {@code ConstantInvokeDynamicInfo} instance
@@ -226,25 +269,6 @@ public final class ConstantInvokeDynamicInfo extends CPInfo {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	/**
-	 * Writes this {@code ConstantInvokeDynamicInfo} to {@code document}.
-	 * <p>
-	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param document the {@link Document} to write to
-	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
-	 */
-	@Override
-	public void write(final Document document) {
-		document.linef("%s_info = {", getName());
-		document.indent();
-		document.linef("u1 tag = %s;", Integer.toString(getTag()));
-		document.linef("u2 bootstrap_method_attr_index = %s;", Integer.toString(getBootstrapMethodAttrIndex()));
-		document.linef("u2 name_and_type_index = %s;", Integer.toString(getNameAndTypeIndex()));
-		document.outdent();
-		document.linef("};");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

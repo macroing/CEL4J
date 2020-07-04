@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.macroing.cel4j.util.Document;
+import org.macroing.cel4j.util.Documentable;
 import org.macroing.cel4j.util.Strings;
 
 /**
@@ -35,7 +36,7 @@ import org.macroing.cel4j.util.Strings;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class PMethod implements Comparable<PMethod> {
+public final class PMethod implements Comparable<PMethod>, Documentable {
 	private static final int ACCESS_FLAG_ABSTRACT = 0x0400;
 	private static final int ACCESS_FLAG_FINAL = 0x0010;
 	private static final int ACCESS_FLAG_PRIVATE = 0x0002;
@@ -71,9 +72,9 @@ public final class PMethod implements Comparable<PMethod> {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Writes this {@code PMethod} instance to a {@link Document}.
+	 * Writes this {@code PMethod} to a {@link Document}.
 	 * <p>
-	 * Returns the {@code Document} that was written to.
+	 * Returns the {@code Document}.
 	 * <p>
 	 * Calling this method is equivalent to the following:
 	 * <pre>
@@ -82,23 +83,25 @@ public final class PMethod implements Comparable<PMethod> {
 	 * }
 	 * </pre>
 	 * 
-	 * @return the {@code Document} that was written to
+	 * @return the {@code Document}
 	 */
+	@Override
 	public Document write() {
 		return write(new Document());
 	}
 	
 	/**
-	 * Writes this {@code PMethod} instance to a {@link Document}.
+	 * Writes this {@code PMethod} to {@code document}.
 	 * <p>
-	 * Returns the {@code Document} that was written to.
+	 * Returns {@code document}.
 	 * <p>
 	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param document the {@code Document} to write to
-	 * @return the {@code Document} that was written to
+	 * @param document the {@link Document} to write to
+	 * @return {@code document}
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
 	 */
+	@Override
 	public Document write(final Document document) {
 		final PBlock block = this.block;
 		

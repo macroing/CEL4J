@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.macroing.cel4j.util.Document;
+import org.macroing.cel4j.util.Documentable;
 
 /**
  * A {@code PClass} represents a class and can be added to a {@link PDocument}.
@@ -35,7 +36,7 @@ import org.macroing.cel4j.util.Document;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class PClass {
+public final class PClass implements Documentable {
 	private static final int ACCESS_FLAG_ABSTRACT = 0x0400;
 	private static final int ACCESS_FLAG_FINAL = 0x0010;
 	
@@ -69,9 +70,9 @@ public final class PClass {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Writes this {@code PClass} instance to a {@link Document}.
+	 * Writes this {@code PClass} to a {@link Document}.
 	 * <p>
-	 * Returns the {@code Document} that was written to.
+	 * Returns the {@code Document}.
 	 * <p>
 	 * Calling this method is equivalent to the following:
 	 * <pre>
@@ -80,16 +81,17 @@ public final class PClass {
 	 * }
 	 * </pre>
 	 * 
-	 * @return the {@code Document} that was written to
+	 * @return the {@code Document}
 	 */
+	@Override
 	public Document write() {
 		return write(new Document());
 	}
 	
 	/**
-	 * Writes this {@code PClass} instance to a {@link Document}.
+	 * Writes this {@code PClass} to {@code document}.
 	 * <p>
-	 * Returns the {@code Document} that was written to.
+	 * Returns {@code document}.
 	 * <p>
 	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
@@ -100,24 +102,25 @@ public final class PClass {
 	 * }
 	 * </pre>
 	 * 
-	 * @param document the {@code Document} to write to
-	 * @return the {@code Document} that was written to
+	 * @param document the {@link Document} to write to
+	 * @return {@code document}
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
 	 */
+	@Override
 	public Document write(final Document document) {
 		return write(document, false);
 	}
 	
 	/**
-	 * Writes this {@code PClass} instance to a {@link Document}.
+	 * Writes this {@code PClass} to {@code document}.
 	 * <p>
-	 * Returns the {@code Document} that was written to.
+	 * Returns {@code document}.
 	 * <p>
 	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param document the {@code Document} to write to
 	 * @param isAligningConsts {@code true} if, and only if, all {@link PConst} instances should be aligned, {@code false} otherwise
-	 * @return the {@code Document} that was written to
+	 * @return {@code document}
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
 	 */
 	public Document write(final Document document, final boolean isAligningConsts) {

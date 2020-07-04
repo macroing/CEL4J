@@ -34,6 +34,7 @@ import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 import org.macroing.cel4j.util.Document;
+import org.macroing.cel4j.util.Documentable;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
@@ -68,7 +69,7 @@ import org.macroing.cel4j.util.ParameterArguments;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class ClassFile implements Node {
+public final class ClassFile implements Documentable, Node {
 	/**
 	 * The value for the access flag {@code ACC_ABSTRACT} in the {@code access_flags} item of the {@code ClassFile} structure.
 	 */
@@ -476,6 +477,7 @@ public final class ClassFile implements Node {
 	 * 
 	 * @return the {@code Document}
 	 */
+	@Override
 	public Document write() {
 		return write(new Document());
 	}
@@ -491,6 +493,7 @@ public final class ClassFile implements Node {
 	 * @return {@code document}
 	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
 	 */
+	@Override
 	public Document write(final Document document) {
 		document.linef("ClassFile = {");
 		document.indent();

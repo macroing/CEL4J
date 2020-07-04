@@ -35,16 +35,6 @@ import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.util.Document;
 
 /**
- * A {@code ConstantUTF8Info} denotes a CONSTANT_Utf8_info structure in the constant_pool of a ClassFile structure.
- * <p>
- * The CONSTANT_Utf8_info structure was added to Java in version 1.0.2.
- * <p>
- * This class is not thread-safe.
- * 
- * @since 1.0.0
- * @author J&#246;rgen Lundgren
- */
-/**
  * A {@code ConstantUTF8Info} represents a {@code CONSTANT_Utf8_info} structure as defined by the Java Virtual Machine Specifications.
  * <p>
  * This class is mutable and not thread-safe.
@@ -120,6 +110,48 @@ public final class ConstantUTF8Info extends CPInfo {
 	@Override
 	public ConstantUTF8Info copy() {
 		return new ConstantUTF8Info(this);
+	}
+	
+	/**
+	 * Writes this {@code ConstantUTF8Info} to a {@link Document}.
+	 * <p>
+	 * Returns the {@code Document}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * constantUTF8Info.write(new Document());
+	 * }
+	 * </pre>
+	 * 
+	 * @return the {@code Document}
+	 */
+	@Override
+	public Document write() {
+		return write(new Document());
+	}
+	
+	/**
+	 * Writes this {@code ConstantUTF8Info} to {@code document}.
+	 * <p>
+	 * Returns {@code document}.
+	 * <p>
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param document the {@link Document} to write to
+	 * @return {@code document}
+	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
+	 */
+	@Override
+	public Document write(final Document document) {
+		document.linef("%s_info = {", getName());
+		document.indent();
+		document.linef("u1 tag = %s;", Integer.toString(getTag()));
+		document.linef("String string = \"%s\";", getStringValue());
+		document.outdent();
+		document.linef("};");
+		
+		return document;
 	}
 	
 	/**
@@ -211,24 +243,6 @@ public final class ConstantUTF8Info extends CPInfo {
 		} catch(final IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-	
-	/**
-	 * Writes this {@code ConstantUTF8Info} to {@code document}.
-	 * <p>
-	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param document the {@link Document} to write to
-	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
-	 */
-	@Override
-	public void write(final Document document) {
-		document.linef("%s_info = {", getName());
-		document.indent();
-		document.linef("u1 tag = %s;", Integer.toString(getTag()));
-		document.linef("String string = \"%s\";", getStringValue());
-		document.outdent();
-		document.linef("};");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
