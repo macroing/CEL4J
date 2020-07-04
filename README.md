@@ -17,6 +17,7 @@ Supported Features
 This library consists of several projects. They are presented below.
 
  - [CEL4J Artifact](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Artifact) provides a `ScriptEngine` implementation that evaluates Java source code.
+ - [CEL4J HTML](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-HTML) provides functionality to generate HTML source code.
  - [CEL4J Java Binary](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Java-Binary) provides functionality for reading, manipulating and writing Java bytecode.
  - [CEL4J Java Decompiler](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Java-Decompiler) provides a decompiler that can decompile Java bytecode into Java source code.
  - [CEL4J Java Source](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Java-Source) provides functionality for reading, manipulating and writing Java source code.
