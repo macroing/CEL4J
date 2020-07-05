@@ -22,13 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.macroing.cel4j.node.Node;
-import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Documentable;
-import org.macroing.cel4j.util.ParameterArguments;
-import org.macroing.cel4j.util.Strings;
 
 /**
  * An {@code Element} represents an element in HTML source code.
@@ -39,7 +35,7 @@ import org.macroing.cel4j.util.Strings;
  * @author J&#246;rgen Lundgren
  */
 public abstract class Element implements Documentable, Node {
-	private final AtomicReference<Display> display;
+	private final Display display;
 	private final Attribute attributeAccessKey;
 	private final Attribute attributeAriaControls;
 	private final Attribute attributeAriaCurrent;
@@ -94,7 +90,7 @@ public abstract class Element implements Documentable, Node {
 	 * @throws NullPointerException thrown if, and only if, either {@code name} or {@code display} are {@code null}
 	 */
 	protected Element(final String name, final Display display) {
-		this.display = new AtomicReference<>(Objects.requireNonNull(display, "display == null"));
+		this.display = Objects.requireNonNull(display, "display == null");
 		this.attributeAccessKey = new Attribute("accesskey");
 		this.attributeAriaControls = new Attribute("aria-controls");
 		this.attributeAriaCurrent = new Attribute("aria-current");
@@ -327,7 +323,7 @@ public abstract class Element implements Documentable, Node {
 	 * @return the {@code Display} associated with this {@code Element} instance
 	 */
 	public final Display getDisplay() {
-		return this.display.get();
+		return this.display;
 	}
 	
 	/**
@@ -471,55 +467,5 @@ public abstract class Element implements Documentable, Node {
 		}
 		
 		return false;
-	}
-	
-	/**
-	 * Sets {@code display} as the {@link Display} associated with this {@code Element} instance.
-	 * <p>
-	 * If {@code display} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param display the {@code Display} associated with this {@code Element} instance
-	 * @throws NullPointerException thrown if, and only if, {@code display} is {@code null}
-	 */
-	public final void setDisplay(final Display display) {
-		this.display.set(Objects.requireNonNull(display, "display == null"));
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Writes {@code element} to {@code document}.
-	 * <p>
-	 * Returns {@code document}.
-	 * <p>
-	 * If either {@code document}, {@code element}, {@code childElements} or an {@code Element} in {@code childElements} are {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param document the {@link Document} to write to
-	 * @param element the {@code Element} to write
-	 * @param childElements the child {@code Element} instances of {@code element}
-	 * @return {@code document}
-	 * @throws NullPointerException thrown if, and only if, either {@code document}, {@code element}, {@code childElements} or an {@code Element} in {@code childElements} are {@code null}
-	 */
-	public static Document write(final Document document, final Element element, final List<Element> childElements) {
-		Objects.requireNonNull(document, "document == null");
-		Objects.requireNonNull(element, "element == null");
-		
-		ParameterArguments.requireNonNullList(childElements, "childElements");
-		
-		final List<Attribute> attributes = element.getAttributesSet();
-		
-		final String name = element.getName();
-		
-		document.linef("<%s%s>", name, Strings.optional(attributes, " ", "", " ", attribute -> attribute.getNameAndValue()));
-		document.indent();
-		
-		for(final Element childElement : childElements) {
-			childElement.write(document);
-		}
-		
-		document.outdent();
-		document.linef("</%s>", name);
-		
-		return document;
 	}
 }

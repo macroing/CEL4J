@@ -272,6 +272,25 @@ public final class Document {
 	}
 	
 	/**
+	 * Appends text to this {@code Document} instance.
+	 * <p>
+	 * Returns the {@code Document} itself, such that method chaining is possible.
+	 * <p>
+	 * If {@code text} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param text the text to append
+	 * @return the {@code Document} itself, such that method chaining is possible
+	 * @throws NullPointerException thrown if, and only if, {@code text} is {@code null}
+	 */
+	public Document text(final String text) {
+		synchronized(this.nodes) {
+			this.nodes.add(new TextNode(Objects.requireNonNull(text, "text == null")));
+		}
+		
+		return this;
+	}
+	
+	/**
 	 * Returns a {@code String} representation of this {@code Document} instance.
 	 * <p>
 	 * The {@code String} representation is the text that you appended to it with all lines and indentations etc.
@@ -308,6 +327,10 @@ public final class Document {
 					if(indentation < 0) {
 						indentation = 0;
 					}
+				} else if(node instanceof TextNode) {
+					final TextNode textNode = TextNode.class.cast(node);
+					
+					stringBuilder.append(textNode.getText());
 				}
 			}
 		}
@@ -389,6 +412,24 @@ public final class Document {
 	private static final class OutdentationNode implements Node {
 		public OutdentationNode() {
 			
+		}
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static final class TextNode implements Node {
+		private final String text;
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		public TextNode(final String text) {
+			this.text = Objects.requireNonNull(text, "text == null");
+		}
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		public String getText() {
+			return this.text;
 		}
 	}
 }

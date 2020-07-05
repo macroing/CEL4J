@@ -21,64 +21,64 @@ package org.macroing.cel4j.html.model;
 import java.util.Objects;
 
 /**
- * A {@code Div} represents a {@code div} element in HTML source code.
+ * A {@code Span} represents a {@code span} element in HTML source code.
  * <p>
  * This class is mutable and not thread-safe.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class Div extends ContentElement {
+public final class Span extends ContentElement {
 	/**
-	 * The initial {@link Display} associated with a {@code Div} instance.
+	 * The initial {@link Display} associated with a {@code Span} instance.
 	 */
-	public static final Display DISPLAY_INITIAL = Display.BLOCK;
+	public static final Display DISPLAY_INITIAL = Display.INLINE;
 	
 	/**
-	 * The name associated with a {@code Div} instance.
+	 * The name associated with a {@code Span} instance.
 	 */
-	public static final String NAME = "div";
+	public static final String NAME = "span";
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Constructs a new {@code Div} instance.
+	 * Constructs a new {@code Span} instance.
 	 */
-	public Div() {
+	public Span() {
 		super(NAME, DISPLAY_INITIAL);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code String} representation of this {@code Div} instance.
+	 * Returns a {@code String} representation of this {@code Span} instance.
 	 * 
-	 * @return a {@code String} representation of this {@code Div} instance
+	 * @return a {@code String} representation of this {@code Span} instance
 	 */
 	@Override
 	public String toString() {
-		return "new Div()";
+		return "new Span()";
 	}
 	
 	/**
-	 * Compares {@code object} to this {@code Div} instance for equality.
+	 * Compares {@code object} to this {@code Span} instance for equality.
 	 * <p>
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code Div}, and their respective values are equal, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code Span}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object the {@code Object} to compare to this {@code Div} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code Div}, and their respective values are equal, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code Span} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code Span}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
-		} else if(!(object instanceof Div)) {
+		} else if(!(object instanceof Span)) {
 			return false;
-		} else if(!Objects.equals(getAttributes(), Div.class.cast(object).getAttributes())) {
+		} else if(!Objects.equals(getAttributes(), Span.class.cast(object).getAttributes())) {
 			return false;
-		} else if(!Objects.equals(getDisplay(), Div.class.cast(object).getDisplay())) {
+		} else if(!Objects.equals(getDisplay(), Span.class.cast(object).getDisplay())) {
 			return false;
-		} else if(!Objects.equals(getContent(), Div.class.cast(object).getContent())) {
+		} else if(!Objects.equals(getContent(), Span.class.cast(object).getContent())) {
 			return false;
 		} else {
 			return true;
@@ -86,9 +86,9 @@ public final class Div extends ContentElement {
 	}
 	
 	/**
-	 * Returns a hash code for this {@code Div} instance.
+	 * Returns a hash code for this {@code Span} instance.
 	 * 
-	 * @return a hash code for this {@code Div} instance
+	 * @return a hash code for this {@code Span} instance
 	 */
 	@Override
 	public int hashCode() {

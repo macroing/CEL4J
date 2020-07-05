@@ -28,57 +28,57 @@ import java.util.Objects;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class Div extends ContentElement {
+public final class P extends ContentElement {
 	/**
-	 * The initial {@link Display} associated with a {@code Div} instance.
+	 * The initial {@link Display} associated with a {@code P} instance.
 	 */
 	public static final Display DISPLAY_INITIAL = Display.BLOCK;
 	
 	/**
-	 * The name associated with a {@code Div} instance.
+	 * The name associated with a {@code P} instance.
 	 */
-	public static final String NAME = "div";
+	public static final String NAME = "p";
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Constructs a new {@code Div} instance.
+	 * Constructs a new {@code P} instance.
 	 */
-	public Div() {
+	public P() {
 		super(NAME, DISPLAY_INITIAL);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code String} representation of this {@code Div} instance.
+	 * Returns a {@code String} representation of this {@code P} instance.
 	 * 
-	 * @return a {@code String} representation of this {@code Div} instance
+	 * @return a {@code String} representation of this {@code P} instance
 	 */
 	@Override
 	public String toString() {
-		return "new Div()";
+		return "new P()";
 	}
 	
 	/**
-	 * Compares {@code object} to this {@code Div} instance for equality.
+	 * Compares {@code object} to this {@code P} instance for equality.
 	 * <p>
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code Div}, and their respective values are equal, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code P}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object the {@code Object} to compare to this {@code Div} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code Div}, and their respective values are equal, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code P} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code P}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
-		} else if(!(object instanceof Div)) {
+		} else if(!(object instanceof P)) {
 			return false;
-		} else if(!Objects.equals(getAttributes(), Div.class.cast(object).getAttributes())) {
+		} else if(!Objects.equals(getAttributes(), P.class.cast(object).getAttributes())) {
 			return false;
-		} else if(!Objects.equals(getDisplay(), Div.class.cast(object).getDisplay())) {
+		} else if(!Objects.equals(getDisplay(), P.class.cast(object).getDisplay())) {
 			return false;
-		} else if(!Objects.equals(getContent(), Div.class.cast(object).getContent())) {
+		} else if(!Objects.equals(getContent(), P.class.cast(object).getContent())) {
 			return false;
 		} else {
 			return true;
@@ -86,9 +86,9 @@ public final class Div extends ContentElement {
 	}
 	
 	/**
-	 * Returns a hash code for this {@code Div} instance.
+	 * Returns a hash code for this {@code P} instance.
 	 * 
-	 * @return a hash code for this {@code Div} instance
+	 * @return a hash code for this {@code P} instance
 	 */
 	@Override
 	public int hashCode() {
