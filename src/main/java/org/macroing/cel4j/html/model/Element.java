@@ -25,7 +25,10 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.macroing.cel4j.node.Node;
+import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Documentable;
+import org.macroing.cel4j.util.ParameterArguments;
+import org.macroing.cel4j.util.Strings;
 
 /**
  * An {@code Element} represents an element in HTML source code.
@@ -328,13 +331,6 @@ public abstract class Element implements Documentable, Node {
 	}
 	
 	/**
-	 * Returns the initial {@link Display} associated with this {@code Element} instance.
-	 * 
-	 * @return the initial {@code Display} associated with this {@code Element} instance.
-	 */
-	public abstract Display getDisplayInitial();
-	
-	/**
 	 * Returns a {@code List} with all {@link Attribute} instances currently added to this {@code Element} instance.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code Element} instance.
@@ -487,5 +483,43 @@ public abstract class Element implements Documentable, Node {
 	 */
 	public final void setDisplay(final Display display) {
 		this.display.set(Objects.requireNonNull(display, "display == null"));
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Writes {@code element} to {@code document}.
+	 * <p>
+	 * Returns {@code document}.
+	 * <p>
+	 * If either {@code document}, {@code element}, {@code childElements} or an {@code Element} in {@code childElements} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param document the {@link Document} to write to
+	 * @param element the {@code Element} to write
+	 * @param childElements the child {@code Element} instances of {@code element}
+	 * @return {@code document}
+	 * @throws NullPointerException thrown if, and only if, either {@code document}, {@code element}, {@code childElements} or an {@code Element} in {@code childElements} are {@code null}
+	 */
+	public static Document write(final Document document, final Element element, final List<Element> childElements) {
+		Objects.requireNonNull(document, "document == null");
+		Objects.requireNonNull(element, "element == null");
+		
+		ParameterArguments.requireNonNullList(childElements, "childElements");
+		
+		final List<Attribute> attributes = element.getAttributesSet();
+		
+		final String name = element.getName();
+		
+		document.linef("<%s%s>", name, Strings.optional(attributes, " ", "", " ", attribute -> attribute.getNameAndValue()));
+		document.indent();
+		
+		for(final Element childElement : childElements) {
+			childElement.write(document);
+		}
+		
+		document.outdent();
+		document.linef("</%s>", name);
+		
+		return document;
 	}
 }

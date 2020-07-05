@@ -18,8 +18,15 @@
  */
 package org.macroing.cel4j.html.model;
 
+import java.util.Objects;
+
 /**
- * A {@code Display} represents a display property in HTML and CSS source code.
+ * A {@code Display} represents a display property in CSS and HTML source code.
+ * <p>
+ * This enum is used as a measure to restrict what can and what cannot be added to an {@link Element} with children. It is also used to write the HTML source code in the correct way.
+ * <p>
+ * The display properties {@code contents}, {@code flex}, {@code grid}, {@code inherit}, {@code initial}, {@code inline-block}, {@code inline-flex}, {@code inline-grid}, {@code inline-table}, {@code list-item}, {@code none}, {@code run-in},
+ * {@code table}, {@code table-caption}, {@code table-cell}, {@code table-column}, {@code table-column-group}, {@code table-header-group}, {@code table-footer-group}, {@code table-row} and {@code table-row-group} are not supported.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
@@ -28,121 +35,40 @@ public enum Display {
 	/**
 	 * A {@code Display} that represents {@code block}.
 	 */
-	BLOCK,
-	
-	/**
-	 * A {@code Display} that represents {@code contents}.
-	 */
-	CONTENTS,
-	
-	/**
-	 * A {@code Display} that represents {@code flex}.
-	 */
-	FLEX,
-	
-	/**
-	 * A {@code Display} that represents {@code grid}.
-	 */
-	GRID,
-	
-	/**
-	 * A {@code Display} that represents {@code initial}.
-	 */
-	INITIAL,
-	
-	/**
-	 * A {@code Display} that represents {@code inherit}.
-	 */
-	INHERIT,
+	BLOCK(),
 	
 	/**
 	 * A {@code Display} that represents {@code inline}.
 	 */
-	INLINE,
-	
-	/**
-	 * A {@code Display} that represents {@code inline-block}.
-	 */
-	INLINE_BLOCK,
-	
-	/**
-	 * A {@code Display} that represents {@code inline-flex}.
-	 */
-	INLINE_FLEX,
-	
-	/**
-	 * A {@code Display} that represents {@code inline-grid}.
-	 */
-	INLINE_GRID,
-	
-	/**
-	 * A {@code Display} that represents {@code inline-table}.
-	 */
-	INLINE_TABLE,
-	
-	/**
-	 * A {@code Display} that represents {@code list-item}.
-	 */
-	LIST_ITEM,
-	
-	/**
-	 * A {@code Display} that represents {@code none}.
-	 */
-	NONE,
-	
-	/**
-	 * A {@code Display} that represents {@code run-in}.
-	 */
-	RUN_IN,
-	
-	/**
-	 * A {@code Display} that represents {@code table}.
-	 */
-	TABLE,
-	
-	/**
-	 * A {@code Display} that represents {@code table-caption}.
-	 */
-	TABLE_CAPTION,
-	
-	/**
-	 * A {@code Display} that represents {@code table-cell}.
-	 */
-	TABLE_CELL,
-	
-	/**
-	 * A {@code Display} that represents {@code table-column}.
-	 */
-	TABLE_COLUMN,
-	
-	/**
-	 * A {@code Display} that represents {@code table-column-group}.
-	 */
-	TABLE_COLUMN_GROUP,
-	
-	/**
-	 * A {@code Display} that represents {@code table-header-group}.
-	 */
-	TABLE_HEADER_GROUP,
-	
-	/**
-	 * A {@code Display} that represents {@code table-footer-group}.
-	 */
-	TABLE_FOOTER_GROUP,
-	
-	/**
-	 * A {@code Display} that represents {@code table-row}.
-	 */
-	TABLE_ROW,
-	
-	/**
-	 * A {@code Display} that represents {@code table-row-group}.
-	 */
-	TABLE_ROW_GROUP;
+	INLINE();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private Display() {
 		
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns {@code true} if, and only if, an {@link Element} with this {@code Display} instance as its display property supports adding an {@code Element} with {@code display} as its display property, {@code false} otherwise.
+	 * <p>
+	 * If {@code display} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param display a {@code Display} instance
+	 * @return {@code true} if, and only if, an {@code Element} with this {@code Display} instance as its display property supports adding an {@code Element} with {@code display} as its display property, {@code false} otherwise
+	 * @throws NullPointerException thrown if, and only if, {@code display} is {@code null}
+	 */
+	public boolean isSupporting(final Display display) {
+		Objects.requireNonNull(display, "display == null");
+		
+		switch(this) {
+			case BLOCK:
+				return true;
+			case INLINE:
+				return display == INLINE;
+			default:
+				return false;
+		}
 	}
 }

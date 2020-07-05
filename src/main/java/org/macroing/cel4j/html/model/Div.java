@@ -63,16 +63,6 @@ public final class Div extends Element {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns the initial {@link Display} associated with this {@code Div} instance.
-	 * 
-	 * @return the initial {@code Display} associated with this {@code Div} instance.
-	 */
-	@Override
-	public Display getDisplayInitial() {
-		return DISPLAY_INITIAL;
-	}
-	
-	/**
 	 * Writes this {@code Div} to a {@link Document}.
 	 * <p>
 	 * Returns the {@code Document}.
@@ -104,10 +94,7 @@ public final class Div extends Element {
 	 */
 	@Override
 	public Document write(final Document document) {
-		document.linef("<%s>", getName());
-		document.linef("</%s>", getName());
-		
-		return document;
+		return write(document, this, getElements());
 	}
 	
 	/**
@@ -178,6 +165,27 @@ public final class Div extends Element {
 	}
 	
 	/**
+	 * Adds {@code element} to this {@code Div} instance.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code element} was added, {@code false} otherwise.
+	 * <p>
+	 * If {@code element} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param element the {@link Element} to add
+	 * @return {@code true} if, and only if, {@code element} was added, {@code false} otherwise
+	 * @throws NullPointerException thrown if, and only if, {@code element} is {@code null}
+	 */
+	public boolean addElement(final Element element) {
+		Objects.requireNonNull(element, "element == null");
+		
+		if(getDisplay().isSupporting(element.getDisplay())) {
+			return this.elements.add(element);
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Compares {@code object} to this {@code Div} instance for equality.
 	 * <p>
 	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code Div}, and their respective values are equal, {@code false} otherwise.
@@ -193,11 +201,28 @@ public final class Div extends Element {
 			return false;
 		} else if(!Objects.equals(getAttributes(), Div.class.cast(object).getAttributes())) {
 			return false;
+		} else if(!Objects.equals(getDisplay(), Div.class.cast(object).getDisplay())) {
+			return false;
 		} else if(!Objects.equals(getElements(), Div.class.cast(object).getElements())) {
 			return false;
 		} else {
 			return true;
 		}
+	}
+	
+	/**
+	 * Removes {@code element} from this {@code Div} instance.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code element} was removed, {@code false} otherwise.
+	 * <p>
+	 * If {@code element} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param element the {@link Element} to remove
+	 * @return {@code true} if, and only if, {@code element} was added, {@code false} otherwise
+	 * @throws NullPointerException thrown if, and only if, {@code element} is {@code null}
+	 */
+	public boolean removeElement(final Element element) {
+		return this.elements.remove(Objects.requireNonNull(element, "element == null"));
 	}
 	
 	/**
@@ -207,6 +232,6 @@ public final class Div extends Element {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(getAttributes(), getElements());
+		return Objects.hash(getAttributes(), getDisplay(), getElements());
 	}
 }
