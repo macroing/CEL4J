@@ -1033,12 +1033,12 @@ final class CodeAttributeReader implements AttributeInfoReader {
 						case Instruction.OPCODE_L_LOAD:
 						case Instruction.OPCODE_L_STORE:
 						case Instruction.OPCODE_RET: {
-							codeAttribute.addInstruction(Instruction.getWide1(opcode, code[i++] & 0xFF, code[i++] & 0xFF));
+							codeAttribute.addInstruction(Instruction.getWide(opcode, code[i++] & 0xFF, code[i++] & 0xFF));
 							
 							break;
 						}
 						case Instruction.OPCODE_I_INC: {
-							codeAttribute.addInstruction(Instruction.getWide2(opcode, code[i++] & 0xFF, code[i++] & 0xFF, code[i++] & 0xFF, code[i++] & 0xFF));
+							codeAttribute.addInstruction(Instruction.getWide(opcode, code[i++] & 0xFF, code[i++] & 0xFF, code[i++] & 0xFF, code[i++] & 0xFF));
 							
 							break;
 						}

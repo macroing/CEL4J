@@ -4,6 +4,11 @@
 
 		* CHANGE:		Update the HTML Model API.
 
+	CEL4J Java Binary:
+
+		* CHANGE:		Update Javadocs.
+		* CHANGE:		Rename the methods getWide1(int, int, int) and getWide2(int, int, int, int, int) in the Instruction class to getWide(int, int, int) and getWide(int, int, int, int, int), respectively.
+
 2020-07-05  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:

@@ -21,7 +21,6 @@ package org.macroing.cel4j.java.binary.classfile.attributeinfo;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Field;//TODO: Update Javadocs!
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -1064,1777 +1063,1777 @@ public final class Instruction implements Node {
 	public static final String MNEMONIC_WIDE = "wide";
 	
 	/**
-	 * The opcode for the instruction arraylength.
+	 * The opcode for the instruction {@code arraylength}.
 	 */
 	public static final int OPCODE_ARRAY_LENGTH = 0xBE;
 	
 	/**
-	 * The opcode for the instruction aaload.
+	 * The opcode for the instruction {@code aaload}.
 	 */
 	public static final int OPCODE_A_A_LOAD = 0x32;
 	
 	/**
-	 * The opcode for the instruction aastore.
+	 * The opcode for the instruction {@code aastore}.
 	 */
 	public static final int OPCODE_A_A_STORE = 0x53;
 	
 	/**
-	 * The opcode for the instruction aconst_null.
+	 * The opcode for the instruction {@code aconst_null}.
 	 */
 	public static final int OPCODE_A_CONST_NULL = 0x01;
 	
 	/**
-	 * The opcode for the instruction aload.
+	 * The opcode for the instruction {@code aload}.
 	 */
 	public static final int OPCODE_A_LOAD = 0x19;
 	
 	/**
-	 * The opcode for the instruction aload_0.
+	 * The opcode for the instruction {@code aload_0}.
 	 */
 	public static final int OPCODE_A_LOAD_0 = 0x2A;
 	
 	/**
-	 * The opcode for the instruction aload_1.
+	 * The opcode for the instruction {@code aload_1}.
 	 */
 	public static final int OPCODE_A_LOAD_1 = 0x2B;
 	
 	/**
-	 * The opcode for the instruction aload_2.
+	 * The opcode for the instruction {@code aload_2}.
 	 */
 	public static final int OPCODE_A_LOAD_2 = 0x2C;
 	
 	/**
-	 * The opcode for the instruction aload_3.
+	 * The opcode for the instruction {@code aload_3}.
 	 */
 	public static final int OPCODE_A_LOAD_3 = 0x2D;
 	
 	/**
-	 * The opcode for the instruction anewarray.
+	 * The opcode for the instruction {@code anewarray}.
 	 */
 	public static final int OPCODE_A_NEW_ARRAY = 0xBD;
 	
 	/**
-	 * The opcode for the instruction areturn.
+	 * The opcode for the instruction {@code areturn}.
 	 */
 	public static final int OPCODE_A_RETURN = 0xB0;
 	
 	/**
-	 * The opcode for the instruction astore.
+	 * The opcode for the instruction {@code astore}.
 	 */
 	public static final int OPCODE_A_STORE = 0x3A;
 	
 	/**
-	 * The opcode for the instruction astore_0.
+	 * The opcode for the instruction {@code astore_0}.
 	 */
 	public static final int OPCODE_A_STORE_0 = 0x4B;
 	
 	/**
-	 * The opcode for the instruction astore_1.
+	 * The opcode for the instruction {@code astore_1}.
 	 */
 	public static final int OPCODE_A_STORE_1 = 0x4C;
 	
 	/**
-	 * The opcode for the instruction astore_2.
+	 * The opcode for the instruction {@code astore_2}.
 	 */
 	public static final int OPCODE_A_STORE_2 = 0x4D;
 	
 	/**
-	 * The opcode for the instruction astore_3.
+	 * The opcode for the instruction {@code astore_3}.
 	 */
 	public static final int OPCODE_A_STORE_3 = 0x4E;
 	
 	/**
-	 * The opcode for the instruction athrow.
+	 * The opcode for the instruction {@code athrow}.
 	 */
 	public static final int OPCODE_A_THROW = 0xBF;
 	
 	/**
-	 * The opcode for the instruction breakpoint.
+	 * The opcode for the instruction {@code breakpoint}.
 	 */
 	public static final int OPCODE_BREAK_POINT = 0xCA;
 	
 	/**
-	 * The opcode for the instruction baload.
+	 * The opcode for the instruction {@code baload}.
 	 */
 	public static final int OPCODE_B_A_LOAD = 0x33;
 	
 	/**
-	 * The opcode for the instruction bastore.
+	 * The opcode for the instruction {@code bastore}.
 	 */
 	public static final int OPCODE_B_A_STORE = 0x54;
 	
 	/**
-	 * The opcode for the instruction bipush.
+	 * The opcode for the instruction {@code bipush}.
 	 */
 	public static final int OPCODE_B_I_PUSH = 0x10;
 	
 	/**
-	 * The opcode for the instruction checkcast.
+	 * The opcode for the instruction {@code checkcast}.
 	 */
 	public static final int OPCODE_CHECK_CAST = 0xC0;
 	
 	/**
-	 * The opcode for the instruction caload.
+	 * The opcode for the instruction {@code caload}.
 	 */
 	public static final int OPCODE_C_A_LOAD = 0x34;
 	
 	/**
-	 * The opcode for the instruction castore.
+	 * The opcode for the instruction {@code castore}.
 	 */
 	public static final int OPCODE_C_A_STORE = 0x55;
 	
 	/**
-	 * The opcode for the instruction dup.
+	 * The opcode for the instruction {@code dup}.
 	 */
 	public static final int OPCODE_DUP = 0x59;
 	
 	/**
-	 * The opcode for the instruction dup2.
+	 * The opcode for the instruction {@code dup2}.
 	 */
 	public static final int OPCODE_DUP_2 = 0x5C;
 	
 	/**
-	 * The opcode for the instruction dup2_x1.
+	 * The opcode for the instruction {@code dup2_x1}.
 	 */
 	public static final int OPCODE_DUP_2_X_1 = 0x5D;
 	
 	/**
-	 * The opcode for the instruction dup2_x2.
+	 * The opcode for the instruction {@code dup2_x2}.
 	 */
 	public static final int OPCODE_DUP_2_X_2 = 0x5E;
 	
 	/**
-	 * The opcode for the instruction dup_x1.
+	 * The opcode for the instruction {@code dup_x1}.
 	 */
 	public static final int OPCODE_DUP_X_1 = 0x5A;
 	
 	/**
-	 * The opcode for the instruction dup_x2.
+	 * The opcode for the instruction {@code dup_x2}.
 	 */
 	public static final int OPCODE_DUP_X_2 = 0x5B;
 	
 	/**
-	 * The opcode for the instruction d2f.
+	 * The opcode for the instruction {@code d2f}.
 	 */
 	public static final int OPCODE_D_2_F = 0x90;
 	
 	/**
-	 * The opcode for the instruction d2i.
+	 * The opcode for the instruction {@code d2i}.
 	 */
 	public static final int OPCODE_D_2_I = 0x8E;
 	
 	/**
-	 * The opcode for the instruction d2l.
+	 * The opcode for the instruction {@code d2l}.
 	 */
 	public static final int OPCODE_D_2_L = 0x8F;
 	
 	/**
-	 * The opcode for the instruction dadd.
+	 * The opcode for the instruction {@code dadd}.
 	 */
 	public static final int OPCODE_D_ADD = 0x63;
 	
 	/**
-	 * The opcode for the instruction daload.
+	 * The opcode for the instruction {@code daload}.
 	 */
 	public static final int OPCODE_D_A_LOAD = 0x31;
 	
 	/**
-	 * The opcode for the instruction dastore.
+	 * The opcode for the instruction {@code dastore}.
 	 */
 	public static final int OPCODE_D_A_STORE = 0x52;
 	
 	/**
-	 * The opcode for the instruction dcmpg.
+	 * The opcode for the instruction {@code dcmpg}.
 	 */
 	public static final int OPCODE_D_CMP_G = 0x98;
 	
 	/**
-	 * The opcode for the instruction dcmpl.
+	 * The opcode for the instruction {@code dcmpl}.
 	 */
 	public static final int OPCODE_D_CMP_L = 0x97;
 	
 	/**
-	 * The opcode for the instruction dconst_0.
+	 * The opcode for the instruction {@code dconst_0}.
 	 */
 	public static final int OPCODE_D_CONST_0 = 0x0E;
 	
 	/**
-	 * The opcode for the instruction dconst_1.
+	 * The opcode for the instruction {@code dconst_1}.
 	 */
 	public static final int OPCODE_D_CONST_1 = 0x0F;
 	
 	/**
-	 * The opcode for the instruction ddiv.
+	 * The opcode for the instruction {@code ddiv}.
 	 */
 	public static final int OPCODE_D_DIV = 0x6F;
 	
 	/**
-	 * The opcode for the instruction dload.
+	 * The opcode for the instruction {@code dload}.
 	 */
 	public static final int OPCODE_D_LOAD = 0x18;
 	
 	/**
-	 * The opcode for the instruction dload_0.
+	 * The opcode for the instruction {@code dload_0}.
 	 */
 	public static final int OPCODE_D_LOAD_0 = 0x26;
 	
 	/**
-	 * The opcode for the instruction dload_1.
+	 * The opcode for the instruction {@code dload_1}.
 	 */
 	public static final int OPCODE_D_LOAD_1 = 0x27;
 	
 	/**
-	 * The opcode for the instruction dload_2.
+	 * The opcode for the instruction {@code dload_2}.
 	 */
 	public static final int OPCODE_D_LOAD_2 = 0x28;
 	
 	/**
-	 * The opcode for the instruction dload_3.
+	 * The opcode for the instruction {@code dload_3}.
 	 */
 	public static final int OPCODE_D_LOAD_3 = 0x29;
 	
 	/**
-	 * The opcode for the instruction dmul.
+	 * The opcode for the instruction {@code dmul}.
 	 */
 	public static final int OPCODE_D_MUL = 0x6B;
 	
 	/**
-	 * The opcode for the instruction dneg.
+	 * The opcode for the instruction {@code dneg}.
 	 */
 	public static final int OPCODE_D_NEG = 0x77;
 	
 	/**
-	 * The opcode for the instruction drem.
+	 * The opcode for the instruction {@code drem}.
 	 */
 	public static final int OPCODE_D_REM = 0x73;
 	
 	/**
-	 * The opcode for the instruction dreturn.
+	 * The opcode for the instruction {@code dreturn}.
 	 */
 	public static final int OPCODE_D_RETURN = 0xAF;
 	
 	/**
-	 * The opcode for the instruction dstore.
+	 * The opcode for the instruction {@code dstore}.
 	 */
 	public static final int OPCODE_D_STORE = 0x39;
 	
 	/**
-	 * The opcode for the instruction dstore_0.
+	 * The opcode for the instruction {@code dstore_0}.
 	 */
 	public static final int OPCODE_D_STORE_0 = 0x47;
 	
 	/**
-	 * The opcode for the instruction dstore_1.
+	 * The opcode for the instruction {@code dstore_1}.
 	 */
 	public static final int OPCODE_D_STORE_1 = 0x48;
 	
 	/**
-	 * The opcode for the instruction dstore_2.
+	 * The opcode for the instruction {@code dstore_2}.
 	 */
 	public static final int OPCODE_D_STORE_2 = 0x49;
 	
 	/**
-	 * The opcode for the instruction dstore_3.
+	 * The opcode for the instruction {@code dstore_3}.
 	 */
 	public static final int OPCODE_D_STORE_3 = 0x4A;
 	
 	/**
-	 * The opcode for the instruction dsub.
+	 * The opcode for the instruction {@code dsub}.
 	 */
 	public static final int OPCODE_D_SUB = 0x67;
 	
 	/**
-	 * The opcode for the instruction f2d.
+	 * The opcode for the instruction {@code f2d}.
 	 */
 	public static final int OPCODE_F_2_D = 0x8D;
 	
 	/**
-	 * The opcode for the instruction f2i.
+	 * The opcode for the instruction {@code f2i}.
 	 */
 	public static final int OPCODE_F_2_I = 0x8B;
 	
 	/**
-	 * The opcode for the instruction f2l.
+	 * The opcode for the instruction {@code f2l}.
 	 */
 	public static final int OPCODE_F_2_L = 0x8C;
 	
 	/**
-	 * The opcode for the instruction dadd.
+	 * The opcode for the instruction {@code fadd}.
 	 */
 	public static final int OPCODE_F_ADD = 0x62;
 	
 	/**
-	 * The opcode for the instruction faload.
+	 * The opcode for the instruction {@code faload}.
 	 */
 	public static final int OPCODE_F_A_LOAD = 0x30;
 	
 	/**
-	 * The opcode for the instruction fastore.
+	 * The opcode for the instruction {@code fastore}.
 	 */
 	public static final int OPCODE_F_A_STORE = 0x51;
 	
 	/**
-	 * The opcode for the instruction fcmpg.
+	 * The opcode for the instruction {@code fcmpg}.
 	 */
 	public static final int OPCODE_F_CMP_G = 0x96;
 	
 	/**
-	 * The opcode for the instruction fcmpl.
+	 * The opcode for the instruction {@code fcmpl}.
 	 */
 	public static final int OPCODE_F_CMP_L = 0x95;
 	
 	/**
-	 * The opcode for the instruction fconst_0.
+	 * The opcode for the instruction {@code fconst_0}.
 	 */
 	public static final int OPCODE_F_CONST_0 = 0x0B;
 	
 	/**
-	 * The opcode for the instruction fconst_1.
+	 * The opcode for the instruction {@code fconst_1}.
 	 */
 	public static final int OPCODE_F_CONST_1 = 0x0C;
 	
 	/**
-	 * The opcode for the instruction fconst_2.
+	 * The opcode for the instruction {@code fconst_2}.
 	 */
 	public static final int OPCODE_F_CONST_2 = 0x0D;
 	
 	/**
-	 * The opcode for the instruction fdiv.
+	 * The opcode for the instruction {@code fdiv}.
 	 */
 	public static final int OPCODE_F_DIV = 0x6E;
 	
 	/**
-	 * The opcode for the instruction fload.
+	 * The opcode for the instruction {@code fload}.
 	 */
 	public static final int OPCODE_F_LOAD = 0x17;
 	
 	/**
-	 * The opcode for the instruction fload_0.
+	 * The opcode for the instruction {@code fload_0}.
 	 */
 	public static final int OPCODE_F_LOAD_0 = 0x22;
 	
 	/**
-	 * The opcode for the instruction fload_1.
+	 * The opcode for the instruction {@code fload_1}.
 	 */
 	public static final int OPCODE_F_LOAD_1 = 0x23;
 	
 	/**
-	 * The opcode for the instruction fload_2.
+	 * The opcode for the instruction {@code fload_2}.
 	 */
 	public static final int OPCODE_F_LOAD_2 = 0x24;
 	
 	/**
-	 * The opcode for the instruction fload_3.
+	 * The opcode for the instruction {@code fload_3}.
 	 */
 	public static final int OPCODE_F_LOAD_3 = 0x25;
 	
 	/**
-	 * The opcode for the instruction fmul.
+	 * The opcode for the instruction {@code fmul}.
 	 */
 	public static final int OPCODE_F_MUL = 0x6A;
 	
 	/**
-	 * The opcode for the instruction fneg.
+	 * The opcode for the instruction {@code fneg}.
 	 */
 	public static final int OPCODE_F_NEG = 0x76;
 	
 	/**
-	 * The opcode for the instruction frem.
+	 * The opcode for the instruction {@code frem}.
 	 */
 	public static final int OPCODE_F_REM = 0x72;
 	
 	/**
-	 * The opcode for the instruction freturn.
+	 * The opcode for the instruction {@code freturn}.
 	 */
 	public static final int OPCODE_F_RETURN = 0xAE;
 	
 	/**
-	 * The opcode for the instruction fstore.
+	 * The opcode for the instruction {@code fstore}.
 	 */
 	public static final int OPCODE_F_STORE = 0x38;
 	
 	/**
-	 * The opcode for the instruction fstore_0.
+	 * The opcode for the instruction {@code fstore_0}.
 	 */
 	public static final int OPCODE_F_STORE_0 = 0x43;
 	
 	/**
-	 * The opcode for the instruction fstore_1.
+	 * The opcode for the instruction {@code fstore_1}.
 	 */
 	public static final int OPCODE_F_STORE_1 = 0x44;
 	
 	/**
-	 * The opcode for the instruction fstore_2.
+	 * The opcode for the instruction {@code fstore_2}.
 	 */
 	public static final int OPCODE_F_STORE_2 = 0x45;
 	
 	/**
-	 * The opcode for the instruction fstore_3.
+	 * The opcode for the instruction {@code fstore_3}.
 	 */
 	public static final int OPCODE_F_STORE_3 = 0x46;
 	
 	/**
-	 * The opcode for the instruction fsub.
+	 * The opcode for the instruction {@code fsub}.
 	 */
 	public static final int OPCODE_F_SUB = 0x66;
 	
 	/**
-	 * The opcode for the instruction getfield.
+	 * The opcode for the instruction {@code getfield}.
 	 */
 	public static final int OPCODE_GET_FIELD = 0xB4;
 	
 	/**
-	 * The opcode for the instruction getstatic.
+	 * The opcode for the instruction {@code getstatic}.
 	 */
 	public static final int OPCODE_GET_STATIC = 0xB2;
 	
 	/**
-	 * The opcode for the instruction goto.
+	 * The opcode for the instruction {@code goto}.
 	 */
 	public static final int OPCODE_GO_TO = 0xA7;
 	
 	/**
-	 * The opcode for the instruction goto_w.
+	 * The opcode for the instruction {@code goto_w}.
 	 */
 	public static final int OPCODE_GO_TO_W = 0xC8;
 	
 	/**
-	 * The opcode for the instruction if_acmpeq.
+	 * The opcode for the instruction {@code if_acmpeq}.
 	 */
 	public static final int OPCODE_IF_A_CMP_EQ = 0xA5;
 	
 	/**
-	 * The opcode for the instruction if_acmpne.
+	 * The opcode for the instruction {@code if_acmpne}.
 	 */
 	public static final int OPCODE_IF_A_CMP_N_E = 0xA6;
 	
 	/**
-	 * The opcode for the instruction ifeq.
+	 * The opcode for the instruction {@code ifeq}.
 	 */
 	public static final int OPCODE_IF_EQ = 0x99;
 	
 	/**
-	 * The opcode for the instruction ifge.
+	 * The opcode for the instruction {@code ifge}.
 	 */
 	public static final int OPCODE_IF_G_E = 0x9C;
 	
 	/**
-	 * The opcode for the instruction ifgt.
+	 * The opcode for the instruction {@code ifgt}.
 	 */
 	public static final int OPCODE_IF_G_T = 0x9D;
 	
 	/**
-	 * The opcode for the instruction if_icmpeq.
+	 * The opcode for the instruction {@code if_icmpeq}.
 	 */
 	public static final int OPCODE_IF_I_CMP_EQ = 0x9F;
 	
 	/**
-	 * The opcode for the instruction if_icmpge.
+	 * The opcode for the instruction {@code if_icmpge}.
 	 */
 	public static final int OPCODE_IF_I_CMP_G_E = 0xA2;
 	
 	/**
-	 * The opcode for the instruction if_icmpgt.
+	 * The opcode for the instruction {@code if_icmpgt}.
 	 */
 	public static final int OPCODE_IF_I_CMP_G_T = 0xA3;
 	
 	/**
-	 * The opcode for the instruction if_icmple.
+	 * The opcode for the instruction {@code if_icmple}.
 	 */
 	public static final int OPCODE_IF_I_CMP_L_E = 0xA4;
 	
 	/**
-	 * The opcode for the instruction if_icmplt.
+	 * The opcode for the instruction {@code if_icmplt}.
 	 */
 	public static final int OPCODE_IF_I_CMP_L_T = 0xA1;
 	
 	/**
-	 * The opcode for the instruction if_icmpne.
+	 * The opcode for the instruction {@code if_icmpne}.
 	 */
 	public static final int OPCODE_IF_I_CMP_N_E = 0xA0;
 	
 	/**
-	 * The opcode for the instruction ifle.
+	 * The opcode for the instruction {@code ifle}.
 	 */
 	public static final int OPCODE_IF_L_E = 0x9E;
 	
 	/**
-	 * The opcode for the instruction iflt.
+	 * The opcode for the instruction {@code iflt}.
 	 */
 	public static final int OPCODE_IF_L_T = 0x9B;
 	
 	/**
-	 * The opcode for the instruction ifnonnull.
+	 * The opcode for the instruction {@code ifnonnull}.
 	 */
 	public static final int OPCODE_IF_NON_NULL = 0xC7;
 	
 	/**
-	 * The opcode for the instruction ifnull.
+	 * The opcode for the instruction {@code ifnull}.
 	 */
 	public static final int OPCODE_IF_NULL = 0xC6;
 	
 	/**
-	 * The opcode for the instruction ifne.
+	 * The opcode for the instruction {@code ifne}.
 	 */
 	public static final int OPCODE_IF_N_E = 0x9A;
 	
 	/**
-	 * The opcode for the instruction impdep1.
+	 * The opcode for the instruction {@code impdep1}.
 	 */
 	public static final int OPCODE_IMP_DEP_1 = 0xFE;
 	
 	/**
-	 * The opcode for the instruction impdep2.
+	 * The opcode for the instruction {@code impdep2}.
 	 */
 	public static final int OPCODE_IMP_DEP_2 = 0xFF;
 	
 	/**
-	 * The opcode for the instruction instanceof.
+	 * The opcode for the instruction {@code instanceof}.
 	 */
 	public static final int OPCODE_INSTANCE_OF = 0xC1;
 	
 	/**
-	 * The opcode for the instruction invokedynamic.
+	 * The opcode for the instruction {@code invokedynamic}.
 	 */
 	public static final int OPCODE_INVOKE_DYNAMIC = 0xBA;
 	
 	/**
-	 * The opcode for the instruction invokeinterface.
+	 * The opcode for the instruction {@code invokeinterface}.
 	 */
 	public static final int OPCODE_INVOKE_INTERFACE = 0xB9;
 	
 	/**
-	 * The opcode for the instruction invokespecial.
+	 * The opcode for the instruction {@code invokespecial}.
 	 */
 	public static final int OPCODE_INVOKE_SPECIAL = 0xB7;
 	
 	/**
-	 * The opcode for the instruction invokestatic.
+	 * The opcode for the instruction {@code invokestatic}.
 	 */
 	public static final int OPCODE_INVOKE_STATIC = 0xB8;
 	
 	/**
-	 * The opcode for the instruction invokevirtual.
+	 * The opcode for the instruction {@code invokevirtual}.
 	 */
 	public static final int OPCODE_INVOKE_VIRTUAL = 0xB6;
 	
 	/**
-	 * The opcode for the instruction i2b.
+	 * The opcode for the instruction {@code i2b}.
 	 */
 	public static final int OPCODE_I_2_B = 0x91;
 	
 	/**
-	 * The opcode for the instruction i2c.
+	 * The opcode for the instruction {@code i2c}.
 	 */
 	public static final int OPCODE_I_2_C = 0x92;
 	
 	/**
-	 * The opcode for the instruction i2d.
+	 * The opcode for the instruction {@code i2d}.
 	 */
 	public static final int OPCODE_I_2_D = 0x87;
 	
 	/**
-	 * The opcode for the instruction i2f.
+	 * The opcode for the instruction {@code i2f}.
 	 */
 	public static final int OPCODE_I_2_F = 0x86;
 	
 	/**
-	 * The opcode for the instruction i2l.
+	 * The opcode for the instruction {@code i2l}.
 	 */
 	public static final int OPCODE_I_2_L = 0x85;
 	
 	/**
-	 * The opcode for the instruction i2s.
+	 * The opcode for the instruction {@code i2s}.
 	 */
 	public static final int OPCODE_I_2_S = 0x93;
 	
 	/**
-	 * The opcode for the instruction iadd.
+	 * The opcode for the instruction {@code iadd}.
 	 */
 	public static final int OPCODE_I_ADD = 0x60;
 	
 	/**
-	 * The opcode for the instruction iand.
+	 * The opcode for the instruction {@code iand}.
 	 */
 	public static final int OPCODE_I_AND = 0x7E;
 	
 	/**
-	 * The opcode for the instruction iaload.
+	 * The opcode for the instruction {@code iaload}.
 	 */
 	public static final int OPCODE_I_A_LOAD = 0x2E;
 	
 	/**
-	 * The opcode for the instruction iastore.
+	 * The opcode for the instruction {@code iastore}.
 	 */
 	public static final int OPCODE_I_A_STORE = 0x4F;
 	
 	/**
-	 * The opcode for the instruction iconst_0.
+	 * The opcode for the instruction {@code iconst_0}.
 	 */
 	public static final int OPCODE_I_CONST_0 = 0x03;
 	
 	/**
-	 * The opcode for the instruction iconst_1.
+	 * The opcode for the instruction {@code iconst_1}.
 	 */
 	public static final int OPCODE_I_CONST_1 = 0x04;
 	
 	/**
-	 * The opcode for the instruction iconst_2.
+	 * The opcode for the instruction {@code iconst_2}.
 	 */
 	public static final int OPCODE_I_CONST_2 = 0x05;
 	
 	/**
-	 * The opcode for the instruction iconst_3.
+	 * The opcode for the instruction {@code iconst_3}.
 	 */
 	public static final int OPCODE_I_CONST_3 = 0x06;
 	
 	/**
-	 * The opcode for the instruction iconst_4.
+	 * The opcode for the instruction {@code iconst_4}.
 	 */
 	public static final int OPCODE_I_CONST_4 = 0x07;
 	
 	/**
-	 * The opcode for the instruction iconst_5.
+	 * The opcode for the instruction {@code iconst_5}.
 	 */
 	public static final int OPCODE_I_CONST_5 = 0x08;
 	
 	/**
-	 * The opcode for the instruction iconst_m1.
+	 * The opcode for the instruction {@code iconst_m1}.
 	 */
 	public static final int OPCODE_I_CONST_M1 = 0x02;
 	
 	/**
-	 * The opcode for the instruction idiv.
+	 * The opcode for the instruction {@code idiv}.
 	 */
 	public static final int OPCODE_I_DIV = 0x6C;
 	
 	/**
-	 * The opcode for the instruction iinc.
+	 * The opcode for the instruction {@code iinc}.
 	 */
 	public static final int OPCODE_I_INC = 0x84;
 	
 	/**
-	 * The opcode for the instruction iload.
+	 * The opcode for the instruction {@code iload}.
 	 */
 	public static final int OPCODE_I_LOAD = 0x15;
 	
 	/**
-	 * The opcode for the instruction iload_0.
+	 * The opcode for the instruction {@code iload_0}.
 	 */
 	public static final int OPCODE_I_LOAD_0 = 0x1A;
 	
 	/**
-	 * The opcode for the instruction iload_1.
+	 * The opcode for the instruction {@code iload_1}.
 	 */
 	public static final int OPCODE_I_LOAD_1 = 0x1B;
 	
 	/**
-	 * The opcode for the instruction iload_2.
+	 * The opcode for the instruction {@code iload_2}.
 	 */
 	public static final int OPCODE_I_LOAD_2 = 0x1C;
 	
 	/**
-	 * The opcode for the instruction iload_3.
+	 * The opcode for the instruction {@code iload_3}.
 	 */
 	public static final int OPCODE_I_LOAD_3 = 0x1D;
 	
 	/**
-	 * The opcode for the instruction imul.
+	 * The opcode for the instruction {@code imul}.
 	 */
 	public static final int OPCODE_I_MUL = 0x68;
 	
 	/**
-	 * The opcode for the instruction ineg.
+	 * The opcode for the instruction {@code ineg}.
 	 */
 	public static final int OPCODE_I_NEG = 0x74;
 	
 	/**
-	 * The opcode for the instruction ior.
+	 * The opcode for the instruction {@code ior}.
 	 */
 	public static final int OPCODE_I_OR = 0x80;
 	
 	/**
-	 * The opcode for the instruction irem.
+	 * The opcode for the instruction {@code irem}.
 	 */
 	public static final int OPCODE_I_REM = 0x70;
 	
 	/**
-	 * The opcode for the instruction ireturn.
+	 * The opcode for the instruction {@code ireturn}.
 	 */
 	public static final int OPCODE_I_RETURN = 0xAC;
 	
 	/**
-	 * The opcode for the instruction ishl.
+	 * The opcode for the instruction {@code ishl}.
 	 */
 	public static final int OPCODE_I_SH_L = 0x78;
 	
 	/**
-	 * The opcode for the instruction ishr.
+	 * The opcode for the instruction {@code ishr}.
 	 */
 	public static final int OPCODE_I_SH_R = 0x7A;
 	
 	/**
-	 * The opcode for the instruction istore.
+	 * The opcode for the instruction {@code istore}.
 	 */
 	public static final int OPCODE_I_STORE = 0x36;
 	
 	/**
-	 * The opcode for the instruction istore_0.
+	 * The opcode for the instruction {@code istore_0}.
 	 */
 	public static final int OPCODE_I_STORE_0 = 0x3B;
 	
 	/**
-	 * The opcode for the instruction istore_1.
+	 * The opcode for the instruction {@code istore_1}.
 	 */
 	public static final int OPCODE_I_STORE_1 = 0x3C;
 	
 	/**
-	 * The opcode for the instruction istore_2.
+	 * The opcode for the instruction {@code istore_2}.
 	 */
 	public static final int OPCODE_I_STORE_2 = 0x3D;
 	
 	/**
-	 * The opcode for the instruction istore_3.
+	 * The opcode for the instruction {@code istore_3}.
 	 */
 	public static final int OPCODE_I_STORE_3 = 0x3E;
 	
 	/**
-	 * The opcode for the instruction isub.
+	 * The opcode for the instruction {@code isub}.
 	 */
 	public static final int OPCODE_I_SUB = 0x64;
 	
 	/**
-	 * The opcode for the instruction iushr.
+	 * The opcode for the instruction {@code iushr}.
 	 */
 	public static final int OPCODE_I_U_SH_R = 0x7C;
 	
 	/**
-	 * The opcode for the instruction ixor.
+	 * The opcode for the instruction {@code ixor}.
 	 */
 	public static final int OPCODE_I_XOR = 0x82;
 	
 	/**
-	 * The opcode for the instruction jsr.
+	 * The opcode for the instruction {@code jsr}.
 	 */
 	public static final int OPCODE_J_S_R = 0xA8;
 	
 	/**
-	 * The opcode for the instruction jsr_w.
+	 * The opcode for the instruction {@code jsr_w}.
 	 */
 	public static final int OPCODE_J_S_R_W = 0xC9;
 	
 	/**
-	 * The opcode for the instruction lookupswitch.
+	 * The opcode for the instruction {@code lookupswitch}.
 	 */
 	public static final int OPCODE_LOOKUP_SWITCH = 0xAB;
 	
 	/**
-	 * The opcode for the instruction l2d.
+	 * The opcode for the instruction {@code l2d}.
 	 */
 	public static final int OPCODE_L_2_D = 0x8A;
 	
 	/**
-	 * The opcode for the instruction l2f.
+	 * The opcode for the instruction {@code l2f}.
 	 */
 	public static final int OPCODE_L_2_F = 0x89;
 	
 	/**
-	 * The opcode for the instruction l2i.
+	 * The opcode for the instruction {@code l2i}.
 	 */
 	public static final int OPCODE_L_2_I = 0x88;
 	
 	/**
-	 * The opcode for the instruction ladd.
+	 * The opcode for the instruction {@code ladd}.
 	 */
 	public static final int OPCODE_L_ADD = 0x61;
 	
 	/**
-	 * The opcode for the instruction land.
+	 * The opcode for the instruction {@code land}.
 	 */
 	public static final int OPCODE_L_AND = 0x7F;
 	
 	/**
-	 * The opcode for the instruction laload.
+	 * The opcode for the instruction {@code laload}.
 	 */
 	public static final int OPCODE_L_A_LOAD = 0x2F;
 	
 	/**
-	 * The opcode for the instruction lastore.
+	 * The opcode for the instruction {@code lastore}.
 	 */
 	public static final int OPCODE_L_A_STORE = 0x50;
 	
 	/**
-	 * The opcode for the instruction lcmp.
+	 * The opcode for the instruction {@code lcmp}.
 	 */
 	public static final int OPCODE_L_CMP = 0x94;
 	
 	/**
-	 * The opcode for the instruction lconst_0.
+	 * The opcode for the instruction {@code lconst_0}.
 	 */
 	public static final int OPCODE_L_CONST_0 = 0x09;
 	
 	/**
-	 * The opcode for the instruction lconst_1.
+	 * The opcode for the instruction {@code lconst_1}.
 	 */
 	public static final int OPCODE_L_CONST_1 = 0x0A;
 	
 	/**
-	 * The opcode for the instruction ldiv.
+	 * The opcode for the instruction {@code ldiv}.
 	 */
 	public static final int OPCODE_L_DIV = 0x6D;
 	
 	/**
-	 * The opcode for the instruction ldc.
+	 * The opcode for the instruction {@code ldc}.
 	 */
 	public static final int OPCODE_L_D_C = 0x12;
 	
 	/**
-	 * The opcode for the instruction ldc2_w.
+	 * The opcode for the instruction {@code ldc2_w}.
 	 */
 	public static final int OPCODE_L_D_C_2_W = 0x14;
 	
 	/**
-	 * The opcode for the instruction ldc_w.
+	 * The opcode for the instruction {@code ldc_w}.
 	 */
 	public static final int OPCODE_L_D_C_W = 0x13;
 	
 	/**
-	 * The opcode for the instruction lload.
+	 * The opcode for the instruction {@code lload}.
 	 */
 	public static final int OPCODE_L_LOAD = 0x16;
 	
 	/**
-	 * The opcode for the instruction lload_0.
+	 * The opcode for the instruction {@code lload_0}.
 	 */
 	public static final int OPCODE_L_LOAD_0 = 0x1E;
 	
 	/**
-	 * The opcode for the instruction lload_1.
+	 * The opcode for the instruction {@code lload_1}.
 	 */
 	public static final int OPCODE_L_LOAD_1 = 0x1F;
 	
 	/**
-	 * The opcode for the instruction lload_2.
+	 * The opcode for the instruction {@code lload_2}.
 	 */
 	public static final int OPCODE_L_LOAD_2 = 0x20;
 	
 	/**
-	 * The opcode for the instruction lload_3.
+	 * The opcode for the instruction {@code lload_3}.
 	 */
 	public static final int OPCODE_L_LOAD_3 = 0x21;
 	
 	/**
-	 * The opcode for the instruction lmul.
+	 * The opcode for the instruction {@code lmul}.
 	 */
 	public static final int OPCODE_L_MUL = 0x69;
 	
 	/**
-	 * The opcode for the instruction lneg.
+	 * The opcode for the instruction {@code lneg}.
 	 */
 	public static final int OPCODE_L_NEG = 0x75;
 	
 	/**
-	 * The opcode for the instruction lor.
+	 * The opcode for the instruction {@code lor}.
 	 */
 	public static final int OPCODE_L_OR = 0x81;
 	
 	/**
-	 * The opcode for the instruction lrem.
+	 * The opcode for the instruction {@code lrem}.
 	 */
 	public static final int OPCODE_L_REM = 0x71;
 	
 	/**
-	 * The opcode for the instruction lreturn.
+	 * The opcode for the instruction {@code lreturn}.
 	 */
 	public static final int OPCODE_L_RETURN = 0xAD;
 	
 	/**
-	 * The opcode for the instruction lshl.
+	 * The opcode for the instruction {@code lshl}.
 	 */
 	public static final int OPCODE_L_SH_L = 0x79;
 	
 	/**
-	 * The opcode for the instruction lshr.
+	 * The opcode for the instruction {@code lshr}.
 	 */
 	public static final int OPCODE_L_SH_R = 0x7B;
 	
 	/**
-	 * The opcode for the instruction lstore.
+	 * The opcode for the instruction {@code lstore}.
 	 */
 	public static final int OPCODE_L_STORE = 0x37;
 	
 	/**
-	 * The opcode for the instruction lstore_0.
+	 * The opcode for the instruction {@code lstore_0}.
 	 */
 	public static final int OPCODE_L_STORE_0 = 0x3F;
 	
 	/**
-	 * The opcode for the instruction lstore_1.
+	 * The opcode for the instruction {@code lstore_1}.
 	 */
 	public static final int OPCODE_L_STORE_1 = 0x40;
 	
 	/**
-	 * The opcode for the instruction lstore_2.
+	 * The opcode for the instruction {@code lstore_2}.
 	 */
 	public static final int OPCODE_L_STORE_2 = 0x41;
 	
 	/**
-	 * The opcode for the instruction lstore_3.
+	 * The opcode for the instruction {@code lstore_3}.
 	 */
 	public static final int OPCODE_L_STORE_3 = 0x42;
 	
 	/**
-	 * The opcode for the instruction lsub.
+	 * The opcode for the instruction {@code lsub}.
 	 */
 	public static final int OPCODE_L_SUB = 0x65;
 	
 	/**
-	 * The opcode for the instruction lushr.
+	 * The opcode for the instruction {@code lushr}.
 	 */
 	public static final int OPCODE_L_U_SH_R = 0x7D;
 	
 	/**
-	 * The opcode for the instruction lxor.
+	 * The opcode for the instruction {@code lxor}.
 	 */
 	public static final int OPCODE_L_XOR = 0x83;
 	
 	/**
-	 * The opcode for the instruction monitorenter.
+	 * The opcode for the instruction {@code monitorenter}.
 	 */
 	public static final int OPCODE_MONITOR_ENTER = 0xC2;
 	
 	/**
-	 * The opcode for the instruction monitorexit.
+	 * The opcode for the instruction {@code monitorexit}.
 	 */
 	public static final int OPCODE_MONITOR_EXIT = 0xC3;
 	
 	/**
-	 * The opcode for the instruction multianewarray.
+	 * The opcode for the instruction {@code multianewarray}.
 	 */
 	public static final int OPCODE_MULTI_A_NEW_ARRAY = 0xC5;
 	
 	/**
-	 * The opcode for the instruction new.
+	 * The opcode for the instruction {@code new}.
 	 */
 	public static final int OPCODE_NEW = 0xBB;
 	
 	/**
-	 * The opcode for the instruction newarray.
+	 * The opcode for the instruction {@code newarray}.
 	 */
 	public static final int OPCODE_NEW_ARRAY = 0xBC;
 	
 	/**
-	 * The opcode for the instruction nop.
+	 * The opcode for the instruction {@code nop}.
 	 */
 	public static final int OPCODE_NOP = 0x00;
 	
 	/**
-	 * The opcode for the instruction pop.
+	 * The opcode for the instruction {@code pop}.
 	 */
 	public static final int OPCODE_POP = 0x57;
 	
 	/**
-	 * The opcode for the instruction pop2.
+	 * The opcode for the instruction {@code pop2}.
 	 */
 	public static final int OPCODE_POP_2 = 0x58;
 	
 	/**
-	 * The opcode for the instruction putfield.
+	 * The opcode for the instruction {@code putfield}.
 	 */
 	public static final int OPCODE_PUT_FIELD = 0xB5;
 	
 	/**
-	 * The opcode for the instruction putstatic.
+	 * The opcode for the instruction {@code putstatic}.
 	 */
 	public static final int OPCODE_PUT_STATIC = 0xB3;
 	
 	/**
-	 * The opcode for the instruction ret.
+	 * The opcode for the instruction {@code ret}.
 	 */
 	public static final int OPCODE_RET = 0xA9;
 	
 	/**
-	 * The opcode for the instruction return.
+	 * The opcode for the instruction {@code return}.
 	 */
 	public static final int OPCODE_RETURN = 0xB1;
 	
 	/**
-	 * The opcode for the instruction swap.
+	 * The opcode for the instruction {@code swap}.
 	 */
 	public static final int OPCODE_SWAP = 0x5F;
 	
 	/**
-	 * The opcode for the instruction saload.
+	 * The opcode for the instruction {@code saload}.
 	 */
 	public static final int OPCODE_S_A_LOAD = 0x35;
 	
 	/**
-	 * The opcode for the instruction sastore.
+	 * The opcode for the instruction {@code sastore}.
 	 */
 	public static final int OPCODE_S_A_STORE = 0x56;
 	
 	/**
-	 * The opcode for the instruction sipush.
+	 * The opcode for the instruction {@code sipush}.
 	 */
 	public static final int OPCODE_S_I_PUSH = 0x11;
 	
 	/**
-	 * The opcode for the instruction tableswitch.
+	 * The opcode for the instruction {@code tableswitch}.
 	 */
 	public static final int OPCODE_TABLE_SWITCH = 0xAA;
 	
 	/**
-	 * The opcode for the instruction wide.
+	 * The opcode for the instruction {@code wide}.
 	 */
 	public static final int OPCODE_WIDE = 0xC4;
 	
 	/**
-	 * Represents the instruction arraylength.
+	 * Represents the instruction {@code arraylength}.
 	 */
 	public static final Instruction ARRAY_LENGTH = valueOf(OPCODE_ARRAY_LENGTH, MNEMONIC_ARRAY_LENGTH);
 	
 	/**
-	 * Represents the instruction aaload.
+	 * Represents the instruction {@code aaload}.
 	 */
 	public static final Instruction A_A_LOAD = valueOf(OPCODE_A_A_LOAD, MNEMONIC_A_A_LOAD);
 	
 	/**
-	 * Represents the instruction aastore.
+	 * Represents the instruction {@code aastore}.
 	 */
 	public static final Instruction A_A_STORE = valueOf(OPCODE_A_A_STORE, MNEMONIC_A_A_STORE);
 	
 	/**
-	 * Represents the instruction aconst_null.
+	 * Represents the instruction {@code aconst_null}.
 	 */
 	public static final Instruction A_CONST_NULL = valueOf(OPCODE_A_CONST_NULL, MNEMONIC_A_CONST_NULL);
 	
 	/**
-	 * Represents the instruction aload_0.
+	 * Represents the instruction {@code aload_0}.
 	 */
 	public static final Instruction A_LOAD_0 = valueOf(OPCODE_A_LOAD_0, MNEMONIC_A_LOAD_0);
 	
 	/**
-	 * Represents the instruction aload_1.
+	 * Represents the instruction {@code aload_1}.
 	 */
 	public static final Instruction A_LOAD_1 = valueOf(OPCODE_A_LOAD_1, MNEMONIC_A_LOAD_1);
 	
 	/**
-	 * Represents the instruction aload_2.
+	 * Represents the instruction {@code aload_2}.
 	 */
 	public static final Instruction A_LOAD_2 = valueOf(OPCODE_A_LOAD_2, MNEMONIC_A_LOAD_2);
 	
 	/**
-	 * Represents the instruction aload_3.
+	 * Represents the instruction {@code aload_3}.
 	 */
 	public static final Instruction A_LOAD_3 = valueOf(OPCODE_A_LOAD_3, MNEMONIC_A_LOAD_3);
 	
 	/**
-	 * Represents the instruction areturn.
+	 * Represents the instruction {@code areturn}.
 	 */
 	public static final Instruction A_RETURN = valueOf(OPCODE_A_RETURN, MNEMONIC_A_RETURN);
 	
 	/**
-	 * Represents the instruction astore_0.
+	 * Represents the instruction {@code astore_0}.
 	 */
 	public static final Instruction A_STORE_0 = valueOf(OPCODE_A_STORE_0, MNEMONIC_A_STORE_0);
 	
 	/**
-	 * Represents the instruction astore_1.
+	 * Represents the instruction {@code astore_1}.
 	 */
 	public static final Instruction A_STORE_1 = valueOf(OPCODE_A_STORE_1, MNEMONIC_A_STORE_1);
 	
 	/**
-	 * Represents the instruction astore_2.
+	 * Represents the instruction {@code astore_2}.
 	 */
 	public static final Instruction A_STORE_2 = valueOf(OPCODE_A_STORE_2, MNEMONIC_A_STORE_2);
 	
 	/**
-	 * Represents the instruction astore_3.
+	 * Represents the instruction {@code astore_3}.
 	 */
 	public static final Instruction A_STORE_3 = valueOf(OPCODE_A_STORE_3, MNEMONIC_A_STORE_3);
 	
 	/**
-	 * Represents the instruction athrow.
+	 * Represents the instruction {@code athrow}.
 	 */
 	public static final Instruction A_THROW = valueOf(OPCODE_A_THROW, MNEMONIC_A_THROW);
 	
 	/**
-	 * Represents the instruction breakpoint.
+	 * Represents the instruction {@code breakpoint}.
 	 */
 	public static final Instruction BREAK_POINT = valueOf(OPCODE_BREAK_POINT, MNEMONIC_BREAK_POINT);
 	
 	/**
-	 * Represents the instruction baload.
+	 * Represents the instruction {@code baload}.
 	 */
 	public static final Instruction B_A_LOAD = valueOf(OPCODE_B_A_LOAD, MNEMONIC_B_A_LOAD);
 	
 	/**
-	 * Represents the instruction bastore.
+	 * Represents the instruction {@code bastore}.
 	 */
 	public static final Instruction B_A_STORE = valueOf(OPCODE_B_A_STORE, MNEMONIC_B_A_STORE);
 	
 	/**
-	 * Represents the instruction caload.
+	 * Represents the instruction {@code caload}.
 	 */
 	public static final Instruction C_A_LOAD = valueOf(OPCODE_C_A_LOAD, MNEMONIC_C_A_LOAD);
 	
 	/**
-	 * Represents the instruction castore.
+	 * Represents the instruction {@code castore}.
 	 */
 	public static final Instruction C_A_STORE = valueOf(OPCODE_C_A_STORE, MNEMONIC_C_A_STORE);
 	
 	/**
-	 * Represents the instruction dup.
+	 * Represents the instruction {@code dup}.
 	 */
 	public static final Instruction DUP = valueOf(OPCODE_DUP, MNEMONIC_DUP);
 	
 	/**
-	 * Represents the instruction dup2.
+	 * Represents the instruction {@code dup2}.
 	 */
 	public static final Instruction DUP_2 = valueOf(OPCODE_DUP_2, MNEMONIC_DUP_2);
 	
 	/**
-	 * Represents the instruction dup2_x1.
+	 * Represents the instruction {@code dup2_x1}.
 	 */
 	public static final Instruction DUP_2_X_1 = valueOf(OPCODE_DUP_2_X_1, MNEMONIC_DUP_2_X_1);
 	
 	/**
-	 * Represents the instruction dup2_x2.
+	 * Represents the instruction {@code dup2_x2}.
 	 */
 	public static final Instruction DUP_2_X_2 = valueOf(OPCODE_DUP_2_X_2, MNEMONIC_DUP_2_X_2);
 	
 	/**
-	 * Represents the instruction dup_x1.
+	 * Represents the instruction {@code dup_x1}.
 	 */
 	public static final Instruction DUP_X_1 = valueOf(OPCODE_DUP_X_1, MNEMONIC_DUP_X_1);
 	
 	/**
-	 * Represents the instruction dup_x2.
+	 * Represents the instruction {@code dup_x2}.
 	 */
 	public static final Instruction DUP_X_2 = valueOf(OPCODE_DUP_X_2, MNEMONIC_DUP_X_2);
 	
 	/**
-	 * Represents the instruction d2f.
+	 * Represents the instruction {@code d2f}.
 	 */
 	public static final Instruction D_2_F = valueOf(OPCODE_D_2_F, MNEMONIC_D_2_F);
 	
 	/**
-	 * Represents the instruction d2i.
+	 * Represents the instruction {@code d2i}.
 	 */
 	public static final Instruction D_2_I = valueOf(OPCODE_D_2_I, MNEMONIC_D_2_I);
 	
 	/**
-	 * Represents the instruction d2l.
+	 * Represents the instruction {@code d2l}.
 	 */
 	public static final Instruction D_2_L = valueOf(OPCODE_D_2_L, MNEMONIC_D_2_L);
 	
 	/**
-	 * Represents the instruction dadd.
+	 * Represents the instruction {@code dadd}.
 	 */
 	public static final Instruction D_ADD = valueOf(OPCODE_D_ADD, MNEMONIC_D_ADD);
 	
 	/**
-	 * Represents the instruction daload.
+	 * Represents the instruction {@code daload}.
 	 */
 	public static final Instruction D_A_LOAD = valueOf(OPCODE_D_A_LOAD, MNEMONIC_D_A_LOAD);
 	
 	/**
-	 * Represents the instruction dastore.
+	 * Represents the instruction {@code dastore}.
 	 */
 	public static final Instruction D_A_STORE = valueOf(OPCODE_D_A_STORE, MNEMONIC_D_A_STORE);
 	
 	/**
-	 * Represents the instruction dcmpg.
+	 * Represents the instruction {@code dcmpg}.
 	 */
 	public static final Instruction D_CMP_G = valueOf(OPCODE_D_CMP_G, MNEMONIC_D_CMP_G);
 	
 	/**
-	 * Represents the instruction dcmpl.
+	 * Represents the instruction {@code dcmpl}.
 	 */
 	public static final Instruction D_CMP_L = valueOf(OPCODE_D_CMP_L, MNEMONIC_D_CMP_L);
 	
 	/**
-	 * Represents the instruction dconst_0.
+	 * Represents the instruction {@code dconst_0}.
 	 */
 	public static final Instruction D_CONST_0 = valueOf(OPCODE_D_CONST_0, MNEMONIC_D_CONST_0);
 	
 	/**
-	 * Represents the instruction dconst_1.
+	 * Represents the instruction {@code dconst_1}.
 	 */
 	public static final Instruction D_CONST_1 = valueOf(OPCODE_D_CONST_1, MNEMONIC_D_CONST_1);
 	
 	/**
-	 * Represents the instruction ddiv.
+	 * Represents the instruction {@code ddiv}.
 	 */
 	public static final Instruction D_DIV = valueOf(OPCODE_D_DIV, MNEMONIC_D_DIV);
 	
 	/**
-	 * Represents the instruction dload_0.
+	 * Represents the instruction {@code dload_0}.
 	 */
 	public static final Instruction D_LOAD_0 = valueOf(OPCODE_D_LOAD_0, MNEMONIC_D_LOAD_0);
 	
 	/**
-	 * Represents the instruction dload_1.
+	 * Represents the instruction {@code dload_1}.
 	 */
 	public static final Instruction D_LOAD_1 = valueOf(OPCODE_D_LOAD_1, MNEMONIC_D_LOAD_1);
 	
 	/**
-	 * Represents the instruction dload_2.
+	 * Represents the instruction {@code dload_2}.
 	 */
 	public static final Instruction D_LOAD_2 = valueOf(OPCODE_D_LOAD_2, MNEMONIC_D_LOAD_2);
 	
 	/**
-	 * Represents the instruction dload_3.
+	 * Represents the instruction {@code dload_3}.
 	 */
 	public static final Instruction D_LOAD_3 = valueOf(OPCODE_D_LOAD_3, MNEMONIC_D_LOAD_3);
 	
 	/**
-	 * Represents the instruction dmul.
+	 * Represents the instruction {@code dmul}.
 	 */
 	public static final Instruction D_MUL = valueOf(OPCODE_D_MUL, MNEMONIC_D_MUL);
 	
 	/**
-	 * Represents the instruction dneg.
+	 * Represents the instruction {@code dneg}.
 	 */
 	public static final Instruction D_NEG = valueOf(OPCODE_D_NEG, MNEMONIC_D_NEG);
 	
 	/**
-	 * Represents the instruction drem.
+	 * Represents the instruction {@code drem}.
 	 */
 	public static final Instruction D_REM = valueOf(OPCODE_D_REM, MNEMONIC_D_REM);
 	
 	/**
-	 * Represents the instruction dreturn.
+	 * Represents the instruction {@code dreturn}.
 	 */
 	public static final Instruction D_RETURN = valueOf(OPCODE_D_RETURN, MNEMONIC_D_RETURN);
 	
 	/**
-	 * Represents the instruction dstore_0.
+	 * Represents the instruction {@code dstore_0}.
 	 */
 	public static final Instruction D_STORE_0 = valueOf(OPCODE_D_STORE_0, MNEMONIC_D_STORE_0);
 	
 	/**
-	 * Represents the instruction dstore_1.
+	 * Represents the instruction {@code dstore_1}.
 	 */
 	public static final Instruction D_STORE_1 = valueOf(OPCODE_D_STORE_1, MNEMONIC_D_STORE_1);
 	
 	/**
-	 * Represents the instruction dstore_2.
+	 * Represents the instruction {@code dstore_2}.
 	 */
 	public static final Instruction D_STORE_2 = valueOf(OPCODE_D_STORE_2, MNEMONIC_D_STORE_2);
 	
 	/**
-	 * Represents the instruction dstore_3.
+	 * Represents the instruction {@code dstore_3}.
 	 */
 	public static final Instruction D_STORE_3 = valueOf(OPCODE_D_STORE_3, MNEMONIC_D_STORE_3);
 	
 	/**
-	 * Represents the instruction dsub.
+	 * Represents the instruction {@code dsub}.
 	 */
 	public static final Instruction D_SUB = valueOf(OPCODE_D_SUB, MNEMONIC_D_SUB);
 	
 	/**
-	 * Represents the instruction f2d.
+	 * Represents the instruction {@code f2d}.
 	 */
 	public static final Instruction F_2_D = valueOf(OPCODE_F_2_D, MNEMONIC_F_2_D);
 	
 	/**
-	 * Represents the instruction f2i.
+	 * Represents the instruction {@code f2i}.
 	 */
 	public static final Instruction F_2_I = valueOf(OPCODE_F_2_I, MNEMONIC_F_2_I);
 	
 	/**
-	 * Represents the instruction f2l.
+	 * Represents the instruction {@code f2l}.
 	 */
 	public static final Instruction F_2_L = valueOf(OPCODE_F_2_L, MNEMONIC_F_2_L);
 	
 	/**
-	 * Represents the instruction dadd.
+	 * Represents the instruction {@code dadd}.
 	 */
 	public static final Instruction F_ADD = valueOf(OPCODE_F_ADD, MNEMONIC_F_ADD);
 	
 	/**
-	 * Represents the instruction faload.
+	 * Represents the instruction {@code faload}.
 	 */
 	public static final Instruction F_A_LOAD = valueOf(OPCODE_F_A_LOAD, MNEMONIC_F_A_LOAD);
 	
 	/**
-	 * Represents the instruction fastore.
+	 * Represents the instruction {@code fastore}.
 	 */
 	public static final Instruction F_A_STORE = valueOf(OPCODE_F_A_STORE, MNEMONIC_F_A_STORE);
 	
 	/**
-	 * Represents the instruction fcmpg.
+	 * Represents the instruction {@code fcmpg}.
 	 */
 	public static final Instruction F_CMP_G = valueOf(OPCODE_F_CMP_G, MNEMONIC_F_CMP_G);
 	
 	/**
-	 * Represents the instruction fcmpl.
+	 * Represents the instruction {@code fcmpl}.
 	 */
 	public static final Instruction F_CMP_L = valueOf(OPCODE_F_CMP_L, MNEMONIC_F_CMP_L);
 	
 	/**
-	 * Represents the instruction fconst_0.
+	 * Represents the instruction {@code fconst_0}.
 	 */
 	public static final Instruction F_CONST_0 = valueOf(OPCODE_F_CONST_0, MNEMONIC_F_CONST_0);
 	
 	/**
-	 * Represents the instruction fconst_1.
+	 * Represents the instruction {@code fconst_1}.
 	 */
 	public static final Instruction F_CONST_1 = valueOf(OPCODE_F_CONST_1, MNEMONIC_F_CONST_1);
 	
 	/**
-	 * Represents the instruction fconst_2.
+	 * Represents the instruction {@code fconst_2}.
 	 */
 	public static final Instruction F_CONST_2 = valueOf(OPCODE_F_CONST_2, MNEMONIC_F_CONST_2);
 	
 	/**
-	 * Represents the instruction fdiv.
+	 * Represents the instruction {@code fdiv}.
 	 */
 	public static final Instruction F_DIV = valueOf(OPCODE_F_DIV, MNEMONIC_F_DIV);
 	
 	/**
-	 * Represents the instruction fload_0.
+	 * Represents the instruction {@code fload_0}.
 	 */
 	public static final Instruction F_LOAD_0 = valueOf(OPCODE_F_LOAD_0, MNEMONIC_F_LOAD_0);
 	
 	/**
-	 * Represents the instruction fload_1.
+	 * Represents the instruction {@code fload_1}.
 	 */
 	public static final Instruction F_LOAD_1 = valueOf(OPCODE_F_LOAD_1, MNEMONIC_F_LOAD_1);
 	
 	/**
-	 * Represents the instruction fload_2.
+	 * Represents the instruction {@code fload_2}.
 	 */
 	public static final Instruction F_LOAD_2 = valueOf(OPCODE_F_LOAD_2, MNEMONIC_F_LOAD_2);
 	
 	/**
-	 * Represents the instruction fload_3.
+	 * Represents the instruction {@code fload_3}.
 	 */
 	public static final Instruction F_LOAD_3 = valueOf(OPCODE_F_LOAD_3, MNEMONIC_F_LOAD_3);
 	
 	/**
-	 * Represents the instruction fmul.
+	 * Represents the instruction {@code fmul}.
 	 */
 	public static final Instruction F_MUL = valueOf(OPCODE_F_MUL, MNEMONIC_F_MUL);
 	
 	/**
-	 * Represents the instruction fneg.
+	 * Represents the instruction {@code fneg}.
 	 */
 	public static final Instruction F_NEG = valueOf(OPCODE_F_NEG, MNEMONIC_F_NEG);
 	
 	/**
-	 * Represents the instruction frem.
+	 * Represents the instruction {@code frem}.
 	 */
 	public static final Instruction F_REM = valueOf(OPCODE_F_REM, MNEMONIC_F_REM);
 	
 	/**
-	 * Represents the instruction freturn.
+	 * Represents the instruction {@code freturn}.
 	 */
 	public static final Instruction F_RETURN = valueOf(OPCODE_F_RETURN, MNEMONIC_F_RETURN);
 	
 	/**
-	 * Represents the instruction fstore_0.
+	 * Represents the instruction {@code fstore_0}.
 	 */
 	public static final Instruction F_STORE_0 = valueOf(OPCODE_F_STORE_0, MNEMONIC_F_STORE_0);
 	
 	/**
-	 * Represents the instruction fstore_1.
+	 * Represents the instruction {@code fstore_1}.
 	 */
 	public static final Instruction F_STORE_1 = valueOf(OPCODE_F_STORE_1, MNEMONIC_F_STORE_1);
 	
 	/**
-	 * Represents the instruction fstore_2.
+	 * Represents the instruction {@code fstore_2}.
 	 */
 	public static final Instruction F_STORE_2 = valueOf(OPCODE_F_STORE_2, MNEMONIC_F_STORE_2);
 	
 	/**
-	 * Represents the instruction fstore_3.
+	 * Represents the instruction {@code fstore_3}.
 	 */
 	public static final Instruction F_STORE_3 = valueOf(OPCODE_F_STORE_3, MNEMONIC_F_STORE_3);
 	
 	/**
-	 * Represents the instruction fsub.
+	 * Represents the instruction {@code fsub}.
 	 */
 	public static final Instruction F_SUB = valueOf(OPCODE_F_SUB, MNEMONIC_F_SUB);
 	
 	/**
-	 * Represents the instruction impdep1.
+	 * Represents the instruction {@code impdep1}.
 	 */
 	public static final Instruction IMP_DEP_1 = valueOf(OPCODE_IMP_DEP_1, MNEMONIC_IMP_DEP_1);
 	
 	/**
-	 * Represents the instruction impdep2.
+	 * Represents the instruction {@code impdep2}.
 	 */
 	public static final Instruction IMP_DEP_2 = valueOf(OPCODE_IMP_DEP_2, MNEMONIC_IMP_DEP_2);
 	
 	/**
-	 * Represents the instruction i2b.
+	 * Represents the instruction {@code i2b}.
 	 */
 	public static final Instruction I_2_B = valueOf(OPCODE_I_2_B, MNEMONIC_I_2_B);
 	
 	/**
-	 * Represents the instruction i2c.
+	 * Represents the instruction {@code i2c}.
 	 */
 	public static final Instruction I_2_C = valueOf(OPCODE_I_2_C, MNEMONIC_I_2_C);
 	
 	/**
-	 * Represents the instruction i2d.
+	 * Represents the instruction {@code i2d}.
 	 */
 	public static final Instruction I_2_D = valueOf(OPCODE_I_2_D, MNEMONIC_I_2_D);
 	
 	/**
-	 * Represents the instruction i2f.
+	 * Represents the instruction {@code i2f}.
 	 */
 	public static final Instruction I_2_F = valueOf(OPCODE_I_2_F, MNEMONIC_I_2_F);
 	
 	/**
-	 * Represents the instruction i2l.
+	 * Represents the instruction {@code i2l}.
 	 */
 	public static final Instruction I_2_L = valueOf(OPCODE_I_2_L, MNEMONIC_I_2_L);
 	
 	/**
-	 * Represents the instruction i2s.
+	 * Represents the instruction {@code i2s}.
 	 */
 	public static final Instruction I_2_S = valueOf(OPCODE_I_2_S, MNEMONIC_I_2_S);
 	
 	/**
-	 * Represents the instruction iadd.
+	 * Represents the instruction {@code iadd}.
 	 */
 	public static final Instruction I_ADD = valueOf(OPCODE_I_ADD, MNEMONIC_I_ADD);
 	
 	/**
-	 * Represents the instruction iand.
+	 * Represents the instruction {@code iand}.
 	 */
 	public static final Instruction I_AND = valueOf(OPCODE_I_AND, MNEMONIC_I_AND);
 	
 	/**
-	 * Represents the instruction iaload.
+	 * Represents the instruction {@code iaload}.
 	 */
 	public static final Instruction I_A_LOAD = valueOf(OPCODE_I_A_LOAD, MNEMONIC_I_A_LOAD);
 	
 	/**
-	 * Represents the instruction iastore.
+	 * Represents the instruction {@code iastore}.
 	 */
 	public static final Instruction I_A_STORE = valueOf(OPCODE_I_A_STORE, MNEMONIC_I_A_STORE);
 	
 	/**
-	 * Represents the instruction iconst_0.
+	 * Represents the instruction {@code iconst_0}.
 	 */
 	public static final Instruction I_CONST_0 = valueOf(OPCODE_I_CONST_0, MNEMONIC_I_CONST_0);
 	
 	/**
-	 * Represents the instruction iconst_1.
+	 * Represents the instruction {@code iconst_1}.
 	 */
 	public static final Instruction I_CONST_1 = valueOf(OPCODE_I_CONST_1, MNEMONIC_I_CONST_1);
 	
 	/**
-	 * Represents the instruction iconst_2.
+	 * Represents the instruction {@code iconst_2}.
 	 */
 	public static final Instruction I_CONST_2 = valueOf(OPCODE_I_CONST_2, MNEMONIC_I_CONST_2);
 	
 	/**
-	 * Represents the instruction iconst_3.
+	 * Represents the instruction {@code iconst_3}.
 	 */
 	public static final Instruction I_CONST_3 = valueOf(OPCODE_I_CONST_3, MNEMONIC_I_CONST_3);
 	
 	/**
-	 * Represents the instruction iconst_4.
+	 * Represents the instruction {@code iconst_4}.
 	 */
 	public static final Instruction I_CONST_4 = valueOf(OPCODE_I_CONST_4, MNEMONIC_I_CONST_4);
 	
 	/**
-	 * Represents the instruction iconst_5.
+	 * Represents the instruction {@code iconst_5}.
 	 */
 	public static final Instruction I_CONST_5 = valueOf(OPCODE_I_CONST_5, MNEMONIC_I_CONST_5);
 	
 	/**
-	 * Represents the instruction iconst_m1.
+	 * Represents the instruction {@code iconst_m1}.
 	 */
 	public static final Instruction I_CONST_M1 = valueOf(OPCODE_I_CONST_M1, MNEMONIC_I_CONST_M1);
 	
 	/**
-	 * Represents the instruction idiv.
+	 * Represents the instruction {@code idiv}.
 	 */
 	public static final Instruction I_DIV = valueOf(OPCODE_I_DIV, MNEMONIC_I_DIV);
 	
 	/**
-	 * Represents the instruction iload_0.
+	 * Represents the instruction {@code iload_0}.
 	 */
 	public static final Instruction I_LOAD_0 = valueOf(OPCODE_I_LOAD_0, MNEMONIC_I_LOAD_0);
 	
 	/**
-	 * Represents the instruction iload_1.
+	 * Represents the instruction {@code iload_1}.
 	 */
 	public static final Instruction I_LOAD_1 = valueOf(OPCODE_I_LOAD_1, MNEMONIC_I_LOAD_1);
 	
 	/**
-	 * Represents the instruction iload_2.
+	 * Represents the instruction {@code iload_2}.
 	 */
 	public static final Instruction I_LOAD_2 = valueOf(OPCODE_I_LOAD_2, MNEMONIC_I_LOAD_2);
 	
 	/**
-	 * Represents the instruction iload_3.
+	 * Represents the instruction {@code iload_3}.
 	 */
 	public static final Instruction I_LOAD_3 = valueOf(OPCODE_I_LOAD_3, MNEMONIC_I_LOAD_3);
 	
 	/**
-	 * Represents the instruction imul.
+	 * Represents the instruction {@code imul}.
 	 */
 	public static final Instruction I_MUL = valueOf(OPCODE_I_MUL, MNEMONIC_I_MUL);
 	
 	/**
-	 * Represents the instruction ineg.
+	 * Represents the instruction {@code ineg}.
 	 */
 	public static final Instruction I_NEG = valueOf(OPCODE_I_NEG, MNEMONIC_I_NEG);
 	
 	/**
-	 * Represents the instruction ior.
+	 * Represents the instruction {@code ior}.
 	 */
 	public static final Instruction I_OR = valueOf(OPCODE_I_OR, MNEMONIC_I_OR);
 	
 	/**
-	 * Represents the instruction irem.
+	 * Represents the instruction {@code irem}.
 	 */
 	public static final Instruction I_REM = valueOf(OPCODE_I_REM, MNEMONIC_I_REM);
 	
 	/**
-	 * Represents the instruction ireturn.
+	 * Represents the instruction {@code ireturn}.
 	 */
 	public static final Instruction I_RETURN = valueOf(OPCODE_I_RETURN, MNEMONIC_I_RETURN);
 	
 	/**
-	 * Represents the instruction ishl.
+	 * Represents the instruction {@code ishl}.
 	 */
 	public static final Instruction I_SH_L = valueOf(OPCODE_I_SH_L, MNEMONIC_I_SH_L);
 	
 	/**
-	 * Represents the instruction ishr.
+	 * Represents the instruction {@code ishr}.
 	 */
 	public static final Instruction I_SH_R = valueOf(OPCODE_I_SH_R, MNEMONIC_I_SH_R);
 	
 	/**
-	 * Represents the instruction istore_0.
+	 * Represents the instruction {@code istore_0}.
 	 */
 	public static final Instruction I_STORE_0 = valueOf(OPCODE_I_STORE_0, MNEMONIC_I_STORE_0);
 	
 	/**
-	 * Represents the instruction istore_1.
+	 * Represents the instruction {@code istore_1}.
 	 */
 	public static final Instruction I_STORE_1 = valueOf(OPCODE_I_STORE_1, MNEMONIC_I_STORE_1);
 	
 	/**
-	 * Represents the instruction istore_2.
+	 * Represents the instruction {@code istore_2}.
 	 */
 	public static final Instruction I_STORE_2 = valueOf(OPCODE_I_STORE_2, MNEMONIC_I_STORE_2);
 	
 	/**
-	 * Represents the instruction istore_3.
+	 * Represents the instruction {@code istore_3}.
 	 */
 	public static final Instruction I_STORE_3 = valueOf(OPCODE_I_STORE_3, MNEMONIC_I_STORE_3);
 	
 	/**
-	 * Represents the instruction isub.
+	 * Represents the instruction {@code isub}.
 	 */
 	public static final Instruction I_SUB = valueOf(OPCODE_I_SUB, MNEMONIC_I_SUB);
 	
 	/**
-	 * Represents the instruction iushr.
+	 * Represents the instruction {@code iushr}.
 	 */
 	public static final Instruction I_U_SH_R = valueOf(OPCODE_I_U_SH_R, MNEMONIC_I_U_SH_R);
 	
 	/**
-	 * Represents the instruction ixor.
+	 * Represents the instruction {@code ixor}.
 	 */
 	public static final Instruction I_XOR = valueOf(OPCODE_I_XOR, MNEMONIC_I_XOR);
 	
 	/**
-	 * Represents the instruction l2d.
+	 * Represents the instruction {@code l2d}.
 	 */
 	public static final Instruction L_2_D = valueOf(OPCODE_L_2_D, MNEMONIC_L_2_D);
 	
 	/**
-	 * Represents the instruction l2f.
+	 * Represents the instruction {@code l2f}.
 	 */
 	public static final Instruction L_2_F = valueOf(OPCODE_L_2_F, MNEMONIC_L_2_F);
 	
 	/**
-	 * Represents the instruction l2i.
+	 * Represents the instruction {@code l2i}.
 	 */
 	public static final Instruction L_2_I = valueOf(OPCODE_L_2_I, MNEMONIC_L_2_I);
 	
 	/**
-	 * Represents the instruction ladd.
+	 * Represents the instruction {@code ladd}.
 	 */
 	public static final Instruction L_ADD = valueOf(OPCODE_L_ADD, MNEMONIC_L_ADD);
 	
 	/**
-	 * Represents the instruction land.
+	 * Represents the instruction {@code land}.
 	 */
 	public static final Instruction L_AND = valueOf(OPCODE_L_AND, MNEMONIC_L_AND);
 	
 	/**
-	 * Represents the instruction laload.
+	 * Represents the instruction {@code laload}.
 	 */
 	public static final Instruction L_A_LOAD = valueOf(OPCODE_L_A_LOAD, MNEMONIC_L_A_LOAD);
 	
 	/**
-	 * Represents the instruction lastore.
+	 * Represents the instruction {@code lastore}.
 	 */
 	public static final Instruction L_A_STORE = valueOf(OPCODE_L_A_STORE, MNEMONIC_L_A_STORE);
 	
 	/**
-	 * Represents the instruction lcmp.
+	 * Represents the instruction {@code lcmp}.
 	 */
 	public static final Instruction L_CMP = valueOf(OPCODE_L_CMP, MNEMONIC_L_CMP);
 	
 	/**
-	 * Represents the instruction lconst_0.
+	 * Represents the instruction {@code lconst_0}.
 	 */
 	public static final Instruction L_CONST_0 = valueOf(OPCODE_L_CONST_0, MNEMONIC_L_CONST_0);
 	
 	/**
-	 * Represents the instruction lconst_1.
+	 * Represents the instruction {@code lconst_1}.
 	 */
 	public static final Instruction L_CONST_1 = valueOf(OPCODE_L_CONST_1, MNEMONIC_L_CONST_1);
 	
 	/**
-	 * Represents the instruction ldiv.
+	 * Represents the instruction {@code ldiv}.
 	 */
 	public static final Instruction L_DIV = valueOf(OPCODE_L_DIV, MNEMONIC_L_DIV);
 	
 	/**
-	 * Represents the instruction lload_0.
+	 * Represents the instruction {@code lload_0}.
 	 */
 	public static final Instruction L_LOAD_0 = valueOf(OPCODE_L_LOAD_0, MNEMONIC_L_LOAD_0);
 	
 	/**
-	 * Represents the instruction lload_1.
+	 * Represents the instruction {@code lload_1}.
 	 */
 	public static final Instruction L_LOAD_1 = valueOf(OPCODE_L_LOAD_1, MNEMONIC_L_LOAD_1);
 	
 	/**
-	 * Represents the instruction lload_2.
+	 * Represents the instruction {@code lload_2}.
 	 */
 	public static final Instruction L_LOAD_2 = valueOf(OPCODE_L_LOAD_2, MNEMONIC_L_LOAD_2);
 	
 	/**
-	 * Represents the instruction lload_3.
+	 * Represents the instruction {@code lload_3}.
 	 */
 	public static final Instruction L_LOAD_3 = valueOf(OPCODE_L_LOAD_3, MNEMONIC_L_LOAD_3);
 	
 	/**
-	 * Represents the instruction lmul.
+	 * Represents the instruction {@code lmul}.
 	 */
 	public static final Instruction L_MUL = valueOf(OPCODE_L_MUL, MNEMONIC_L_MUL);
 	
 	/**
-	 * Represents the instruction lneg.
+	 * Represents the instruction {@code lneg}.
 	 */
 	public static final Instruction L_NEG = valueOf(OPCODE_L_NEG, MNEMONIC_L_NEG);
 	
 	/**
-	 * Represents the instruction lor.
+	 * Represents the instruction {@code lor}.
 	 */
 	public static final Instruction L_OR = valueOf(OPCODE_L_OR, MNEMONIC_L_OR);
 	
 	/**
-	 * Represents the instruction lrem.
+	 * Represents the instruction {@code lrem}.
 	 */
 	public static final Instruction L_REM = valueOf(OPCODE_L_REM, MNEMONIC_L_REM);
 	
 	/**
-	 * Represents the instruction lreturn.
+	 * Represents the instruction {@code lreturn}.
 	 */
 	public static final Instruction L_RETURN = valueOf(OPCODE_L_RETURN, MNEMONIC_L_RETURN);
 	
 	/**
-	 * Represents the instruction lshl.
+	 * Represents the instruction {@code lshl}.
 	 */
 	public static final Instruction L_SH_L = valueOf(OPCODE_L_SH_L, MNEMONIC_L_SH_L);
 	
 	/**
-	 * Represents the instruction lshr.
+	 * Represents the instruction {@code lshr}.
 	 */
 	public static final Instruction L_SH_R = valueOf(OPCODE_L_SH_R, MNEMONIC_L_SH_R);
 	
 	/**
-	 * Represents the instruction lstore_0.
+	 * Represents the instruction {@code lstore_0}.
 	 */
 	public static final Instruction L_STORE_0 = valueOf(OPCODE_L_STORE_0, MNEMONIC_L_STORE_0);
 	
 	/**
-	 * Represents the instruction lstore_1.
+	 * Represents the instruction {@code lstore_1}.
 	 */
 	public static final Instruction L_STORE_1 = valueOf(OPCODE_L_STORE_1, MNEMONIC_L_STORE_1);
 	
 	/**
-	 * Represents the instruction lstore_2.
+	 * Represents the instruction {@code lstore_2}.
 	 */
 	public static final Instruction L_STORE_2 = valueOf(OPCODE_L_STORE_2, MNEMONIC_L_STORE_2);
 	
 	/**
-	 * Represents the instruction lstore_3.
+	 * Represents the instruction {@code lstore_3}.
 	 */
 	public static final Instruction L_STORE_3 = valueOf(OPCODE_L_STORE_3, MNEMONIC_L_STORE_3);
 	
 	/**
-	 * Represents the instruction lsub.
+	 * Represents the instruction {@code lsub}.
 	 */
 	public static final Instruction L_SUB = valueOf(OPCODE_L_SUB, MNEMONIC_L_SUB);
 	
 	/**
-	 * Represents the instruction lushr.
+	 * Represents the instruction {@code lushr}.
 	 */
 	public static final Instruction L_U_SH_R = valueOf(OPCODE_L_U_SH_R, MNEMONIC_L_U_SH_R);
 	
 	/**
-	 * Represents the instruction lxor.
+	 * Represents the instruction {@code lxor}.
 	 */
 	public static final Instruction L_XOR = valueOf(OPCODE_L_XOR, MNEMONIC_L_XOR);
 	
 	/**
-	 * Represents the instruction monitorenter.
+	 * Represents the instruction {@code monitorenter}.
 	 */
 	public static final Instruction MONITOR_ENTER = valueOf(OPCODE_MONITOR_ENTER, MNEMONIC_MONITOR_ENTER);
 	
 	/**
-	 * Represents the instruction monitorexit.
+	 * Represents the instruction {@code monitorexit}.
 	 */
 	public static final Instruction MONITOR_EXIT = valueOf(OPCODE_MONITOR_EXIT, MNEMONIC_MONITOR_EXIT);
 	
 	/**
-	 * Represents the instruction nop.
+	 * Represents the instruction {@code nop}.
 	 */
 	public static final Instruction NOP = valueOf(OPCODE_NOP, MNEMONIC_NOP);
 	
 	/**
-	 * Represents the instruction pop.
+	 * Represents the instruction {@code pop}.
 	 */
 	public static final Instruction POP = valueOf(OPCODE_POP, MNEMONIC_POP);
 	
 	/**
-	 * Represents the instruction pop2.
+	 * Represents the instruction {@code pop2}.
 	 */
 	public static final Instruction POP_2 = valueOf(OPCODE_POP_2, MNEMONIC_POP_2);
 	
 	/**
-	 * Represents the instruction return.
+	 * Represents the instruction {@code return}.
 	 */
 	public static final Instruction RETURN = valueOf(OPCODE_RETURN, MNEMONIC_RETURN);
 	
 	/**
-	 * Represents the instruction swap.
+	 * Represents the instruction {@code swap}.
 	 */
 	public static final Instruction SWAP = valueOf(OPCODE_SWAP, MNEMONIC_SWAP);
 	
 	/**
-	 * Represents the instruction saload.
+	 * Represents the instruction {@code saload}.
 	 */
 	public static final Instruction S_A_LOAD = valueOf(OPCODE_S_A_LOAD, MNEMONIC_S_A_LOAD);
 	
 	/**
-	 * Represents the instruction sastore.
+	 * Represents the instruction {@code sastore}.
 	 */
 	public static final Instruction S_A_STORE = valueOf(OPCODE_S_A_STORE, MNEMONIC_S_A_STORE);
 	
@@ -3358,9 +3357,9 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns a hash-code for this {@code Instruction} instance.
+	 * Returns a hash code for this {@code Instruction} instance.
 	 * 
-	 * @return a hash-code for this {@code Instruction} instance
+	 * @return a hash code for this {@code Instruction} instance
 	 */
 	@Override
 	public int hashCode() {
@@ -3477,12 +3476,12 @@ public final class Instruction implements Node {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns an {@code Instruction} denoting aload.
+	 * Returns an {@code Instruction} denoting {@code aload}.
 	 * <p>
 	 * If {@code index} is less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param index an index between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting aload
+	 * @return an {@code Instruction} denoting {@code aload}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getALoad(final int index) {
@@ -3490,13 +3489,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting anewarray.
+	 * Returns an {@code Instruction} denoting {@code anewarray}.
 	 * <p>
 	 * If either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param indexByte1 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting anewarray
+	 * @return an {@code Instruction} denoting {@code anewarray}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getANewArray(final int indexByte1, final int indexByte2) {
@@ -3504,12 +3503,12 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting astore.
+	 * Returns an {@code Instruction} denoting {@code astore}.
 	 * <p>
 	 * If {@code index} is less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param index an index between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting astore
+	 * @return an {@code Instruction} denoting {@code astore}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getAStore(final int index) {
@@ -3517,12 +3516,12 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting bipush.
+	 * Returns an {@code Instruction} denoting {@code bipush}.
 	 * <p>
 	 * If {@code value} is less than {@code Byte.MIN_VALUE} or greater than {@code Byte.MAX_VALUE}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param value a value between {@code Byte.MIN_VALUE} (inclusive) and {@code Byte.MAX_VALUE} (inclusive)
-	 * @return an {@code Instruction} denoting bipush
+	 * @return an {@code Instruction} denoting {@code bipush}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code value} is less than {@code Byte.MIN_VALUE} or greater than {@code Byte.MAX_VALUE}
 	 */
 	public static Instruction getBIPush(final int value) {
@@ -3530,13 +3529,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting checkcast.
+	 * Returns an {@code Instruction} denoting {@code checkcast}.
 	 * <p>
 	 * If either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param indexByte1 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting checkcast
+	 * @return an {@code Instruction} denoting {@code checkcast}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getCheckCast(final int indexByte1, final int indexByte2) {
@@ -3544,12 +3543,12 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting dload.
+	 * Returns an {@code Instruction} denoting {@code dload}.
 	 * <p>
 	 * If {@code index} is less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param index an index between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting dload
+	 * @return an {@code Instruction} denoting {@code dload}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getDLoad(final int index) {
@@ -3557,12 +3556,12 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting dstore.
+	 * Returns an {@code Instruction} denoting {@code dstore}.
 	 * <p>
 	 * If {@code index} is less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param index an index between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting dstore
+	 * @return an {@code Instruction} denoting {@code dstore}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getDStore(final int index) {
@@ -3570,12 +3569,12 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting fload.
+	 * Returns an {@code Instruction} denoting {@code fload}.
 	 * <p>
 	 * If {@code index} is less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param index an index between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting fload
+	 * @return an {@code Instruction} denoting {@code fload}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getFLoad(final int index) {
@@ -3583,12 +3582,12 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting fstore.
+	 * Returns an {@code Instruction} denoting {@code fstore}.
 	 * <p>
 	 * If {@code index} is less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param index an index between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting fstore
+	 * @return an {@code Instruction} denoting {@code fstore}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getFStore(final int index) {
@@ -3596,13 +3595,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting getfield.
+	 * Returns an {@code Instruction} denoting {@code getfield}.
 	 * <p>
 	 * If either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param indexByte1 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting getfield
+	 * @return an {@code Instruction} denoting {@code getfield}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getGetField(final int indexByte1, final int indexByte2) {
@@ -3610,13 +3609,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting getstatic.
+	 * Returns an {@code Instruction} denoting {@code getstatic}.
 	 * <p>
 	 * If either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param indexByte1 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting getstatic
+	 * @return an {@code Instruction} denoting {@code getstatic}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getGetStatic(final int indexByte1, final int indexByte2) {
@@ -3624,13 +3623,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting goto.
+	 * Returns an {@code Instruction} denoting {@code goto}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 a part of the branch index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 a part of the branch index, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting goto
+	 * @return an {@code Instruction} denoting {@code goto}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getGoTo(final int branchByte1, final int branchByte2) {
@@ -3638,7 +3637,7 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting goto_w.
+	 * Returns an {@code Instruction} denoting {@code goto_w}.
 	 * <p>
 	 * If either {@code branchByte1}, {@code branchByte2}, {@code branchByte3} or {@code branchByte4} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
@@ -3646,7 +3645,7 @@ public final class Instruction implements Node {
 	 * @param branchByte2 a part of the branch offset, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte3 a part of the branch offset, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte4 a part of the branch offset, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting goto_w
+	 * @return an {@code Instruction} denoting {@code goto_w}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1}, {@code branchByte2}, {@code branchByte3} or {@code branchByte4} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getGoToW(final int branchByte1, final int branchByte2, final int branchByte3, final int branchByte4) {
@@ -3654,28 +3653,26 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting iinc.
+	 * Returns an {@code Instruction} denoting {@code iinc}.
 	 * <p>
-	 * If {@code index} is less than {@code 0} or greater than {@code 255}, or {@code constant} is less than {@code Byte.MIN_VALUE} or greater than {@code Byte.MAX_VALUE}, an {@code IllegalArgumentException} will be
-	 * thrown.
+	 * If {@code index} is less than {@code 0} or greater than {@code 255}, or {@code constant} is less than {@code Byte.MIN_VALUE} or greater than {@code Byte.MAX_VALUE}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param index an index between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param constant a constant between {@code Byte.MIN_VALUE} (inclusive) and {@code Byte.MAX_VALUE} (inclusive)
-	 * @return an {@code Instruction} denoting iinc
-	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than {@code 255}, or {@code constant} is less than {@code Byte.MIN_VALUE} or greater than
-	 * {@code Byte.MAX_VALUE}
+	 * @return an {@code Instruction} denoting {@code iinc}
+	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than {@code 255}, or {@code constant} is less than {@code Byte.MIN_VALUE} or greater than {@code Byte.MAX_VALUE}
 	 */
 	public static Instruction getIInc(final int index, final int constant) {
 		return valueOf(OPCODE_I_INC, MNEMONIC_I_INC, ParameterArguments.requireRange(index, 0, 255), ParameterArguments.requireRange(constant, Byte.MIN_VALUE, Byte.MAX_VALUE));
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting iload.
+	 * Returns an {@code Instruction} denoting {@code iload}.
 	 * <p>
 	 * If {@code index} is less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param index an index between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting iload
+	 * @return an {@code Instruction} denoting {@code iload}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getILoad(final int index) {
@@ -3683,12 +3680,12 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting istore.
+	 * Returns an {@code Instruction} denoting {@code istore}.
 	 * <p>
 	 * If {@code index} is less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param index an index between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting istore
+	 * @return an {@code Instruction} denoting {@code istore}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getIStore(final int index) {
@@ -3696,13 +3693,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting if_acmpeq.
+	 * Returns an {@code Instruction} denoting {@code if_acmpeq}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting if_acmpeq
+	 * @return an {@code Instruction} denoting {@code if_acmpeq}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getIfACmpEq(final int branchByte1, final int branchByte2) {
@@ -3710,13 +3707,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting if_acmpne.
+	 * Returns an {@code Instruction} denoting {@code if_acmpne}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting if_acmpne
+	 * @return an {@code Instruction} denoting {@code if_acmpne}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getIfACmpNE(final int branchByte1, final int branchByte2) {
@@ -3724,13 +3721,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting ifeq.
+	 * Returns an {@code Instruction} denoting {@code ifeq}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting ifeq
+	 * @return an {@code Instruction} denoting {@code ifeq}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getIfEq(final int branchByte1, final int branchByte2) {
@@ -3738,13 +3735,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting ifge.
+	 * Returns an {@code Instruction} denoting {@code ifge}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting ifge
+	 * @return an {@code Instruction} denoting {@code ifge}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getIfGE(final int branchByte1, final int branchByte2) {
@@ -3752,13 +3749,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting ifgt.
+	 * Returns an {@code Instruction} denoting {@code ifgt}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting ifgt
+	 * @return an {@code Instruction} denoting {@code ifgt}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getIfGT(final int branchByte1, final int branchByte2) {
@@ -3766,13 +3763,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting if_icmpeq.
+	 * Returns an {@code Instruction} denoting {@code if_icmpeq}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting if_icmpeq
+	 * @return an {@code Instruction} denoting {@code if_icmpeq}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getIfICmpEq(final int branchByte1, final int branchByte2) {
@@ -3780,13 +3777,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting if_icmpge.
+	 * Returns an {@code Instruction} denoting {@code if_icmpge}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting if_icmpge
+	 * @return an {@code Instruction} denoting {@code if_icmpge}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getIfICmpGE(final int branchByte1, final int branchByte2) {
@@ -3794,13 +3791,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting if_icmpgt.
+	 * Returns an {@code Instruction} denoting {@code if_icmpgt}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting if_icmpgt
+	 * @return an {@code Instruction} denoting {@code if_icmpgt}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getIfICmpGT(final int branchByte1, final int branchByte2) {
@@ -3808,13 +3805,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting if_icmple.
+	 * Returns an {@code Instruction} denoting {@code if_icmple}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting if_imple
+	 * @return an {@code Instruction} denoting {@code if_imple}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getIfICmpLE(final int branchByte1, final int branchByte2) {
@@ -3822,13 +3819,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting if_icmplt.
+	 * Returns an {@code Instruction} denoting {@code if_icmplt}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting if_icmplt
+	 * @return an {@code Instruction} denoting {@code if_icmplt}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getIfICmpLT(final int branchByte1, final int branchByte2) {
@@ -3836,13 +3833,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting if_icmpne.
+	 * Returns an {@code Instruction} denoting {@code if_icmpne}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting if_icmpne
+	 * @return an {@code Instruction} denoting {@code if_icmpne}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getIfICmpNE(final int branchByte1, final int branchByte2) {
@@ -3850,13 +3847,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting ifle.
+	 * Returns an {@code Instruction} denoting {@code ifle}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting ifle
+	 * @return an {@code Instruction} denoting {@code ifle}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getIfLE(final int branchByte1, final int branchByte2) {
@@ -3864,13 +3861,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting iflt.
+	 * Returns an {@code Instruction} denoting {@code iflt}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting iflt
+	 * @return an {@code Instruction} denoting {@code iflt}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getIfLT(final int branchByte1, final int branchByte2) {
@@ -3878,13 +3875,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting ifne.
+	 * Returns an {@code Instruction} denoting {@code ifne}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting ifne
+	 * @return an {@code Instruction} denoting {@code ifne}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getIfNE(final int branchByte1, final int branchByte2) {
@@ -3892,13 +3889,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting ifnonnull.
+	 * Returns an {@code Instruction} denoting {@code ifnonnull}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting ifnonnull
+	 * @return an {@code Instruction} denoting {@code ifnonnull}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getIfNonNull(final int branchByte1, final int branchByte2) {
@@ -3906,13 +3903,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting ifnull.
+	 * Returns an {@code Instruction} denoting {@code ifnull}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting ifnull
+	 * @return an {@code Instruction} denoting {@code ifnull}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getIfNull(final int branchByte1, final int branchByte2) {
@@ -3920,13 +3917,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting instanceof.
+	 * Returns an {@code Instruction} denoting {@code instanceof}.
 	 * <p>
 	 * If either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param indexByte1 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting instanceof
+	 * @return an {@code Instruction} denoting {@code instanceof}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getInstanceOf(final int indexByte1, final int indexByte2) {
@@ -3934,49 +3931,45 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting invokedynamic.
+	 * Returns an {@code Instruction} denoting {@code invokedynamic}.
 	 * <p>
-	 * If either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, or {@code constant1} or {@code constant2} are anything but {@code 0}, an {@code IllegalArgumentException}
-	 * will be thrown.
+	 * If either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, or {@code constant1} or {@code constant2} are anything but {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param indexByte1 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param constant1 a value of {@code 0}
 	 * @param constant2 a value of {@code 0}
-	 * @return an {@code Instruction} denoting invokedynamic
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, or {@code constant1} or {@code constant2} are
-	 * anything but {@code 0}
+	 * @return an {@code Instruction} denoting {@code invokedynamic}
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, or {@code constant1} or {@code constant2} are anything but {@code 0}
 	 */
 	public static Instruction getInvokeDynamic(final int indexByte1, final int indexByte2, final int constant1, final int constant2) {
 		return valueOf(OPCODE_INVOKE_DYNAMIC, MNEMONIC_INVOKE_DYNAMIC, ParameterArguments.requireRange(indexByte1, 0, 255), ParameterArguments.requireRange(indexByte2, 0, 255), ParameterArguments.requireRange(constant1, 0, 0), ParameterArguments.requireRange(constant2, 0, 0));
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting invokeinterface.
+	 * Returns an {@code Instruction} denoting {@code invokeinterface}.
 	 * <p>
-	 * If either {@code indexByte1}, {@code indexByte2} or {@code count} are less than {@code 0} or greater than {@code 255}, or {@code constant} is anything but {@code 0}, an {@code IllegalArgumentException} will be
-	 * thrown.
+	 * If either {@code indexByte1}, {@code indexByte2} or {@code count} are less than {@code 0} or greater than {@code 255}, or {@code constant} is anything but {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param indexByte1 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param count a value between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param constant a value of {@code 0}
-	 * @return an {@code Instruction} denoting invokeinterface
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1}, {@code indexByte2} or {@code count} are less than {@code 0} or greater than {@code 255}, or {@code constant} is anything but
-	 * {@code 0}
+	 * @return an {@code Instruction} denoting {@code invokeinterface}
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1}, {@code indexByte2} or {@code count} are less than {@code 0} or greater than {@code 255}, or {@code constant} is anything but {@code 0}
 	 */
 	public static Instruction getInvokeInterface(final int indexByte1, final int indexByte2, final int count, final int constant) {
 		return valueOf(OPCODE_INVOKE_INTERFACE, MNEMONIC_INVOKE_INTERFACE, ParameterArguments.requireRange(indexByte1, 0, 255), ParameterArguments.requireRange(indexByte2, 0, 255), ParameterArguments.requireRange(count, 0, 255), ParameterArguments.requireRange(constant, 0, 0));
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting invokespecial.
+	 * Returns an {@code Instruction} denoting {@code invokespecial}.
 	 * <p>
 	 * If either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param indexByte1 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting invokespecial
+	 * @return an {@code Instruction} denoting {@code invokespecial}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getInvokeSpecial(final int indexByte1, final int indexByte2) {
@@ -3984,13 +3977,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting invokestatic.
+	 * Returns an {@code Instruction} denoting {@code invokestatic}.
 	 * <p>
 	 * If either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param indexByte1 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting invokestatic
+	 * @return an {@code Instruction} denoting {@code invokestatic}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getInvokeStatic(final int indexByte1, final int indexByte2) {
@@ -3998,13 +3991,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting invokevirtual.
+	 * Returns an {@code Instruction} denoting {@code invokevirtual}.
 	 * <p>
 	 * If either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param indexByte1 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting invokevirtual
+	 * @return an {@code Instruction} denoting {@code invokevirtual}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getInvokeVirtual(final int indexByte1, final int indexByte2) {
@@ -4012,13 +4005,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting jsr.
+	 * Returns an {@code Instruction} denoting {@code jsr}.
 	 * <p>
 	 * If either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param branchByte1 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting jsr
+	 * @return an {@code Instruction} denoting {@code jsr}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1} or {@code branchByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getJSR(final int branchByte1, final int branchByte2) {
@@ -4026,7 +4019,7 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting jsr_w.
+	 * Returns an {@code Instruction} denoting {@code jsr_w}.
 	 * <p>
 	 * If either {@code branchByte1}, {@code branchByte2}, {@code branchByte3} or {@code branchByte4} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
@@ -4034,7 +4027,7 @@ public final class Instruction implements Node {
 	 * @param branchByte2 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte3 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param branchByte4 an unsigned byte between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting jsr_w
+	 * @return an {@code Instruction} denoting {@code jsr_w}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code branchByte1}, {@code branchByte2}, {@code branchByte3} or {@code branchByte4} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getJSRW(final int branchByte1, final int branchByte2, final int branchByte3, final int branchByte4) {
@@ -4042,12 +4035,12 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting ldc.
+	 * Returns an {@code Instruction} denoting {@code ldc}.
 	 * <p>
 	 * If {@code index} is less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param index an index between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting ldc
+	 * @return an {@code Instruction} denoting {@code ldc}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getLDC(final int index) {
@@ -4055,13 +4048,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting ldc2_w.
+	 * Returns an {@code Instruction} denoting {@code ldc2_w}.
 	 * <p>
 	 * If either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param indexByte1 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting ldc2_w
+	 * @return an {@code Instruction} denoting {@code ldc2_w}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getLDC2W(final int indexByte1, final int indexByte2) {
@@ -4069,13 +4062,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting ldc_w.
+	 * Returns an {@code Instruction} denoting {@code ldc_w}.
 	 * <p>
 	 * If either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param indexByte1 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting ldc_w
+	 * @return an {@code Instruction} denoting {@code ldc_w}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getLDCW(final int indexByte1, final int indexByte2) {
@@ -4083,12 +4076,12 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting lload.
+	 * Returns an {@code Instruction} denoting {@code lload}.
 	 * <p>
 	 * If {@code index} is less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param index an index between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting lload
+	 * @return an {@code Instruction} denoting {@code lload}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getLLoad(final int index) {
@@ -4096,12 +4089,12 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting lstore.
+	 * Returns an {@code Instruction} denoting {@code lstore}.
 	 * <p>
 	 * If {@code index} is less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param index an index between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting lstore
+	 * @return an {@code Instruction} denoting {@code lstore}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getLStore(final int index) {
@@ -4109,18 +4102,18 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting lookupswitch.
+	 * Returns an {@code Instruction} denoting {@code lookupswitch}.
 	 * <p>
 	 * If {@code operands} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If either {@code padding} is less than {@code 0} or greater than {@code 3}, or any of the values in {@code operands} are less than {@code Byte.MIN_VALUE} or greater than {@code Byte.MAX_VALUE}, an
-	 * {@code IllegalArgumentException} will be thrown.
+	 * If either {@code padding} is less than {@code 0} or greater than {@code 3}, or any of the values in {@code operands} are less than {@code Byte.MIN_VALUE} or greater than {@code Byte.MAX_VALUE}, an {@code IllegalArgumentException} will be
+	 * thrown.
 	 * 
 	 * @param padding the padding between {@code 0} (inclusive) and {@code 3} (inclusive)
 	 * @param operands an array with values, each one between {@code Byte.MIN_VALUE} (inclusive) and {@code Byte.MAX_VALUE} (inclusive)
-	 * @return an {@code Instruction} denoting lookupswitch
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code padding} is less than {@code 0} or greater than {@code 3}, or any of the values in {@code operands} are less than {@code Byte.MIN_VALUE} or
-	 * greater than {@code Byte.MAX_VALUE}
+	 * @return an {@code Instruction} denoting {@code lookupswitch}
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code padding} is less than {@code 0} or greater than {@code 3}, or any of the values in {@code operands} are less than {@code Byte.MIN_VALUE} or greater than
+	 *                                  {@code Byte.MAX_VALUE}
 	 * @throws NullPointerException thrown if, and only if, {@code operands} is {@code null}
 	 */
 	public static Instruction getLookupSwitch(final int padding, final int... operands) {
@@ -4128,30 +4121,28 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting multianewarray.
+	 * Returns an {@code Instruction} denoting {@code multianewarray}.
 	 * <p>
-	 * If either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, or {@code dimensions} are less than {@code 1} or greater than {@code 255}, an
-	 * {@code IllegalArgumentException} will be thrown.
+	 * If either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, or {@code dimensions} are less than {@code 1} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param indexByte1 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param dimensions the dimensions, between {@code 1} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting multianewarray
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, or {@code dimensions} are less than {@code 1} or
-	 * greater than {@code 255}
+	 * @return an {@code Instruction} denoting {@code multianewarray}
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, or {@code dimensions} are less than {@code 1} or greater than {@code 255}
 	 */
 	public static Instruction getMultiANewArray(final int indexByte1, final int indexByte2, final int dimensions) {
 		return valueOf(OPCODE_MULTI_A_NEW_ARRAY, MNEMONIC_MULTI_A_NEW_ARRAY, ParameterArguments.requireRange(indexByte1, 0, 255), ParameterArguments.requireRange(indexByte2, 0, 255), ParameterArguments.requireRange(dimensions, 1, 255));
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting new.
+	 * Returns an {@code Instruction} denoting {@code new}.
 	 * <p>
 	 * If either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param indexByte1 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting new
+	 * @return an {@code Instruction} denoting {@code new}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getNew(final int indexByte1, final int indexByte2) {
@@ -4159,12 +4150,12 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting newarray.
+	 * Returns an {@code Instruction} denoting {@code newarray}.
 	 * <p>
 	 * If {@code aType} is less than {@code 4} or greater than {@code 11}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param aType the type, between {@code 4} (inclusive) and {@code 11} (inclusive)
-	 * @return an {@code Instruction} denoting newarray
+	 * @return an {@code Instruction} denoting {@code newarray}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code aType} is less than {@code 4} or greater than {@code 11}
 	 */
 	public static Instruction getNewArray(final int aType) {
@@ -4172,13 +4163,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting putfield.
+	 * Returns an {@code Instruction} denoting {@code putfield}.
 	 * <p>
 	 * If either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param indexByte1 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting putfield
+	 * @return an {@code Instruction} denoting {@code putfield}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getPutField(final int indexByte1, final int indexByte2) {
@@ -4186,13 +4177,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting putstatic.
+	 * Returns an {@code Instruction} denoting {@code putstatic}.
 	 * <p>
 	 * If either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param indexByte1 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting putstatic
+	 * @return an {@code Instruction} denoting {@code putstatic}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getPutStatic(final int indexByte1, final int indexByte2) {
@@ -4200,12 +4191,12 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting ret.
+	 * Returns an {@code Instruction} denoting {@code ret}.
 	 * <p>
 	 * If {@code index} is less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param index an index between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting ret
+	 * @return an {@code Instruction} denoting {@code ret}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getRet(final int index) {
@@ -4213,13 +4204,13 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting sipush.
+	 * Returns an {@code Instruction} denoting {@code sipush}.
 	 * <p>
 	 * If either {@code byte1} or {@code byte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param byte1 a part of the value, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param byte2 a part of the value, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting sipush
+	 * @return an {@code Instruction} denoting {@code sipush}
 	 * @throws IllegalArgumentException thrown if, and only if, either {@code byte1} or {@code byte2} are less than {@code 0} or greater than {@code 255}
 	 */
 	public static Instruction getSIPush(final int byte1, final int byte2) {
@@ -4227,18 +4218,18 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting tableswitch.
+	 * Returns an {@code Instruction} denoting {@code tableswitch}.
 	 * <p>
 	 * If {@code operands} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If either {@code padding} is less than {@code 0} or greater than {@code 3}, or any of the values in {@code operands} are less than {@code Byte.MIN_VALUE} or greater than {@code Byte.MAX_VALUE}, an
-	 * {@code IllegalArgumentException} will be thrown.
+	 * If either {@code padding} is less than {@code 0} or greater than {@code 3}, or any of the values in {@code operands} are less than {@code Byte.MIN_VALUE} or greater than {@code Byte.MAX_VALUE}, an {@code IllegalArgumentException} will be
+	 * thrown.
 	 * 
 	 * @param padding the padding between {@code 0} (inclusive) and {@code 3} (inclusive)
 	 * @param operands an array with values, each one between {@code Byte.MIN_VALUE} (inclusive) and {@code Byte.MAX_VALUE} (inclusive)
-	 * @return an {@code Instruction} denoting tableswitch
-	 * @throws IllegalArgumentException thrown if, and only if, either {@code padding} is less than {@code 0} or greater than {@code 3}, or any of the values in {@code operands} are less than {@code Byte.MIN_VALUE} or
-	 * greater than {@code Byte.MAX_VALUE}
+	 * @return an {@code Instruction} denoting {@code tableswitch}
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code padding} is less than {@code 0} or greater than {@code 3}, or any of the values in {@code operands} are less than {@code Byte.MIN_VALUE} or greater than
+	 *                                  {@code Byte.MAX_VALUE}
 	 * @throws NullPointerException thrown if, and only if, {@code operands} is {@code null}
 	 */
 	public static Instruction getTableSwitch(final int padding, final int... operands) {
@@ -4246,7 +4237,7 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting wide.
+	 * Returns an {@code Instruction} denoting {@code wide}.
 	 * <p>
 	 * If {@code opcode} is invalid, or either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
@@ -4268,10 +4259,10 @@ public final class Instruction implements Node {
 	 * @param opcode an opcode that the wide instruction handles
 	 * @param indexByte1 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting wide
+	 * @return an {@code Instruction} denoting {@code wide}
 	 * @throws IllegalArgumentException thrown if, and only if, {@code opcode} is invalid, or either {@code indexByte1} or {@code indexByte2} are less than {@code 0} or greater than {@code 255}
 	 */
-	public static Instruction getWide1(final int opcode, final int indexByte1, final int indexByte2) {
+	public static Instruction getWide(final int opcode, final int indexByte1, final int indexByte2) {
 		switch(opcode) {
 			case OPCODE_A_LOAD:
 			case OPCODE_A_STORE:
@@ -4291,10 +4282,9 @@ public final class Instruction implements Node {
 	}
 	
 	/**
-	 * Returns an {@code Instruction} denoting wide.
+	 * Returns an {@code Instruction} denoting {@code wide}.
 	 * <p>
-	 * If {@code opcode} is invalid, or either {@code indexByte1}, {@code indexByte2}, {@code constByte1} or {@code constByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException}
-	 * will be thrown.
+	 * If {@code opcode} is invalid, or either {@code indexByte1}, {@code indexByte2}, {@code constByte1} or {@code constByte2} are less than {@code 0} or greater than {@code 255}, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
 	 * The valid opcodes for the wide instruction provided by this method is the following:
 	 * <ul>
@@ -4306,11 +4296,10 @@ public final class Instruction implements Node {
 	 * @param indexByte2 a part of the index, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param constByte1 a part of the constant, between {@code 0} (inclusive) and {@code 255} (inclusive)
 	 * @param constByte2 a part of the constant, between {@code 0} (inclusive) and {@code 255} (inclusive)
-	 * @return an {@code Instruction} denoting wide
-	 * @throws IllegalArgumentException thrown if, and only if, {@code opcode} is invalid, or either {@code indexByte1}, {@code indexByte2}, {@code constByte1} or {@code constByte2} are less than {@code 0} or greater
-	 * than {@code 255}
+	 * @return an {@code Instruction} denoting {@code wide}
+	 * @throws IllegalArgumentException thrown if, and only if, {@code opcode} is invalid, or either {@code indexByte1}, {@code indexByte2}, {@code constByte1} or {@code constByte2} are less than {@code 0} or greater than {@code 255}
 	 */
-	public static Instruction getWide2(final int opcode, final int indexByte1, final int indexByte2, final int constByte1, final int constByte2) {
+	public static Instruction getWide(final int opcode, final int indexByte1, final int indexByte2, final int constByte1, final int constByte2) {
 		return valueOf(OPCODE_WIDE, MNEMONIC_WIDE, ParameterArguments.requireRange(opcode, OPCODE_I_INC, OPCODE_I_INC), ParameterArguments.requireRange(indexByte1, 0, 255), ParameterArguments.requireRange(indexByte2, 0, 255), ParameterArguments.requireRange(constByte1, 0, 255), ParameterArguments.requireRange(constByte2, 0, 255));
 	}
 	
@@ -4321,7 +4310,7 @@ public final class Instruction implements Node {
 	 * <p>
 	 * If either {@code mnemonic} or {@code operands} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * It's recommended to use the constants provided by this class, or any of the many methods that create {@code Instruction}s with operands.
+	 * It's recommended to use the constants provided by this class, or any of the many methods that create {@code Instruction} instances with operands.
 	 * 
 	 * @param opcode the opcode of the {@code Instruction}
 	 * @param mnemonic the mnemonic of the {@code Instruction}
