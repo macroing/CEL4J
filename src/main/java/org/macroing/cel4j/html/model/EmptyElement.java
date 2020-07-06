@@ -27,45 +27,57 @@ import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 
 /**
- * A {@code ContentElement} represents an element in HTML source code that contains content.
+ * An {@code EmptyElement} represents an empty element in HTML source code.
  * <p>
  * This class is mutable and not thread-safe.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public abstract class ContentElement<T extends Content> extends Element {
-	private T content;
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
+public abstract class EmptyElement extends Element {
+	/**
+	 * Constructs a new {@code EmptyElement} instance.
+	 * <p>
+	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * super(name, Display.BLOCK);
+	 * }
+	 * </pre>
+	 * 
+	 * @param name the case-insensitive name associated with this {@code EmptyElement} instance
+	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 */
+	protected EmptyElement(final String name) {
+		this(name, Display.BLOCK);
+	}
 	
 	/**
-	 * Constructs a new {@code ContentElement} instance.
+	 * Constructs a new {@code EmptyElement} instance.
 	 * <p>
-	 * If either {@code name}, {@code display} or {@code content} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * If either {@code name} or {@code display} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param name the case-insensitive name associated with this {@code ContentElement} instance
-	 * @param display the {@link Display} associated with this {@code ContentElement} instance
-	 * @param content the {@link Content} associated with this {@code ContentElement} instance
-	 * @throws NullPointerException thrown if, and only if, either {@code name}, {@code display} or {@code content} are {@code null}
+	 * @param name the case-insensitive name associated with this {@code EmptyElement} instance
+	 * @param display the {@link Display} associated with this {@code EmptyElement} instance
+	 * @throws NullPointerException thrown if, and only if, either {@code name} or {@code display} are {@code null}
 	 */
-	protected ContentElement(final String name, final Display display, final T content) {
+	protected EmptyElement(final String name, final Display display) {
 		super(name, display);
-		
-		this.content = Objects.requireNonNull(content, "content == null");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Writes this {@code ContentElement} to a {@link Document}.
+	 * Writes this {@code EmptyElement} to a {@link Document}.
 	 * <p>
 	 * Returns the {@code Document}.
 	 * <p>
 	 * Calling this method is equivalent to the following:
 	 * <pre>
 	 * {@code
-	 * contentElement.write(new Document());
+	 * emptyElement.write(new Document());
 	 * }
 	 * </pre>
 	 * 
@@ -77,7 +89,7 @@ public abstract class ContentElement<T extends Content> extends Element {
 	}
 	
 	/**
-	 * Writes this {@code ContentElement} to {@code document}.
+	 * Writes this {@code EmptyElement} to {@code document}.
 	 * <p>
 	 * Returns {@code document}.
 	 * <p>
@@ -91,43 +103,13 @@ public abstract class ContentElement<T extends Content> extends Element {
 	public final Document write(final Document document) {
 		Objects.requireNonNull(document, "document == null");
 		
-		final Content content = getContent();
-		
-		final Display display = content.getDisplay();
-		
 		final List<Attribute> attributes = getAttributesSet();
 		
 		final String name = getName();
 		
-		switch(display) {
-			case BLOCK:
-				document.linef("<%s%s>", name, Strings.optional(attributes, " ", "", " ", attribute -> attribute.getNameAndValue()));
-				document.indent();
-				
-				content.write(document);
-				
-				document.outdent();
-				document.linef("</%s>", name);
-				
-				break;
-			case INLINE:
-				document.linef("<%s%s>%s</%s>", name, Strings.optional(attributes, " ", "", " ", attribute -> attribute.getNameAndValue()), content.write().toString().replaceAll("\n|\r\n|\r|\t", ""), name);
-				
-				break;
-			default:
-				break;
-		}
+		document.linef("<%s%s/>", name, Strings.optional(attributes, " ", "", " ", attribute -> attribute.getNameAndValue()));
 		
 		return document;
-	}
-	
-	/**
-	 * Returns the {@link Content} associated with this {@code ContentElement} instance.
-	 * 
-	 * @return the {@code Content} associated with this {@code ContentElement} instance
-	 */
-	public final T getContent() {
-		return this.content;
 	}
 	
 	/**
@@ -162,27 +144,11 @@ public abstract class ContentElement<T extends Content> extends Element {
 						return nodeHierarchicalVisitor.visitLeave(this);
 					}
 				}
-				
-				if(!getContent().accept(nodeHierarchicalVisitor)) {
-					return nodeHierarchicalVisitor.visitLeave(this);
-				}
 			}
 			
 			return nodeHierarchicalVisitor.visitLeave(this);
 		} catch(final RuntimeException e) {
 			throw new NodeTraversalException(e);
 		}
-	}
-	
-	/**
-	 * Sets {@code content} as the {@link Content} associated with this {@code ContentElement} instance.
-	 * <p>
-	 * If {@code content} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param content the {@code Content} associated with this {@code ContentElement} instance
-	 * @throws NullPointerException thrown if, and only if, {@code content} is {@code null}
-	 */
-	public final void setContent(final T content) {
-		this.content = Objects.requireNonNull(content, "content == null");
 	}
 }

@@ -21,64 +21,64 @@ package org.macroing.cel4j.html.model;
 import java.util.Objects;
 
 /**
- * A {@code H1} represents a {@code h1} element in HTML source code.
+ * An {@code UL} represents an {@code ul} element in HTML source code.
  * <p>
  * This class is mutable and not thread-safe.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class H1 extends ContentElement<Content> {
+public final class UL extends ContentElement<Elements<LI>> {
 	/**
-	 * The initial {@link Display} associated with a {@code H1} instance.
+	 * The initial {@link Display} associated with an {@code UL} instance.
 	 */
 	public static final Display DISPLAY_INITIAL = Display.BLOCK;
 	
 	/**
-	 * The name associated with a {@code H1} instance.
+	 * The name associated with an {@code UL} instance.
 	 */
-	public static final String NAME = "h1";
+	public static final String NAME = "ul";
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Constructs a new {@code H1} instance.
+	 * Constructs a new {@code UL} instance.
 	 */
-	public H1() {
-		super(NAME, DISPLAY_INITIAL, new Text());
+	public UL() {
+		super(NAME, DISPLAY_INITIAL, new Elements<LI>(DISPLAY_INITIAL));
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code String} representation of this {@code H1} instance.
+	 * Returns a {@code String} representation of this {@code UL} instance.
 	 * 
-	 * @return a {@code String} representation of this {@code H1} instance
+	 * @return a {@code String} representation of this {@code UL} instance
 	 */
 	@Override
 	public String toString() {
-		return "new H1()";
+		return "new UL()";
 	}
 	
 	/**
-	 * Compares {@code object} to this {@code H1} instance for equality.
+	 * Compares {@code object} to this {@code UL} instance for equality.
 	 * <p>
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code H1}, and their respective values are equal, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code UL}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object the {@code Object} to compare to this {@code H1} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code H1}, and their respective values are equal, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code UL} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code UL}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
-		} else if(!(object instanceof H1)) {
+		} else if(!(object instanceof UL)) {
 			return false;
-		} else if(!Objects.equals(getAttributes(), H1.class.cast(object).getAttributes())) {
+		} else if(!Objects.equals(getAttributes(), UL.class.cast(object).getAttributes())) {
 			return false;
-		} else if(!Objects.equals(getDisplay(), H1.class.cast(object).getDisplay())) {
+		} else if(!Objects.equals(getDisplay(), UL.class.cast(object).getDisplay())) {
 			return false;
-		} else if(!Objects.equals(getContent(), H1.class.cast(object).getContent())) {
+		} else if(!Objects.equals(getContent(), UL.class.cast(object).getContent())) {
 			return false;
 		} else {
 			return true;
@@ -86,9 +86,9 @@ public final class H1 extends ContentElement<Content> {
 	}
 	
 	/**
-	 * Returns a hash code for this {@code H1} instance.
+	 * Returns a hash code for this {@code UL} instance.
 	 * 
-	 * @return a hash code for this {@code H1} instance
+	 * @return a hash code for this {@code UL} instance
 	 */
 	@Override
 	public int hashCode() {

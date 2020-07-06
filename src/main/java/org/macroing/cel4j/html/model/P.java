@@ -28,7 +28,7 @@ import java.util.Objects;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class P extends ContentElement {
+public final class P extends ContentElement<Content> {
 	/**
 	 * The initial {@link Display} associated with a {@code P} instance.
 	 */
@@ -45,7 +45,7 @@ public final class P extends ContentElement {
 	 * Constructs a new {@code P} instance.
 	 */
 	public P() {
-		super(NAME, DISPLAY_INITIAL);
+		super(NAME, DISPLAY_INITIAL, new Text());
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

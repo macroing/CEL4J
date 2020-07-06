@@ -28,7 +28,7 @@ import java.util.Objects;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class H6 extends ContentElement {
+public final class H6 extends ContentElement<Content> {
 	/**
 	 * The initial {@link Display} associated with a {@code H6} instance.
 	 */
@@ -45,7 +45,7 @@ public final class H6 extends ContentElement {
 	 * Constructs a new {@code H6} instance.
 	 */
 	public H6() {
-		super(NAME, DISPLAY_INITIAL);
+		super(NAME, DISPLAY_INITIAL, new Text());
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

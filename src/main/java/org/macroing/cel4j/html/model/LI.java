@@ -28,7 +28,7 @@ import java.util.Objects;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class LI extends ContentElement {
+public final class LI extends ContentElement<Content> {
 	/**
 	 * The initial {@link Display} associated with an {@code LI} instance.
 	 */
@@ -49,7 +49,7 @@ public final class LI extends ContentElement {
 	 * Constructs a new {@code LI} instance.
 	 */
 	public LI() {
-		super(NAME, DISPLAY_INITIAL);
+		super(NAME, DISPLAY_INITIAL, new Text());
 		
 		this.attributeValue = new Attribute("value");
 		

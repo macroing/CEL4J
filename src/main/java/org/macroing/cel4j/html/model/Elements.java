@@ -36,11 +36,24 @@ import org.macroing.cel4j.util.ParameterArguments;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class Elements implements Content {
+public final class Elements<T extends Element> implements Content {
 	private final Display display;
-	private final List<Element> elements;
+	private final List<T> elements;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Constructs a new {@code Elements} instance.
+	 * <p>
+	 * If {@code display} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param display the {@link Display} associated with this {@code Elements} instance
+	 * @throws NullPointerException thrown if, and only if, {@code display} is {@code null}
+	 */
+	public Elements(final Display display) {
+		this.display = Objects.requireNonNull(display, "display == null");
+		this.elements = new ArrayList<>();
+	}
 	
 	/**
 	 * Constructs a new {@code Elements} instance.
@@ -51,7 +64,7 @@ public final class Elements implements Content {
 	 * @param elements the {@code Element} instances to add to this {@code Elements} instance
 	 * @throws NullPointerException thrown if, and only if, either {@code display}, {@code elements} or an {@code Element} in {@code elements} are {@code null}
 	 */
-	public Elements(final Display display, final Element... elements) {
+	public Elements(final Display display, final T[] elements) {
 		this.display = Objects.requireNonNull(display, "display == null");
 		this.elements = Arrays.asList(ParameterArguments.requireNonNullArray(elements, "elements")).stream().filter(element -> this.display.isSupporting(element.getDisplay())).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 	}
@@ -129,7 +142,7 @@ public final class Elements implements Content {
 	 * 
 	 * @return a {@code List} with all {@code Element} instances currently added to this {@code Elements} instance
 	 */
-	public List<Element> getElements() {
+	public List<T> getElements() {
 		return new ArrayList<>(this.elements);
 	}
 	
@@ -194,7 +207,7 @@ public final class Elements implements Content {
 	 * @return {@code true} if, and only if, {@code element} was added, {@code false} otherwise
 	 * @throws NullPointerException thrown if, and only if, {@code element} is {@code null}
 	 */
-	public boolean addElement(final Element element) {
+	public boolean addElement(final T element) {
 		Objects.requireNonNull(element, "element == null");
 		
 		if(getDisplay().isSupporting(element.getDisplay())) {
@@ -238,7 +251,7 @@ public final class Elements implements Content {
 	 * @return {@code true} if, and only if, {@code element} was added, {@code false} otherwise
 	 * @throws NullPointerException thrown if, and only if, {@code element} is {@code null}
 	 */
-	public boolean removeElement(final Element element) {
+	public boolean removeElement(final T element) {
 		return this.elements.remove(Objects.requireNonNull(element, "element == null"));
 	}
 	
