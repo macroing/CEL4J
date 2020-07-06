@@ -21,7 +21,7 @@ package org.macroing.cel4j.html.model;
 import java.util.Objects;
 
 /**
- * A {@code Div} represents a {@code div} element in HTML source code.
+ * A {@code P} represents a {@code p} element in HTML source code.
  * <p>
  * This class is mutable and not thread-safe.
  * 
