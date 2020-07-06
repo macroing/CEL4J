@@ -41,14 +41,103 @@ public final class Script extends ContentElement<Text> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	private final Attribute attributeAsync;
+	private final Attribute attributeCharSet;
+	private final Attribute attributeCrossOrigin;
+	private final Attribute attributeDefer;
+	private final Attribute attributeIntegrity;
+	private final Attribute attributeSrc;
+	private final Attribute attributeType;
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	/**
 	 * Constructs a new {@code Script} instance.
 	 */
 	public Script() {
 		super(NAME, DISPLAY_INITIAL, new Text());
+		
+		this.attributeAsync = new Attribute("async");
+		this.attributeCharSet = new Attribute("charset");
+		this.attributeCrossOrigin = new Attribute("crossorigin");
+		this.attributeDefer = new Attribute("defer");
+		this.attributeIntegrity = new Attribute("integrity");
+		this.attributeSrc = new Attribute("src");
+		this.attributeType = new Attribute("type");
+		
+		addAttribute(this.attributeAsync);
+		addAttribute(this.attributeCharSet);
+		addAttribute(this.attributeCrossOrigin);
+		addAttribute(this.attributeDefer);
+		addAttribute(this.attributeIntegrity);
+		addAttribute(this.attributeSrc);
+		addAttribute(this.attributeType);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns the {@link Attribute} instance with the name {@code "async"}.
+	 * 
+	 * @return the {@code Attribute} instance with the name {@code "async"}
+	 */
+	public Attribute getAttributeAsync() {
+		return this.attributeAsync;
+	}
+	
+	/**
+	 * Returns the {@link Attribute} instance with the name {@code "charset"}.
+	 * 
+	 * @return the {@code Attribute} instance with the name {@code "charset"}
+	 */
+	public Attribute getAttributeCharSet() {
+		return this.attributeCharSet;
+	}
+	
+	/**
+	 * Returns the {@link Attribute} instance with the name {@code "crossorigin"}.
+	 * 
+	 * @return the {@code Attribute} instance with the name {@code "crossorigin"}
+	 */
+	public Attribute getAttributeCrossOrigin() {
+		return this.attributeCrossOrigin;
+	}
+	
+	/**
+	 * Returns the {@link Attribute} instance with the name {@code "defer"}.
+	 * 
+	 * @return the {@code Attribute} instance with the name {@code "defer"}
+	 */
+	public Attribute getAttributeDefer() {
+		return this.attributeDefer;
+	}
+	
+	/**
+	 * Returns the {@link Attribute} instance with the name {@code "integrity"}.
+	 * 
+	 * @return the {@code Attribute} instance with the name {@code "integrity"}
+	 */
+	public Attribute getAttributeIntegrity() {
+		return this.attributeIntegrity;
+	}
+	
+	/**
+	 * Returns the {@link Attribute} instance with the name {@code "src"}.
+	 * 
+	 * @return the {@code Attribute} instance with the name {@code "src"}
+	 */
+	public Attribute getAttributeSrc() {
+		return this.attributeSrc;
+	}
+	
+	/**
+	 * Returns the {@link Attribute} instance with the name {@code "type"}.
+	 * 
+	 * @return the {@code Attribute} instance with the name {@code "type"}
+	 */
+	public Attribute getAttributeType() {
+		return this.attributeType;
+	}
 	
 	/**
 	 * Returns a {@code String} representation of this {@code Script} instance.
