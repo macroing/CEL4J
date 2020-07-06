@@ -21,7 +21,7 @@ package org.macroing.cel4j.html.model;
 import java.util.Objects;
 
 /**
- * A {@code HR} represents a {@code hr} element in HTML source code.
+ * An {@code HR} represents an {@code hr} element in HTML source code.
  * <p>
  * This class is mutable and not thread-safe.
  * 
@@ -30,12 +30,12 @@ import java.util.Objects;
  */
 public final class HR extends EmptyElement {
 	/**
-	 * The initial {@link Display} associated with a {@code HR} instance.
+	 * The initial {@link Display} associated with an {@code HR} instance.
 	 */
 	public static final Display DISPLAY_INITIAL = Display.BLOCK;
 	
 	/**
-	 * The name associated with a {@code HR} instance.
+	 * The name associated with an {@code HR} instance.
 	 */
 	public static final String NAME = "hr";
 	

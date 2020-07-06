@@ -21,7 +21,7 @@ package org.macroing.cel4j.html.model;
 import java.util.Objects;
 
 /**
- * A {@code H6} represents a {@code h6} element in HTML source code.
+ * An {@code H6} represents an {@code h6} element in HTML source code.
  * <p>
  * This class is mutable and not thread-safe.
  * 
@@ -30,12 +30,12 @@ import java.util.Objects;
  */
 public final class H6 extends ContentElement<Content> {
 	/**
-	 * The initial {@link Display} associated with a {@code H6} instance.
+	 * The initial {@link Display} associated with an {@code H6} instance.
 	 */
 	public static final Display DISPLAY_INITIAL = Display.BLOCK;
 	
 	/**
-	 * The name associated with a {@code H6} instance.
+	 * The name associated with an {@code H6} instance.
 	 */
 	public static final String NAME = "h6";
 	

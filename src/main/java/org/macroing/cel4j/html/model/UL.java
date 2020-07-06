@@ -21,7 +21,7 @@ package org.macroing.cel4j.html.model;
 import java.util.Objects;
 
 /**
- * An {@code UL} represents an {@code ul} element in HTML source code.
+ * A {@code UL} represents a {@code ul} element in HTML source code.
  * <p>
  * This class is mutable and not thread-safe.
  * 
@@ -30,12 +30,12 @@ import java.util.Objects;
  */
 public final class UL extends ContentElement<Elements<LI>> {
 	/**
-	 * The initial {@link Display} associated with an {@code UL} instance.
+	 * The initial {@link Display} associated with a {@code UL} instance.
 	 */
 	public static final Display DISPLAY_INITIAL = Display.BLOCK;
 	
 	/**
-	 * The name associated with an {@code UL} instance.
+	 * The name associated with a {@code UL} instance.
 	 */
 	public static final String NAME = "ul";
 	
