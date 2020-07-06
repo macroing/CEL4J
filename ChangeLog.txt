@@ -1,8 +1,18 @@
+2020-07-06  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J HTML:
+
+		* CHANGE:		Update the HTML Model API.
+
 2020-07-05  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:
 
 		* CHANGE:		Update the HTML Model API.
+
+	CEL4J Utilities:
+
+		* ADD:			Add a text(String) method to the Document class.
 
 2020-07-04  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 

@@ -37,7 +37,7 @@ import org.macroing.cel4j.util.ParameterArguments;
  * @author J&#246;rgen Lundgren
  */
 public final class Elements implements Content {
-	private final ContentElement contentElement;
+	private final Display display;
 	private final List<Element> elements;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,27 +45,18 @@ public final class Elements implements Content {
 	/**
 	 * Constructs a new {@code Elements} instance.
 	 * <p>
-	 * If either {@code contentElement}, {@code elements} or an {@link Element} in {@code elements} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * If either {@code display}, {@code elements} or an {@link Element} in {@code elements} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param contentElement the {@link ContentElement} associated with this {@code Elements} instance
+	 * @param display the {@link Display} associated with this {@code Elements} instance
 	 * @param elements the {@code Element} instances to add to this {@code Elements} instance
-	 * @throws NullPointerException thrown if, and only if, either {@code contentElement}, {@code elements} or an {@code Element} in {@code elements} are {@code null}
+	 * @throws NullPointerException thrown if, and only if, either {@code display}, {@code elements} or an {@code Element} in {@code elements} are {@code null}
 	 */
-	public Elements(final ContentElement contentElement, final Element... elements) {
-		this.contentElement = Objects.requireNonNull(contentElement, "contentElement == null");
-		this.elements = new ArrayList<>(Arrays.asList(ParameterArguments.requireNonNullArray(elements, "elements")));
+	public Elements(final Display display, final Element... elements) {
+		this.display = Objects.requireNonNull(display, "display == null");
+		this.elements = Arrays.asList(ParameterArguments.requireNonNullArray(elements, "elements")).stream().filter(element -> this.display.isSupporting(element.getDisplay())).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns the {@link ContentElement} associated with this {@code Elements} instance.
-	 * 
-	 * @return the {@code ContentElement} associated with this {@code Elements} instance
-	 */
-	public ContentElement getContentElement() {
-		return this.contentElement;
-	}
 	
 	/**
 	 * Returns the {@link Display} associated with this {@code Elements} instance.
@@ -74,7 +65,7 @@ public final class Elements implements Content {
 	 */
 	@Override
 	public Display getDisplay() {
-		return getElements().stream().allMatch(element -> element.getDisplay() == Display.INLINE) ? Display.INLINE : Display.BLOCK;
+		return this.display;
 	}
 	
 	/**
@@ -111,14 +102,21 @@ public final class Elements implements Content {
 	public Document write(final Document document) {
 		Objects.requireNonNull(document, "document == null");
 		
-		if(getDisplay() == Display.INLINE) {
-			for(final Element element : getElements()) {
-				document.text(element.write().toString());
-			}
-		} else {
-			for(final Element element : getElements()) {
-				element.write(document);
-			}
+		switch(getDisplay()) {
+			case BLOCK:
+				for(final Element element : getElements()) {
+					element.write(document);
+				}
+				
+				break;
+			case INLINE:
+				for(final Element element : getElements()) {
+					document.text(element.write().toString().replaceAll("\n|\r\n|\r|\t", ""));
+				}
+				
+				break;
+			default:
+				break;
 		}
 		
 		return document;
@@ -142,7 +140,7 @@ public final class Elements implements Content {
 	 */
 	@Override
 	public String toString() {
-		return String.format("new Elements(%s)", getContentElement());
+		return String.format("new Elements(%s)", getDisplay());
 	}
 	
 	/**
@@ -199,7 +197,7 @@ public final class Elements implements Content {
 	public boolean addElement(final Element element) {
 		Objects.requireNonNull(element, "element == null");
 		
-		if(getContentElement().getDisplay().isSupporting(element.getDisplay())) {
+		if(getDisplay().isSupporting(element.getDisplay())) {
 			return this.elements.add(element);
 		}
 		
@@ -220,7 +218,7 @@ public final class Elements implements Content {
 			return true;
 		} else if(!(object instanceof Elements)) {
 			return false;
-		} else if(!Objects.equals(getContentElement(), Elements.class.cast(object).getContentElement())) {
+		} else if(!Objects.equals(getDisplay(), Elements.class.cast(object).getDisplay())) {
 			return false;
 		} else if(!Objects.equals(getElements(), Elements.class.cast(object).getElements())) {
 			return false;
@@ -251,6 +249,6 @@ public final class Elements implements Content {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(getContentElement(), getElements());
+		return Objects.hash(getDisplay(), getElements());
 	}
 }

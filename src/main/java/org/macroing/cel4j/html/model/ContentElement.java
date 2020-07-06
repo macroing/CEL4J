@@ -141,20 +141,29 @@ public abstract class ContentElement extends Element {
 		
 		final Content content = getContent();
 		
+		final Display display = content.getDisplay();
+		
 		final List<Attribute> attributes = getAttributesSet();
 		
 		final String name = getName();
 		
-		if(content.getDisplay() == Display.INLINE) {
-			document.linef("<%s%s>%s</%s>", name, Strings.optional(attributes, " ", "", " ", attribute -> attribute.getNameAndValue()), content.write().toString(), name);
-		} else {
-			document.linef("<%s%s>", name, Strings.optional(attributes, " ", "", " ", attribute -> attribute.getNameAndValue()));
-			document.indent();
-			
-			content.write(document);
-			
-			document.outdent();
-			document.linef("</%s>", name);
+		switch(display) {
+			case BLOCK:
+				document.linef("<%s%s>", name, Strings.optional(attributes, " ", "", " ", attribute -> attribute.getNameAndValue()));
+				document.indent();
+				
+				content.write(document);
+				
+				document.outdent();
+				document.linef("</%s>", name);
+				
+				break;
+			case INLINE:
+				document.linef("<%s%s>%s</%s>", name, Strings.optional(attributes, " ", "", " ", attribute -> attribute.getNameAndValue()), content.write().toString().replaceAll("\n|\r\n|\r|\t", ""), name);
+				
+				break;
+			default:
+				break;
 		}
 		
 		return document;
