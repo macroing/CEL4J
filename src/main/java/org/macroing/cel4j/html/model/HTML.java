@@ -47,6 +47,7 @@ public final class HTML extends Element {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	private final Attribute attributeXMLNS;
 	private Body body;
 	private Head head;
 	
@@ -78,11 +79,23 @@ public final class HTML extends Element {
 	public HTML(final Head head, final Body body) {
 		super(NAME, DISPLAY_INITIAL);
 		
-		this.head = Objects.requireNonNull(head, "head == null");
+		this.attributeXMLNS = new Attribute("xmlns");
 		this.body = Objects.requireNonNull(body, "body == null");
+		this.head = Objects.requireNonNull(head, "head == null");
+		
+		addAttribute(this.attributeXMLNS);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns the {@link Attribute} instance with the name {@code "xmlns"}.
+	 * 
+	 * @return the {@code Attribute} instance with the name {@code "xmlns"}
+	 */
+	public Attribute getAttributeXMLNS() {
+		return this.attributeXMLNS;
+	}
 	
 	/**
 	 * Returns the {@link Body} associated with this {@code HTML} instance.
