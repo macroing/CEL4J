@@ -53,9 +53,28 @@ public final class Script extends ContentElement<Text> {
 	
 	/**
 	 * Constructs a new {@code Script} instance.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new Script(new Text());
+	 * }
+	 * </pre>
 	 */
 	public Script() {
-		super(NAME, DISPLAY_INITIAL, new Text());
+		this(new Text());
+	}
+	
+	/**
+	 * Constructs a new {@code Script} instance.
+	 * <p>
+	 * If {@code text} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param text the {@link Text} associated with this {@code Script} instance
+	 * @throws NullPointerException thrown if, and only if, {@code text} is {@code null}
+	 */
+	public Script(final Text text) {
+		super(NAME, DISPLAY_INITIAL, text);
 		
 		this.attributeAsync = new Attribute("async");
 		this.attributeCharSet = new Attribute("charset");
@@ -72,6 +91,25 @@ public final class Script extends ContentElement<Text> {
 		addAttribute(this.attributeIntegrity);
 		addAttribute(this.attributeSrc);
 		addAttribute(this.attributeType);
+	}
+	
+	/**
+	 * Constructs a new {@code Script} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new Script(new Text(string));
+	 * }
+	 * </pre>
+	 * 
+	 * @param string the {@code String} associated with a {@link Text} instance
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
+	public Script(final String string) {
+		this(new Text(string));
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

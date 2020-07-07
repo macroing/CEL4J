@@ -49,9 +49,28 @@ public final class OL extends ContentElement<Elements<LI>> {
 	
 	/**
 	 * Constructs a new {@code OL} instance.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new OL(new Elements<>(OL.DISPLAY_INITIAL));
+	 * }
+	 * </pre>
 	 */
 	public OL() {
-		super(NAME, DISPLAY_INITIAL, new Elements<LI>(DISPLAY_INITIAL));
+		this(new Elements<>(DISPLAY_INITIAL));
+	}
+	
+	/**
+	 * Constructs a new {@code OL} instance.
+	 * <p>
+	 * If {@code elements} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param elements the {@link Elements} associated with this {@code OL} instance
+	 * @throws NullPointerException thrown if, and only if, {@code elements} is {@code null}
+	 */
+	public OL(final Elements<LI> elements) {
+		super(NAME, DISPLAY_INITIAL, elements);
 		
 		this.attributeReversed = new Attribute("reversed");
 		this.attributeStart = new Attribute("start");

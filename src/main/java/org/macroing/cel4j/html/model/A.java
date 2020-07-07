@@ -55,9 +55,28 @@ public final class A extends ContentElement<Content> {
 	
 	/**
 	 * Constructs a new {@code A} instance.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new A(new Text());
+	 * }
+	 * </pre>
 	 */
 	public A() {
-		super(NAME, DISPLAY_INITIAL, new Text());
+		this(new Text());
+	}
+	
+	/**
+	 * Constructs a new {@code A} instance.
+	 * <p>
+	 * If {@code content} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param content the {@link Content} associated with this {@code A} instance
+	 * @throws NullPointerException thrown if, and only if, {@code content} is {@code null}
+	 */
+	public A(final Content content) {
+		super(NAME, DISPLAY_INITIAL, content);
 		
 		this.attributeDownload = new Attribute("download");
 		this.attributeHRef = new Attribute("href");
@@ -78,6 +97,25 @@ public final class A extends ContentElement<Content> {
 		addAttribute(this.attributeRel);
 		addAttribute(this.attributeTarget);
 		addAttribute(this.attributeType);
+	}
+	
+	/**
+	 * Constructs a new {@code A} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new A(new Text(string));
+	 * }
+	 * </pre>
+	 * 
+	 * @param string the {@code String} associated with a {@link Text} instance
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
+	public A(final String string) {
+		this(new Text(string));
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

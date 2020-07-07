@@ -53,9 +53,28 @@ public final class Select extends ContentElement<Elements<Option>> {
 	
 	/**
 	 * Constructs a new {@code Select} instance.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new Select(new Elements<>(Select.DISPLAY_INITIAL));
+	 * }
+	 * </pre>
 	 */
 	public Select() {
-		super(NAME, DISPLAY_INITIAL, new Elements<Option>(DISPLAY_INITIAL));
+		this(new Elements<>(DISPLAY_INITIAL));
+	}
+	
+	/**
+	 * Constructs a new {@code Select} instance.
+	 * <p>
+	 * If {@code elements} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param elements the {@link Elements} associated with this {@code Select} instance
+	 * @throws NullPointerException thrown if, and only if, {@code elements} is {@code null}
+	 */
+	public Select(final Elements<Option> elements) {
+		super(NAME, DISPLAY_INITIAL, elements);
 		
 		this.attributeAutoFocus = new Attribute("autofocus");
 		this.attributeDisabled = new Attribute("disabled");

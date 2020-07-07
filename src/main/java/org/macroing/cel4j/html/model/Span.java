@@ -43,9 +43,47 @@ public final class Span extends ContentElement<Content> {
 	
 	/**
 	 * Constructs a new {@code Span} instance.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new Span(new Text());
+	 * }
+	 * </pre>
 	 */
 	public Span() {
-		super(NAME, DISPLAY_INITIAL, new Text());
+		this(new Text());
+	}
+	
+	/**
+	 * Constructs a new {@code Span} instance.
+	 * <p>
+	 * If {@code content} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param content the {@link Content} associated with this {@code Span} instance
+	 * @throws NullPointerException thrown if, and only if, {@code content} is {@code null}
+	 */
+	public Span(final Content content) {
+		super(NAME, DISPLAY_INITIAL, content);
+	}
+	
+	/**
+	 * Constructs a new {@code Span} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new Span(new Text(string));
+	 * }
+	 * </pre>
+	 * 
+	 * @param string the {@code String} associated with a {@link Text} instance
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
+	public Span(final String string) {
+		this(new Text(string));
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

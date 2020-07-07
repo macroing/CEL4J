@@ -47,13 +47,51 @@ public final class LI extends ContentElement<Content> {
 	
 	/**
 	 * Constructs a new {@code LI} instance.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new LI(new Text());
+	 * }
+	 * </pre>
 	 */
 	public LI() {
-		super(NAME, DISPLAY_INITIAL, new Text());
+		this(new Text());
+	}
+	
+	/**
+	 * Constructs a new {@code LI} instance.
+	 * <p>
+	 * If {@code content} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param content the {@link Content} associated with this {@code LI} instance
+	 * @throws NullPointerException thrown if, and only if, {@code content} is {@code null}
+	 */
+	public LI(final Content content) {
+		super(NAME, DISPLAY_INITIAL, content);
 		
 		this.attributeValue = new Attribute("value");
 		
 		addAttribute(this.attributeValue);
+	}
+	
+	/**
+	 * Constructs a new {@code LI} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new LI(new Text(string));
+	 * }
+	 * </pre>
+	 * 
+	 * @param string the {@code String} associated with a {@link Text} instance
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
+	public LI(final String string) {
+		this(new Text(string));
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

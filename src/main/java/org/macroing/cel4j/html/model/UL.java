@@ -43,9 +43,28 @@ public final class UL extends ContentElement<Elements<LI>> {
 	
 	/**
 	 * Constructs a new {@code UL} instance.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new UL(new Elements<>(UL.DISPLAY_INITIAL));
+	 * }
+	 * </pre>
 	 */
 	public UL() {
-		super(NAME, DISPLAY_INITIAL, new Elements<LI>(DISPLAY_INITIAL));
+		this(new Elements<>(DISPLAY_INITIAL));
+	}
+	
+	/**
+	 * Constructs a new {@code UL} instance.
+	 * <p>
+	 * If {@code elements} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param elements the {@link Elements} associated with this {@code UL} instance
+	 * @throws NullPointerException thrown if, and only if, {@code elements} is {@code null}
+	 */
+	public UL(final Elements<LI> elements) {
+		super(NAME, DISPLAY_INITIAL, elements);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
