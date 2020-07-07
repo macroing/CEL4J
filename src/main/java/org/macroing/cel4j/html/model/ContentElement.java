@@ -114,6 +114,16 @@ public abstract class ContentElement<T extends Content> extends Element {
 				document.linef("<%s%s>%s</%s>", name, Strings.optional(attributes, " ", "", " ", attribute -> attribute.getNameAndValue()), content.write().toString().replaceAll("\n|\r\n|\r|\t", ""), name);
 				
 				break;
+			case NONE:
+				document.linef("<%s%s>", name, Strings.optional(attributes, " ", "", " ", attribute -> attribute.getNameAndValue()));
+				document.indent();
+				
+				content.write(document);
+				
+				document.outdent();
+				document.linef("</%s>", name);
+				
+				break;
 			default:
 				break;
 		}

@@ -128,6 +128,12 @@ public final class Elements<T extends Element> implements Content {
 				}
 				
 				break;
+			case NONE:
+				for(final Element element : getElements()) {
+					element.write(document);
+				}
+				
+				break;
 			default:
 				break;
 		}

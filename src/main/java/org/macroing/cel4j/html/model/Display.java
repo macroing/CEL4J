@@ -25,8 +25,8 @@ import java.util.Objects;
  * <p>
  * This enum is used as a measure to restrict what can and what cannot be added to an {@link Element} with children. It is also used to write the HTML source code in the correct way.
  * <p>
- * The display properties {@code contents}, {@code flex}, {@code grid}, {@code inherit}, {@code initial}, {@code inline-block}, {@code inline-flex}, {@code inline-grid}, {@code inline-table}, {@code list-item}, {@code none}, {@code run-in},
- * {@code table}, {@code table-caption}, {@code table-cell}, {@code table-column}, {@code table-column-group}, {@code table-header-group}, {@code table-footer-group}, {@code table-row} and {@code table-row-group} are not supported.
+ * The display properties {@code contents}, {@code flex}, {@code grid}, {@code inherit}, {@code initial}, {@code inline-block}, {@code inline-flex}, {@code inline-grid}, {@code inline-table}, {@code list-item}, {@code run-in}, {@code table},
+ * {@code table-caption}, {@code table-cell}, {@code table-column}, {@code table-column-group}, {@code table-header-group}, {@code table-footer-group}, {@code table-row} and {@code table-row-group} are not supported.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
@@ -35,12 +35,17 @@ public enum Display {
 	/**
 	 * A {@code Display} that represents {@code block}.
 	 */
-	BLOCK(),
+	BLOCK,
 	
 	/**
 	 * A {@code Display} that represents {@code inline}.
 	 */
-	INLINE();
+	INLINE,
+	
+	/**
+	 * A {@code Display} that represents {@code none}.
+	 */
+	NONE;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -64,9 +69,11 @@ public enum Display {
 		
 		switch(this) {
 			case BLOCK:
-				return true;
+				return display != NONE;
 			case INLINE:
 				return display == INLINE;
+			case NONE:
+				return false;
 			default:
 				return false;
 		}
