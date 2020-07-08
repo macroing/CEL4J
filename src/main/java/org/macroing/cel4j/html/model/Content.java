@@ -18,6 +18,8 @@
  */
 package org.macroing.cel4j.html.model;
 
+import java.util.List;
+
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.util.Documentable;
 
@@ -27,11 +29,20 @@ import org.macroing.cel4j.util.Documentable;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public interface Content extends Documentable, Node {
+public interface Content<T extends Element> extends Documentable, Node {
 	/**
 	 * Returns the {@link Display} associated with this {@code Content} instance.
 	 * 
 	 * @return the {@code Display} associated with this {@code Content} instance
 	 */
 	Display getDisplay();
+	
+	/**
+	 * Returns a {@code List} with all {@link Element} instances currently added to this {@code Content} instance.
+	 * <p>
+	 * Modifying the returned {@code List} will not affect this {@code Content} instance.
+	 * 
+	 * @return a {@code List} with all {@code Element} instances currently added to this {@code Content} instance
+	 */
+	List<T> getElements();
 }

@@ -32,6 +32,19 @@ public final class Bootstrap {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns an alert {@link Div} instance with a color represented by {@code danger}.
+	 * <p>
+	 * If {@code content} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param content a {@link Content} instance
+	 * @param isDismissible {@code true} if, and only if, the alert is dismissible, {@code false} otherwise
+	 * @return an alert {@code Div} instance with a color represented by {@code danger}
+	 */
+	public static Div createDivAlertDanger(final Content<Element> content, final boolean isDismissible) {
+		return doCreateDivAlert(content, isDismissible, "danger");
+	}
+	
+	/**
 	 * Returns a {@link Link} instance that points to Bootstrap.
 	 * <p>
 	 * The current implementation of this method points to Bootstrap version 4.1.0, minified.
@@ -63,5 +76,31 @@ public final class Bootstrap {
 		script.getAttributeSrc().setValue("https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js");
 		
 		return script;
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static Div doCreateDivAlert(final Content<Element> content, final boolean isDismissible, final String type) {
+		final Elements<Element> elements = new Elements<>(Div.DISPLAY_INITIAL, content);
+		
+		final
+		Div div = new Div(elements);
+		div.getAttributeClass().setValue(new String[] {"alert", "alert-" + type});
+		
+		if(isDismissible) {
+			div.getAttributeClass().addValue("alert-dismissible");
+			div.getAttributeClass().addValue("fade");
+			div.getAttributeClass().addValue("show");
+			
+			final
+			Button button = new Button("&times;");
+			button.addAttribute(new Attribute("data-dismiss", "alert"));
+			button.getAttributeClass().setValue("close");
+			button.getAttributeType().setValue("button");
+			
+			elements.addElement(button);
+		}
+		
+		return div;
 	}
 }

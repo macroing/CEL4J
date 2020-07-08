@@ -34,8 +34,8 @@ import org.macroing.cel4j.util.Strings;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public abstract class ContentElement<T extends Content> extends Element {
-	private T content;
+public abstract class ContentElement<T extends Element, U extends Content<T>> extends Element {
+	private U content;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -49,7 +49,7 @@ public abstract class ContentElement<T extends Content> extends Element {
 	 * @param content the {@link Content} associated with this {@code ContentElement} instance
 	 * @throws NullPointerException thrown if, and only if, either {@code name}, {@code display} or {@code content} are {@code null}
 	 */
-	protected ContentElement(final String name, final Display display, final T content) {
+	protected ContentElement(final String name, final Display display, final U content) {
 		super(name, display);
 		
 		this.content = Objects.requireNonNull(content, "content == null");
@@ -91,7 +91,7 @@ public abstract class ContentElement<T extends Content> extends Element {
 	public final Document write(final Document document) {
 		Objects.requireNonNull(document, "document == null");
 		
-		final Content content = getContent();
+		final Content<T> content = getContent();
 		
 		final Display display = content.getDisplay();
 		
@@ -136,7 +136,7 @@ public abstract class ContentElement<T extends Content> extends Element {
 	 * 
 	 * @return the {@code Content} associated with this {@code ContentElement} instance
 	 */
-	public final T getContent() {
+	public final U getContent() {
 		return this.content;
 	}
 	
@@ -192,7 +192,7 @@ public abstract class ContentElement<T extends Content> extends Element {
 	 * @param content the {@code Content} associated with this {@code ContentElement} instance
 	 * @throws NullPointerException thrown if, and only if, {@code content} is {@code null}
 	 */
-	public final void setContent(final T content) {
+	public final void setContent(final U content) {
 		this.content = Objects.requireNonNull(content, "content == null");
 	}
 }

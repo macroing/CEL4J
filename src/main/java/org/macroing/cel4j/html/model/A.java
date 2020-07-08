@@ -28,7 +28,7 @@ import java.util.Objects;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class A extends ContentElement<Content> {
+public final class A extends ContentElement<Element, Content<Element>> {
 	/**
 	 * The initial {@link Display} associated with an {@code A} instance.
 	 */
@@ -75,7 +75,7 @@ public final class A extends ContentElement<Content> {
 	 * @param content the {@link Content} associated with this {@code A} instance
 	 * @throws NullPointerException thrown if, and only if, {@code content} is {@code null}
 	 */
-	public A(final Content content) {
+	public A(final Content<Element> content) {
 		super(NAME, DISPLAY_INITIAL, content);
 		
 		this.attributeDownload = new Attribute("download");

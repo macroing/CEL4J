@@ -36,7 +36,7 @@ import org.macroing.cel4j.util.ParameterArguments;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class Elements<T extends Element> implements Content {
+public final class Elements<T extends Element> implements Content<T> {
 	private final Display display;
 	private final List<T> elements;
 	
@@ -53,6 +53,34 @@ public final class Elements<T extends Element> implements Content {
 	public Elements(final Display display) {
 		this.display = Objects.requireNonNull(display, "display == null");
 		this.elements = new ArrayList<>();
+	}
+	
+	/**
+	 * Constructs a new {@code Elements} instance.
+	 * <p>
+	 * If either {@code display} or {@code content} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param display the {@link Display} associated with this {@code Elements} instance
+	 * @param content the {@link Content} that contains the {@code Element} instances to add to this {@code Elements} instance
+	 * @throws NullPointerException thrown if, and only if, either {@code display} or {@code content} are {@code null}
+	 */
+	public Elements(final Display display, final Content<T> content) {
+		this.display = Objects.requireNonNull(display, "display == null");
+		this.elements = new ArrayList<>(Objects.requireNonNull(content, "content == null").getElements());
+	}
+	
+	/**
+	 * Constructs a new {@code Elements} instance.
+	 * <p>
+	 * If either {@code display}, {@code elements} or an {@link Element} in {@code elements} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param display the {@link Display} associated with this {@code Elements} instance
+	 * @param elements the {@code Element} instances to add to this {@code Elements} instance
+	 * @throws NullPointerException thrown if, and only if, either {@code display}, {@code elements} or an {@code Element} in {@code elements} are {@code null}
+	 */
+	public Elements(final Display display, final List<T> elements) {
+		this.display = Objects.requireNonNull(display, "display == null");
+		this.elements = new ArrayList<>(ParameterArguments.requireNonNullList(elements, "elements"));
 	}
 	
 	/**
@@ -148,6 +176,7 @@ public final class Elements<T extends Element> implements Content {
 	 * 
 	 * @return a {@code List} with all {@code Element} instances currently added to this {@code Elements} instance
 	 */
+	@Override
 	public List<T> getElements() {
 		return new ArrayList<>(this.elements);
 	}

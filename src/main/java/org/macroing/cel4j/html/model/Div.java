@@ -28,7 +28,7 @@ import java.util.Objects;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class Div extends ContentElement<Content> {
+public final class Div extends ContentElement<Element, Content<Element>> {
 	/**
 	 * The initial {@link Display} associated with a {@code Div} instance.
 	 */
@@ -63,7 +63,7 @@ public final class Div extends ContentElement<Content> {
 	 * @param content the {@link Content} associated with this {@code Div} instance
 	 * @throws NullPointerException thrown if, and only if, {@code content} is {@code null}
 	 */
-	public Div(final Content content) {
+	public Div(final Content<Element> content) {
 		super(NAME, DISPLAY_INITIAL, content);
 	}
 	

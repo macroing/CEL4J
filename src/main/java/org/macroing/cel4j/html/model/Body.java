@@ -28,7 +28,7 @@ import java.util.Objects;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class Body extends ContentElement<Content> {
+public final class Body extends ContentElement<Element, Content<Element>> {
 	/**
 	 * The initial {@link Display} associated with a {@code Body} instance.
 	 */
@@ -63,7 +63,7 @@ public final class Body extends ContentElement<Content> {
 	 * @param content the {@link Content} associated with this {@code Body} instance
 	 * @throws NullPointerException thrown if, and only if, {@code content} is {@code null}
 	 */
-	public Body(final Content content) {
+	public Body(final Content<Element> content) {
 		super(NAME, DISPLAY_INITIAL, content);
 	}
 	

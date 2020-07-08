@@ -18,6 +18,9 @@
  */
 package org.macroing.cel4j.html.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import org.macroing.cel4j.util.Document;
@@ -30,7 +33,7 @@ import org.macroing.cel4j.util.Document;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class Text implements Content {
+public final class Text implements Content<Element> {
 	private final String string;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,6 +113,18 @@ public final class Text implements Content {
 		document.text(getString());
 		
 		return document;
+	}
+	
+	/**
+	 * Returns a {@code List} with all {@link Element} instances currently added to this {@code Text} instance.
+	 * <p>
+	 * Modifying the returned {@code List} will not affect this {@code Text} instance.
+	 * 
+	 * @return a {@code List} with all {@code Element} instances currently added to this {@code Text} instance
+	 */
+	@Override
+	public List<Element> getElements() {
+		return new ArrayList<>(Arrays.asList(new Span(this)));
 	}
 	
 	/**

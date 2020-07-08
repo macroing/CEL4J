@@ -159,6 +159,24 @@ public final class Attribute implements Node {
 	}
 	
 	/**
+	 * Adds {@code value} to the value associated with this {@code Attribute} instance.
+	 * <p>
+	 * If {@code value} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param value the value to add to the value associated with this {@code Attribute} instance
+	 * @throws NullPointerException thrown if, and only if, {@code value} is {@code null}
+	 */
+	public void addValue(final String value) {
+		Objects.requireNonNull(value, "value == null");
+		
+		if(isSet()) {
+			this.value += " ";
+		}
+		
+		this.value += value;
+	}
+	
+	/**
 	 * Sets the value associated with this {@code Attribute} instance to an empty ({@code ""}) {@code String}.
 	 * <p>
 	 * Calling this method is equivalent to the following:

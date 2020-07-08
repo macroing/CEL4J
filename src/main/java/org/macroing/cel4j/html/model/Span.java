@@ -28,7 +28,7 @@ import java.util.Objects;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class Span extends ContentElement<Content> {
+public final class Span extends ContentElement<Element, Content<Element>> {
 	/**
 	 * The initial {@link Display} associated with a {@code Span} instance.
 	 */
@@ -63,7 +63,7 @@ public final class Span extends ContentElement<Content> {
 	 * @param content the {@link Content} associated with this {@code Span} instance
 	 * @throws NullPointerException thrown if, and only if, {@code content} is {@code null}
 	 */
-	public Span(final Content content) {
+	public Span(final Content<Element> content) {
 		super(NAME, DISPLAY_INITIAL, content);
 	}
 	
@@ -131,5 +131,53 @@ public final class Span extends ContentElement<Content> {
 	@Override
 	public int hashCode() {
 		return Objects.hash(getAttributes(), getDisplay(), getContent());
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns a {@code Span} instance that combines {@code spanA} and {@code spanB}.
+	 * <p>
+	 * If either {@code spanA} or {@code spanB} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * Span.combine(spanA, spanB, false);
+	 * }
+	 * </pre>
+	 * 
+	 * @param spanA the {@code Span} instance that is added first
+	 * @param spanB the {@code Span} instance that is added last
+	 * @return a {@code Span} instance that combines {@code spanA} and {@code spanB}
+	 * @throws NullPointerException thrown if, and only if, either {@code spanA} or {@code spanB} are {@code null}
+	 */
+	public static Span combine(final Span spanA, final Span spanB) {
+		return combine(spanA, spanB, false);
+	}
+	
+	/**
+	 * Returns a {@code Span} instance that combines {@code spanA} and {@code spanB}.
+	 * <p>
+	 * If either {@code spanA} or {@code spanB} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param spanA the {@code Span} instance that is added first
+	 * @param spanB the {@code Span} instance that is added last
+	 * @param isSeparatingWithSpace {@code true} if, and only if, {@code new Span(" ")} should be added between {@code spanA} and {@code spanB}, {@code false} otherwise
+	 * @return a {@code Span} instance that combines {@code spanA} and {@code spanB}
+	 * @throws NullPointerException thrown if, and only if, either {@code spanA} or {@code spanB} are {@code null}
+	 */
+	public static Span combine(final Span spanA, final Span spanB, final boolean isSeparatingWithSpace) {
+		final
+		Elements<Element> elements = new Elements<>(DISPLAY_INITIAL);
+		elements.addElement(Objects.requireNonNull(spanA, "spanA == null"));
+		
+		if(isSeparatingWithSpace) {
+			elements.addElement(new Span(" "));
+		}
+		
+		elements.addElement(Objects.requireNonNull(spanB, "spanB == null"));
+		
+		return new Span(elements);
 	}
 }

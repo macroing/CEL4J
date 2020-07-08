@@ -28,7 +28,7 @@ import java.util.Objects;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class Select extends ContentElement<Elements<Option>> {
+public final class Select extends ContentElement<Option, Elements<Option>> {
 	/**
 	 * The initial {@link Display} associated with a {@code Select} instance.
 	 */

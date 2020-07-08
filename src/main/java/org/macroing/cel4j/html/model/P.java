@@ -28,7 +28,7 @@ import java.util.Objects;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class P extends ContentElement<Content> {
+public final class P extends ContentElement<Element, Content<Element>> {
 	/**
 	 * The initial {@link Display} associated with a {@code P} instance.
 	 */
@@ -63,7 +63,7 @@ public final class P extends ContentElement<Content> {
 	 * @param content the {@link Content} associated with this {@code P} instance
 	 * @throws NullPointerException thrown if, and only if, {@code content} is {@code null}
 	 */
-	public P(final Content content) {
+	public P(final Content<Element> content) {
 		super(NAME, DISPLAY_INITIAL, content);
 	}
 	

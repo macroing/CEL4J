@@ -28,7 +28,7 @@ import java.util.Objects;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class H1 extends ContentElement<Content> {
+public final class H1 extends ContentElement<Element, Content<Element>> {
 	/**
 	 * The initial {@link Display} associated with an {@code H1} instance.
 	 */
@@ -63,7 +63,7 @@ public final class H1 extends ContentElement<Content> {
 	 * @param content the {@link Content} associated with this {@code H1} instance
 	 * @throws NullPointerException thrown if, and only if, {@code content} is {@code null}
 	 */
-	public H1(final Content content) {
+	public H1(final Content<Element> content) {
 		super(NAME, DISPLAY_INITIAL, content);
 	}
 	

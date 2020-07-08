@@ -28,7 +28,7 @@ import java.util.Objects;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class Button extends ContentElement<Content> {
+public final class Button extends ContentElement<Element, Content<Element>> {
 	/**
 	 * The initial {@link Display} associated with a {@code Button} instance.
 	 */
@@ -78,7 +78,7 @@ public final class Button extends ContentElement<Content> {
 	 * @param content the {@link Content} associated with this {@code Button} instance
 	 * @throws NullPointerException thrown if, and only if, {@code content} is {@code null}
 	 */
-	public Button(final Content content) {
+	public Button(final Content<Element> content) {
 		super(NAME, DISPLAY_INITIAL, content);
 		
 		this.attributeAutoFocus = new Attribute("autofocus");

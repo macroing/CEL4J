@@ -28,7 +28,7 @@ import java.util.Objects;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class Title extends ContentElement<Text> {
+public final class Title extends ContentElement<Element, Text> {
 	/**
 	 * The initial {@link Display} associated with a {@code Title} instance.
 	 */

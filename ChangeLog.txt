@@ -1,3 +1,9 @@
+2020-07-08  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J HTML:
+
+		* CHANGE:		Update the HTML Model API.
+
 2020-07-07  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:

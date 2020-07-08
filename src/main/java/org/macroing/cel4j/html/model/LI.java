@@ -28,7 +28,7 @@ import java.util.Objects;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class LI extends ContentElement<Content> {
+public final class LI extends ContentElement<Element, Content<Element>> {
 	/**
 	 * The initial {@link Display} associated with an {@code LI} instance.
 	 */
@@ -67,7 +67,7 @@ public final class LI extends ContentElement<Content> {
 	 * @param content the {@link Content} associated with this {@code LI} instance
 	 * @throws NullPointerException thrown if, and only if, {@code content} is {@code null}
 	 */
-	public LI(final Content content) {
+	public LI(final Content<Element> content) {
 		super(NAME, DISPLAY_INITIAL, content);
 		
 		this.attributeValue = new Attribute("value");

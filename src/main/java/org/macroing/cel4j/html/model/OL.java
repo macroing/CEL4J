@@ -28,7 +28,7 @@ import java.util.Objects;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class OL extends ContentElement<Elements<LI>> {
+public final class OL extends ContentElement<LI, Elements<LI>> {
 	/**
 	 * The initial {@link Display} associated with an {@code OL} instance.
 	 */
