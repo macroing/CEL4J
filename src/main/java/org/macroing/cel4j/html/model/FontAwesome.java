@@ -220,6 +220,93 @@ public final class FontAwesome {
 		return doCreateSpan(color, new String[] {"fa", "fa-envelope"});
 	}
 	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-file}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanFile("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-file}
+	 */
+	public static Span createSpanFile() {
+		return createSpanFile("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-file}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-file}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanFile(final String color) {
+		return doCreateSpan(color, new String[] {"fa", "fa-file"});
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-folder}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanFolder("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-folder}
+	 */
+	public static Span createSpanFolder() {
+		return createSpanFolder("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-folder}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-folder}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanFolder(final String color) {
+		return doCreateSpan(color, new String[] {"fa", "fa-folder"});
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-folder-open}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanFolderOpen("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-folder-open}
+	 */
+	public static Span createSpanFolderOpen() {
+		return createSpanFolderOpen("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-folder-open}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-folder-open}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanFolderOpen(final String color) {
+		return doCreateSpan(color, new String[] {"fa", "fa-folder-open"});
+	}
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private static Span doCreateSpan(final String color, final String[] attributeClassValues) {
