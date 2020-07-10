@@ -1,5 +1,9 @@
 2020-07-10  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
+	CEL4J Rex:
+
+		* ADD:			Add a new Rex API.
+
 	CEL4J Scanner:
 
 		* ADD:			Add the methods stateSet(int) and stateSet(int, int) to the Scanner class.

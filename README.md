@@ -25,6 +25,7 @@ This library consists of several projects. They are presented below.
  - [CEL4J Lexer](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Lexer) provides lexing functionality for different formal languages.
  - [CEL4J Node](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Node) provides functionality for modeling data types that can be filtered and traversed in various ways.
  - [CEL4J PHP](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-PHP) provides functionality to generate PHP source code.
+ - [CEL4J Rex](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Rex) provides functionality to match text such as source code.
  - [CEL4J Scanner](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Scanner) provides scanning functionality for data in various forms.
  - [CEL4J Utilities](https://github.com/macroing/CEL4J/tree/master/documentation/CEL4J-Utilities) provides unrelated functionality used by the library.
 
