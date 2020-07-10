@@ -1,3 +1,16 @@
+2020-07-10  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Scanner:
+
+		* ADD:			Add the methods stateSet(int) and stateSet(int, int) to the Scanner class.
+		* CHANGE:		Change the access modifiers of the methods getIndexAtBeginningInclusive(), getIndexAtEndExclusive(), setIndexAtBeginningInclusive(int), setIndexAtBeginningInclusiveAndIndexAtEndExclusive(int, int) and setIndexAtEndExclusive(int) from protected to public in the Scanner class.
+
+2020-07-09  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J HTML:
+
+		* CHANGE:		Update the HTML Model API.
+
 2020-07-08  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:

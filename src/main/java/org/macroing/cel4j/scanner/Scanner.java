@@ -276,6 +276,44 @@ public abstract class Scanner<T, U> {
 	}
 	
 	/**
+	 * Sets the state of this {@code Scanner} instance to {@code indexAtBeginningInclusive}.
+	 * <p>
+	 * Returns {@code true} if, and only if, the state was set, {@code false} otherwise.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * scanner.stateSet(indexAtBeginningInclusive, indexAtBeginningInclusive);
+	 * }
+	 * </pre>
+	 * 
+	 * @param indexAtBeginningInclusive the index at the beginning of the consumption, which is inclusive
+	 * @return {@code true} if, and only if, the state was set, {@code false} otherwise
+	 */
+	public final boolean stateSet(final int indexAtBeginningInclusive) {
+		return stateSet(indexAtBeginningInclusive, indexAtBeginningInclusive);
+	}
+	
+	/**
+	 * Sets the state of this {@code Scanner} instance to {@code indexAtBeginningInclusive} and {@code indexAtEndExclusive}.
+	 * <p>
+	 * Returns {@code true} if, and only if, the state was set, {@code false} otherwise.
+	 * 
+	 * @param indexAtBeginningInclusive the index at the beginning of the consumption, which is inclusive
+	 * @param indexAtEndExclusive the index at the end of the consumption, which is exclusive
+	 * @return {@code true} if, and only if, the state was set, {@code false} otherwise
+	 */
+	public final boolean stateSet(final int indexAtBeginningInclusive, final int indexAtEndExclusive) {
+		if(indexAtBeginningInclusive >= 0 && indexAtBeginningInclusive <= indexAtEndExclusive) {
+			setIndexAtBeginningInclusiveAndIndexAtEndExclusive(indexAtBeginningInclusive, indexAtEndExclusive);
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Tests whether {@link #next()} can be called successfully.
 	 * <p>
 	 * Returns {@code true} if, and only if, {@code next()} returns {@code true}, {@code false} otherwise.
@@ -285,17 +323,15 @@ public abstract class Scanner<T, U> {
 	 * @return {@code true} if, and only if, {@code next()} returns {@code true}, {@code false} otherwise
 	 */
 	public final boolean testNext() {
-		final Key key = stateSave();
+		final int indexAtBeginningInclusive = getIndexAtBeginningInclusive();
+		final int indexAtEndExclusive = getIndexAtEndExclusive();
 		
 		try {
 			return next();
 		} finally {
-			stateLoad(key);
-			stateDelete(key);
+			stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
 		}
 	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Returns the index at the beginning of the current consumption.
@@ -304,7 +340,7 @@ public abstract class Scanner<T, U> {
 	 * 
 	 * @return the index at the beginning of the current consumption
 	 */
-	protected final int getIndexAtBeginningInclusive() {
+	public final int getIndexAtBeginningInclusive() {
 		return this.indexAtBeginningInclusive.get();
 	}
 	
@@ -315,9 +351,52 @@ public abstract class Scanner<T, U> {
 	 * 
 	 * @return the index at the end of the current consumption
 	 */
-	protected final int getIndexAtEndExclusive() {
+	public final int getIndexAtEndExclusive() {
 		return this.indexAtEndExclusive.get();
 	}
+	
+	/**
+	 * Sets the index at the beginning of the consumption.
+	 * <p>
+	 * If {@code indexAtBeginningInclusive} is less than {@code 0} or greater than {@code scanner.getIndexAtEndExclusive()}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param indexAtBeginningInclusive the index at the beginning of the consumption, which is inclusive
+	 * @throws IllegalArgumentException thrown if, and only if, {@code indexAtBeginningInclusive} is less than {@code 0} or greater than {@code scanner.getIndexAtEndExclusive()}
+	 */
+	public final void setIndexAtBeginningInclusive(final int indexAtBeginningInclusive) {
+		this.indexAtBeginningInclusive.set(ParameterArguments.requireRange(indexAtBeginningInclusive, 0, getIndexAtEndExclusive(), "indexAtBeginningInclusive"));
+	}
+	
+	/**
+	 * Sets the indices at the beginning and the end of the consumption.
+	 * <p>
+	 * If {@code indexAtBeginningInclusive} is less than {@code 0} or greater than {@code indexAtEndExclusive}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param indexAtBeginningInclusive the index at the beginning of the consumption, which is inclusive
+	 * @param indexAtEndExclusive the index at the end of the consumption, which is exclusive
+	 * @throws IllegalArgumentException thrown if, and only if, {@code indexAtBeginningInclusive} is less than {@code 0} or greater than {@code indexAtEndExclusive}
+	 */
+	public final void setIndexAtBeginningInclusiveAndIndexAtEndExclusive(final int indexAtBeginningInclusive, final int indexAtEndExclusive) {
+		ParameterArguments.requireRange(indexAtBeginningInclusive, 0, indexAtEndExclusive, "indexAtBeginningInclusive");
+		ParameterArguments.requireRange(indexAtEndExclusive, indexAtBeginningInclusive, Integer.MAX_VALUE, "indexAtEndExclusive");//Might not be necessary?
+		
+		this.indexAtBeginningInclusive.set(indexAtBeginningInclusive);
+		this.indexAtEndExclusive.set(indexAtEndExclusive);
+	}
+	
+	/**
+	 * Sets the index at the end of the consumption.
+	 * <p>
+	 * If {@code indexAtEndExclusive} is less than {@code scanner.getIndexAtBeginningInclusive()}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param indexAtEndExclusive the index at the end of the consumption, which is exclusive
+	 * @throws IllegalArgumentException thrown if, and only if, {@code indexAtEndExclusive} is less than {@code scanner.getIndexAtBeginningInclusive()}
+	 */
+	public final void setIndexAtEndExclusive(final int indexAtEndExclusive) {
+		this.indexAtEndExclusive.set(ParameterArguments.requireRange(indexAtEndExclusive, getIndexAtBeginningInclusive(), Integer.MAX_VALUE, "indexAtEndExclusive"));
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Called by {@link #consume()} when data can be consumed.
@@ -339,47 +418,6 @@ public abstract class Scanner<T, U> {
 	 * @param object the {@code Object} that consumes the data
 	 */
 	protected abstract void consume(final int indexAtBeginningInclusive, final int indexAtEndExclusive, final T object);
-	
-	/**
-	 * Sets the index at the beginning of the consumption.
-	 * <p>
-	 * If {@code indexAtBeginningInclusive} is less than {@code 0} or greater than {@code scanner.getIndexAtEndExclusive()}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param indexAtBeginningInclusive the index at the beginning of the consumption, which is inclusive
-	 * @throws IllegalArgumentException thrown if, and only if, {@code indexAtBeginningInclusive} is less than {@code 0} or greater than {@code scanner.getIndexAtEndExclusive()}
-	 */
-	protected final void setIndexAtBeginningInclusive(final int indexAtBeginningInclusive) {
-		this.indexAtBeginningInclusive.set(ParameterArguments.requireRange(indexAtBeginningInclusive, 0, getIndexAtEndExclusive(), "indexAtBeginningInclusive"));
-	}
-	
-	/**
-	 * Sets the indices at the beginning and the end of the consumption.
-	 * <p>
-	 * If {@code indexAtBeginningInclusive} is less than {@code 0} or greater than {@code indexAtEndExclusive}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param indexAtBeginningInclusive the index at the beginning of the consumption, which is inclusive
-	 * @param indexAtEndExclusive the index at the end of the consumption, which is exclusive
-	 * @throws IllegalArgumentException thrown if, and only if, {@code indexAtBeginningInclusive} is less than {@code 0} or greater than {@code indexAtEndExclusive}
-	 */
-	protected final void setIndexAtBeginningInclusiveAndIndexAtEndExclusive(final int indexAtBeginningInclusive, final int indexAtEndExclusive) {
-		ParameterArguments.requireRange(indexAtBeginningInclusive, 0, indexAtEndExclusive, "indexAtBeginningInclusive");
-		ParameterArguments.requireRange(indexAtEndExclusive, indexAtBeginningInclusive, Integer.MAX_VALUE, "indexAtEndExclusive");//Might not be necessary?
-		
-		this.indexAtBeginningInclusive.set(indexAtBeginningInclusive);
-		this.indexAtEndExclusive.set(indexAtEndExclusive);
-	}
-	
-	/**
-	 * Sets the index at the end of the consumption.
-	 * <p>
-	 * If {@code indexAtEndExclusive} is less than {@code scanner.getIndexAtBeginningInclusive()}, an {@code IllegalArgumentException} will be thrown.
-	 * 
-	 * @param indexAtEndExclusive the index at the end of the consumption, which is exclusive
-	 * @throws IllegalArgumentException thrown if, and only if, {@code indexAtEndExclusive} is less than {@code scanner.getIndexAtBeginningInclusive()}
-	 */
-	protected final void setIndexAtEndExclusive(final int indexAtEndExclusive) {
-		this.indexAtEndExclusive.set(ParameterArguments.requireRange(indexAtEndExclusive, getIndexAtBeginningInclusive(), Integer.MAX_VALUE, "indexAtEndExclusive"));
-	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	

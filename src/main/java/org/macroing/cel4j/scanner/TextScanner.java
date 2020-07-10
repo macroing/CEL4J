@@ -46,7 +46,10 @@ import org.macroing.cel4j.util.Strings;
  * @author J&#246;rgen Lundgren
  */
 public final class TextScanner extends Scanner<StringBuilder, String> {
-	private static final char EOF = (char)(0);
+	/**
+	 * A {@code char} that represents end of file.
+	 */
+	public static final char EOF = (char)(0);
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -123,6 +126,16 @@ public final class TextScanner extends Scanner<StringBuilder, String> {
 		}
 		
 		return stringBuilder.toString();
+	}
+	
+	/**
+	 * Returns a {@code String} representation of this {@code TextScanner} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code TextScanner} instance
+	 */
+	@Override
+	public String toString() {
+		return consumption(getIndexAtBeginningInclusive(), Math.min(getIndexAtBeginningInclusive() + 10, this.charBuffer.limit()));
 	}
 	
 	/**
@@ -215,18 +228,16 @@ public final class TextScanner extends Scanner<StringBuilder, String> {
 	public boolean nextCharacterAlternation(final char... characters) {
 		Objects.requireNonNull(characters, "characters == null");
 		
-		final Key key = stateSave();
+		final int indexAtBeginningInclusive = getIndexAtBeginningInclusive();
+		final int indexAtEndExclusive = getIndexAtEndExclusive();
 		
 		for(final char character : characters) {
 			if(nextCharacter(character)) {
-				stateDelete(key);
-				
 				return true;
 			}
 		}
 		
-		stateLoad(key);
-		stateDelete(key);
+		stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
 		
 		return false;
 	}
@@ -249,18 +260,16 @@ public final class TextScanner extends Scanner<StringBuilder, String> {
 	public boolean nextCharacterConcatenation(final char... characters) {
 		Objects.requireNonNull(characters, "characters == null");
 		
-		final Key key = stateSave();
+		final int indexAtBeginningInclusive = getIndexAtBeginningInclusive();
+		final int indexAtEndExclusive = getIndexAtEndExclusive();
 		
 		for(final char character : characters) {
 			if(!nextCharacter(character)) {
-				stateLoad(key);
-				stateDelete(key);
+				stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
 				
 				return false;
 			}
 		}
-		
-		stateDelete(key);
 		
 		return true;
 	}
@@ -345,18 +354,16 @@ public final class TextScanner extends Scanner<StringBuilder, String> {
 	public boolean nextRegexAlternation(final Pattern... patterns) {
 		Objects.requireNonNull(patterns, "patterns == null");
 		
-		final Key key = stateSave();
+		final int indexAtBeginningInclusive = getIndexAtBeginningInclusive();
+		final int indexAtEndExclusive = getIndexAtEndExclusive();
 		
 		for(final Pattern pattern : patterns) {
 			if(nextRegex(pattern)) {
-				stateDelete(key);
-				
 				return true;
 			}
 		}
 		
-		stateLoad(key);
-		stateDelete(key);
+		stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
 		
 		return false;
 	}
@@ -379,18 +386,16 @@ public final class TextScanner extends Scanner<StringBuilder, String> {
 	public boolean nextRegexConcatenation(final Pattern... patterns) {
 		Objects.requireNonNull(patterns, "patterns == null");
 		
-		final Key key = stateSave();
+		final int indexAtBeginningInclusive = getIndexAtBeginningInclusive();
+		final int indexAtEndExclusive = getIndexAtEndExclusive();
 		
 		for(final Pattern pattern : patterns) {
 			if(!nextRegex(pattern)) {
-				stateLoad(key);
-				stateDelete(key);
+				stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
 				
 				return false;
 			}
 		}
-		
-		stateDelete(key);
 		
 		return true;
 	}
@@ -432,18 +437,16 @@ public final class TextScanner extends Scanner<StringBuilder, String> {
 	public boolean nextStringAlternation(final String... strings) {
 		Objects.requireNonNull(strings, "strings == null");
 		
-		final Key key = stateSave();
+		final int indexAtBeginningInclusive = getIndexAtBeginningInclusive();
+		final int indexAtEndExclusive = getIndexAtEndExclusive();
 		
 		for(final String string : strings) {
 			if(nextString(string)) {
-				stateDelete(key);
-				
 				return true;
 			}
 		}
 		
-		stateLoad(key);
-		stateDelete(key);
+		stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
 		
 		return false;
 	}
@@ -466,18 +469,16 @@ public final class TextScanner extends Scanner<StringBuilder, String> {
 	public boolean nextStringConcatenation(final String... strings) {
 		Objects.requireNonNull(strings, "strings == null");
 		
-		final Key key = stateSave();
+		final int indexAtBeginningInclusive = getIndexAtBeginningInclusive();
+		final int indexAtEndExclusive = getIndexAtEndExclusive();
 		
 		for(final String string : strings) {
 			if(!nextString(string)) {
-				stateLoad(key);
-				stateDelete(key);
+				stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
 				
 				return false;
 			}
 		}
-		
-		stateDelete(key);
 		
 		return true;
 	}
@@ -670,6 +671,15 @@ public final class TextScanner extends Scanner<StringBuilder, String> {
 		return doTestNext(() -> nextStringConcatenation(strings));
 	}
 	
+	/**
+	 * Returns the {@code char} on the index at the beginning of the current consumption without reading it, or {@link #EOF} if the end has been reached.
+	 * 
+	 * @return the {@code char} on the index at the beginning of the current consumption without reading it, or {@code EOF} if the end has been reached
+	 */
+	public char currentCharacter() {
+		return doGetCharAt(getIndexAtBeginningInclusive());
+	}
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
@@ -702,13 +712,13 @@ public final class TextScanner extends Scanner<StringBuilder, String> {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private boolean doTestNext(final BooleanSupplier booleanSupplier) {
-		final Key key = stateSave();
+		final int indexAtBeginningInclusive = getIndexAtBeginningInclusive();
+		final int indexAtEndExclusive = getIndexAtEndExclusive();
 		
 		try {
 			return booleanSupplier.getAsBoolean();
 		} finally {
-			stateLoad(key);
-			stateDelete(key);
+			stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
 		}
 	}
 	
