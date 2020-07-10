@@ -1,5 +1,5 @@
 CEL4J Rex
-==========
+=========
 CEL4J Rex provides functionality to match text such as source code.
 
 Supported Features
