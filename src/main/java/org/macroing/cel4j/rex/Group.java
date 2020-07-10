@@ -337,11 +337,11 @@ public final class Group implements Matchable {
 		stringBuilder.append("(");
 		
 		for(final Matchable matchable : matchables) {
-			stringBuilder.append(matchable);
+			stringBuilder.append(matchable.getSource());
 		}
 		
 		stringBuilder.append(")");
-		stringBuilder.append(repetition);
+		stringBuilder.append(repetition.getSource());
 		
 		return stringBuilder.toString();
 	}

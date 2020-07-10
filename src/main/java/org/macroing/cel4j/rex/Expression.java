@@ -31,7 +31,7 @@ import org.macroing.cel4j.scanner.TextScanner;
 import org.macroing.cel4j.util.ParameterArguments;
 
 //TODO: Add Javadocs!
-public final class Expression implements Node {
+public final class Expression implements Matchable {
 	private final Group group;
 	private final String source;
 	
@@ -54,11 +54,13 @@ public final class Expression implements Node {
 	}
 	
 //	TODO: Add Javadocs!
+	@Override
 	public Matcher matcher(final String source) {
 		return matcher(source, 0, 0);
 	}
 	
 //	TODO: Add Javadocs!
+	@Override
 	public Matcher matcher(final String source, final int beginIndex, final int endIndex) {
 		Objects.requireNonNull(source, "source == null");
 		
@@ -137,7 +139,7 @@ public final class Expression implements Node {
 		matcher_Builder.setCurrentCharacterMatch(currentCharacterMatch);
 		matcher_Builder.setEndIndex(newEndIndex);
 		matcher_Builder.setMatchInfo(matchInfo);
-		matcher_Builder.setMatchable(this.group);
+		matcher_Builder.setMatchable(this);
 		matcher_Builder.setMatching(isMatching);
 		matcher_Builder.setSource(source);
 		
@@ -153,6 +155,7 @@ public final class Expression implements Node {
 	 * 
 	 * @return the source associated with this {@code Expression} instance
 	 */
+	@Override
 	public String getSource() {
 		return this.source;
 	}
@@ -226,6 +229,18 @@ public final class Expression implements Node {
 		}
 	}
 	
+//	TODO: Add Javadocs!
+	@Override
+	public int getMaximumCharacterMatch() {
+		return this.group.getMaximumCharacterMatch();
+	}
+	
+//	TODO: Add Javadocs!
+	@Override
+	public int getMinimumCharacterMatch() {
+		return this.group.getMinimumCharacterMatch();
+	}
+	
 	/**
 	 * Returns a hash code for this {@code Expression} instance.
 	 * 
@@ -286,15 +301,11 @@ public final class Expression implements Node {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private static String doCreateSource(final Group group) {
-		final
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("/");
+		final StringBuilder stringBuilder = new StringBuilder();
 		
 		for(final Matchable matchable : group.getMatchables()) {
-			stringBuilder.append(matchable);
+			stringBuilder.append(matchable.getSource());
 		}
-		
-		stringBuilder.append("/");
 		
 		return stringBuilder.toString();
 	}

@@ -298,7 +298,7 @@ public final class Concatenation implements Matchable {
 		final StringBuilder stringBuilder = new StringBuilder();
 		
 		for(int i = 0; i < matchables.size(); i++) {
-			stringBuilder.append(matchables.get(i));
+			stringBuilder.append(matchables.get(i).getSource());
 		}
 		
 		return stringBuilder.toString();

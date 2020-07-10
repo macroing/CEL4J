@@ -180,7 +180,7 @@ public final class Symbol implements Matchable {
 		}
 		
 		stringBuilder.append(this.character);
-		stringBuilder.append(this.repetition);
+		stringBuilder.append(this.repetition.getSource());
 		
 		return stringBuilder.toString();
 	}

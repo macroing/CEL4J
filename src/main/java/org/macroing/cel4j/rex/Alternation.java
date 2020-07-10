@@ -268,7 +268,9 @@ public final class Alternation implements Matchable {
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-//		TODO: Add Javadocs!
+		/**
+		 * Constructs a new {@code Builder} instance.
+		 */
 		public Builder() {
 			this.matchables = new ArrayList<>();
 			this.maximumCharacterMatch = 0;
@@ -277,7 +279,13 @@ public final class Alternation implements Matchable {
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-//		TODO: Add Javadocs!
+		/**
+		 * Builds an {@link Alternation} instance from this {@code Builder} instance.
+		 * <p>
+		 * Returns an {@code Alternation} instance.
+		 * 
+		 * @return an {@code Alternation} instance
+		 */
 		public Alternation build() {
 			for(final Matchable matchable : this.matchables) {
 				this.maximumCharacterMatch = Math.max(this.maximumCharacterMatch, matchable.getMaximumCharacterMatch());
@@ -309,7 +317,7 @@ public final class Alternation implements Matchable {
 		
 		for(int i = 0; i < matchables.size(); i++) {
 			stringBuilder.append(i > 0 ? "|" : "");
-			stringBuilder.append(matchables.get(i));
+			stringBuilder.append(matchables.get(i).getSource());
 		}
 		
 		return stringBuilder.toString();

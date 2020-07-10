@@ -107,6 +107,8 @@ public final class Matcher implements Node {
 		stringBuilder.append("\n");
 		stringBuilder.append("- Matchable=" + getMatchable());
 		stringBuilder.append("\n");
+		stringBuilder.append("- MatchableSource=" + getMatchable().getSource());
+		stringBuilder.append("\n");
 		stringBuilder.append("- MatchInfo=" + getMatchInfo());
 		
 		return stringBuilder.toString();

@@ -115,9 +115,11 @@ public final class GroupReference implements Matchable {
 		stringBuilder.append("$");
 		stringBuilder.append(this.name);
 		
-		if(this.group != null) {
+		final Optional<Group> optionalGroup = getGroup();
+		
+		if(optionalGroup.isPresent()) {
 			stringBuilder.append("=");
-			stringBuilder.append(this.group);
+			stringBuilder.append(optionalGroup.get().getSource());
 		}
 		
 		return stringBuilder.toString();
