@@ -258,7 +258,9 @@ public final class Concatenation implements Matchable {
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-//		TODO: Add Javadocs!
+		/**
+		 * Constructs a new {@code Builder} instance.
+		 */
 		public Builder() {
 			this.matchables = new ArrayList<>();
 			this.maximumCharacterMatch = 0;

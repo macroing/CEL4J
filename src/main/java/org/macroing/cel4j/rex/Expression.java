@@ -271,7 +271,9 @@ public final class Expression implements Matchable {
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-//		TODO: Add Javadocs!
+		/**
+		 * Constructs a new {@code Builder} instance.
+		 */
 		public Builder() {
 			this.group_Builder = new Group.Builder();
 		}

@@ -284,7 +284,9 @@ public final class Group implements Matchable {
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-//		TODO: Add Javadocs!
+		/**
+		 * Constructs a new {@code Builder} instance.
+		 */
 		public Builder() {
 			this.matchables = new ArrayList<>();
 			this.repetition = Repetition.ONE;
