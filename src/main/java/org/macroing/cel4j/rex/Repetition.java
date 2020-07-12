@@ -37,7 +37,15 @@ public final class Repetition {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Constructs a new {@code Repetition} instance.
+	 * <p>
+	 * If either {@code minimum} is less than {@code 0} or {@code maximum} is less than {@code minimum}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param minimum the minimum repetition count
+	 * @param maximum the maximum repetition count
+	 * @throws IllegalArgumentException thrown if, and only if, either {@code minimum} is less than {@code 0} or {@code maximum} is less than {@code minimum}
+	 */
 	public Repetition(final int minimum, final int maximum) {
 		this.maximum = ParameterArguments.requireRange(maximum, minimum, Integer.MAX_VALUE, "maximum");
 		this.minimum = ParameterArguments.requireRange(minimum, 0, Integer.MAX_VALUE, "minimum");
@@ -97,12 +105,20 @@ public final class Repetition {
 		}
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the maximum repetition count.
+	 * 
+	 * @return the maximum repetition count
+	 */
 	public int getMaximum() {
 		return this.maximum;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns the minimum repetition count.
+	 * 
+	 * @return the minimum repetition count
+	 */
 	public int getMinimum() {
 		return this.minimum;
 	}
