@@ -18,16 +18,37 @@
  */
 package org.macroing.cel4j.rex;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.util.ParameterArguments;
 
-//TODO: Add Javadocs!
+/**
+ * A {@code Repetition} contains the minimum and maximum repetition bounds that must be satisfied for a match to occur.
+ * <p>
+ * The current implementation uses {@code Integer.MAX_VALUE} to denote a bound of positive infinity. This may change.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class Repetition {
+	/**
+	 * A {@code Repetition} with a minimum bound of 0 and a maximum bound of positive infinity.
+	 */
 	public static final Repetition ANY = new Repetition(0, Integer.MAX_VALUE);
+	
+	/**
+	 * A {@code Repetition} with a minimum bound of 1 and a maximum bound of 1.
+	 */
 	public static final Repetition ONE = new Repetition(1, 1);
+	
+	/**
+	 * A {@code Repetition} with a minimum bound of 1 and a maximum bound of positive infinity.
+	 */
 	public static final Repetition ONE_OR_MORE = new Repetition(1, Integer.MAX_VALUE);
+	
+	/**
+	 * A {@code Repetition} with a minimum bound of 0 and a maximum bound of 1.
+	 */
 	public static final Repetition ZERO_OR_ONE = new Repetition(0, 1);
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,16 +80,16 @@ public final class Repetition {
 	 * @return the source associated with this {@code Repetition} instance
 	 */
 	public String getSource() {
-		if(this.minimum == 0 && this.maximum == Integer.MAX_VALUE) {
+		if(getMinimum() == 0 && getMaximum() == Integer.MAX_VALUE) {
 			return "*";
-		} else if(this.minimum == 1 && this.maximum == 1) {
+		} else if(getMinimum() == 1 && getMaximum() == 1) {
 			return "";
-		} else if(this.minimum == 1 && this.maximum == Integer.MAX_VALUE) {
+		} else if(getMinimum() == 1 && getMaximum() == Integer.MAX_VALUE) {
 			return "+";
-		} else if(this.minimum == 0 && this.maximum == 1) {
+		} else if(getMinimum() == 0 && getMaximum() == 1) {
 			return "?";
 		} else {
-			return String.format("{%s,%s}", Integer.toString(this.minimum), Integer.toString(this.maximum));
+			return String.format("{%s,%s}", Integer.toString(getMinimum()), Integer.toString(getMaximum()));
 		}
 	}
 	
@@ -79,7 +100,17 @@ public final class Repetition {
 	 */
 	@Override
 	public String toString() {
-		return String.format("new Repetition(%s, %s)", Integer.toString(getMinimum()), Integer.toString(getMaximum()));
+		if(getMinimum() == 0 && getMaximum() == Integer.MAX_VALUE) {
+			return "Repetition.ANY";
+		} else if(getMinimum() == 1 && getMaximum() == 1) {
+			return "Repetition.ONE";
+		} else if(getMinimum() == 1 && getMaximum() == Integer.MAX_VALUE) {
+			return "Repetition.ONE_OR_MORE";
+		} else if(getMinimum() == 0 && getMaximum() == 1) {
+			return "Repetition.ZERO_OR_ONE";
+		} else {
+			return String.format("new Repetition(%s, %s)", Integer.toString(getMinimum()), Integer.toString(getMaximum()));
+		}
 	}
 	
 	/**
@@ -96,9 +127,9 @@ public final class Repetition {
 			return true;
 		} else if(!(object instanceof Repetition)) {
 			return false;
-		} else if(this.maximum != Repetition.class.cast(object).maximum) {
+		} else if(getMaximum() != Repetition.class.cast(object).getMaximum()) {
 			return false;
-		} else if(this.minimum != Repetition.class.cast(object).minimum) {
+		} else if(getMinimum() != Repetition.class.cast(object).getMinimum()) {
 			return false;
 		} else {
 			return true;
@@ -130,6 +161,6 @@ public final class Repetition {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(Integer.valueOf(this.maximum), Integer.valueOf(this.minimum));
+		return Objects.hash(Integer.valueOf(getMaximum()), Integer.valueOf(getMinimum()));
 	}
 }

@@ -1,3 +1,10 @@
+2020-07-14  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Rex:
+
+		* ADD:			Add Javadocs.
+		* CHANGE:		Update the Rex API.
+
 2020-07-13  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Rex:

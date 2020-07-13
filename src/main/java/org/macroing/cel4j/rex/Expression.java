@@ -18,136 +18,145 @@
  */
 package org.macroing.cel4j.rex;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Objects;
 
-import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
-import org.macroing.cel4j.rex.Matcher.MatchInfo;
 import org.macroing.cel4j.scanner.TextScanner;
+import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.ParameterArguments;
 
-//TODO: Add Javadocs!
-public final class Expression implements Matchable {
-	private final Group group;
+/**
+ * An {@code Expression} is a {@link Matcher} that can match an {@link Alternation} instance.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
+public final class Expression implements Matcher {
+	private final Alternation alternation;
 	private final String source;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	Expression(final Builder builder) {
-		this.group = builder.group_Builder.build();
-		this.source = doCreateSource(this.group);
+	/**
+	 * Constructs a new {@code Expression} instance.
+	 * <p>
+	 * If {@code alternation} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param alternation the {@link Alternation} associated with this {@code Expression} instance
+	 * @throws NullPointerException thrown if, and only if, {@code alternation} is {@code null}
+	 */
+	public Expression(final Alternation alternation) {
+		this.alternation = Objects.requireNonNull(alternation, "alternation == null");
+		this.source = alternation.getSource();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns the {@link Group} associated with this {@code Expression} instance.
+	 * Returns the {@link Alternation} associated with this {@code Expression} instance.
 	 * 
-	 * @return the {@code Group} associated with this {@code Expression} instance
+	 * @return the {@code Alternation} associated with this {@code Expression} instance
 	 */
-	public Group getGroup() {
-		return this.group;
+	public Alternation getAlternation() {
+		return this.alternation;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Writes this {@code Expression} to a {@link Document}.
+	 * <p>
+	 * Returns the {@code Document}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * expression.write(new Document());
+	 * }
+	 * </pre>
+	 * 
+	 * @return the {@code Document}
+	 */
 	@Override
-	public Matcher matcher(final String source) {
-		return matcher(source, 0, 0);
+	public Document write() {
+		return write(new Document());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Writes this {@code Expression} to {@code document}.
+	 * <p>
+	 * Returns {@code document}.
+	 * <p>
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param document the {@link Document} to write to
+	 * @return {@code document}
+	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
+	 */
 	@Override
-	public Matcher matcher(final String source, final int beginIndex, final int endIndex) {
+	public Document write(final Document document) {
+		document.line("Expression {");
+		document.indent();
+		
+		this.alternation.write(document);
+		
+		document.outdent();
+		document.line("}");
+		
+		return document;
+	}
+	
+	/**
+	 * Matches {@code source}.
+	 * <p>
+	 * Returns a {@link MatchResult} with the result of the match.
+	 * <p>
+	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * expression.match(source, 0);
+	 * }
+	 * </pre>
+	 * 
+	 * @param source the source to match
+	 * @return a {@code MatchResult} with the result of the match
+	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 */
+	@Override
+	public MatchResult match(final String source) {
+		return match(source, 0);
+	}
+	
+	/**
+	 * Matches {@code source}.
+	 * <p>
+	 * Returns a {@link MatchResult} with the result of the match.
+	 * <p>
+	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param source the source to match
+	 * @param index the index in {@code source} to match from
+	 * @return a {@code MatchResult} with the result of the match
+	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}
+	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 */
+	@Override
+	public MatchResult match(final String source, final int index) {
 		Objects.requireNonNull(source, "source == null");
 		
-		ParameterArguments.requireRange(beginIndex, 0, source.length(), "beginIndex");
-		ParameterArguments.requireRange(endIndex, beginIndex, source.length(), "endIndex");
+		ParameterArguments.requireRange(index, 0, source.length(), "index");
 		
-		boolean isMatching = true;
+		final MatchResult matchResult = getAlternation().match(source, index);
 		
-		int currentCharacterMatch = 0;
-		int newBeginIndex = beginIndex;
-		int newEndIndex = endIndex;
-		int matches = 0;
-		int maximum = 1;
-		int minimum = 1;
-		
-		final List<Matcher> matchers = new ArrayList<>();
-		
-		MatchInfo matchInfo = MatchInfo.SUCCESS;
-		
-		loop:
-		while(matches < maximum) {
-			for(final Matchable matchable : this.group.getMatchables()) {
-				if(matchable instanceof GroupReference && GroupReference.class.cast(matchable).isDefinition()) {
-					continue;
-				}
-				
-				final Matcher matcher = matchable.matcher(source, newBeginIndex, newEndIndex);
-				
-				matchers.add(matcher);
-				
-				currentCharacterMatch += matcher.getCurrentCharacterMatch();
-				
-				switch(matcher.getMatchInfo()) {
-					case FAILURE:
-						matchInfo = MatchInfo.FAILURE;
-						
-						break;
-					case SUCCESS:
-						break;
-					case UNEXPECTED_CHARACTER_MATCH:
-						if(matchInfo != MatchInfo.FAILURE) {
-							matchInfo = MatchInfo.UNEXPECTED_CHARACTER_MATCH;
-						}
-						
-						break;
-					case UNEXPECTED_STRING_LENGTH:
-						if(matchInfo != MatchInfo.FAILURE && matchInfo != MatchInfo.UNEXPECTED_CHARACTER_MATCH) {
-							matchInfo = MatchInfo.UNEXPECTED_STRING_LENGTH;
-						}
-						
-						break;
-					default:
-						break;
-				}
-				
-				if(!matcher.isMatching()) {
-					break loop;
-				}
-				
-				newBeginIndex = matcher.getEndIndex();
-				newEndIndex = matcher.getEndIndex();
-			}
-			
-			matches++;
+		if(matchResult.isMatching()) {
+			return new MatchResult(this, source, true, index, index + matchResult.getLength(), Arrays.asList(matchResult));
 		}
 		
-		if(matches < minimum) {
-			isMatching = false;
-		}
-		
-		newBeginIndex = beginIndex;
-		
-		final
-		Matcher.Builder matcher_Builder = new Matcher.Builder();
-		matcher_Builder.setBeginIndex(newBeginIndex);
-		matcher_Builder.setCurrentCharacterMatch(currentCharacterMatch);
-		matcher_Builder.setEndIndex(newEndIndex);
-		matcher_Builder.setMatchInfo(matchInfo);
-		matcher_Builder.setMatchable(this);
-		matcher_Builder.setMatching(isMatching);
-		matcher_Builder.setSource(source);
-		
-		for(final Matcher matcher : matchers) {
-			matcher_Builder.addMatcher(matcher);
-		}
-		
-		return matcher_Builder.build();
+		return new MatchResult(this, source, false, index);
 	}
 	
 	/**
@@ -167,7 +176,7 @@ public final class Expression implements Matchable {
 	 */
 	@Override
 	public String toString() {
-		return "new Expression(...)";
+		return String.format("new Expression(%s)", getAlternation());
 	}
 	
 	/**
@@ -197,7 +206,7 @@ public final class Expression implements Matchable {
 		
 		try {
 			if(nodeHierarchicalVisitor.visitEnter(this)) {
-				if(!this.group.accept(nodeHierarchicalVisitor)) {
+				if(!getAlternation().accept(nodeHierarchicalVisitor)) {
 					return nodeHierarchicalVisitor.visitLeave(this);
 				}
 			}
@@ -229,18 +238,6 @@ public final class Expression implements Matchable {
 		}
 	}
 	
-//	TODO: Add Javadocs!
-	@Override
-	public int getMaximumCharacterMatch() {
-		return this.group.getMaximumCharacterMatch();
-	}
-	
-//	TODO: Add Javadocs!
-	@Override
-	public int getMinimumCharacterMatch() {
-		return this.group.getMinimumCharacterMatch();
-	}
-	
 	/**
 	 * Returns a hash code for this {@code Expression} instance.
 	 * 
@@ -253,62 +250,21 @@ public final class Expression implements Matchable {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Parses {@code string} into an {@code Expression} instance.
+	 * <p>
+	 * Returns an {@code Expression} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param string the {@code String} to parse
+	 * @return an {@code Expression} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
 	public static Expression parse(final String string) {
-		return parse(new TextScanner(Objects.requireNonNull(string, "string == null")));
-	}
-	
-//	TODO: Add Javadocs!
-	public static Expression parse(final TextScanner textScanner) {
-		return Parsers.parseExpression(Objects.requireNonNull(textScanner, "textScanner == null"));
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-//	TODO: Add Javadocs!
-	public static final class Builder {
-		final Group.Builder group_Builder;
-		
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		/**
-		 * Constructs a new {@code Builder} instance.
-		 */
-		public Builder() {
-			this.group_Builder = new Group.Builder();
-		}
-		
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-//		TODO: Add Javadocs!
-		public Builder addMatchable(final Matchable matchable) {
-			this.group_Builder.addMatchable(Objects.requireNonNull(matchable, "matchable == null"));
-			
-			return this;
-		}
-		
-//		TODO: Add Javadocs!
-		public Builder removeMatchable(final Matchable matchable) {
-			this.group_Builder.removeMatchable(Objects.requireNonNull(matchable, "matchable == null"));
-			
-			return this;
-		}
-		
-//		TODO: Add Javadocs!
-		public Expression build() {
-			return new Expression(this);
-		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	private static String doCreateSource(final Group group) {
-		final StringBuilder stringBuilder = new StringBuilder();
-		
-		for(final Matchable matchable : group.getMatchables()) {
-			stringBuilder.append(matchable.getSource());
-		}
-		
-		return stringBuilder.toString();
+		return Parsers.parseExpression(new TextScanner(Objects.requireNonNull(string, "string == null")));
 	}
 }

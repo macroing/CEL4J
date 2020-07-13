@@ -18,11 +18,7 @@
  */
 package org.macroing.cel4j.rex;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
@@ -30,63 +26,42 @@ import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code GroupReference} is a {@link Matcher} that can match a {@link Group} defined by a {@link GroupReferenceDefinition}.
+ * A {@code GroupReferenceDefinition} is a {@link Matcher} that cannot match anything.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class GroupReference implements Matcher {
-	private final AtomicReference<Group> group;
-	private final Repetition repetition;
+public final class GroupReferenceDefinition implements Matcher {
+	private final Group group;
 	private final String name;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Constructs a new {@code GroupReference} instance.
+	 * Constructs a new {@code GroupReferenceDefinition} instance.
 	 * <p>
-	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * <p>
-	 * Calling this constructor is equivalent to the following:
-	 * <pre>
-	 * {@code
-	 * new GroupReference(name, Repetition.ONE);
-	 * }
-	 * </pre>
+	 * If either {@code name} or {@code group} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
-	 * @param name the name associated with this {@code GroupReference} instance
-	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 * @param name the name associated with this {@code GroupReferenceDefinition} instance
+	 * @param group the {@link Group} associated with this {@code GroupReferenceDefinition} instance
+	 * @throws NullPointerException thrown if, and only if, either {@code name} or {@code group} are {@code null}
 	 */
-	public GroupReference(final String name) {
-		this(name, Repetition.ONE);
-	}
-	
-	/**
-	 * Constructs a new {@code GroupReference} instance.
-	 * <p>
-	 * If either {@code name} or {@code repetition} are {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param name the name associated with this {@code GroupReference} instance
-	 * @param repetition the {@link Repetition} associated with this {@code GroupReference} instance
-	 * @throws NullPointerException thrown if, and only if, either {@code name} or {@code repetition} are {@code null}
-	 */
-	public GroupReference(final String name, final Repetition repetition) {
-		this.group = new AtomicReference<>();
-		this.repetition = Objects.requireNonNull(repetition, "repetition == null");
+	public GroupReferenceDefinition(final String name, final Group group) {
+		this.group = Objects.requireNonNull(group, "group == null");
 		this.name = Objects.requireNonNull(name, "name == null");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Writes this {@code GroupReference} to a {@link Document}.
+	 * Writes this {@code GroupReferenceDefinition} to a {@link Document}.
 	 * <p>
 	 * Returns the {@code Document}.
 	 * <p>
 	 * Calling this method is equivalent to the following:
 	 * <pre>
 	 * {@code
-	 * groupReference.write(new Document());
+	 * groupReferenceDefinition.write(new Document());
 	 * }
 	 * </pre>
 	 * 
@@ -98,7 +73,7 @@ public final class GroupReference implements Matcher {
 	}
 	
 	/**
-	 * Writes this {@code GroupReference} to {@code document}.
+	 * Writes this {@code GroupReferenceDefinition} to {@code document}.
 	 * <p>
 	 * Returns {@code document}.
 	 * <p>
@@ -110,9 +85,24 @@ public final class GroupReference implements Matcher {
 	 */
 	@Override
 	public Document write(final Document document) {
-		document.linef("GroupReference %s;", this.name);
+		document.linef("GroupReferenceDefinition %s {", this.name);
+		document.indent();
+		
+		getGroup().write(document);
+		
+		document.outdent();
+		document.line("}");
 		
 		return document;
+	}
+	
+	/**
+	 * Returns the {@link Group} associated with this {@code GroupReferenceDefinition} instance.
+	 * 
+	 * @return the {@code Group} associated with this {@code GroupReferenceDefinition} instance
+	 */
+	public Group getGroup() {
+		return this.group;
 	}
 	
 	/**
@@ -125,7 +115,7 @@ public final class GroupReference implements Matcher {
 	 * Calling this method is equivalent to the following:
 	 * <pre>
 	 * {@code
-	 * groupReference.match(source, 0);
+	 * groupReferenceDefinition.match(source, 0);
 	 * }
 	 * </pre>
 	 * 
@@ -159,71 +149,22 @@ public final class GroupReference implements Matcher {
 		
 		ParameterArguments.requireRange(index, 0, source.length(), "index");
 		
-		final List<MatchResult> matchResults = new ArrayList<>();
-		
-		final Repetition repetition = getRepetition();
-		
-		final int minimumRepetition = repetition.getMinimum();
-		final int maximumRepetition = repetition.getMaximum();
-		
-		int currentIndex = index;
-		int currentRepetition = 0;
-		
-		int length = 0;
-		
-		for(int i = minimumRepetition; i <= maximumRepetition && currentIndex < source.length(); i++) {
-			final MatchResult currentMatchResult = getGroup().get().match(source, currentIndex);
-			
-			if(currentMatchResult.isMatching()) {
-				currentIndex += currentMatchResult.getLength();
-				currentRepetition++;
-				
-				length += currentMatchResult.getLength();
-				
-				matchResults.add(currentMatchResult);
-			} else {
-				break;
-			}
-		}
-		
-		if(currentRepetition >= minimumRepetition) {
-			return new MatchResult(this, source, true, index, index + length, matchResults);
-		}
-		
-		return new MatchResult(this, source, false, index);
+		return new MatchResult(this, source, true, index);
 	}
 	
 	/**
-	 * Returns an {@code Optional} with the optional {@link Group} associated with this {@code GroupReference} instance.
+	 * Returns the name associated with this {@code GroupReferenceDefinition} instance.
 	 * 
-	 * @return an {@code Optional} with the optional {@code Group} associated with this {@code GroupReference} instance
-	 */
-	public Optional<Group> getGroup() {
-		return Optional.ofNullable(this.group.get());
-	}
-	
-	/**
-	 * Returns the {@link Repetition} associated with this {@code GroupReference} instance.
-	 * 
-	 * @return the {@code Repetition} associated with this {@code GroupReference} instance
-	 */
-	public Repetition getRepetition() {
-		return this.repetition;
-	}
-	
-	/**
-	 * Returns the name associated with this {@code GroupReference} instance.
-	 * 
-	 * @return the name associated with this {@code GroupReference} instance
+	 * @return the name associated with this {@code GroupReferenceDefinition} instance
 	 */
 	public String getName() {
 		return this.name;
 	}
 	
 	/**
-	 * Returns the source associated with this {@code GroupReference} instance.
+	 * Returns the source associated with this {@code GroupReferenceDefinition} instance.
 	 * 
-	 * @return the source associated with this {@code GroupReference} instance
+	 * @return the source associated with this {@code GroupReferenceDefinition} instance
 	 */
 	@Override
 	public String getSource() {
@@ -231,19 +172,20 @@ public final class GroupReference implements Matcher {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("%");
 		stringBuilder.append(this.name);
-		stringBuilder.append(this.repetition.getSource());
+		stringBuilder.append("=");
+		stringBuilder.append(this.group.getSource());
 		
 		return stringBuilder.toString();
 	}
 	
 	/**
-	 * Returns a {@code String} representation of this {@code GroupReference} instance.
+	 * Returns a {@code String} representation of this {@code GroupReferenceDefinition} instance.
 	 * 
-	 * @return a {@code String} representation of this {@code GroupReference} instance
+	 * @return a {@code String} representation of this {@code GroupReferenceDefinition} instance
 	 */
 	@Override
 	public String toString() {
-		return String.format("new GroupReference(\"%s\", %s)", getName(), getRepetition());
+		return String.format("new GroupReferenceDefinition(\"%s\", %s)", getName(), getGroup());
 	}
 	
 	/**
@@ -273,9 +215,7 @@ public final class GroupReference implements Matcher {
 		
 		try {
 			if(nodeHierarchicalVisitor.visitEnter(this)) {
-				final Optional<Group> optionalGroup = getGroup();
-				
-				if(optionalGroup.isPresent() && !optionalGroup.get().accept(nodeHierarchicalVisitor)) {
+				if(!getGroup().accept(nodeHierarchicalVisitor)) {
 					return nodeHierarchicalVisitor.visitLeave(this);
 				}
 			}
@@ -287,20 +227,20 @@ public final class GroupReference implements Matcher {
 	}
 	
 	/**
-	 * Compares {@code object} to this {@code GroupReference} instance for equality.
+	 * Compares {@code object} to this {@code GroupReferenceDefinition} instance for equality.
 	 * <p>
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code GroupReference}, and their respective values are equal, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code GroupReferenceDefinition}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object the {@code Object} to compare to this {@code GroupReference} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code GroupReference}, and their respective values are equal, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code GroupReferenceDefinition} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code GroupReferenceDefinition}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
-		} else if(!(object instanceof GroupReference)) {
+		} else if(!(object instanceof GroupReferenceDefinition)) {
 			return false;
-		} else if(!Objects.equals(getSource(), GroupReference.class.cast(object).getSource())) {
+		} else if(!Objects.equals(getSource(), GroupReferenceDefinition.class.cast(object).getSource())) {
 			return false;
 		} else {
 			return true;
@@ -308,33 +248,12 @@ public final class GroupReference implements Matcher {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, this {@code GroupReference} instance is associated with a {@code Group}, {@code false} otherwise.
+	 * Returns a hash code for this {@code GroupReferenceDefinition} instance.
 	 * 
-	 * @return {@code true} if, and only if, this {@code GroupReference} instance is associated with a {@code Group}, {@code false} otherwise
-	 */
-	public boolean hasGroup() {
-		return this.group.get() != null;
-	}
-	
-	/**
-	 * Returns a hash code for this {@code GroupReference} instance.
-	 * 
-	 * @return a hash code for this {@code GroupReference} instance
+	 * @return a hash code for this {@code GroupReferenceDefinition} instance
 	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(getSource());
-	}
-	
-	/**
-	 * Sets {@code group} as the {@link Group} associated with this {@code GroupReference} instance.
-	 * <p>
-	 * If {@code group} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param group the {@code Group} associated with this {@code GroupReference} instance
-	 * @throws NullPointerException thrown if, and only if, {@code group} is {@code null}
-	 */
-	public void setGroup(final Group group) {
-		this.group.set(Objects.requireNonNull(group, "group == null"));
 	}
 }

@@ -18,147 +18,192 @@
  */
 package org.macroing.cel4j.rex;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
-import org.macroing.cel4j.rex.Matcher.MatchInfo;
+import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.ParameterArguments;
 
-//TODO: Add Javadocs!
-public final class Group implements Matchable {
-	private final List<Matchable> matchables;
+/**
+ * A {@code Group} is a {@link Matcher} that can match an {@link Alternation} instance.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
+public final class Group implements Matcher {
+	private final Alternation alternation;
 	private final Repetition repetition;
 	private final String source;
-	private final int maximumCharacterMatch;
-	private final int minimumCharacterMatch;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	Group(final Builder builder) {
-		this.matchables = Collections.unmodifiableList(new ArrayList<>(builder.matchables));
-		this.repetition = builder.repetition;
-		this.source = doCreateSource(this.matchables, this.repetition);
-		this.maximumCharacterMatch = builder.maximumCharacterMatch;
-		this.minimumCharacterMatch = builder.minimumCharacterMatch;
+	/**
+	 * Constructs a new {@code Group} instance.
+	 * <p>
+	 * If {@code alternation} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new Group(alternation, Repetition.ONE);
+	 * }
+	 * </pre>
+	 * 
+	 * @param alternation the {@link Alternation} associated with this {@code Group} instance
+	 * @throws NullPointerException thrown if, and only if, {@code alternation} is {@code null}
+	 */
+	public Group(final Alternation alternation) {
+		this(alternation, Repetition.ONE);
+	}
+	
+	/**
+	 * Constructs a new {@code Group} instance.
+	 * <p>
+	 * If either {@code alternation} or {@code repetition} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param alternation the {@link Alternation} associated with this {@code Group} instance
+	 * @param repetition the {@link Repetition} associated with this {@code Group} instance
+	 * @throws NullPointerException thrown if, and only if, either {@code alternation} or {@code repetition} are {@code null}
+	 */
+	public Group(final Alternation alternation, final Repetition repetition) {
+		this.alternation = Objects.requireNonNull(alternation, "alternation == null");
+		this.repetition = Objects.requireNonNull(repetition, "repetition == null");
+		this.source = doCreateSource(this.alternation, this.repetition);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@link Matchable} instances associated with this {@code Group} instance.
-	 * <p>
-	 * Modifying the returned {@code List} will not affect this {@code Group} instance.
+	 * Returns the {@link Alternation} associated with this {@code Group} instance.
 	 * 
-	 * @return a {@code List} with all {@code Matchable} instances associated with this {@code Group} instance
+	 * @return the {@code Alternation} associated with this {@code Group} instance
 	 */
-	public List<Matchable> getMatchables() {
-		return new ArrayList<>(this.matchables);
+	public Alternation getAlternation() {
+		return this.alternation;
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Writes this {@code Group} to a {@link Document}.
+	 * <p>
+	 * Returns the {@code Document}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * group.write(new Document());
+	 * }
+	 * </pre>
+	 * 
+	 * @return the {@code Document}
+	 */
 	@Override
-	public Matcher matcher(final String source) {
-		return matcher(source, 0, 0);
+	public Document write() {
+		return write(new Document());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Writes this {@code Group} to {@code document}.
+	 * <p>
+	 * Returns {@code document}.
+	 * <p>
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param document the {@link Document} to write to
+	 * @return {@code document}
+	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
+	 */
 	@Override
-	public Matcher matcher(final String source, final int beginIndex, final int endIndex) {
+	public Document write(final Document document) {
+		document.line("Group {");
+		document.indent();
+		
+		this.alternation.write(document);
+		
+		document.outdent();
+		document.line("}");
+		
+		return document;
+	}
+	
+	/**
+	 * Matches {@code source}.
+	 * <p>
+	 * Returns a {@link MatchResult} with the result of the match.
+	 * <p>
+	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * group.match(source, 0);
+	 * }
+	 * </pre>
+	 * 
+	 * @param source the source to match
+	 * @return a {@code MatchResult} with the result of the match
+	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 */
+	@Override
+	public MatchResult match(final String source) {
+		return match(source, 0);
+	}
+	
+	/**
+	 * Matches {@code source}.
+	 * <p>
+	 * Returns a {@link MatchResult} with the result of the match.
+	 * <p>
+	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param source the source to match
+	 * @param index the index in {@code source} to match from
+	 * @return a {@code MatchResult} with the result of the match
+	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}
+	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 */
+	@Override
+	public MatchResult match(final String source, final int index) {
 		Objects.requireNonNull(source, "source == null");
 		
-		ParameterArguments.requireRange(beginIndex, 0, source.length(), "beginIndex");
-		ParameterArguments.requireRange(endIndex, beginIndex, source.length(), "endIndex");
+		ParameterArguments.requireRange(index, 0, source.length(), "index");
 		
-		boolean isMatching = true;
+		final List<MatchResult> matchResults = new ArrayList<>();
 		
-		int currentCharacterMatch = 0;
-		int newBeginIndex = beginIndex;
-		int newEndIndex = endIndex;
-		int matches = 0;
-		int maximum = this.repetition.getMaximum();
-		int minimum = this.repetition.getMinimum();
+		final Repetition repetition = getRepetition();
 		
-		final List<Matcher> matchers = new ArrayList<>();
+		final int minimumRepetition = repetition.getMinimum();
+		final int maximumRepetition = repetition.getMaximum();
 		
-		MatchInfo matchInfo = MatchInfo.SUCCESS;
+		int currentIndex = index;
+		int currentRepetition = 0;
 		
-		loop:
-		while(matches < maximum) {
-			for(final Matchable matchable : this.matchables) {
-				if(matchable instanceof GroupReference && GroupReference.class.cast(matchable).isDefinition()) {
-					continue;
-				}
-				
-				final Matcher matcher = matchable.matcher(source, newBeginIndex, newEndIndex);
-				
-				matchers.add(matcher);
-				
-				currentCharacterMatch += matcher.getCurrentCharacterMatch();
-				
-				switch(matcher.getMatchInfo()) {
-					case FAILURE:
-						matchInfo = MatchInfo.FAILURE;
-						
-						break;
-					case SUCCESS:
-						break;
-					case UNEXPECTED_CHARACTER_MATCH:
-						if(matchInfo != MatchInfo.FAILURE) {
-							matchInfo = MatchInfo.UNEXPECTED_CHARACTER_MATCH;
-						}
-						
-						break;
-					case UNEXPECTED_STRING_LENGTH:
-						if(matchInfo != MatchInfo.FAILURE && matchInfo != MatchInfo.UNEXPECTED_CHARACTER_MATCH) {
-							matchInfo = MatchInfo.UNEXPECTED_STRING_LENGTH;
-						}
-						
-						break;
-					default:
-						break;
-				}
-				
-				if(!matcher.isMatching()) {
-					break loop;
-				}
-				
-				newBeginIndex = matcher.getEndIndex();
-				newEndIndex = matcher.getEndIndex();
-			}
+		int length = 0;
+		
+		for(int i = minimumRepetition; i <= maximumRepetition && currentIndex < source.length(); i++) {
+			final MatchResult currentMatchResult = getAlternation().match(source, currentIndex);
 			
-			matches++;
+			if(currentMatchResult.isMatching()) {
+				currentIndex += currentMatchResult.getLength();
+				currentRepetition++;
+				
+				length += currentMatchResult.getLength();
+				
+				matchResults.add(currentMatchResult);
+			} else {
+				break;
+			}
 		}
 		
-		if(matches < minimum) {
-			isMatching = false;
+		if(currentRepetition >= minimumRepetition) {
+			return new MatchResult(this, source, true, index, index + length, matchResults);
 		}
 		
-		if(minimum == 0) {
-			matchInfo = MatchInfo.SUCCESS;
-		}
-		
-		newBeginIndex = beginIndex;
-		
-		final
-		Matcher.Builder matcher_Builder = new Matcher.Builder();
-		matcher_Builder.setBeginIndex(newBeginIndex);
-		matcher_Builder.setCurrentCharacterMatch(currentCharacterMatch);
-		matcher_Builder.setEndIndex(newEndIndex);
-		matcher_Builder.setMatchInfo(matchInfo);
-		matcher_Builder.setMatchable(this);
-		matcher_Builder.setMatching(isMatching);
-		matcher_Builder.setSource(source);
-		
-		for(final Matcher matcher : matchers) {
-			matcher_Builder.addMatcher(matcher);
-		}
-		
-		return matcher_Builder.build();
+		return new MatchResult(this, source, false, index);
 	}
 	
 	/**
@@ -187,7 +232,7 @@ public final class Group implements Matchable {
 	 */
 	@Override
 	public String toString() {
-		return "new Group(...)";
+		return String.format("new Group(%s, %s)", getAlternation(), getRepetition());
 	}
 	
 	/**
@@ -217,10 +262,8 @@ public final class Group implements Matchable {
 		
 		try {
 			if(nodeHierarchicalVisitor.visitEnter(this)) {
-				for(final Matchable matchable : this.matchables) {
-					if(!matchable.accept(nodeHierarchicalVisitor)) {
-						return nodeHierarchicalVisitor.visitLeave(this);
-					}
+				if(!this.alternation.accept(nodeHierarchicalVisitor)) {
+					return nodeHierarchicalVisitor.visitLeave(this);
 				}
 			}
 			
@@ -251,18 +294,6 @@ public final class Group implements Matchable {
 		}
 	}
 	
-//	TODO: Add Javadocs!
-	@Override
-	public int getMaximumCharacterMatch() {
-		return this.maximumCharacterMatch;
-	}
-	
-//	TODO: Add Javadocs!
-	@Override
-	public int getMinimumCharacterMatch() {
-		return this.minimumCharacterMatch;
-	}
-	
 	/**
 	 * Returns a hash code for this {@code Group} instance.
 	 * 
@@ -275,73 +306,11 @@ public final class Group implements Matchable {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
-	public static final class Builder {
-		final List<Matchable> matchables;
-		Repetition repetition;
-		int maximumCharacterMatch;
-		int minimumCharacterMatch;
-		
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		/**
-		 * Constructs a new {@code Builder} instance.
-		 */
-		public Builder() {
-			this.matchables = new ArrayList<>();
-			this.repetition = Repetition.ONE;
-			this.maximumCharacterMatch = 0;
-			this.minimumCharacterMatch = 0;
-		}
-		
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-//		TODO: Add Javadocs!
-		public Builder addMatchable(final Matchable matchable) {
-			this.matchables.add(Objects.requireNonNull(matchable, "matchable == null"));
-			
-			return this;
-		}
-		
-//		TODO: Add Javadocs!
-		public Builder removeMatchable(final Matchable matchable) {
-			this.matchables.remove(Objects.requireNonNull(matchable, "matchable == null"));
-			
-			return this;
-		}
-		
-//		TODO: Add Javadocs!
-		public Builder setRepetition(final Repetition repetition) {
-			this.repetition = Objects.requireNonNull(repetition, "repetition == null");
-			
-			return this;
-		}
-		
-//		TODO: Add Javadocs!
-		public Group build() {
-			for(final Matchable matchable : this.matchables) {
-				this.maximumCharacterMatch = matchable.getMaximumCharacterMatch() == Integer.MAX_VALUE ? Integer.MAX_VALUE : this.maximumCharacterMatch < Integer.MAX_VALUE ? this.maximumCharacterMatch + matchable.getMaximumCharacterMatch() < 0 ? Integer.MAX_VALUE : this.maximumCharacterMatch + matchable.getMaximumCharacterMatch() : this.maximumCharacterMatch;
-				this.minimumCharacterMatch = matchable.getMinimumCharacterMatch() == Integer.MAX_VALUE ? Integer.MAX_VALUE : this.minimumCharacterMatch < Integer.MAX_VALUE ? this.minimumCharacterMatch + matchable.getMinimumCharacterMatch() < 0 ? Integer.MAX_VALUE : this.minimumCharacterMatch + matchable.getMinimumCharacterMatch() : this.minimumCharacterMatch;
-			}
-			
-			this.maximumCharacterMatch = this.repetition.getMaximum() == Integer.MAX_VALUE ? Integer.MAX_VALUE : this.maximumCharacterMatch;
-			this.minimumCharacterMatch = this.repetition.getMinimum() == 0 ? 0 : this.minimumCharacterMatch;
-			
-			return new Group(this);
-		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	private static String doCreateSource(final List<Matchable> matchables, final Repetition repetition) {
+	private static String doCreateSource(final Alternation alternation, final Repetition repetition) {
 		final
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("(");
-		
-		for(final Matchable matchable : matchables) {
-			stringBuilder.append(matchable.getSource());
-		}
-		
+		stringBuilder.append(alternation.getSource());
 		stringBuilder.append(")");
 		stringBuilder.append(repetition.getSource());
 		

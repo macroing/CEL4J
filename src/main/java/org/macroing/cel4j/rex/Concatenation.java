@@ -18,131 +18,164 @@
  */
 package org.macroing.cel4j.rex;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
-import org.macroing.cel4j.rex.Matcher.MatchInfo;
+import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.ParameterArguments;
 
-//TODO: Add Javadocs!
-public final class Concatenation implements Matchable {
-	private final List<Matchable> matchables;
+/**
+ * A {@code Concatenation} is a {@link Matcher} that can match concatenations of {@link Matcher} instances.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
+public final class Concatenation implements Matcher {
+	private final List<Matcher> matchers;
 	private final String source;
-	private final int maximumCharacterMatch;
-	private final int minimumCharacterMatch;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	Concatenation(final Builder builder) {
-		this.matchables = Collections.unmodifiableList(new ArrayList<>(builder.matchables));
-		this.source = doCreateSource(this.matchables);
-		this.maximumCharacterMatch = builder.maximumCharacterMatch;
-		this.minimumCharacterMatch = builder.minimumCharacterMatch;
+	/**
+	 * Constructs a new {@code Concatenation} instance.
+	 * <p>
+	 * If either {@code matchers} or any of its elements are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param matchers a {@code List} with all {@link Matcher} instances associated with this {@code Concatenation} instance
+	 * @throws NullPointerException thrown if, and only if, either {@code matchers} or any of its elements are {@code null}
+	 */
+	public Concatenation(final List<Matcher> matchers) {
+		this.matchers = new ArrayList<>(ParameterArguments.requireNonNullList(matchers, "matchers"));
+		this.source = doCreateSource(this.matchers);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code List} with all {@link Matchable} instances associated with this {@code Concatenation} instance.
+	 * Writes this {@code Concatenation} to a {@link Document}.
+	 * <p>
+	 * Returns the {@code Document}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * concatenation.write(new Document());
+	 * }
+	 * </pre>
+	 * 
+	 * @return the {@code Document}
+	 */
+	@Override
+	public Document write() {
+		return write(new Document());
+	}
+	
+	/**
+	 * Writes this {@code Concatenation} to {@code document}.
+	 * <p>
+	 * Returns {@code document}.
+	 * <p>
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param document the {@link Document} to write to
+	 * @return {@code document}
+	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
+	 */
+	@Override
+	public Document write(final Document document) {
+		document.line("Concatenation {");
+		document.indent();
+		
+		for(final Matcher matcher : this.matchers) {
+			matcher.write(document);
+		}
+		
+		document.outdent();
+		document.line("}");
+		
+		return document;
+	}
+	
+	/**
+	 * Returns a {@code List} with all {@link Matcher} instances associated with this {@code Concatenation} instance.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code Concatenation} instance.
 	 * 
-	 * @return a {@code List} with all {@code Matchable} instances associated with this {@code Concatenation} instance
+	 * @return a {@code List} with all {@code Matcher} instances associated with this {@code Concatenation} instance
 	 */
-	public List<Matchable> getMatchables() {
-		return new ArrayList<>(this.matchables);
+	public List<Matcher> getMatchers() {
+		return new ArrayList<>(this.matchers);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Matches {@code source}.
+	 * <p>
+	 * Returns a {@link MatchResult} with the result of the match.
+	 * <p>
+	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * concatenation.match(source, 0);
+	 * }
+	 * </pre>
+	 * 
+	 * @param source the source to match
+	 * @return a {@code MatchResult} with the result of the match
+	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 */
 	@Override
-	public Matcher matcher(final String source) {
-		return matcher(source, 0, 0);
+	public MatchResult match(final String source) {
+		return match(source, 0);
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Matches {@code source}.
+	 * <p>
+	 * Returns a {@link MatchResult} with the result of the match.
+	 * <p>
+	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param source the source to match
+	 * @param index the index in {@code source} to match from
+	 * @return a {@code MatchResult} with the result of the match
+	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}
+	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 */
 	@Override
-	public Matcher matcher(final String source, final int beginIndex, final int endIndex) {
+	public MatchResult match(final String source, final int index) {
 		Objects.requireNonNull(source, "source == null");
 		
-		ParameterArguments.requireRange(beginIndex, 0, source.length(), "beginIndex");
-		ParameterArguments.requireRange(endIndex, beginIndex, source.length(), "endIndex");
+		ParameterArguments.requireRange(index, 0, source.length(), "index");
 		
-		boolean isMatching = true;
+		final List<MatchResult> matchResults = new ArrayList<>();
 		
-		int currentCharacterMatch = 0;
-		int newBeginIndex = beginIndex;
-		int newEndIndex = endIndex;
+		int currentIndex = index;
 		
-		final List<Matcher> matchers = new ArrayList<>();
+		int length = 0;
 		
-		MatchInfo matchInfo = MatchInfo.SUCCESS;
-		
-		for(final Matchable matchable : this.matchables) {
-			if(matchable instanceof GroupReference && GroupReference.class.cast(matchable).isDefinition()) {
-				continue;
-			}
+		for(final Matcher matcher : getMatchers()) {
+			final MatchResult currentMatchResult = matcher.match(source, currentIndex);
 			
-			final Matcher matcher = matchable.matcher(source, newBeginIndex, newEndIndex);
-			
-			matchers.add(matcher);
-			
-			currentCharacterMatch += matcher.getCurrentCharacterMatch();
-			
-			switch(matcher.getMatchInfo()) {
-				case FAILURE:
-					matchInfo = MatchInfo.FAILURE;
-					
-					break;
-				case SUCCESS:
-					break;
-				case UNEXPECTED_CHARACTER_MATCH:
-					if(matchInfo != MatchInfo.FAILURE) {
-						matchInfo = MatchInfo.UNEXPECTED_CHARACTER_MATCH;
-					}
-					
-					break;
-				case UNEXPECTED_STRING_LENGTH:
-					if(matchInfo != MatchInfo.FAILURE && matchInfo != MatchInfo.UNEXPECTED_CHARACTER_MATCH) {
-						matchInfo = MatchInfo.UNEXPECTED_STRING_LENGTH;
-					}
-					
-					break;
-				default:
-					break;
-			}
-			
-			if(!matcher.isMatching()) {
-				isMatching = false;
+			if(currentMatchResult.isMatching()) {
+				currentIndex += currentMatchResult.getLength();
 				
-				break;
+				length += currentMatchResult.getLength();
+				
+				matchResults.add(currentMatchResult);
+			} else {
+				return new MatchResult(this, source, false, index);
 			}
-			
-			newBeginIndex = matcher.getEndIndex();
-			newEndIndex = matcher.getEndIndex();
 		}
 		
-		newBeginIndex = beginIndex;
-		
-		final
-		Matcher.Builder matcher_Builder = new Matcher.Builder();
-		matcher_Builder.setBeginIndex(newBeginIndex);
-		matcher_Builder.setCurrentCharacterMatch(currentCharacterMatch);
-		matcher_Builder.setEndIndex(newEndIndex);
-		matcher_Builder.setMatchInfo(matchInfo);
-		matcher_Builder.setMatchable(this);
-		matcher_Builder.setMatching(isMatching);
-		matcher_Builder.setSource(source);
-		
-		for(final Matcher matcher : matchers) {
-			matcher_Builder.addMatcher(matcher);
-		}
-		
-		return matcher_Builder.build();
+		return new MatchResult(this, source, true, index, index + length, matchResults);
 	}
 	
 	/**
@@ -162,7 +195,7 @@ public final class Concatenation implements Matchable {
 	 */
 	@Override
 	public String toString() {
-		return "new Concatenation(...)";
+		return String.format("new Concatenation(Arrays.asList(%s))", this.matchers.stream().map(matchable -> matchable.toString()).collect(Collectors.joining(", ")));
 	}
 	
 	/**
@@ -192,8 +225,8 @@ public final class Concatenation implements Matchable {
 		
 		try {
 			if(nodeHierarchicalVisitor.visitEnter(this)) {
-				for(final Matchable matchable : this.matchables) {
-					if(!matchable.accept(nodeHierarchicalVisitor)) {
+				for(final Matcher matcher : this.matchers) {
+					if(!matcher.accept(nodeHierarchicalVisitor)) {
 						return nodeHierarchicalVisitor.visitLeave(this);
 					}
 				}
@@ -226,18 +259,6 @@ public final class Concatenation implements Matchable {
 		}
 	}
 	
-//	TODO: Add Javadocs!
-	@Override
-	public int getMaximumCharacterMatch() {
-		return this.maximumCharacterMatch;
-	}
-	
-//	TODO: Add Javadocs!
-	@Override
-	public int getMinimumCharacterMatch() {
-		return this.minimumCharacterMatch;
-	}
-	
 	/**
 	 * Returns a hash code for this {@code Concatenation} instance.
 	 * 
@@ -250,53 +271,7 @@ public final class Concatenation implements Matchable {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
-	public static final class Builder {
-		final List<Matchable> matchables;
-		int maximumCharacterMatch;
-		int minimumCharacterMatch;
-		
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		/**
-		 * Constructs a new {@code Builder} instance.
-		 */
-		public Builder() {
-			this.matchables = new ArrayList<>();
-			this.maximumCharacterMatch = 0;
-			this.minimumCharacterMatch = 0;
-		}
-		
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-//		TODO: Add Javadocs!
-		public Builder addMatchable(final Matchable matchable) {
-			this.matchables.add(Objects.requireNonNull(matchable, "matchable == null"));
-			
-			return this;
-		}
-		
-//		TODO: Add Javadocs!
-		public Builder removeMatchable(final Matchable matchable) {
-			this.matchables.remove(Objects.requireNonNull(matchable, "matchable == null"));
-			
-			return this;
-		}
-		
-//		TODO: Add Javadocs!
-		public Concatenation build() {
-			for(final Matchable matchable : this.matchables) {
-				this.maximumCharacterMatch = matchable.getMaximumCharacterMatch() == Integer.MAX_VALUE ? Integer.MAX_VALUE : this.maximumCharacterMatch < Integer.MAX_VALUE ? this.maximumCharacterMatch + matchable.getMaximumCharacterMatch() < 0 ? Integer.MAX_VALUE : this.maximumCharacterMatch + matchable.getMaximumCharacterMatch() : this.maximumCharacterMatch;
-				this.minimumCharacterMatch = matchable.getMinimumCharacterMatch() == Integer.MAX_VALUE ? Integer.MAX_VALUE : this.minimumCharacterMatch < Integer.MAX_VALUE ? this.minimumCharacterMatch + matchable.getMinimumCharacterMatch() < 0 ? Integer.MAX_VALUE : this.minimumCharacterMatch + matchable.getMinimumCharacterMatch() : this.minimumCharacterMatch;
-			}
-			
-			return new Concatenation(this);
-		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	private static String doCreateSource(final List<Matchable> matchables) {
+	private static String doCreateSource(final List<Matcher> matchables) {
 		final StringBuilder stringBuilder = new StringBuilder();
 		
 		for(int i = 0; i < matchables.size(); i++) {

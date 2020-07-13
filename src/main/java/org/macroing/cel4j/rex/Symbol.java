@@ -18,14 +18,18 @@
  */
 package org.macroing.cel4j.rex;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 
-import org.macroing.cel4j.rex.Matcher.MatchInfo;
+import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.ParameterArguments;
 
-//TODO: Add Javadocs!
-public final class Symbol implements Matchable {
+/**
+ * A {@code Symbol} is a {@link Matcher} that can match {@code char} values.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
+public final class Symbol implements Matcher {
 	private final Repetition repetition;
 	private final char character;
 	
@@ -63,82 +67,115 @@ public final class Symbol implements Matchable {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Writes this {@code Symbol} to a {@link Document}.
+	 * <p>
+	 * Returns the {@code Document}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * symbol.write(new Document());
+	 * }
+	 * </pre>
+	 * 
+	 * @return the {@code Document}
+	 */
 	@Override
-	public Matcher matcher(final String source) {
-		return matcher(source, 0, 0);
+	public Document write() {
+		return write(new Document());
 	}
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Writes this {@code Symbol} to {@code document}.
+	 * <p>
+	 * Returns {@code document}.
+	 * <p>
+	 * If {@code document} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param document the {@link Document} to write to
+	 * @return {@code document}
+	 * @throws NullPointerException thrown if, and only if, {@code document} is {@code null}
+	 */
 	@Override
-	public Matcher matcher(final String source, final int beginIndex, final int endIndex) {
+	public Document write(final Document document) {
+		document.linef("Symbol \"%s\";", Character.toString(this.character));
+		
+		return document;
+	}
+	
+	/**
+	 * Matches {@code source}.
+	 * <p>
+	 * Returns a {@link MatchResult} with the result of the match.
+	 * <p>
+	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * symbol.match(source, 0);
+	 * }
+	 * </pre>
+	 * 
+	 * @param source the source to match
+	 * @return a {@code MatchResult} with the result of the match
+	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 */
+	@Override
+	public MatchResult match(final String source) {
+		return match(source, 0);
+	}
+	
+	/**
+	 * Matches {@code source}.
+	 * <p>
+	 * Returns a {@link MatchResult} with the result of the match.
+	 * <p>
+	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param source the source to match
+	 * @param index the index in {@code source} to match from
+	 * @return a {@code MatchResult} with the result of the match
+	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}
+	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 */
+	@Override
+	public MatchResult match(final String source, final int index) {
 		Objects.requireNonNull(source, "source == null");
 		
-		ParameterArguments.requireRange(beginIndex, 0, source.length(), "beginIndex");
-		ParameterArguments.requireRange(endIndex, beginIndex, source.length(), "endIndex");
+		ParameterArguments.requireRange(index, 0, source.length(), "index");
 		
-		boolean isInEscapeMode = false;
-		boolean isMatching = true;
+		final Repetition repetition = getRepetition();
 		
-		int currentCharacterMatch = 0;
-		int length = source.length();
-		int matches = 0;
-		int maximum = this.repetition.getMaximum();
-		int minimum = this.repetition.getMinimum();
-		int newBeginIndex = beginIndex;
-		int newEndIndex = endIndex;
+		final int minimumRepetition = repetition.getMinimum();
+		final int maximumRepetition = repetition.getMaximum();
 		
-		MatchInfo matchInfo = MatchInfo.SUCCESS;
+		int currentIndex = index;
+		int currentRepetition = 0;
 		
-		for(; newEndIndex < length; newEndIndex++) {
-			char character = source.charAt(newEndIndex);
+		int length = 0;
+		
+		for(int i = minimumRepetition; i <= maximumRepetition && currentIndex < source.length(); i++) {
+			final int currentLength = source.charAt(currentIndex) == getCharacter() ? 1 : -1;
 			
-			if(character == '\\' && !isInEscapeMode) {
-				isInEscapeMode = true;
+			if(currentLength != -1) {
+				currentIndex += currentLength;
+				currentRepetition++;
 				
-				currentCharacterMatch++;
-			} else if(this.character == character) {
-				isInEscapeMode = false;
-				
-				currentCharacterMatch++;
-				
-				matches++;
-				
-				matchInfo = MatchInfo.SUCCESS;
-				
-				if(matches == maximum) {
-					newEndIndex++;
-					
-					break;
-				}
+				length += currentLength;
 			} else {
-				if(matches < minimum) {
-					matchInfo = MatchInfo.UNEXPECTED_CHARACTER_MATCH;
-				}
-				
 				break;
 			}
 		}
 		
-		if(matches < minimum) {
-			isMatching = false;
-			
-			if(matchInfo != MatchInfo.UNEXPECTED_CHARACTER_MATCH) {
-				matchInfo = MatchInfo.UNEXPECTED_STRING_LENGTH;
-			}
+		if(currentRepetition >= minimumRepetition) {
+			return new MatchResult(this, source, true, index, index + length);
 		}
 		
-		final
-		Matcher.Builder matcher_Builder = new Matcher.Builder();
-		matcher_Builder.setBeginIndex(newBeginIndex);
-		matcher_Builder.setCurrentCharacterMatch(currentCharacterMatch);
-		matcher_Builder.setEndIndex(newEndIndex);
-		matcher_Builder.setMatchInfo(matchInfo);
-		matcher_Builder.setMatchable(this);
-		matcher_Builder.setMatching(isMatching);
-		matcher_Builder.setSource(source);
-		
-		return matcher_Builder.build();
+		return new MatchResult(this, source, false, index);
 	}
 	
 	/**
@@ -159,27 +196,47 @@ public final class Symbol implements Matchable {
 	public String getSource() {
 		final StringBuilder stringBuilder = new StringBuilder();
 		
-		switch(this.character) {
-			case '+':
-			case '*':
-			case '?':
-			case '[':
-			case ']':
-			case '(':
-			case ')':
-			case '{':
-			case '}':
-			case '|':
-			case '$':
-			case '=':
-				stringBuilder.append('\\');
-				
-				break;
-			default:
-				break;
+		if(this.character == '\n' || this.character == '\r' || this.character == '\t') {
+			switch(this.character) {
+				case '\n':
+					stringBuilder.append("\\n");
+					
+					break;
+				case '\r':
+					stringBuilder.append("\\r");
+					
+					break;
+				case '\t':
+					stringBuilder.append("\\t");
+					
+					break;
+				default:
+					break;
+			}
+		} else {
+			switch(this.character) {
+				case '+':
+				case '*':
+				case '?':
+				case '[':
+				case ']':
+				case '(':
+				case ')':
+				case '{':
+				case '}':
+				case '|':
+				case '%':
+				case '=':
+					stringBuilder.append('\\');
+					
+					break;
+				default:
+					break;
+			}
+			
+			stringBuilder.append(this.character);
 		}
 		
-		stringBuilder.append(this.character);
 		stringBuilder.append(this.repetition.getSource());
 		
 		return stringBuilder.toString();
@@ -192,7 +249,7 @@ public final class Symbol implements Matchable {
 	 */
 	@Override
 	public String toString() {
-		return String.format("new Symbol(%s, %s)", Character.toString(getCharacter()), getRepetition());
+		return String.format("new Symbol('%s', %s)", Character.toString(getCharacter()), getRepetition());
 	}
 	
 	/**
@@ -225,18 +282,6 @@ public final class Symbol implements Matchable {
 	 */
 	public char getCharacter() {
 		return this.character;
-	}
-	
-//	TODO: Add Javadocs!
-	@Override
-	public int getMaximumCharacterMatch() {
-		return this.repetition.getMaximum();
-	}
-	
-//	TODO: Add Javadocs!
-	@Override
-	public int getMinimumCharacterMatch() {
-		return this.repetition.getMinimum();
 	}
 	
 	/**

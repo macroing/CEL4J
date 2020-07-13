@@ -18,11 +18,10 @@
  */
 package org.macroing.cel4j.rex;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.macroing.cel4j.node.NodeFilter;
-import org.macroing.cel4j.node.NodeFormatException;
 import org.macroing.cel4j.scanner.TextScanner;
 
 final class Parsers {
@@ -36,11 +35,7 @@ final class Parsers {
 		final Alternation alternation = doParseAlternation(textScanner);
 		
 		if(alternation != null) {
-			final
-			Expression.Builder expression_Builder = new Expression.Builder();
-			expression_Builder.addMatchable(alternation);
-			
-			return doUpdateGroupReferences(expression_Builder.build());
+			return doUpdateGroupReferences(new Expression(alternation));
 		}
 		
 		throw new IllegalArgumentException(String.format("Illegal Expression: %s", textScanner));
@@ -49,7 +44,7 @@ final class Parsers {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private static Alternation doParseAlternation(final TextScanner textScanner) {
-		final Alternation.Builder alternation_Builder = new Alternation.Builder();
+		final List<Concatenation> concatenations = new ArrayList<>();
 		
 		final int indexAtBeginningInclusive = textScanner.getIndexAtBeginningInclusive();
 		final int indexAtEndExclusive = textScanner.getIndexAtEndExclusive();
@@ -58,7 +53,7 @@ final class Parsers {
 			final Concatenation concatenation = doParseConcatenation(textScanner);
 			
 			if(concatenation != null) {
-				alternation_Builder.addMatchable(concatenation);
+				concatenations.add(concatenation);
 			} else {
 				textScanner.stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
 				
@@ -66,11 +61,11 @@ final class Parsers {
 			}
 		} while(textScanner.nextCharacter('|') && textScanner.consume());
 		
-		return alternation_Builder.build();
+		return new Alternation(concatenations);
 	}
 	
 	private static Concatenation doParseConcatenation(final TextScanner textScanner) {
-		final Concatenation.Builder concatenation_Builder = new Concatenation.Builder();
+		final List<Matcher> matchables = new ArrayList<>();
 		
 		final int indexAtBeginningInclusive = textScanner.getIndexAtBeginningInclusive();
 		final int indexAtEndExclusive = textScanner.getIndexAtEndExclusive();
@@ -88,7 +83,7 @@ final class Parsers {
 					if(group != null) {
 						count++;
 						
-						concatenation_Builder.addMatchable(group);
+						matchables.add(group);
 						
 						continue;
 					}
@@ -97,13 +92,23 @@ final class Parsers {
 					
 					return null;
 				}
-				case '$': {
+				case '%': {
+					final GroupReferenceDefinition groupReferenceDefinition = doParseGroupReferenceDefinition(textScanner);
+					
+					if(groupReferenceDefinition != null) {
+						count++;
+						
+						matchables.add(groupReferenceDefinition);
+						
+						continue;
+					}
+					
 					final GroupReference groupReference = doParseGroupReference(textScanner);
 					
 					if(groupReference != null) {
 						count++;
 						
-						concatenation_Builder.addMatchable(groupReference);
+						matchables.add(groupReference);
 						
 						continue;
 					}
@@ -118,7 +123,7 @@ final class Parsers {
 					if(symbol != null) {
 						count++;
 						
-						concatenation_Builder.addMatchable(symbol);
+						matchables.add(symbol);
 						
 						continue;
 					}
@@ -129,7 +134,7 @@ final class Parsers {
 		}
 		
 		if(count > 0) {
-			return concatenation_Builder.build();
+			return new Concatenation(matchables);
 		}
 		
 		textScanner.stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
@@ -140,10 +145,11 @@ final class Parsers {
 	private static Expression doUpdateGroupReferences(final Expression expression) {
 		final List<Group> groups = NodeFilter.filter(expression, NodeFilter.any(), Group.class);
 		final List<GroupReference> groupReferences = NodeFilter.filter(expression, NodeFilter.any(), GroupReference.class);
+		final List<GroupReferenceDefinition> groupReferenceDefinitions = NodeFilter.filter(expression, NodeFilter.any(), GroupReferenceDefinition.class);
 		
 		if(groups.size() > 0 && groupReferences.size() > 0) {
 			for(final GroupReference groupReference : groupReferences) {
-				if(!groupReference.isDefinition() && !groupReference.hasGroup()) {
+				if(!groupReference.hasGroup()) {
 					final String name = groupReference.getName();
 					
 					if(name.matches("[0-9]+")) {
@@ -155,21 +161,17 @@ final class Parsers {
 							break;
 						}
 						
-						throw new NodeFormatException("No matching Group could be found for the GroupReference '" + groupReference + "'.");
+						throw new IllegalArgumentException("No matching Group could be found for the GroupReference '%" + groupReference.getSource() + "'.");
 					}
 					
-					for(int i = 0; i < groupReferences.size(); i++) {
-						final GroupReference currentGroupReference = groupReferences.get(i);
-						
-						final Optional<Group> currentGroup = currentGroupReference.getGroup();
-						
-						if(currentGroupReference.getName().equals(name) && currentGroupReference.isDefinition() && currentGroup.isPresent()) {
-							groupReference.setGroup(currentGroup.get());
+					for(final GroupReferenceDefinition groupReferenceDefinition : groupReferenceDefinitions) {
+						if(groupReferenceDefinition.getName().equals(name)) {
+							groupReference.setGroup(groupReferenceDefinition.getGroup());
 						}
 					}
 					
 					if(!groupReference.hasGroup()) {
-						throw new NodeFormatException("No matching Group could be found for the GroupReference '" + groupReference + "'.");
+						throw new IllegalArgumentException("No matching Group could be found for the GroupReference '%" + groupReference.getSource() + "'.");
 					}
 				}
 			}
@@ -197,27 +199,7 @@ final class Parsers {
 					textScanner.nextCharacter();
 					textScanner.consume();
 					
-					character = textScanner.currentCharacter();
-					
-					switch(character) {
-						case '+':
-							textScanner.nextCharacter();
-							textScanner.consume();
-							
-							return new Group.Builder().addMatchable(alternation).setRepetition(Repetition.ONE_OR_MORE).build();
-						case '*':
-							textScanner.nextCharacter();
-							textScanner.consume();
-							
-							return new Group.Builder().addMatchable(alternation).setRepetition(Repetition.ANY).build();
-						case '?':
-							textScanner.nextCharacter();
-							textScanner.consume();
-							
-							return new Group.Builder().addMatchable(alternation).setRepetition(Repetition.ZERO_OR_ONE).build();
-						default:
-							return new Group.Builder().addMatchable(alternation).setRepetition(Repetition.ONE).build();
-					}
+					return new Group(alternation, doParseRepetition(textScanner));
 				}
 			} else {
 				textScanner.stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
@@ -230,7 +212,7 @@ final class Parsers {
 	private static GroupReference doParseGroupReference(final TextScanner textScanner) {
 		char character = textScanner.currentCharacter();
 		
-		if(character == '$') {
+		if(character == '%') {
 			final int indexAtBeginningInclusive = textScanner.getIndexAtBeginningInclusive();
 			final int indexAtEndExclusive = textScanner.getIndexAtEndExclusive();
 			
@@ -255,23 +237,48 @@ final class Parsers {
 					character = textScanner.currentCharacter();
 				}
 				
-				if(character == '=') {
+				return new GroupReference(stringBuilder.toString(), doParseRepetition(textScanner));
+			} else if(Character.isJavaIdentifierStart(character)) {
+				stringBuilder.append(character);
+				
+				textScanner.nextCharacter();
+				textScanner.consume();
+				
+				character = textScanner.currentCharacter();
+				
+				while(Character.isJavaIdentifierPart(character) && character != TextScanner.EOF) {
+					stringBuilder.append(character);
+					
 					textScanner.nextCharacter();
 					textScanner.consume();
 					
-					final Group group = doParseGroup(textScanner);
-					
-					if(group != null) {
-						return new GroupReference(stringBuilder.toString(), group);
-					}
-					
-					textScanner.stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
-					
-					return null;
+					character = textScanner.currentCharacter();
 				}
 				
-				return new GroupReference(stringBuilder.toString());
-			} else if(Character.isJavaIdentifierStart(character)) {
+				return new GroupReference(stringBuilder.toString(), doParseRepetition(textScanner));
+			} else {
+				textScanner.stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
+			}
+		}
+		
+		return null;
+	}
+	
+	private static GroupReferenceDefinition doParseGroupReferenceDefinition(final TextScanner textScanner) {
+		char character = textScanner.currentCharacter();
+		
+		if(character == '%') {
+			final int indexAtBeginningInclusive = textScanner.getIndexAtBeginningInclusive();
+			final int indexAtEndExclusive = textScanner.getIndexAtEndExclusive();
+			
+			textScanner.nextCharacter();
+			textScanner.consume();
+			
+			final StringBuilder stringBuilder = new StringBuilder();
+			
+			character = textScanner.currentCharacter();
+			
+			if(Character.isJavaIdentifierStart(character) && character != TextScanner.EOF) {
 				stringBuilder.append(character);
 				
 				textScanner.nextCharacter();
@@ -295,21 +302,41 @@ final class Parsers {
 					final Group group = doParseGroup(textScanner);
 					
 					if(group != null) {
-						return new GroupReference(stringBuilder.toString(), group);
+						return new GroupReferenceDefinition(stringBuilder.toString(), group);
 					}
-					
-					textScanner.stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
-					
-					return null;
 				}
-				
-				return new GroupReference(stringBuilder.toString());
-			} else {
-				textScanner.stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
 			}
+			
+			textScanner.stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
 		}
 		
 		return null;
+	}
+	
+	private static Repetition doParseRepetition(final TextScanner textScanner) {
+		final char character = textScanner.currentCharacter();
+		
+		switch(character) {
+			case TextScanner.EOF:
+				return Repetition.ONE;
+			case '+':
+				textScanner.nextCharacter();
+				textScanner.consume();
+				
+				return Repetition.ONE_OR_MORE;
+			case '*':
+				textScanner.nextCharacter();
+				textScanner.consume();
+				
+				return Repetition.ANY;
+			case '?':
+				textScanner.nextCharacter();
+				textScanner.consume();
+				
+				return Repetition.ZERO_OR_ONE;
+			default:
+				return Repetition.ONE;
+		}
 	}
 	
 	private static Symbol doParseSymbol(final TextScanner textScanner) {
@@ -327,7 +354,7 @@ final class Parsers {
 			case '{':
 			case '}':
 			case '|':
-			case '$':
+			case '%':
 			case '=': {
 				return null;
 			}
@@ -349,58 +376,14 @@ final class Parsers {
 						textScanner.nextCharacter();
 						textScanner.consume();
 						
-						final char character2 = textScanner.currentCharacter();
-						
-						switch(character2) {
-							case TextScanner.EOF:
-								return new Symbol(character1);
-							case '+':
-								textScanner.nextCharacter();
-								textScanner.consume();
-								
-								return new Symbol(character1, Repetition.ONE_OR_MORE);
-							case '*':
-								textScanner.nextCharacter();
-								textScanner.consume();
-								
-								return new Symbol(character1, Repetition.ANY);
-							case '?':
-								textScanner.nextCharacter();
-								textScanner.consume();
-								
-								return new Symbol(character1, Repetition.ZERO_OR_ONE);
-							default:
-								return new Symbol(character1);
-						}
+						return new Symbol(character1, doParseRepetition(textScanner));
 				}
 			}
 			default: {
 				textScanner.nextCharacter();
 				textScanner.consume();
 				
-				final char character1 = textScanner.currentCharacter();
-				
-				switch(character1) {
-					case TextScanner.EOF:
-						return new Symbol(character0);
-					case '+':
-						textScanner.nextCharacter();
-						textScanner.consume();
-						
-						return new Symbol(character0, Repetition.ONE_OR_MORE);
-					case '*':
-						textScanner.nextCharacter();
-						textScanner.consume();
-						
-						return new Symbol(character0, Repetition.ANY);
-					case '?':
-						textScanner.nextCharacter();
-						textScanner.consume();
-						
-						return new Symbol(character0, Repetition.ZERO_OR_ONE);
-					default:
-						return new Symbol(character0);
-				}
+				return new Symbol(character0, doParseRepetition(textScanner));
 			}
 		}
 	}
