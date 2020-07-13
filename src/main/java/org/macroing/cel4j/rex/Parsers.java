@@ -20,11 +20,16 @@ package org.macroing.cel4j.rex;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.scanner.TextScanner;
 
 final class Parsers {
+	private static final Pattern PATTERN_REPETITION = Pattern.compile("\\{(\\d*),?(\\d*)\\}");
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	private Parsers() {
 		
 	}
@@ -57,7 +62,7 @@ final class Parsers {
 			} else {
 				textScanner.stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
 				
-				return null;
+				throw new IllegalArgumentException(String.format("Illegal Alternation: %s", textScanner));
 			}
 		} while(textScanner.nextCharacter('|') && textScanner.consume());
 		
@@ -75,8 +80,21 @@ final class Parsers {
 		loop:
 		while(true) {
 			switch(textScanner.currentCharacter()) {
-				case TextScanner.EOF:
+				case TextScanner.EOF: {
 					break loop;
+				}
+				case ' ': {
+					textScanner.nextCharacter();
+					textScanner.consume();
+					
+					continue;
+				}
+				case '&': {
+					textScanner.nextCharacter();
+					textScanner.consume();
+					
+					continue;
+				}
 				case '(': {
 					final Group group = doParseGroup(textScanner);
 					
@@ -91,6 +109,12 @@ final class Parsers {
 					textScanner.stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
 					
 					return null;
+				}
+				case ')': {
+					break loop;
+				}
+				case '|': {
+					break loop;
 				}
 				case '%': {
 					final GroupReferenceDefinition groupReferenceDefinition = doParseGroupReferenceDefinition(textScanner);
@@ -115,7 +139,7 @@ final class Parsers {
 					
 					textScanner.stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
 					
-					return null;
+					throw new IllegalArgumentException(String.format("Illegal Concatenation: %s", textScanner));
 				}
 				default: {
 					final Symbol symbol = doParseSymbol(textScanner);
@@ -139,7 +163,7 @@ final class Parsers {
 		
 		textScanner.stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
 		
-		return null;
+		throw new IllegalArgumentException(String.format("Illegal Concatenation: %s", textScanner));
 	}
 	
 	private static Expression doUpdateGroupReferences(final Expression expression) {
@@ -314,7 +338,7 @@ final class Parsers {
 	}
 	
 	private static Repetition doParseRepetition(final TextScanner textScanner) {
-		final char character = textScanner.currentCharacter();
+		char character = textScanner.currentCharacter();
 		
 		switch(character) {
 			case TextScanner.EOF:
@@ -334,6 +358,23 @@ final class Parsers {
 				textScanner.consume();
 				
 				return Repetition.ZERO_OR_ONE;
+			case '{':
+				final StringBuilder stringBuilderMinimum = new StringBuilder();
+				final StringBuilder stringBuilderMaximum = new StringBuilder();
+				
+				if(textScanner.nextRegex(PATTERN_REPETITION, matchResult -> {stringBuilderMinimum.append(matchResult.group(1)); stringBuilderMaximum.append(matchResult.group(2));})) {
+					textScanner.consume();
+					
+					final String stringMinimum = stringBuilderMinimum.toString();
+					final String stringMaximum = stringBuilderMaximum.toString();
+					
+					final int minimum = stringMinimum.isEmpty() ? 0 : Integer.parseInt(stringMinimum);
+					final int maximum = stringMaximum.isEmpty() ? Integer.MAX_VALUE : Integer.parseInt(stringMaximum);
+					
+					return new Repetition(minimum, maximum);
+				}
+				
+				throw new IllegalArgumentException(String.format("Illegal Repetition: %s", textScanner));
 			default:
 				return Repetition.ONE;
 		}
@@ -344,6 +385,7 @@ final class Parsers {
 		
 		switch(character0) {
 			case TextScanner.EOF:
+			case ' ':
 			case '+':
 			case '*':
 			case '?':
@@ -355,8 +397,9 @@ final class Parsers {
 			case '}':
 			case '|':
 			case '%':
+			case '&':
 			case '=': {
-				return null;
+				throw new IllegalArgumentException(String.format("Illegal Symbol: %s", textScanner));
 			}
 			case '\\': {
 				final int indexAtBeginningInclusive = textScanner.getIndexAtBeginningInclusive();
@@ -371,7 +414,7 @@ final class Parsers {
 					case TextScanner.EOF:
 						textScanner.stateSet(indexAtBeginningInclusive, indexAtEndExclusive);
 						
-						return null;
+						throw new IllegalArgumentException(String.format("Illegal Symbol: %s", textScanner));
 					default:
 						textScanner.nextCharacter();
 						textScanner.consume();
