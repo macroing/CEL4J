@@ -260,7 +260,14 @@ public final class Alternation implements Matchable {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * A {@code Builder} is used for building {@link Alternation} instances.
+	 * <p>
+	 * This class is mutable and not thread-safe.
+	 * 
+	 * @since 1.0.0
+	 * @author J&#246;rgen Lundgren
+	 */
 	public static final class Builder {
 		final List<Matchable> matchables;
 		int maximumCharacterMatch;
@@ -295,14 +302,34 @@ public final class Alternation implements Matchable {
 			return new Alternation(this);
 		}
 		
-//		TODO: Add Javadocs!
+		/**
+		 * Adds {@code matchable} to this {@code Builder} instance.
+		 * <p>
+		 * Returns this {@code Builder} instance.
+		 * <p>
+		 * If {@code matchable} is {@code null}, a {@code NullPointerException} will be thrown.
+		 * 
+		 * @param matchable the {@link Matchable} to add
+		 * @return this {@code Builder} instance
+		 * @throws NullPointerException thrown if, and only if, {@code matchable} is {@code null}
+		 */
 		public Builder addMatchable(final Matchable matchable) {
 			this.matchables.add(Objects.requireNonNull(matchable, "matchable == null"));
 			
 			return this;
 		}
 		
-//		TODO: Add Javadocs!
+		/**
+		 * Removes {@code matchable} from this {@code Builder} instance.
+		 * <p>
+		 * Returns this {@code Builder} instance.
+		 * <p>
+		 * If {@code matchable} is {@code null}, a {@code NullPointerException} will be thrown.
+		 * 
+		 * @param matchable the {@link Matchable} to remove
+		 * @return this {@code Builder} instance
+		 * @throws NullPointerException thrown if, and only if, {@code matchable} is {@code null}
+		 */
 		public Builder removeMatchable(final Matchable matchable) {
 			this.matchables.remove(Objects.requireNonNull(matchable, "matchable == null"));
 			
