@@ -69,7 +69,7 @@ The following example demonstrates various features in Rex by matching a subset 
 <Expression>
 ```
 
-The Rex expression above can match the input supplied in the `HelloWorldExample`, as long as the escape sequences for the double quotes are removed.
+The Rex expression above can match the input supplied in the `HelloWorldExample`, as long as all whitespaces and escape sequences for the double quotes are removed.
 
 ```
 <HelloWorld>=("Hello"&','&' '&"World"&'!')&<HelloWorld>
