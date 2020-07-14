@@ -275,6 +275,7 @@ public final class Concatenation implements Matcher {
 		final StringBuilder stringBuilder = new StringBuilder();
 		
 		for(int i = 0; i < matchables.size(); i++) {
+			stringBuilder.append(i > 0 ? " & " : "");
 			stringBuilder.append(matchables.get(i).getSource());
 		}
 		

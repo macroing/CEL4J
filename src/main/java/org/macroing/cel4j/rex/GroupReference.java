@@ -229,8 +229,9 @@ public final class GroupReference implements Matcher {
 	public String getSource() {
 		final
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("%");
+		stringBuilder.append("<");
 		stringBuilder.append(this.name);
+		stringBuilder.append(">");
 		stringBuilder.append(this.repetition.getSource());
 		
 		return stringBuilder.toString();

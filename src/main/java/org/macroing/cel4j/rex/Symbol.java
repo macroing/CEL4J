@@ -24,16 +24,49 @@ import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.ParameterArguments;
 
 /**
- * A {@code Symbol} is a {@link Matcher} that can match {@code char} values.
+ * A {@code Symbol} is a {@link Matcher} that can match {@code String} values.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
 public final class Symbol implements Matcher {
 	private final Repetition repetition;
-	private final char character;
+	private final String string;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Constructs a new {@code Symbol} instance.
+	 * <p>
+	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new Symbol(string, Repetition.ONE);
+	 * }
+	 * </pre>
+	 * 
+	 * @param string the {@code String} associated with this {@code Symbol} instance
+	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 */
+	public Symbol(final String string) {
+		this(string, Repetition.ONE);
+	}
+	
+	/**
+	 * Constructs a new {@code Symbol} instance.
+	 * <p>
+	 * If either {@code string} or {@code repetition} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param string the {@code String} associated with this {@code Symbol} instance
+	 * @param repetition the {@link Repetition} associated with this {@code Symbol} instance
+	 * @throws NullPointerException thrown if, and only if, either {@code string} or {@code repetition} are {@code null}
+	 */
+	public Symbol(final String string, final Repetition repetition) {
+		this.repetition = Objects.requireNonNull(repetition, "repetition == null");
+		this.string = Objects.requireNonNull(string, "string == null");
+	}
 	
 	/**
 	 * Constructs a new {@code Symbol} instance.
@@ -55,14 +88,20 @@ public final class Symbol implements Matcher {
 	 * Constructs a new {@code Symbol} instance.
 	 * <p>
 	 * If {@code repetition} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this constructor is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * new Symbol(Character.toString(character), repetition);
+	 * }
+	 * </pre>
 	 * 
 	 * @param character the {@code char} associated with this {@code Symbol} instance
 	 * @param repetition the {@link Repetition} associated with this {@code Symbol} instance
 	 * @throws NullPointerException thrown if, and only if, {@code repetition} is {@code null}
 	 */
 	public Symbol(final char character, final Repetition repetition) {
-		this.repetition = Objects.requireNonNull(repetition, "repetition == null");
-		this.character = character;
+		this(Character.toString(character), repetition);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +138,7 @@ public final class Symbol implements Matcher {
 	 */
 	@Override
 	public Document write(final Document document) {
-		document.linef("Symbol \"%s\";", Character.toString(this.character));
+		document.linef("Symbol \"%s\";", getString());
 		
 		return document;
 	}
@@ -150,6 +189,8 @@ public final class Symbol implements Matcher {
 		
 		final Repetition repetition = getRepetition();
 		
+		final String string = getString();
+		
 		final int minimumRepetition = repetition.getMinimum();
 		final int maximumRepetition = repetition.getMaximum();
 		
@@ -159,9 +200,17 @@ public final class Symbol implements Matcher {
 		int length = 0;
 		
 		for(int i = minimumRepetition; i <= maximumRepetition && currentIndex < source.length(); i++) {
-			final int currentLength = source.charAt(currentIndex) == getCharacter() ? 1 : -1;
+			int currentLength = 0;
 			
-			if(currentLength != -1) {
+			for(int j = 0; j < string.length(); j++) {
+				if(source.charAt(currentIndex + j) == string.charAt(j)) {
+					currentLength++;
+				} else {
+					break;
+				}
+			}
+			
+			if(currentLength == string.length()) {
 				currentIndex += currentLength;
 				currentRepetition++;
 				
@@ -194,52 +243,23 @@ public final class Symbol implements Matcher {
 	 */
 	@Override
 	public String getSource() {
-		final StringBuilder stringBuilder = new StringBuilder();
-		
-		if(this.character == '\n' || this.character == '\r' || this.character == '\t') {
-			switch(this.character) {
-				case '\n':
-					stringBuilder.append("\\n");
-					
-					break;
-				case '\r':
-					stringBuilder.append("\\r");
-					
-					break;
-				case '\t':
-					stringBuilder.append("\\t");
-					
-					break;
-				default:
-					break;
-			}
-		} else {
-			switch(this.character) {
-				case '+':
-				case '*':
-				case '?':
-				case '[':
-				case ']':
-				case '(':
-				case ')':
-				case '{':
-				case '}':
-				case '|':
-				case '%':
-				case '=':
-					stringBuilder.append('\\');
-					
-					break;
-				default:
-					break;
-			}
-			
-			stringBuilder.append(this.character);
-		}
-		
-		stringBuilder.append(this.repetition.getSource());
+		final
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(getString().length() == 1 ? "'" : "\"");
+		stringBuilder.append(getString().replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t"));
+		stringBuilder.append(getString().length() == 1 ? "'" : "\"");
+		stringBuilder.append(getRepetition().getSource());
 		
 		return stringBuilder.toString();
+	}
+	
+	/**
+	 * Returns the {@code String} associated with this {@code Symbol} instance.
+	 * 
+	 * @return the {@code String} associated with this {@code Symbol} instance
+	 */
+	public String getString() {
+		return this.string;
 	}
 	
 	/**
@@ -249,7 +269,7 @@ public final class Symbol implements Matcher {
 	 */
 	@Override
 	public String toString() {
-		return String.format("new Symbol('%s', %s)", Character.toString(getCharacter()), getRepetition());
+		return String.format("new Symbol(\"%s\", %s)", getString(), getRepetition());
 	}
 	
 	/**
@@ -266,22 +286,13 @@ public final class Symbol implements Matcher {
 			return true;
 		} else if(!(object instanceof Symbol)) {
 			return false;
-		} else if(!Objects.equals(this.repetition, Symbol.class.cast(object).repetition)) {
+		} else if(!Objects.equals(getRepetition(), Symbol.class.cast(object).getRepetition())) {
 			return false;
-		} else if(this.character != Symbol.class.cast(object).character) {
+		} else if(!Objects.equals(getString(), Symbol.class.cast(object).getString())) {
 			return false;
 		} else {
 			return true;
 		}
-	}
-	
-	/**
-	 * Returns the {@code char} associated with this {@code Symbol} instance.
-	 * 
-	 * @return the {@code char} associated with this {@code Symbol} instance
-	 */
-	public char getCharacter() {
-		return this.character;
 	}
 	
 	/**
@@ -291,6 +302,6 @@ public final class Symbol implements Matcher {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.repetition, Character.valueOf(this.character));
+		return Objects.hash(getRepetition(), getString());
 	}
 }

@@ -18,12 +18,13 @@
  */
 package org.macroing.cel4j.rex;
 
+import java.io.File;
+import java.io.UncheckedIOException;
 import java.util.Arrays;
 import java.util.Objects;
 
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
-import org.macroing.cel4j.scanner.TextScanner;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.ParameterArguments;
 
@@ -251,20 +252,41 @@ public final class Expression implements Matcher {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Parses {@code string} into an {@code Expression} instance.
+	 * Parses {@code file} into an {@code Expression} instance.
 	 * <p>
 	 * Returns an {@code Expression} instance.
 	 * <p>
-	 * If {@code string} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code file} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code string} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code file} cannot be read, an {@code UncheckedIOException} will be thrown.
+	 * <p>
+	 * If {@code file} contains malformed text, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param string the {@code String} to parse
+	 * @param file the {@code File} to parse
 	 * @return an {@code Expression} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
-	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
+	 * @throws IllegalArgumentException thrown if, and only if, {@code file} contains malformed text
+	 * @throws NullPointerException thrown if, and only if, {@code file} is {@code null}
+	 * @throws UncheckedIOException thrown if, and only if, {@code file} cannot be read
 	 */
-	public static Expression parse(final String string) {
-		return Parsers.parseExpression(new TextScanner(Objects.requireNonNull(string, "string == null")));
+	public static Expression parse(final File file) {
+		return RexParser.parse(Objects.requireNonNull(file, "file == null"));
+	}
+	
+	/**
+	 * Parses {@code input} into an {@code Expression} instance.
+	 * <p>
+	 * Returns an {@code Expression} instance.
+	 * <p>
+	 * If {@code input} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code input} is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param input the {@code String} to parse
+	 * @return an {@code Expression} instance
+	 * @throws IllegalArgumentException thrown if, and only if, {@code input} is malformed
+	 * @throws NullPointerException thrown if, and only if, {@code input} is {@code null}
+	 */
+	public static Expression parse(final String input) {
+		return RexParser.parse(Objects.requireNonNull(input, "input == null"));
 	}
 }

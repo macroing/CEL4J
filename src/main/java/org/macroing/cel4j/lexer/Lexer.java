@@ -32,6 +32,7 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.macroing.cel4j.util.ParameterArguments;
 import org.macroing.cel4j.util.Strings;
 
 /**
@@ -312,6 +313,32 @@ public abstract class Lexer {
 			try {
 				if(isUsable()) {
 					return this.matcher.group(Objects.requireNonNull(name, "name == null"));
+				}
+				
+				throw new IllegalStateException("isUsable() == false");
+			} finally {
+				this.lock.unlock();
+			}
+		}
+		
+		/**
+		 * Returns the input subsequence captured by the given group during the previous match operation.
+		 * <p>
+		 * If {@code index} is less than {@code 0} or the group does not exist, an {@code IllegalArgumentException} will be thrown.
+		 * <p>
+		 * If {@code isUsable()} returns {@code false}, an {@code IllegalStateException} will be thrown.
+		 * 
+		 * @param index the index of a group
+		 * @return the input subsequence captured by the given group during the previous match operation
+		 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or the group does not exist
+		 * @throws IllegalStateException thrown if, and only if, {@code isUsable()} returns {@code false}
+		 */
+		public String group(final int index) {
+			this.lock.lock();
+			
+			try {
+				if(isUsable()) {
+					return this.matcher.group(ParameterArguments.requireRange(index, 0, Integer.MAX_VALUE, "index"));
 				}
 				
 				throw new IllegalStateException("isUsable() == false");

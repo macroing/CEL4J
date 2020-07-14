@@ -270,7 +270,7 @@ public final class Alternation implements Matcher {
 		final StringBuilder stringBuilder = new StringBuilder();
 		
 		for(int i = 0; i < concatenations.size(); i++) {
-			stringBuilder.append(i > 0 ? "|" : "");
+			stringBuilder.append(i > 0 ? " | " : "");
 			stringBuilder.append(concatenations.get(i).getSource());
 		}
 		
