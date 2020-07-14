@@ -170,9 +170,9 @@ public final class MatchResult implements Node {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("MatchResult:");
 		stringBuilder.append("\n");
-		stringBuilder.append("- Source = \"" + getSource() + "\"");
+		stringBuilder.append("- Source = \"" + doFormat(getSource()) + "\"");
 		stringBuilder.append("\n");
-		stringBuilder.append("- Result = \"" + getResult() + "\"");
+		stringBuilder.append("- Result = \"" + doFormat(getResult()) + "\"");
 		stringBuilder.append("\n");
 		stringBuilder.append("- IndexAtBeginning = " + getIndexAtBeginning());
 		stringBuilder.append("\n");
@@ -272,5 +272,11 @@ public final class MatchResult implements Node {
 	 */
 	public int getLength() {
 		return getIndexAtEnd() - getIndexAtBeginning();
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static String doFormat(final String string) {
+		return string.replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t");
 	}
 }

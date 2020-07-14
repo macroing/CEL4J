@@ -1,9 +1,17 @@
 2020-07-14  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
+	CEL4J Lexer:
+
+		* ADD:			Add the method group(int) to the Match class.
+
 	CEL4J Rex:
 
 		* ADD:			Add Javadocs.
 		* CHANGE:		Update the Rex API.
+
+	CEL4J Utilities:
+
+		* ADD:			Add a new CharPredicate interface.
 
 2020-07-13  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
