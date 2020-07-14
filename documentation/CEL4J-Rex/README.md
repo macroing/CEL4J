@@ -42,7 +42,7 @@ public class HelloWorldExample {
 }
 ```
 
-#### Rex Feature Example
+#### Features Example
 The following example demonstrates various features in Rex by matching a subset of itself.
 
 ```
