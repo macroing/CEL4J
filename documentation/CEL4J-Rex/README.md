@@ -10,6 +10,7 @@ Supported Features
 * `Group` - A class that can match a group.
 * `GroupReference` - A class that can match a group via a reference to that group.
 * `GroupReferenceDefinition` - A class that defines a `GroupReference`.
+* `Regex` - A class that can match Regex.
 * `Symbol` - A class that can match a symbol.
 * `SymbolClass` - A class that can match a set of predefined symbol classes.
 
