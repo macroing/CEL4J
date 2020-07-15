@@ -347,7 +347,7 @@ public final class SymbolClass implements Matcher {
 		
 		int length = 0;
 		
-		for(int i = minimumRepetition; i <= maximumRepetition && currentIndex < source.length(); i++) {
+		for(int i = 1; i <= maximumRepetition && currentIndex < source.length(); i++) {
 			if(charPredicate.test(source.charAt(currentIndex))) {
 				currentIndex += 1;
 				currentRepetition++;
@@ -378,7 +378,7 @@ public final class SymbolClass implements Matcher {
 		
 		int length = 0;
 		
-		for(int i = minimumRepetition; i <= maximumRepetition && currentIndex < source.length(); i++) {
+		for(int i = 1; i <= maximumRepetition && currentIndex < source.length(); i++) {
 			final MatchResult currentMatchResult = regex.match(source, currentIndex);
 			
 			if(currentMatchResult.isMatching()) {

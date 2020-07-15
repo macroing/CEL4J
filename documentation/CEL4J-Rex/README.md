@@ -44,34 +44,30 @@ public class HelloWorldExample {
 ```
 
 #### Features Example
-The following example demonstrates various features in Rex by matching a subset of itself.
+The following example demonstrates various features in Rex by matching itself.
 
 ```
-<Alternation> = (<Concatenation> & ('|' & <Concatenation>)*)
+<Alternation> = (<Concatenation> & (%Whitespace* & '|' & %Whitespace* & <Concatenation>)*)
 &
-<Concatenation> = (<Matcher> & ('&' & <Matcher>)*)
+<Concatenation> = (<Matcher> & (%Whitespace* & '&' & %Whitespace* & <Matcher>)*)
 &
 <Expression> = (<Alternation>)
 &
-<Group> = ('(' & <Alternation> & ')' & <Repetition>?)
+<Group> = (%Whitespace* & '(' & %Whitespace* & <Alternation> & %Whitespace* & ')' & %Whitespace* & <Repetition>?)
 &
-<GroupReference> = ('<' & (%JavaIdentifierStart & %JavaIdentifierPart* | %Digit+) & '>' & <Repetition>?)
+<GroupReference> = (%Whitespace* & '<' & %Whitespace* & (%JavaIdentifierStart & %JavaIdentifierPart* | %Digit+) & %Whitespace* & '>' & %Whitespace* & <Repetition>?)
 &
-<GroupReferenceDefinition> = ('<' & %JavaIdentifierStart & %JavaIdentifierPart* & '>' & '=' & <Group>)
+<GroupReferenceDefinition> = (%Whitespace* & '<' & %Whitespace* & %JavaIdentifierStart & %JavaIdentifierPart* & %Whitespace* & '>' & %Whitespace* & '=' & %Whitespace* & <Group>)
 &
-<Matcher> = (<Group> | <GroupReferenceDefinition> | <GroupReference> | <Symbol> | <SymbolClass>)
+<Matcher> = (<Group> | <GroupReferenceDefinition> | <GroupReference> | <Regex> | <Symbol> | <SymbolClass>)
 &
-<Repetition> = ('*' | '+' | '?')
+<Regex> = (%Whitespace* & %RegexLiteral)
 &
-<Symbol> = ('"' & (%LetterOrDigit | ' ' | ',' | '!')* & '"' | "'" & (%LetterOrDigit | ' ' | ',' | '!')* & "'")
+<Repetition> = (%Whitespace* & ('*' | '+' | '?'))
 &
-<SymbolClass> = ('%' & %JavaIdentifierStart & %JavaIdentifierPart*)
+<Symbol> = (%Whitespace* & (%CharacterLiteral | %StringLiteral))
+&
+<SymbolClass> = (%Whitespace* & '%' & %JavaIdentifierStart & %JavaIdentifierPart* & %Whitespace* & <Repetition>?)
 &
 <Expression>
-```
-
-The Rex expression above can match the input supplied in the `HelloWorldExample`, as long as all whitespaces and escape sequences for the double quotes are removed.
-
-```
-<HelloWorld>=("Hello"&','&' '&"World"&'!')&<HelloWorld>
 ```

@@ -184,7 +184,7 @@ public final class Group implements Matcher {
 		
 		int length = 0;
 		
-		for(int i = minimumRepetition; i <= maximumRepetition && currentIndex < source.length(); i++) {
+		for(int i = 1; i <= maximumRepetition && currentIndex < source.length(); i++) {
 			final MatchResult currentMatchResult = getAlternation().match(source, currentIndex);
 			
 			if(currentMatchResult.isMatching()) {

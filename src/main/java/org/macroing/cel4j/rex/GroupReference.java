@@ -171,7 +171,7 @@ public final class GroupReference implements Matcher {
 		
 		int length = 0;
 		
-		for(int i = minimumRepetition; i <= maximumRepetition && currentIndex < source.length(); i++) {
+		for(int i = 1; i <= maximumRepetition && currentIndex < source.length(); i++) {
 			final MatchResult currentMatchResult = getGroup().get().match(source, currentIndex);
 			
 			if(currentMatchResult.isMatching()) {

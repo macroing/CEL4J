@@ -199,7 +199,7 @@ public final class Symbol implements Matcher {
 		
 		int length = 0;
 		
-		for(int i = minimumRepetition; i <= maximumRepetition && currentIndex < source.length(); i++) {
+		for(int i = 1; i <= maximumRepetition && currentIndex < source.length(); i++) {
 			int currentLength = 0;
 			
 			for(int j = 0; j < string.length(); j++) {

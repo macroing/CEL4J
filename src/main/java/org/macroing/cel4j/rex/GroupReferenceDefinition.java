@@ -173,7 +173,9 @@ public final class GroupReferenceDefinition implements Matcher {
 		stringBuilder.append("<");
 		stringBuilder.append(this.name);
 		stringBuilder.append(">");
+		stringBuilder.append(" ");
 		stringBuilder.append("=");
+		stringBuilder.append(" ");
 		stringBuilder.append(this.group.getSource());
 		
 		return stringBuilder.toString();
