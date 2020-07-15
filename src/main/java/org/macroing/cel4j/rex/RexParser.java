@@ -162,6 +162,8 @@ final class RexParser {
 			return doParseGroup(tokens, index);
 		} else if(doGetNextToken(tokens, index, RexLexer.NAME_CHARACTER_LITERAL)) {
 			return new Symbol(tokens.get(index[0]).getText(), doParseRepetition(tokens, index));
+		} else if(doGetNextToken(tokens, index, RexLexer.NAME_REGEX_LITERAL)) {
+			return new Regex(tokens.get(index[0]).getText());
 		} else if(doGetNextToken(tokens, index, RexLexer.NAME_STRING_LITERAL)) {
 			return new Symbol(tokens.get(index[0]).getText(), doParseRepetition(tokens, index));
 		} else if(doGetNextToken(tokens, index, SYMBOL_CLASS_START)) {

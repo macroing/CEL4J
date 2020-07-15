@@ -18,6 +18,8 @@
  */
 package org.macroing.cel4j.rex;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.macroing.cel4j.util.CharPredicate;
@@ -31,6 +33,11 @@ import org.macroing.cel4j.util.ParameterArguments;
  * @author J&#246;rgen Lundgren
  */
 public final class SymbolClass implements Matcher {
+	/**
+	 * The name {@code "CharacterLiteral"} is used by a {@code SymbolClass} that matches using {@link Regex#CHARACTER_LITERAL}.
+	 */
+	public static final String NAME_CHARACTER_LITERAL = "CharacterLiteral";
+	
 	/**
 	 * The name {@code "Digit"} is used by a {@code SymbolClass} that matches using {@code Character.isDigit(char)}.
 	 */
@@ -60,6 +67,16 @@ public final class SymbolClass implements Matcher {
 	 * The name {@code "LowerCase"} is used by a {@code SymbolClass} that matches using {@code Character.isLowerCase(char)}.
 	 */
 	public static final String NAME_LOWER_CASE = "LowerCase";
+	
+	/**
+	 * The name {@code "RegexLiteral"} is used by a {@code SymbolClass} that matches using {@link Regex#REGEX_LITERAL}.
+	 */
+	public static final String NAME_REGEX_LITERAL = "RegexLiteral";
+	
+	/**
+	 * The name {@code "StringLiteral"} is used by a {@code SymbolClass} that matches using {@link Regex#STRING_LITERAL}.
+	 */
+	public static final String NAME_STRING_LITERAL = "StringLiteral";
 	
 	/**
 	 * The name {@code "UnicodeIdentifierPart"} is used by a {@code SymbolClass} that matches using {@code Character.isUnicodeIdentifierPart(char)}.
@@ -205,6 +222,8 @@ public final class SymbolClass implements Matcher {
 		ParameterArguments.requireRange(index, 0, source.length(), "index");
 		
 		switch(getName()) {
+			case NAME_CHARACTER_LITERAL:
+				return doMatchRegex(source, index, Regex.CHARACTER_LITERAL);
 			case NAME_DIGIT:
 				return doMatchCharPredicate(source, index, character -> Character.isDigit(character));
 			case NAME_JAVA_IDENTIFIER_PART:
@@ -217,6 +236,10 @@ public final class SymbolClass implements Matcher {
 				return doMatchCharPredicate(source, index, character -> Character.isLetterOrDigit(character));
 			case NAME_LOWER_CASE:
 				return doMatchCharPredicate(source, index, character -> Character.isLowerCase(character));
+			case NAME_REGEX_LITERAL:
+				return doMatchRegex(source, index, Regex.REGEX_LITERAL);
+			case NAME_STRING_LITERAL:
+				return doMatchRegex(source, index, Regex.STRING_LITERAL);
 			case NAME_UNICODE_IDENTIFIER_PART:
 				return doMatchCharPredicate(source, index, character -> Character.isUnicodeIdentifierPart(character));
 			case NAME_UNICODE_IDENTIFIER_START:
@@ -337,6 +360,41 @@ public final class SymbolClass implements Matcher {
 		
 		if(currentRepetition >= minimumRepetition) {
 			return new MatchResult(this, source, true, index, index + length);
+		}
+		
+		return new MatchResult(this, source, false, index);
+	}
+	
+	private MatchResult doMatchRegex(final String source, final int index, final Regex regex) {
+		final List<MatchResult> matchResults = new ArrayList<>();
+		
+		final Repetition repetition = getRepetition();
+		
+		final int minimumRepetition = repetition.getMinimum();
+		final int maximumRepetition = repetition.getMaximum();
+		
+		int currentIndex = index;
+		int currentRepetition = 0;
+		
+		int length = 0;
+		
+		for(int i = minimumRepetition; i <= maximumRepetition && currentIndex < source.length(); i++) {
+			final MatchResult currentMatchResult = regex.match(source, currentIndex);
+			
+			if(currentMatchResult.isMatching()) {
+				currentIndex += currentMatchResult.getLength();
+				currentRepetition++;
+				
+				length += currentMatchResult.getLength();
+				
+				matchResults.add(currentMatchResult);
+			} else {
+				break;
+			}
+		}
+		
+		if(currentRepetition >= minimumRepetition) {
+			return new MatchResult(this, source, true, index, index + length, matchResults);
 		}
 		
 		return new MatchResult(this, source, false, index);

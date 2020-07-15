@@ -32,6 +32,7 @@ final class RexLexer extends Lexer {
 	public static final String NAME_END_OF_LINE_COMMENT = "EndOfLineComment";
 	public static final String NAME_IDENTIFIER = "Identifier";
 	public static final String NAME_OPERATOR = "Operator";
+	public static final String NAME_REGEX_LITERAL = "RegexLiteral";
 	public static final String NAME_SEPARATOR = "Separator";
 	public static final String NAME_STRING_LITERAL = "StringLiteral";
 	public static final String NAME_TRADITIONAL_COMMENT = "TraditionalComment";
@@ -44,15 +45,16 @@ final class RexLexer extends Lexer {
 	private static final String REGEX_END_OF_LINE_COMMENT = String.format("(?<%s>//.*(?=\\R|$))", NAME_END_OF_LINE_COMMENT);
 	private static final String REGEX_IDENTIFIER = String.format("(?<%s>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)", NAME_IDENTIFIER);
 	private static final String REGEX_OPERATOR = String.format("(?<%s>%%|\\*|\\+|=|\\?)", NAME_OPERATOR);
+	private static final String REGEX_REGEX_LITERAL = String.format("/(?<%s>([^/\\\\]|\\\\([btnfr/'\\\\0-7]|[0-7]{2}|[0-3][0-7]{2}|u+[0-9a-fA-F]{4}))*)/", NAME_REGEX_LITERAL);
 	private static final String REGEX_SEPARATOR = String.format("(?<%s>&|\\(|\\)|,|<|>|\\[|\\]|\\{|\\||\\})", NAME_SEPARATOR);
 	private static final String REGEX_STRING_LITERAL = String.format("\"(?<%s>([^\"\\\\]|\\\\([btnfr\"'\\\\0-7]|[0-7]{2}|[0-3][0-7]{2}|u+[0-9a-fA-F]{4}))*)\"", NAME_STRING_LITERAL);
 	private static final String REGEX_TRADITIONAL_COMMENT = String.format("(?s)(?<%s>/\\*((?!\\*/).)*\\*/)(?-s)", NAME_TRADITIONAL_COMMENT);
 	private static final String REGEX_WHITESPACE = String.format("(?<%s>\\s)", NAME_WHITESPACE);
-	private static final String REGEX_COMMENT = REGEX_END_OF_LINE_COMMENT + "|" + REGEX_TRADITIONAL_COMMENT;
+	private static final String REGEX_COMMENT = String.format("%s|%s", REGEX_END_OF_LINE_COMMENT, REGEX_TRADITIONAL_COMMENT);
 	private static final String REGEX_INTEGER_LITERAL = REGEX_DECIMAL_INTEGER_LITERAL;
-	private static final String REGEX_LITERAL = REGEX_CHARACTER_LITERAL + "|" + REGEX_INTEGER_LITERAL + "|" + REGEX_STRING_LITERAL;
-	private static final String REGEX_TOKEN = REGEX_IDENTIFIER + "|" + REGEX_LITERAL + "|" + REGEX_SEPARATOR + "|" + REGEX_OPERATOR;
-	private static final String REGEX_INPUT_ELEMENT = REGEX_WHITESPACE + "|" + REGEX_COMMENT + "|" + REGEX_TOKEN;
+	private static final String REGEX_LITERAL = String.format("%s|%s|%s|%s", REGEX_CHARACTER_LITERAL, REGEX_INTEGER_LITERAL, REGEX_REGEX_LITERAL, REGEX_STRING_LITERAL);
+	private static final String REGEX_TOKEN = String.format("%s|%s|%s|%s", REGEX_IDENTIFIER, REGEX_LITERAL, REGEX_SEPARATOR, REGEX_OPERATOR);
+	private static final String REGEX_INPUT_ELEMENT = String.format("%s|%s|%s", REGEX_WHITESPACE, REGEX_COMMENT, REGEX_TOKEN);
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -88,6 +90,7 @@ final class RexLexer extends Lexer {
 		functions.put(NAME_END_OF_LINE_COMMENT, match -> new Token(NAME_END_OF_LINE_COMMENT, match.group(), true));
 		functions.put(NAME_IDENTIFIER, match -> new Token(NAME_IDENTIFIER, match.group()));
 		functions.put(NAME_OPERATOR, match -> new Token(NAME_OPERATOR, match.group()));
+		functions.put(NAME_REGEX_LITERAL, match -> new Token(NAME_REGEX_LITERAL, match.group(NAME_REGEX_LITERAL)));
 		functions.put(NAME_SEPARATOR, match -> new Token(NAME_SEPARATOR, match.group()));
 		functions.put(NAME_STRING_LITERAL, match -> new Token(NAME_STRING_LITERAL, match.group(NAME_STRING_LITERAL)));
 		functions.put(NAME_TRADITIONAL_COMMENT, match -> new Token(NAME_TRADITIONAL_COMMENT, match.group(), true));
