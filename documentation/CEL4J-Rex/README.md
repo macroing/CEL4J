@@ -10,7 +10,7 @@ Supported Features
 * `Group` - A class that can match a group, such as `("A")`.
 * `GroupReference` - A class that can match a group via a reference to that group, such as `<GroupReferenceName>`.
 * `GroupReferenceDefinition` - A class that defines a reference to a group, such as `<GroupReferenceName> = ("A")`.
-* `Regex` - A class that can match Regex, such as `/AB+C/`.
+* `Regex` - A class that can match Regex patterns, such as `/AB+C/`.
 * `Repetition` - A class that provides the repetition bounds for different `Matcher` types, such as `"A"?` or `%Digit+`.
 * `Symbol` - A class that can match a symbol, such as `"ABC"` or `'A'`.
 * `SymbolClass` - A class that can match a set of predefined symbol classes, such as `%Digit`.
