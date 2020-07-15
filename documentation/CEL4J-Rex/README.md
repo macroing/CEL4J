@@ -65,7 +65,7 @@ The following example demonstrates various features in Rex by matching itself.
 &
 <Repetition> = (%Whitespace* & ('*' | '+' | '?'))
 &
-<Symbol> = (%Whitespace* & (%CharacterLiteral | %StringLiteral))
+<Symbol> = (%Whitespace* & (%CharacterLiteral | %StringLiteral) & %Whitespace* & <Repetition>?)
 &
 <SymbolClass> = (%Whitespace* & '%' & %JavaIdentifierStart & %JavaIdentifierPart* & %Whitespace* & <Repetition>?)
 &
