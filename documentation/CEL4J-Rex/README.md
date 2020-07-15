@@ -4,15 +4,16 @@ CEL4J Rex provides functionality to match text such as source code.
 
 Supported Features
 ------------------
-* `Alternation` - A class that can match alternations.
-* `Concatenation` - A class that can match concatenations.
-* `Expression` - A class that can match a full expression.
-* `Group` - A class that can match a group.
-* `GroupReference` - A class that can match a group via a reference to that group.
-* `GroupReferenceDefinition` - A class that defines a `GroupReference`.
-* `Regex` - A class that can match Regex.
-* `Symbol` - A class that can match a symbol.
-* `SymbolClass` - A class that can match a set of predefined symbol classes.
+* `Alternation` - A class that can match alternations, such as `"A" | "B"`.
+* `Concatenation` - A class that can match concatenations, such as `"A" & "B"`.
+* `Expression` - A class that can match a full expression, such as `"A"`.
+* `Group` - A class that can match a group, such as `("A")`.
+* `GroupReference` - A class that can match a group via a reference to that group, such as `<GroupReferenceName>`.
+* `GroupReferenceDefinition` - A class that defines a reference to a group, such as `<GroupReferenceName> = ("A")`.
+* `Regex` - A class that can match Regex, such as `/AB+C/`.
+* `Repetition` - A class that provides the repetition bounds for different `Matcher` types, such as `"A"?` or `%Digit+`.
+* `Symbol` - A class that can match a symbol, such as `"ABC"` or `'A'`.
+* `SymbolClass` - A class that can match a set of predefined symbol classes, such as `%Digit`.
 
 Packages
 --------
