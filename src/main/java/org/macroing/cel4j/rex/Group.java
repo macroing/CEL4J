@@ -29,6 +29,17 @@ import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * A {@code Group} is a {@link Matcher} that can match an {@link Alternation} instance.
+ * <p>
+ * This class is indirectly mutable and not thread-safe.
+ * <p>
+ * A {@code Group} consists of a single {@code Alternation} instance inside a set of parenthesis and an optional {@link Repetition} instance.
+ * <p>
+ * To use a {@code Group} in Rex, consider the following example:
+ * <pre>
+ * {@code
+ * ("A" & "B" | "C" & "D")+
+ * }
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren

@@ -30,6 +30,17 @@ import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * A {@code Concatenation} is a {@link Matcher} that can match concatenations of {@link Matcher} instances.
+ * <p>
+ * This class is indirectly mutable and not thread-safe.
+ * <p>
+ * A {@code Concatenation} consists of one or more {@code Matcher} instances. If two or more {@code Matcher} instances are present, they are separated with an ampersand character ({@code &}).
+ * <p>
+ * To use a {@code Concatenation} in Rex, consider the following example:
+ * <pre>
+ * {@code
+ * "A" & "B" & "C"
+ * }
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren

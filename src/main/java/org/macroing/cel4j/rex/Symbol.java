@@ -25,6 +25,18 @@ import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * A {@code Symbol} is a {@link Matcher} that can match {@code String} values.
+ * <p>
+ * This class is immutable and thread-safe.
+ * <p>
+ * A {@code Symbol} consists of a {@code Character} literal or a {@code String} literal, as well as an optional {@link Repetition} instance.
+ * <p>
+ * To use a {@code Symbol} in Rex, consider the following examples:
+ * <pre>
+ * {@code
+ * "ABC"
+ * 'A'?
+ * }
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren

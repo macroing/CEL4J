@@ -27,6 +27,17 @@ import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * A {@code Regex} is a {@link Matcher} that can match Regex (Regular Expressions).
+ * <p>
+ * This class is immutable and thread-safe.
+ * <p>
+ * A {@code Regex} consists of a Regex literal. A Regex literal is similar to a {@code String} literal, with the exception that the double quotes ({@code "}) are replaced with forward slashes ({@code /}).
+ * <p>
+ * To use a {@code Regex} in Rex, consider the following example:
+ * <pre>
+ * {@code
+ * /[a-zA-Z]+/
+ * }
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren

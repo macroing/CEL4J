@@ -27,6 +27,17 @@ import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * A {@code GroupReferenceDefinition} is a {@link Matcher} that cannot match anything.
+ * <p>
+ * This class is indirectly mutable and not thread-safe.
+ * <p>
+ * A {@code GroupReferenceDefinition} consists of a name and a {@link Group} instance.
+ * <p>
+ * To use a {@code GroupReferenceDefinition} in Rex, consider the following example:
+ * <pre>
+ * {@code
+ * <GroupReferenceName> = ("A" | "B")
+ * }
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren

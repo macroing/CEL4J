@@ -30,6 +30,17 @@ import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * An {@code Expression} is a {@link Matcher} that can match an {@link Alternation} instance.
+ * <p>
+ * This class is indirectly mutable and not thread-safe.
+ * <p>
+ * An {@code Expression} consists of a single {@code Alternation} instance.
+ * <p>
+ * To use an {@code Expression} in Rex, consider the following example:
+ * <pre>
+ * {@code
+ * "A" & "B" | "C" & "D"
+ * }
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren

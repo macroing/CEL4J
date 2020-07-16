@@ -28,6 +28,17 @@ import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * A {@code SymbolClass} is a {@link Matcher} that can match {@code String} values in different predefined formats.
+ * <p>
+ * This class is immutable and thread-safe.
+ * <p>
+ * A {@code SymbolClass} consists of a percent character ({@code %}) followed by a name and an optional {@link Repetition} instance.
+ * <p>
+ * To use a {@code SymbolClass} in Rex, consider the following example:
+ * <pre>
+ * {@code
+ * %Digit+
+ * }
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren

@@ -31,6 +31,17 @@ import org.macroing.cel4j.util.ParameterArguments;
 
 /**
  * An {@code Alternation} is a {@link Matcher} that can match alternations of {@link Concatenation} instances.
+ * <p>
+ * This class is indirectly mutable and not thread-safe.
+ * <p>
+ * An {@code Alternation} consists of one or more {@code Concatenation} instances. If two or more {@code Concatenation} instances are present, they are separated with a pipe character ({@code |}).
+ * <p>
+ * To use an {@code Alternation} in Rex, consider the following example:
+ * <pre>
+ * {@code
+ * "A" | "B" | "C"
+ * }
+ * </pre>
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
