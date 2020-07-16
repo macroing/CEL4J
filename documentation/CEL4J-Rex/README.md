@@ -5,7 +5,7 @@ CEL4J Rex provides functionality to match text such as source code.
 Supported Features
 ------------------
 * `Alternation` - A class that can match alternations, such as `"A" | "B"`.
-* `Concatenation` - A class that can match concatenations, such as `"A" & "B"`.
+* `Concatenation` - A class that can match concatenations, such as `"A" & "B"`, `"A", "B"` or `"A"; "B"`.
 * `Expression` - A class that can match a full expression, such as `"A"`.
 * `Group` - A class that can match a group, such as `("A")`.
 * `GroupReference` - A class that can match a group via a reference to that group, such as `<GroupReferenceName>`.
