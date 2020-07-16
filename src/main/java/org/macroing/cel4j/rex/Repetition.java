@@ -75,11 +75,11 @@ public final class Repetition {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns the source associated with this {@code Repetition} instance.
+	 * Returns the source code associated with this {@code Repetition} instance.
 	 * 
-	 * @return the source associated with this {@code Repetition} instance
+	 * @return the source code associated with this {@code Repetition} instance
 	 */
-	public String getSource() {
+	public String getSourceCode() {
 		if(getMinimum() == 0 && getMaximum() == Integer.MAX_VALUE) {
 			return "*";
 		} else if(getMinimum() == 1 && getMaximum() == 1) {

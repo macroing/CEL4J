@@ -36,7 +36,7 @@ import org.macroing.cel4j.util.ParameterArguments;
 public final class Group implements Matcher {
 	private final Alternation alternation;
 	private final Repetition repetition;
-	private final String source;
+	private final String sourceCode;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -71,7 +71,7 @@ public final class Group implements Matcher {
 	public Group(final Alternation alternation, final Repetition repetition) {
 		this.alternation = Objects.requireNonNull(alternation, "alternation == null");
 		this.repetition = Objects.requireNonNull(repetition, "repetition == null");
-		this.source = doCreateSource(this.alternation, this.repetition);
+		this.sourceCode = doCreateSourceCode(this.alternation, this.repetition);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -120,7 +120,7 @@ public final class Group implements Matcher {
 		document.line("Group {");
 		document.indent();
 		
-		this.alternation.write(document);
+		getAlternation().write(document);
 		
 		document.outdent();
 		document.line("}");
@@ -129,48 +129,48 @@ public final class Group implements Matcher {
 	}
 	
 	/**
-	 * Matches {@code source}.
+	 * Matches {@code input}.
 	 * <p>
 	 * Returns a {@link MatchResult} with the result of the match.
 	 * <p>
-	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code input} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
 	 * Calling this method is equivalent to the following:
 	 * <pre>
 	 * {@code
-	 * group.match(source, 0);
+	 * group.match(input, 0);
 	 * }
 	 * </pre>
 	 * 
-	 * @param source the source to match
+	 * @param input the {@code String} to match
 	 * @return a {@code MatchResult} with the result of the match
-	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 * @throws NullPointerException thrown if, and only if, {@code input} is {@code null}
 	 */
 	@Override
-	public MatchResult match(final String source) {
-		return match(source, 0);
+	public MatchResult match(final String input) {
+		return match(input, 0);
 	}
 	
 	/**
-	 * Matches {@code source}.
+	 * Matches {@code input}.
 	 * <p>
 	 * Returns a {@link MatchResult} with the result of the match.
 	 * <p>
-	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code input} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code index} is less than {@code 0} or greater than or equal to {@code input.length()}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param source the source to match
-	 * @param index the index in {@code source} to match from
+	 * @param input the {@code String} to match
+	 * @param index the index in {@code input} to match from
 	 * @return a {@code MatchResult} with the result of the match
-	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}
-	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code input.length()}
+	 * @throws NullPointerException thrown if, and only if, {@code input} is {@code null}
 	 */
 	@Override
-	public MatchResult match(final String source, final int index) {
-		Objects.requireNonNull(source, "source == null");
+	public MatchResult match(final String input, final int index) {
+		Objects.requireNonNull(input, "input == null");
 		
-		ParameterArguments.requireRange(index, 0, source.length(), "index");
+		ParameterArguments.requireRange(index, 0, input.length(), "index");
 		
 		final List<MatchResult> matchResults = new ArrayList<>();
 		
@@ -184,8 +184,8 @@ public final class Group implements Matcher {
 		
 		int length = 0;
 		
-		for(int i = 1; i <= maximumRepetition && currentIndex < source.length(); i++) {
-			final MatchResult currentMatchResult = getAlternation().match(source, currentIndex);
+		for(int i = 1; i <= maximumRepetition && currentIndex < input.length(); i++) {
+			final MatchResult currentMatchResult = getAlternation().match(input, currentIndex);
 			
 			if(currentMatchResult.isMatching()) {
 				currentIndex += currentMatchResult.getLength();
@@ -200,10 +200,10 @@ public final class Group implements Matcher {
 		}
 		
 		if(currentRepetition >= minimumRepetition) {
-			return new MatchResult(this, source, true, index, index + length, matchResults);
+			return new MatchResult(this, input, true, index, index + length, matchResults);
 		}
 		
-		return new MatchResult(this, source, false, index);
+		return new MatchResult(this, input, false, index);
 	}
 	
 	/**
@@ -216,13 +216,13 @@ public final class Group implements Matcher {
 	}
 	
 	/**
-	 * Returns the source associated with this {@code Group} instance.
+	 * Returns the source code associated with this {@code Group} instance.
 	 * 
-	 * @return the source associated with this {@code Group} instance
+	 * @return the source code associated with this {@code Group} instance
 	 */
 	@Override
-	public String getSource() {
-		return this.source;
+	public String getSourceCode() {
+		return this.sourceCode;
 	}
 	
 	/**
@@ -287,7 +287,7 @@ public final class Group implements Matcher {
 			return true;
 		} else if(!(object instanceof Group)) {
 			return false;
-		} else if(!Objects.equals(getSource(), Group.class.cast(object).getSource())) {
+		} else if(!Objects.equals(getSourceCode(), Group.class.cast(object).getSourceCode())) {
 			return false;
 		} else {
 			return true;
@@ -301,18 +301,18 @@ public final class Group implements Matcher {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(getSource());
+		return Objects.hash(getSourceCode());
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private static String doCreateSource(final Alternation alternation, final Repetition repetition) {
+	private static String doCreateSourceCode(final Alternation alternation, final Repetition repetition) {
 		final
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("(");
-		stringBuilder.append(alternation.getSource());
+		stringBuilder.append(alternation.getSourceCode());
 		stringBuilder.append(")");
-		stringBuilder.append(repetition.getSource());
+		stringBuilder.append(repetition.getSourceCode());
 		
 		return stringBuilder.toString();
 	}

@@ -29,46 +29,46 @@ import org.macroing.cel4j.util.Documentable;
  */
 public interface Matcher extends Documentable, Node {
 	/**
-	 * Matches {@code source}.
+	 * Matches {@code input}.
 	 * <p>
 	 * Returns a {@link MatchResult} with the result of the match.
 	 * <p>
-	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code input} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
 	 * Calling this method is equivalent to the following:
 	 * <pre>
 	 * {@code
-	 * matcher.match(source, 0);
+	 * matcher.match(input, 0);
 	 * }
 	 * </pre>
 	 * 
-	 * @param source the source to match
+	 * @param input the {@code String} to match
 	 * @return a {@code MatchResult} with the result of the match
-	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 * @throws NullPointerException thrown if, and only if, {@code input} is {@code null}
 	 */
-	MatchResult match(final String source);
+	MatchResult match(final String input);
 	
 	/**
-	 * Matches {@code source}.
+	 * Matches {@code input}.
 	 * <p>
 	 * Returns a {@link MatchResult} with the result of the match.
 	 * <p>
-	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code input} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code index} is less than {@code 0} or greater than or equal to {@code input.length()}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param source the source to match
-	 * @param index the index in {@code source} to match from
+	 * @param input the {@code String} to match
+	 * @param index the index in {@code input} to match from
 	 * @return a {@code MatchResult} with the result of the match
-	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}
-	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code input.length()}
+	 * @throws NullPointerException thrown if, and only if, {@code input} is {@code null}
 	 */
-	MatchResult match(final String source, final int index);
+	MatchResult match(final String input, final int index);
 	
 	/**
-	 * Returns the source associated with this {@code Matchable} instance.
+	 * Returns the source code associated with this {@code Matcher} instance.
 	 * 
-	 * @return the source associated with this {@code Matchable} instance
+	 * @return the source code associated with this {@code Matcher} instance
 	 */
-	String getSource();
+	String getSourceCode();
 }

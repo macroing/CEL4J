@@ -36,7 +36,7 @@ import org.macroing.cel4j.util.ParameterArguments;
  */
 public final class Concatenation implements Matcher {
 	private final List<Matcher> matchers;
-	private final String source;
+	private final String sourceCode;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -50,7 +50,7 @@ public final class Concatenation implements Matcher {
 	 */
 	public Concatenation(final List<Matcher> matchers) {
 		this.matchers = new ArrayList<>(ParameterArguments.requireNonNullList(matchers, "matchers"));
-		this.source = doCreateSource(this.matchers);
+		this.sourceCode = doCreateSourceCode(this.matchers);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,7 +90,7 @@ public final class Concatenation implements Matcher {
 		document.line("Concatenation {");
 		document.indent();
 		
-		for(final Matcher matcher : this.matchers) {
+		for(final Matcher matcher : getMatchers()) {
 			matcher.write(document);
 		}
 		
@@ -112,48 +112,48 @@ public final class Concatenation implements Matcher {
 	}
 	
 	/**
-	 * Matches {@code source}.
+	 * Matches {@code input}.
 	 * <p>
 	 * Returns a {@link MatchResult} with the result of the match.
 	 * <p>
-	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code input} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
 	 * Calling this method is equivalent to the following:
 	 * <pre>
 	 * {@code
-	 * concatenation.match(source, 0);
+	 * concatenation.match(input, 0);
 	 * }
 	 * </pre>
 	 * 
-	 * @param source the source to match
+	 * @param input the {@code String} to match
 	 * @return a {@code MatchResult} with the result of the match
-	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 * @throws NullPointerException thrown if, and only if, {@code input} is {@code null}
 	 */
 	@Override
-	public MatchResult match(final String source) {
-		return match(source, 0);
+	public MatchResult match(final String input) {
+		return match(input, 0);
 	}
 	
 	/**
-	 * Matches {@code source}.
+	 * Matches {@code input}.
 	 * <p>
 	 * Returns a {@link MatchResult} with the result of the match.
 	 * <p>
-	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code input} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code index} is less than {@code 0} or greater than or equal to {@code input.length()}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param source the source to match
-	 * @param index the index in {@code source} to match from
+	 * @param input the {@code String} to match
+	 * @param index the index in {@code input} to match from
 	 * @return a {@code MatchResult} with the result of the match
-	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}
-	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code input.length()}
+	 * @throws NullPointerException thrown if, and only if, {@code input} is {@code null}
 	 */
 	@Override
-	public MatchResult match(final String source, final int index) {
-		Objects.requireNonNull(source, "source == null");
+	public MatchResult match(final String input, final int index) {
+		Objects.requireNonNull(input, "input == null");
 		
-		ParameterArguments.requireRange(index, 0, source.length(), "index");
+		ParameterArguments.requireRange(index, 0, input.length(), "index");
 		
 		final List<MatchResult> matchResults = new ArrayList<>();
 		
@@ -162,7 +162,7 @@ public final class Concatenation implements Matcher {
 		int length = 0;
 		
 		for(final Matcher matcher : getMatchers()) {
-			final MatchResult currentMatchResult = matcher.match(source, currentIndex);
+			final MatchResult currentMatchResult = matcher.match(input, currentIndex);
 			
 			if(currentMatchResult.isMatching()) {
 				currentIndex += currentMatchResult.getLength();
@@ -171,21 +171,21 @@ public final class Concatenation implements Matcher {
 				
 				matchResults.add(currentMatchResult);
 			} else {
-				return new MatchResult(this, source, false, index);
+				return new MatchResult(this, input, false, index);
 			}
 		}
 		
-		return new MatchResult(this, source, true, index, index + length, matchResults);
+		return new MatchResult(this, input, true, index, index + length, matchResults);
 	}
 	
 	/**
-	 * Returns the source associated with this {@code Concatenation} instance.
+	 * Returns the source code associated with this {@code Concatenation} instance.
 	 * 
-	 * @return the source associated with this {@code Concatenation} instance
+	 * @return the source code associated with this {@code Concatenation} instance
 	 */
 	@Override
-	public String getSource() {
-		return this.source;
+	public String getSourceCode() {
+		return this.sourceCode;
 	}
 	
 	/**
@@ -252,7 +252,7 @@ public final class Concatenation implements Matcher {
 			return true;
 		} else if(!(object instanceof Concatenation)) {
 			return false;
-		} else if(!Objects.equals(getSource(), Concatenation.class.cast(object).getSource())) {
+		} else if(!Objects.equals(getSourceCode(), Concatenation.class.cast(object).getSourceCode())) {
 			return false;
 		} else {
 			return true;
@@ -266,17 +266,17 @@ public final class Concatenation implements Matcher {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(getSource());
+		return Objects.hash(getSourceCode());
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private static String doCreateSource(final List<Matcher> matchables) {
+	private static String doCreateSourceCode(final List<Matcher> matchables) {
 		final StringBuilder stringBuilder = new StringBuilder();
 		
 		for(int i = 0; i < matchables.size(); i++) {
 			stringBuilder.append(i > 0 ? " & " : "");
-			stringBuilder.append(matchables.get(i).getSource());
+			stringBuilder.append(matchables.get(i).getSourceCode());
 		}
 		
 		return stringBuilder.toString();

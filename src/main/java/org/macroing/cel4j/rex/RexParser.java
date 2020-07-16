@@ -98,7 +98,7 @@ final class RexParser {
 							break;
 						}
 						
-						throw new IllegalArgumentException("No matching Group could be found for the GroupReference '%" + groupReference.getSource() + "'.");
+						throw new IllegalArgumentException("No matching Group could be found for the GroupReference '%" + groupReference.getSourceCode() + "'.");
 					}
 					
 					for(final GroupReferenceDefinition groupReferenceDefinition : groupReferenceDefinitions) {
@@ -108,7 +108,7 @@ final class RexParser {
 					}
 					
 					if(!groupReference.hasGroup()) {
-						throw new IllegalArgumentException("No matching Group could be found for the GroupReference '%" + groupReference.getSource() + "'.");
+						throw new IllegalArgumentException("No matching Group could be found for the GroupReference '%" + groupReference.getSourceCode() + "'.");
 					}
 				}
 			}

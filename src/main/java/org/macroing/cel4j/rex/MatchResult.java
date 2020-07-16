@@ -36,7 +36,7 @@ import org.macroing.cel4j.util.ParameterArguments;
 public final class MatchResult implements Node {
 	private final List<MatchResult> matchResults;
 	private final Matcher matcher;
-	private final String source;
+	private final String input;
 	private final boolean isMatching;
 	private final int indexAtBeginning;
 	private final int indexAtEnd;
@@ -46,77 +46,77 @@ public final class MatchResult implements Node {
 	/**
 	 * Constructs a new {@code MatchResult} instance.
 	 * <p>
-	 * If either {@code matcher} or {@code source} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * If either {@code matcher} or {@code input} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
 	 * If {@code indexAtBeginning} is less than {@code 0}, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
 	 * Calling this constructor is equivalent to the following:
 	 * <pre>
 	 * {@code
-	 * new MatchResult(matcher, source, isMatching, indexAtBeginning, indexAtBeginning);
+	 * new MatchResult(matcher, input, isMatching, indexAtBeginning, indexAtBeginning);
 	 * }
 	 * </pre>
 	 * 
 	 * @param matcher the {@link Matcher} associated with this {@code MatchResult} instance
-	 * @param source a {@code String} containing the source used to match the associated {@code Matcher} instance against
+	 * @param input the {@code String} used to match the associated {@code Matcher} instance against
 	 * @param isMatching {@code true} if, and only if, this {@code MatchResult} instance contains a partial match, {@code false} otherwise
-	 * @param indexAtBeginning the index of {@code source} that indicates the beginning of a possible match
+	 * @param indexAtBeginning the index of {@code input} that indicates the beginning of a possible match
 	 * @throws IllegalArgumentException thrown if, and only if, {@code indexAtBeginning} is less than {@code 0}
-	 * @throws NullPointerException thrown if, and only if, either {@code matcher} or {@code source} are {@code null}
+	 * @throws NullPointerException thrown if, and only if, either {@code matcher} or {@code input} are {@code null}
 	 */
-	public MatchResult(final Matcher matcher, final String source, final boolean isMatching, final int indexAtBeginning) {
-		this(matcher, source, isMatching, indexAtBeginning, indexAtBeginning);
+	public MatchResult(final Matcher matcher, final String input, final boolean isMatching, final int indexAtBeginning) {
+		this(matcher, input, isMatching, indexAtBeginning, indexAtBeginning);
 	}
 	
 	/**
 	 * Constructs a new {@code MatchResult} instance.
 	 * <p>
-	 * If either {@code matcher} or {@code source} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * If either {@code matcher} or {@code input} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
 	 * If {@code indexAtBeginning} is less than {@code 0} or {@code indexAtEnd} is less than {@code indexAtBeginning}, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
 	 * Calling this constructor is equivalent to the following:
 	 * <pre>
 	 * {@code
-	 * new MatchResult(matcher, source, isMatching, indexAtBeginning, indexAtEnd, new ArrayList<>());
+	 * new MatchResult(matcher, input, isMatching, indexAtBeginning, indexAtEnd, new ArrayList<>());
 	 * }
 	 * </pre>
 	 * 
 	 * @param matcher the {@link Matcher} associated with this {@code MatchResult} instance
-	 * @param source a {@code String} containing the source used to match the associated {@code Matcher} instance against
+	 * @param input the {@code String} used to match the associated {@code Matcher} instance against
 	 * @param isMatching {@code true} if, and only if, this {@code MatchResult} instance contains a partial match, {@code false} otherwise
-	 * @param indexAtBeginning the index of {@code source} that indicates the beginning of a possible match
-	 * @param indexAtEnd the index of {@code source} that indicates the end of a possible match
+	 * @param indexAtBeginning the index of {@code input} that indicates the beginning of a possible match
+	 * @param indexAtEnd the index of {@code input} that indicates the end of a possible match
 	 * @throws IllegalArgumentException thrown if, and only if, {@code indexAtBeginning} is less than {@code 0} or {@code indexAtEnd} is less than {@code indexAtBeginning}
-	 * @throws NullPointerException thrown if, and only if, either {@code matcher} or {@code source} are {@code null}
+	 * @throws NullPointerException thrown if, and only if, either {@code matcher} or {@code input} are {@code null}
 	 */
-	public MatchResult(final Matcher matcher, final String source, final boolean isMatching, final int indexAtBeginning, final int indexAtEnd) {
-		this(matcher, source, isMatching, indexAtBeginning, indexAtEnd, new ArrayList<>());
+	public MatchResult(final Matcher matcher, final String input, final boolean isMatching, final int indexAtBeginning, final int indexAtEnd) {
+		this(matcher, input, isMatching, indexAtBeginning, indexAtEnd, new ArrayList<>());
 	}
 	
 	/**
 	 * Constructs a new {@code MatchResult} instance.
 	 * <p>
-	 * If either {@code matcher}, {@code source}, {@code matchResults} or any of its elements are {@code null}, a {@code NullPointerException} will be thrown.
+	 * If either {@code matcher}, {@code input}, {@code matchResults} or any of its elements are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
 	 * If {@code indexAtBeginning} is less than {@code 0} or {@code indexAtEnd} is less than {@code indexAtBeginning}, an {@code IllegalArgumentException} will be thrown.
 	 * 
 	 * @param matcher the {@link Matcher} associated with this {@code MatchResult} instance
-	 * @param source a {@code String} containing the source used to match the associated {@code Matcher} instance against
+	 * @param input the {@code String} used to match the associated {@code Matcher} instance against
 	 * @param isMatching {@code true} if, and only if, this {@code MatchResult} instance contains a partial match, {@code false} otherwise
-	 * @param indexAtBeginning the index of {@code source} that indicates the beginning of a possible match
-	 * @param indexAtEnd the index of {@code source} that indicates the end of a possible match
+	 * @param indexAtBeginning the index of {@code input} that indicates the beginning of a possible match
+	 * @param indexAtEnd the index of {@code input} that indicates the end of a possible match
 	 * @param matchResults a {@code List} with all {@code MatchResult} instances associated with this {@code MatchResult} instance
 	 * @throws IllegalArgumentException thrown if, and only if, {@code indexAtBeginning} is less than {@code 0} or {@code indexAtEnd} is less than {@code indexAtBeginning}
-	 * @throws NullPointerException thrown if, and only if, either {@code matcher}, {@code source}, {@code matchResults} or any of its elements are {@code null}
+	 * @throws NullPointerException thrown if, and only if, either {@code matcher}, {@code input}, {@code matchResults} or any of its elements are {@code null}
 	 */
-	public MatchResult(final Matcher matcher, final String source, final boolean isMatching, final int indexAtBeginning, final int indexAtEnd, final List<MatchResult> matchResults) {
+	public MatchResult(final Matcher matcher, final String input, final boolean isMatching, final int indexAtBeginning, final int indexAtEnd, final List<MatchResult> matchResults) {
 		this.matchResults = ParameterArguments.requireNonNullList(matchResults, "matchResults");
 		this.matcher = Objects.requireNonNull(matcher, "matcher == null");
-		this.source = Objects.requireNonNull(source, "source == null");
+		this.input = Objects.requireNonNull(input, "input == null");
 		this.isMatching = isMatching;
-		this.indexAtBeginning = ParameterArguments.requireRange(indexAtBeginning, 0, source.length(), "indexAtBeginning");
-		this.indexAtEnd = ParameterArguments.requireRange(indexAtEnd, indexAtBeginning, source.length(), "indexAtEnd");
+		this.indexAtBeginning = ParameterArguments.requireRange(indexAtBeginning, 0, input.length(), "indexAtBeginning");
+		this.indexAtEnd = ParameterArguments.requireRange(indexAtEnd, indexAtBeginning, input.length(), "indexAtEnd");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,21 +142,21 @@ public final class MatchResult implements Node {
 	}
 	
 	/**
-	 * Returns a {@code String} containing the match result produced by the associated {@link Matcher} instance.
+	 * Returns the {@code String} used to match the associated {@link Matcher} instance against.
 	 * 
-	 * @return a {@code String} containing the match result produced by the associated {@code Matcher} instance
+	 * @return the {@code String} used to match the associated {@code Matcher} instance against
 	 */
-	public String getResult() {
-		return getSource().substring(getIndexAtBeginning(), getIndexAtEnd());
+	public String getInput() {
+		return this.input;
 	}
 	
 	/**
-	 * Returns a {@code String} containing the source used to match the associated {@link Matcher} instance against.
+	 * Returns a {@code String} with the match produced by the associated {@link Matcher} instance.
 	 * 
-	 * @return a {@code String} containing the source used to match the associated {@code Matcher} instance against
+	 * @return a {@code String} with the match produced by the associated {@code Matcher} instance
 	 */
-	public String getSource() {
-		return this.source;
+	public String getMatch() {
+		return getInput().substring(getIndexAtBeginning(), getIndexAtEnd());
 	}
 	
 	/**
@@ -170,9 +170,9 @@ public final class MatchResult implements Node {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("MatchResult:");
 		stringBuilder.append("\n");
-		stringBuilder.append("- Source = \"" + doFormat(getSource()) + "\"");
+		stringBuilder.append("- Input = \"" + doFormat(getInput()) + "\"");
 		stringBuilder.append("\n");
-		stringBuilder.append("- Result = \"" + doFormat(getResult()) + "\"");
+		stringBuilder.append("- Match = \"" + doFormat(getMatch()) + "\"");
 		stringBuilder.append("\n");
 		stringBuilder.append("- IndexAtBeginning = " + getIndexAtBeginning());
 		stringBuilder.append("\n");
@@ -184,7 +184,7 @@ public final class MatchResult implements Node {
 		stringBuilder.append("\n");
 		stringBuilder.append("- Matcher = " + getMatcher());
 		stringBuilder.append("\n");
-		stringBuilder.append("- MatcherSource = \"" + getMatcher().getSource() + "\"");
+		stringBuilder.append("- MatcherSourceCode = \"" + getMatcher().getSourceCode() + "\"");
 		
 		return stringBuilder.toString();
 	}
@@ -244,22 +244,22 @@ public final class MatchResult implements Node {
 	 * @return {@code true} if, and only if, this {@code MatchResult} instance contains a full match, {@code false} otherwise
 	 */
 	public boolean isMatchingAll() {
-		return isMatching() && getResult().equals(getSource());
+		return isMatching() && getMatch().equals(getInput());
 	}
 	
 	/**
-	 * Returns the index of {@code matchResult.getSource()} that indicates the beginning of a possible match.
+	 * Returns the index of {@code matchResult.getInput()} that indicates the beginning of a possible match.
 	 * 
-	 * @return the index of {@code matchResult.getSource()} that indicates the beginning of a possible match
+	 * @return the index of {@code matchResult.getInput()} that indicates the beginning of a possible match
 	 */
 	public int getIndexAtBeginning() {
 		return this.indexAtBeginning;
 	}
 	
 	/**
-	 * Returns the index of {@code matchResult.getSource()} that indicates the end of a possible match.
+	 * Returns the index of {@code matchResult.getInput()} that indicates the end of a possible match.
 	 * 
-	 * @return the index of {@code matchResult.getSource()} that indicates the end of a possible match
+	 * @return the index of {@code matchResult.getInput()} that indicates the end of a possible match
 	 */
 	public int getIndexAtEnd() {
 		return this.indexAtEnd;

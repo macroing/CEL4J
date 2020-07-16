@@ -38,6 +38,21 @@ public final class Regex implements Matcher {
 	public static final Regex CHARACTER_LITERAL = new Regex("'([^'\\\\]|\\\\([btnfr\"'\\\\0-7]|[0-7]{2}|[0-3][0-7]{2}|u+[0-9a-fA-F]{4}))'");
 	
 	/**
+	 * A {@code Regex} that matches a comment.
+	 */
+	public static final Regex COMMENT = new Regex("//.*(?=\\R|$)|(?s)/\\*((?!\\*/).)*\\*/(?-s)");
+	
+	/**
+	 * A {@code Regex} that matches a comment or a whitespace.
+	 */
+	public static final Regex COMMENT_OR_WHITESPACE = new Regex("//.*(?=\\R|$)|(?s)/\\*((?!\\*/).)*\\*/(?-s)|\\s");
+	
+	/**
+	 * A {@code Regex} that matches an end-of-line comment.
+	 */
+	public static final Regex END_OF_LINE_COMMENT = new Regex("//.*(?=\\R|$)");
+	
+	/**
 	 * A {@code Regex} that matches a Regex literal.
 	 */
 	public static final Regex REGEX_LITERAL = new Regex("/([^/\\\\]|\\\\([btnfr/'\\\\0-7]|[0-7]{2}|[0-3][0-7]{2}|u+[0-9a-fA-F]{4}))*/");
@@ -46,6 +61,16 @@ public final class Regex implements Matcher {
 	 * A {@code Regex} that matches a {@code String} literal.
 	 */
 	public static final Regex STRING_LITERAL = new Regex("\"([^\"\\\\]|\\\\([btnfr\"'\\\\0-7]|[0-7]{2}|[0-3][0-7]{2}|u+[0-9a-fA-F]{4}))*\"");
+	
+	/**
+	 * A {@code Regex} that matches a traditional comment.
+	 */
+	public static final Regex TRADITIONAL_COMMENT = new Regex("(?s)/\\*((?!\\*/).)*\\*/(?-s)");
+	
+	/**
+	 * A {@code Regex} that matches a whitespace.
+	 */
+	public static final Regex WHITESPACE = new Regex("\\s");
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -120,59 +145,59 @@ public final class Regex implements Matcher {
 	}
 	
 	/**
-	 * Matches {@code source}.
+	 * Matches {@code input}.
 	 * <p>
 	 * Returns a {@link MatchResult} with the result of the match.
 	 * <p>
-	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code input} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
 	 * Calling this method is equivalent to the following:
 	 * <pre>
 	 * {@code
-	 * regex.match(source, 0);
+	 * regex.match(input, 0);
 	 * }
 	 * </pre>
 	 * 
-	 * @param source the source to match
+	 * @param input the {@code String} to match
 	 * @return a {@code MatchResult} with the result of the match
-	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 * @throws NullPointerException thrown if, and only if, {@code input} is {@code null}
 	 */
 	@Override
-	public MatchResult match(final String source) {
-		return match(source, 0);
+	public MatchResult match(final String input) {
+		return match(input, 0);
 	}
 	
 	/**
-	 * Matches {@code source}.
+	 * Matches {@code input}.
 	 * <p>
 	 * Returns a {@link MatchResult} with the result of the match.
 	 * <p>
-	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code input} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code index} is less than {@code 0} or greater than or equal to {@code input.length()}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param source the source to match
-	 * @param index the index in {@code source} to match from
+	 * @param input the {@code String} to match
+	 * @param index the index in {@code input} to match from
 	 * @return a {@code MatchResult} with the result of the match
-	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}
-	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code input.length()}
+	 * @throws NullPointerException thrown if, and only if, {@code input} is {@code null}
 	 */
 	@Override
-	public MatchResult match(final String source, final int index) {
-		Objects.requireNonNull(source, "source == null");
+	public MatchResult match(final String input, final int index) {
+		Objects.requireNonNull(input, "input == null");
 		
-		ParameterArguments.requireRange(index, 0, source.length(), "index");
+		ParameterArguments.requireRange(index, 0, input.length(), "index");
 		
 		final Pattern pattern = getPattern();
 		
-		java.util.regex.Matcher java_util_regex_Matcher = pattern.matcher(source);
-		java_util_regex_Matcher.region(index, source.length());
+		java.util.regex.Matcher java_util_regex_Matcher = pattern.matcher(input);
+		java_util_regex_Matcher.region(index, input.length());
 		
 		if(java_util_regex_Matcher.lookingAt()) {
-			return new MatchResult(this, source, true, index, index + java_util_regex_Matcher.group().length());
+			return new MatchResult(this, input, true, index, index + java_util_regex_Matcher.group().length());
 		}
 		
-		return new MatchResult(this, source, false, index);
+		return new MatchResult(this, input, false, index);
 	}
 	
 	/**
@@ -185,12 +210,12 @@ public final class Regex implements Matcher {
 	}
 	
 	/**
-	 * Returns the source associated with this {@code Regex} instance.
+	 * Returns the source code associated with this {@code Regex} instance.
 	 * 
-	 * @return the source associated with this {@code Regex} instance
+	 * @return the source code associated with this {@code Regex} instance
 	 */
 	@Override
-	public String getSource() {
+	public String getSourceCode() {
 		final
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("/");

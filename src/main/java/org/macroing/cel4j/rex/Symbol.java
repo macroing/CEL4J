@@ -144,48 +144,48 @@ public final class Symbol implements Matcher {
 	}
 	
 	/**
-	 * Matches {@code source}.
+	 * Matches {@code input}.
 	 * <p>
 	 * Returns a {@link MatchResult} with the result of the match.
 	 * <p>
-	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code input} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
 	 * Calling this method is equivalent to the following:
 	 * <pre>
 	 * {@code
-	 * symbol.match(source, 0);
+	 * symbol.match(input, 0);
 	 * }
 	 * </pre>
 	 * 
-	 * @param source the source to match
+	 * @param input the {@code String} to match
 	 * @return a {@code MatchResult} with the result of the match
-	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 * @throws NullPointerException thrown if, and only if, {@code input} is {@code null}
 	 */
 	@Override
-	public MatchResult match(final String source) {
-		return match(source, 0);
+	public MatchResult match(final String input) {
+		return match(input, 0);
 	}
 	
 	/**
-	 * Matches {@code source}.
+	 * Matches {@code input}.
 	 * <p>
 	 * Returns a {@link MatchResult} with the result of the match.
 	 * <p>
-	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code input} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code index} is less than {@code 0} or greater than or equal to {@code input.length()}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param source the source to match
-	 * @param index the index in {@code source} to match from
+	 * @param input the {@code String} to match
+	 * @param index the index in {@code input} to match from
 	 * @return a {@code MatchResult} with the result of the match
-	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}
-	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code input.length()}
+	 * @throws NullPointerException thrown if, and only if, {@code input} is {@code null}
 	 */
 	@Override
-	public MatchResult match(final String source, final int index) {
-		Objects.requireNonNull(source, "source == null");
+	public MatchResult match(final String input, final int index) {
+		Objects.requireNonNull(input, "input == null");
 		
-		ParameterArguments.requireRange(index, 0, source.length(), "index");
+		ParameterArguments.requireRange(index, 0, input.length(), "index");
 		
 		final Repetition repetition = getRepetition();
 		
@@ -199,11 +199,11 @@ public final class Symbol implements Matcher {
 		
 		int length = 0;
 		
-		for(int i = 1; i <= maximumRepetition && currentIndex < source.length(); i++) {
+		for(int i = 1; i <= maximumRepetition && currentIndex < input.length(); i++) {
 			int currentLength = 0;
 			
 			for(int j = 0; j < string.length(); j++) {
-				if(source.charAt(currentIndex + j) == string.charAt(j)) {
+				if(input.charAt(currentIndex + j) == string.charAt(j)) {
 					currentLength++;
 				} else {
 					break;
@@ -221,10 +221,10 @@ public final class Symbol implements Matcher {
 		}
 		
 		if(currentRepetition >= minimumRepetition) {
-			return new MatchResult(this, source, true, index, index + length);
+			return new MatchResult(this, input, true, index, index + length);
 		}
 		
-		return new MatchResult(this, source, false, index);
+		return new MatchResult(this, input, false, index);
 	}
 	
 	/**
@@ -237,18 +237,18 @@ public final class Symbol implements Matcher {
 	}
 	
 	/**
-	 * Returns the source associated with this {@code Symbol} instance.
+	 * Returns the source code associated with this {@code Symbol} instance.
 	 * 
-	 * @return the source associated with this {@code Symbol} instance
+	 * @return the source code associated with this {@code Symbol} instance
 	 */
 	@Override
-	public String getSource() {
+	public String getSourceCode() {
 		final
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append(getString().length() == 1 ? "'" : "\"");
 		stringBuilder.append(getString().replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t"));
 		stringBuilder.append(getString().length() == 1 ? "'" : "\"");
-		stringBuilder.append(getRepetition().getSource());
+		stringBuilder.append(getRepetition().getSourceCode());
 		
 		return stringBuilder.toString();
 	}

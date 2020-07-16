@@ -39,9 +39,24 @@ public final class SymbolClass implements Matcher {
 	public static final String NAME_CHARACTER_LITERAL = "CharacterLiteral";
 	
 	/**
+	 * The name {@code "Comment"} is used by a {@code SymbolClass} that matches using {@link Regex#COMMENT}.
+	 */
+	public static final String NAME_COMMENT = "Comment";
+	
+	/**
+	 * The name {@code "CommentOrWhitespace"} is used by a {@code SymbolClass} that matches using {@link Regex#COMMENT_OR_WHITESPACE}.
+	 */
+	public static final String NAME_COMMENT_OR_WHITESPACE = "CommentOrWhitespace";
+	
+	/**
 	 * The name {@code "Digit"} is used by a {@code SymbolClass} that matches using {@code Character.isDigit(char)}.
 	 */
 	public static final String NAME_DIGIT = "Digit";
+	
+	/**
+	 * The name {@code "EndOfLineComment"} is used by a {@code SymbolClass} that matches using {@link Regex#END_OF_LINE_COMMENT}.
+	 */
+	public static final String NAME_END_OF_LINE_COMMENT = "EndOfLineComment";
 	
 	/**
 	 * The name {@code "JavaIdentifierPart"} is used by a {@code SymbolClass} that matches using {@code Character.isJavaIdentifierPart(char)}.
@@ -77,6 +92,11 @@ public final class SymbolClass implements Matcher {
 	 * The name {@code "StringLiteral"} is used by a {@code SymbolClass} that matches using {@link Regex#STRING_LITERAL}.
 	 */
 	public static final String NAME_STRING_LITERAL = "StringLiteral";
+	
+	/**
+	 * The name {@code "TraditionalComment"} is used by a {@code SymbolClass} that matches using {@link Regex#TRADITIONAL_COMMENT}.
+	 */
+	public static final String NAME_TRADITIONAL_COMMENT = "TraditionalComment";
 	
 	/**
 	 * The name {@code "UnicodeIdentifierPart"} is used by a {@code SymbolClass} that matches using {@code Character.isUnicodeIdentifierPart(char)}.
@@ -178,78 +198,86 @@ public final class SymbolClass implements Matcher {
 	}
 	
 	/**
-	 * Matches {@code source}.
+	 * Matches {@code input}.
 	 * <p>
 	 * Returns a {@link MatchResult} with the result of the match.
 	 * <p>
-	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code input} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
 	 * Calling this method is equivalent to the following:
 	 * <pre>
 	 * {@code
-	 * symbolClass.match(source, 0);
+	 * symbolClass.match(input, 0);
 	 * }
 	 * </pre>
 	 * 
-	 * @param source the source to match
+	 * @param input the {@code String} to match
 	 * @return a {@code MatchResult} with the result of the match
-	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 * @throws NullPointerException thrown if, and only if, {@code input} is {@code null}
 	 */
 	@Override
-	public MatchResult match(final String source) {
-		return match(source, 0);
+	public MatchResult match(final String input) {
+		return match(input, 0);
 	}
 	
 	/**
-	 * Matches {@code source}.
+	 * Matches {@code input}.
 	 * <p>
 	 * Returns a {@link MatchResult} with the result of the match.
 	 * <p>
-	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code input} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code index} is less than {@code 0} or greater than or equal to {@code input.length()}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param source the source to match
-	 * @param index the index in {@code source} to match from
+	 * @param input the {@code String} to match
+	 * @param index the index in {@code input} to match from
 	 * @return a {@code MatchResult} with the result of the match
-	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}
-	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code input.length()}
+	 * @throws NullPointerException thrown if, and only if, {@code input} is {@code null}
 	 */
 	@Override
-	public MatchResult match(final String source, final int index) {
-		Objects.requireNonNull(source, "source == null");
+	public MatchResult match(final String input, final int index) {
+		Objects.requireNonNull(input, "input == null");
 		
-		ParameterArguments.requireRange(index, 0, source.length(), "index");
+		ParameterArguments.requireRange(index, 0, input.length(), "index");
 		
 		switch(getName()) {
 			case NAME_CHARACTER_LITERAL:
-				return doMatchRegex(source, index, Regex.CHARACTER_LITERAL);
+				return doMatchRegex(input, index, Regex.CHARACTER_LITERAL);
+			case NAME_COMMENT:
+				return doMatchRegex(input, index, Regex.COMMENT);
+			case NAME_COMMENT_OR_WHITESPACE:
+				return doMatchRegex(input, index, Regex.COMMENT_OR_WHITESPACE);
 			case NAME_DIGIT:
-				return doMatchCharPredicate(source, index, character -> Character.isDigit(character));
+				return doMatchCharPredicate(input, index, character -> Character.isDigit(character));
+			case NAME_END_OF_LINE_COMMENT:
+				return doMatchRegex(input, index, Regex.END_OF_LINE_COMMENT);
 			case NAME_JAVA_IDENTIFIER_PART:
-				return doMatchCharPredicate(source, index, character -> Character.isJavaIdentifierPart(character));
+				return doMatchCharPredicate(input, index, character -> Character.isJavaIdentifierPart(character));
 			case NAME_JAVA_IDENTIFIER_START:
-				return doMatchCharPredicate(source, index, character -> Character.isJavaIdentifierStart(character));
+				return doMatchCharPredicate(input, index, character -> Character.isJavaIdentifierStart(character));
 			case NAME_LETTER:
-				return doMatchCharPredicate(source, index, character -> Character.isLetter(character));
+				return doMatchCharPredicate(input, index, character -> Character.isLetter(character));
 			case NAME_LETTER_OR_DIGIT:
-				return doMatchCharPredicate(source, index, character -> Character.isLetterOrDigit(character));
+				return doMatchCharPredicate(input, index, character -> Character.isLetterOrDigit(character));
 			case NAME_LOWER_CASE:
-				return doMatchCharPredicate(source, index, character -> Character.isLowerCase(character));
+				return doMatchCharPredicate(input, index, character -> Character.isLowerCase(character));
 			case NAME_REGEX_LITERAL:
-				return doMatchRegex(source, index, Regex.REGEX_LITERAL);
+				return doMatchRegex(input, index, Regex.REGEX_LITERAL);
 			case NAME_STRING_LITERAL:
-				return doMatchRegex(source, index, Regex.STRING_LITERAL);
+				return doMatchRegex(input, index, Regex.STRING_LITERAL);
+			case NAME_TRADITIONAL_COMMENT:
+				return doMatchRegex(input, index, Regex.TRADITIONAL_COMMENT);
 			case NAME_UNICODE_IDENTIFIER_PART:
-				return doMatchCharPredicate(source, index, character -> Character.isUnicodeIdentifierPart(character));
+				return doMatchCharPredicate(input, index, character -> Character.isUnicodeIdentifierPart(character));
 			case NAME_UNICODE_IDENTIFIER_START:
-				return doMatchCharPredicate(source, index, character -> Character.isUnicodeIdentifierStart(character));
+				return doMatchCharPredicate(input, index, character -> Character.isUnicodeIdentifierStart(character));
 			case NAME_UPPER_CASE:
-				return doMatchCharPredicate(source, index, character -> Character.isUpperCase(character));
+				return doMatchCharPredicate(input, index, character -> Character.isUpperCase(character));
 			case NAME_WHITESPACE:
-				return doMatchCharPredicate(source, index, character -> Character.isWhitespace(character));
+				return doMatchCharPredicate(input, index, character -> Character.isWhitespace(character));
 			default:
-				return doMatchDefault(source, index);
+				return doMatchDefault(input, index);
 		}
 	}
 	
@@ -272,17 +300,17 @@ public final class SymbolClass implements Matcher {
 	}
 	
 	/**
-	 * Returns the source associated with this {@code SymbolClass} instance.
+	 * Returns the source code associated with this {@code SymbolClass} instance.
 	 * 
-	 * @return the source associated with this {@code SymbolClass} instance
+	 * @return the source code associated with this {@code SymbolClass} instance
 	 */
 	@Override
-	public String getSource() {
+	public String getSourceCode() {
 		final
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("%");
 		stringBuilder.append(getName());
-		stringBuilder.append(getRepetition().getSource());
+		stringBuilder.append(getRepetition().getSourceCode());
 		
 		return stringBuilder.toString();
 	}
@@ -332,11 +360,11 @@ public final class SymbolClass implements Matcher {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private MatchResult doMatchDefault(final String source, final int index) {
-		return new MatchResult(this, source, false, index);
+	private MatchResult doMatchDefault(final String input, final int index) {
+		return new MatchResult(this, input, false, index);
 	}
 	
-	private MatchResult doMatchCharPredicate(final String source, final int index, final CharPredicate charPredicate) {
+	private MatchResult doMatchCharPredicate(final String input, final int index, final CharPredicate charPredicate) {
 		final Repetition repetition = getRepetition();
 		
 		final int minimumRepetition = repetition.getMinimum();
@@ -347,8 +375,8 @@ public final class SymbolClass implements Matcher {
 		
 		int length = 0;
 		
-		for(int i = 1; i <= maximumRepetition && currentIndex < source.length(); i++) {
-			if(charPredicate.test(source.charAt(currentIndex))) {
+		for(int i = 1; i <= maximumRepetition && currentIndex < input.length(); i++) {
+			if(charPredicate.test(input.charAt(currentIndex))) {
 				currentIndex += 1;
 				currentRepetition++;
 				
@@ -359,13 +387,13 @@ public final class SymbolClass implements Matcher {
 		}
 		
 		if(currentRepetition >= minimumRepetition) {
-			return new MatchResult(this, source, true, index, index + length);
+			return new MatchResult(this, input, true, index, index + length);
 		}
 		
-		return new MatchResult(this, source, false, index);
+		return new MatchResult(this, input, false, index);
 	}
 	
-	private MatchResult doMatchRegex(final String source, final int index, final Regex regex) {
+	private MatchResult doMatchRegex(final String input, final int index, final Regex regex) {
 		final List<MatchResult> matchResults = new ArrayList<>();
 		
 		final Repetition repetition = getRepetition();
@@ -378,8 +406,8 @@ public final class SymbolClass implements Matcher {
 		
 		int length = 0;
 		
-		for(int i = 1; i <= maximumRepetition && currentIndex < source.length(); i++) {
-			final MatchResult currentMatchResult = regex.match(source, currentIndex);
+		for(int i = 1; i <= maximumRepetition && currentIndex < input.length(); i++) {
+			final MatchResult currentMatchResult = regex.match(input, currentIndex);
 			
 			if(currentMatchResult.isMatching()) {
 				currentIndex += currentMatchResult.getLength();
@@ -394,9 +422,9 @@ public final class SymbolClass implements Matcher {
 		}
 		
 		if(currentRepetition >= minimumRepetition) {
-			return new MatchResult(this, source, true, index, index + length, matchResults);
+			return new MatchResult(this, input, true, index, index + length, matchResults);
 		}
 		
-		return new MatchResult(this, source, false, index);
+		return new MatchResult(this, input, false, index);
 	}
 }

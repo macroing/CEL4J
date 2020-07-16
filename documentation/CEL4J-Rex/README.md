@@ -32,12 +32,9 @@ import org.macroing.cel4j.rex.MatchResult;
 
 public class HelloWorldExample {
     public static void main(String[] args) {
-        String input = "<HelloWorld> = (\"Hello\" & ',' & ' ' & \"World\" & '!') & <HelloWorld>";
-        String source = "Hello, World!";
+        Expression expression = Expression.parse("\"Hello\" & ',' & ' ' & \"World\" & '!'");
         
-        Expression expression = Expression.parse(input);
-        
-        MatchResult matchResult = expression.match(source);
+        MatchResult matchResult = expression.match("Hello, World!");
         
         System.out.println(matchResult);
     }
@@ -48,27 +45,39 @@ public class HelloWorldExample {
 The following example demonstrates various features in Rex by matching itself.
 
 ```
-<Alternation> = (<Concatenation> & (%Whitespace* & '|' & %Whitespace* & <Concatenation>)*)
+//Defines 'Alternation':
+<Alternation> = (<Concatenation> & (%CommentOrWhitespace* & '|' & %CommentOrWhitespace* & <Concatenation>)*)
 &
-<Concatenation> = (<Matcher> & (%Whitespace* & '&' & %Whitespace* & <Matcher>)*)
+//Defines 'Concatenation':
+<Concatenation> = (<Matcher> & (%CommentOrWhitespace* & '&' & %CommentOrWhitespace* & <Matcher>)*)
 &
+//Defines 'Expression':
 <Expression> = (<Alternation>)
 &
-<Group> = (%Whitespace* & '(' & %Whitespace* & <Alternation> & %Whitespace* & ')' & %Whitespace* & <Repetition>?)
+//Defines 'Group':
+<Group> = (%CommentOrWhitespace* & '(' & %CommentOrWhitespace* & <Alternation> & %CommentOrWhitespace* & ')' & %CommentOrWhitespace* & <Repetition>?)
 &
-<GroupReference> = (%Whitespace* & '<' & %Whitespace* & (%JavaIdentifierStart & %JavaIdentifierPart* | %Digit+) & %Whitespace* & '>' & %Whitespace* & <Repetition>?)
+//Defines 'GroupReference':
+<GroupReference> = (%CommentOrWhitespace* & '<' & %CommentOrWhitespace* & (%JavaIdentifierStart & %JavaIdentifierPart* | %Digit+) & %CommentOrWhitespace* & '>' & %CommentOrWhitespace* & <Repetition>?)
 &
-<GroupReferenceDefinition> = (%Whitespace* & '<' & %Whitespace* & %JavaIdentifierStart & %JavaIdentifierPart* & %Whitespace* & '>' & %Whitespace* & '=' & %Whitespace* & <Group>)
+//Defines 'GroupReferenceDefinition':
+<GroupReferenceDefinition> = (%CommentOrWhitespace* & '<' & %CommentOrWhitespace* & %JavaIdentifierStart & %JavaIdentifierPart* & %CommentOrWhitespace* & '>' & %CommentOrWhitespace* & '=' & %CommentOrWhitespace* & <Group>)
 &
+//Defines 'Matcher':
 <Matcher> = (<Group> | <GroupReferenceDefinition> | <GroupReference> | <Regex> | <Symbol> | <SymbolClass>)
 &
-<Regex> = (%Whitespace* & %RegexLiteral)
+//Defines 'Regex':
+<Regex> = (%CommentOrWhitespace* & %RegexLiteral)
 &
-<Repetition> = (%Whitespace* & ('*' | '+' | '?'))
+//Defines 'Repetition':
+<Repetition> = (%CommentOrWhitespace* & ('*' | '+' | '?'))
 &
-<Symbol> = (%Whitespace* & (%CharacterLiteral | %StringLiteral) & %Whitespace* & <Repetition>?)
+//Defines 'Symbol':
+<Symbol> = (%CommentOrWhitespace* & (%CharacterLiteral | %StringLiteral) & %CommentOrWhitespace* & <Repetition>?)
 &
-<SymbolClass> = (%Whitespace* & '%' & %JavaIdentifierStart & %JavaIdentifierPart* & %Whitespace* & <Repetition>?)
+//Defines 'SymbolClass':
+<SymbolClass> = (%CommentOrWhitespace* & '%' & %JavaIdentifierStart & %JavaIdentifierPart* & %CommentOrWhitespace* & <Repetition>?)
 &
+//Evaluates 'Expression':
 <Expression>
 ```

@@ -116,48 +116,48 @@ public final class GroupReference implements Matcher {
 	}
 	
 	/**
-	 * Matches {@code source}.
+	 * Matches {@code input}.
 	 * <p>
 	 * Returns a {@link MatchResult} with the result of the match.
 	 * <p>
-	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code input} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
 	 * Calling this method is equivalent to the following:
 	 * <pre>
 	 * {@code
-	 * groupReference.match(source, 0);
+	 * groupReference.match(input, 0);
 	 * }
 	 * </pre>
 	 * 
-	 * @param source the source to match
+	 * @param input the {@code String} to match
 	 * @return a {@code MatchResult} with the result of the match
-	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 * @throws NullPointerException thrown if, and only if, {@code input} is {@code null}
 	 */
 	@Override
-	public MatchResult match(final String source) {
-		return match(source, 0);
+	public MatchResult match(final String input) {
+		return match(input, 0);
 	}
 	
 	/**
-	 * Matches {@code source}.
+	 * Matches {@code input}.
 	 * <p>
 	 * Returns a {@link MatchResult} with the result of the match.
 	 * <p>
-	 * If {@code source} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * If {@code input} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code index} is less than {@code 0} or greater than or equal to {@code input.length()}, an {@code IllegalArgumentException} will be thrown.
 	 * 
-	 * @param source the source to match
-	 * @param index the index in {@code source} to match from
+	 * @param input the {@code String} to match
+	 * @param index the index in {@code input} to match from
 	 * @return a {@code MatchResult} with the result of the match
-	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code source.length()}
-	 * @throws NullPointerException thrown if, and only if, {@code source} is {@code null}
+	 * @throws IllegalArgumentException thrown if, and only if, {@code index} is less than {@code 0} or greater than or equal to {@code input.length()}
+	 * @throws NullPointerException thrown if, and only if, {@code input} is {@code null}
 	 */
 	@Override
-	public MatchResult match(final String source, final int index) {
-		Objects.requireNonNull(source, "source == null");
+	public MatchResult match(final String input, final int index) {
+		Objects.requireNonNull(input, "input == null");
 		
-		ParameterArguments.requireRange(index, 0, source.length(), "index");
+		ParameterArguments.requireRange(index, 0, input.length(), "index");
 		
 		final List<MatchResult> matchResults = new ArrayList<>();
 		
@@ -171,8 +171,8 @@ public final class GroupReference implements Matcher {
 		
 		int length = 0;
 		
-		for(int i = 1; i <= maximumRepetition && currentIndex < source.length(); i++) {
-			final MatchResult currentMatchResult = getGroup().get().match(source, currentIndex);
+		for(int i = 1; i <= maximumRepetition && currentIndex < input.length(); i++) {
+			final MatchResult currentMatchResult = getGroup().get().match(input, currentIndex);
 			
 			if(currentMatchResult.isMatching()) {
 				currentIndex += currentMatchResult.getLength();
@@ -187,10 +187,10 @@ public final class GroupReference implements Matcher {
 		}
 		
 		if(currentRepetition >= minimumRepetition) {
-			return new MatchResult(this, source, true, index, index + length, matchResults);
+			return new MatchResult(this, input, true, index, index + length, matchResults);
 		}
 		
-		return new MatchResult(this, source, false, index);
+		return new MatchResult(this, input, false, index);
 	}
 	
 	/**
@@ -221,18 +221,18 @@ public final class GroupReference implements Matcher {
 	}
 	
 	/**
-	 * Returns the source associated with this {@code GroupReference} instance.
+	 * Returns the source code associated with this {@code GroupReference} instance.
 	 * 
-	 * @return the source associated with this {@code GroupReference} instance
+	 * @return the source code associated with this {@code GroupReference} instance
 	 */
 	@Override
-	public String getSource() {
+	public String getSourceCode() {
 		final
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("<");
-		stringBuilder.append(this.name);
+		stringBuilder.append(getName());
 		stringBuilder.append(">");
-		stringBuilder.append(this.repetition.getSource());
+		stringBuilder.append(getRepetition().getSourceCode());
 		
 		return stringBuilder.toString();
 	}
@@ -301,7 +301,7 @@ public final class GroupReference implements Matcher {
 			return true;
 		} else if(!(object instanceof GroupReference)) {
 			return false;
-		} else if(!Objects.equals(getSource(), GroupReference.class.cast(object).getSource())) {
+		} else if(!Objects.equals(getSourceCode(), GroupReference.class.cast(object).getSourceCode())) {
 			return false;
 		} else {
 			return true;
@@ -324,7 +324,7 @@ public final class GroupReference implements Matcher {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(getSource());
+		return Objects.hash(getSourceCode());
 	}
 	
 	/**
