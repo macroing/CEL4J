@@ -184,7 +184,7 @@ public final class MatchResult implements Node {
 		stringBuilder.append("\n");
 		stringBuilder.append("- Matcher = " + getMatcher());
 		stringBuilder.append("\n");
-		stringBuilder.append("- MatcherSourceCode = \"" + getMatcher().getSourceCode() + "\"");
+		stringBuilder.append("- MatcherSourceCode = \"" + doFormat(getMatcher().getSourceCode()) + "\"");
 		
 		return stringBuilder.toString();
 	}

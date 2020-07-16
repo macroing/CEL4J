@@ -45,39 +45,19 @@ public class HelloWorldExample {
 The following example demonstrates various features in Rex by matching itself.
 
 ```
-//Defines 'Alternation':
-<Alternation> = (<Concatenation> & (%CommentOrWhitespace* & '|' & %CommentOrWhitespace* & <Concatenation>)*)
-&
-//Defines 'Concatenation':
-<Concatenation> = (<Matcher> & (%CommentOrWhitespace* & '&' & %CommentOrWhitespace* & <Matcher>)*)
-&
-//Defines 'Expression':
-<Expression> = (<Alternation>)
-&
-//Defines 'Group':
-<Group> = (%CommentOrWhitespace* & '(' & %CommentOrWhitespace* & <Alternation> & %CommentOrWhitespace* & ')' & %CommentOrWhitespace* & <Repetition>?)
-&
-//Defines 'GroupReference':
-<GroupReference> = (%CommentOrWhitespace* & '<' & %CommentOrWhitespace* & (%JavaIdentifierStart & %JavaIdentifierPart* | %Digit+) & %CommentOrWhitespace* & '>' & %CommentOrWhitespace* & <Repetition>?)
-&
-//Defines 'GroupReferenceDefinition':
-<GroupReferenceDefinition> = (%CommentOrWhitespace* & '<' & %CommentOrWhitespace* & %JavaIdentifierStart & %JavaIdentifierPart* & %CommentOrWhitespace* & '>' & %CommentOrWhitespace* & '=' & %CommentOrWhitespace* & <Group>)
-&
-//Defines 'Matcher':
-<Matcher> = (<Group> | <GroupReferenceDefinition> | <GroupReference> | <Regex> | <Symbol> | <SymbolClass>)
-&
-//Defines 'Regex':
-<Regex> = (%CommentOrWhitespace* & %RegexLiteral)
-&
-//Defines 'Repetition':
-<Repetition> = (%CommentOrWhitespace* & ('*' | '+' | '?'))
-&
-//Defines 'Symbol':
-<Symbol> = (%CommentOrWhitespace* & (%CharacterLiteral | %StringLiteral) & %CommentOrWhitespace* & <Repetition>?)
-&
-//Defines 'SymbolClass':
-<SymbolClass> = (%CommentOrWhitespace* & '%' & %JavaIdentifierStart & %JavaIdentifierPart* & %CommentOrWhitespace* & <Repetition>?)
-&
-//Evaluates 'Expression':
+/**
+ * Rex supports comments and whitespaces. Both end-of-line comments and traditional comments are supported, as in Java.
+ */
+<Alternation> = (<Concatenation> & (%CommentOrWhitespace* & '|' & %CommentOrWhitespace* & <Concatenation>)*);
+<Concatenation> = (<Matcher> & (%CommentOrWhitespace* & ('&' | ',' | ';') & %CommentOrWhitespace* & <Matcher>)*);
+<Expression> = (<Alternation>);
+<Group> = (%CommentOrWhitespace* & '(' & %CommentOrWhitespace* & <Alternation> & %CommentOrWhitespace* & ')' & %CommentOrWhitespace* & <Repetition>?);
+<GroupReference> = (%CommentOrWhitespace* & '<' & %CommentOrWhitespace* & (%JavaIdentifierStart & %JavaIdentifierPart* | %Digit+) & %CommentOrWhitespace* & '>' & %CommentOrWhitespace* & <Repetition>?);
+<GroupReferenceDefinition> = (%CommentOrWhitespace* & '<' & %CommentOrWhitespace* & %JavaIdentifierStart & %JavaIdentifierPart* & %CommentOrWhitespace* & '>' & %CommentOrWhitespace* & '=' & %CommentOrWhitespace* & <Group>);
+<Matcher> = (<Group> | <GroupReferenceDefinition> | <GroupReference> | <Regex> | <Symbol> | <SymbolClass>);
+<Regex> = (%CommentOrWhitespace* & %RegexLiteral);
+<Repetition> = (%CommentOrWhitespace* & ('*' | '+' | '?'));
+<Symbol> = (%CommentOrWhitespace* & (%CharacterLiteral | %StringLiteral) & %CommentOrWhitespace* & <Repetition>?);
+<SymbolClass> = (%CommentOrWhitespace* & '%' & %JavaIdentifierStart & %JavaIdentifierPart* & %CommentOrWhitespace* & <Repetition>?);
 <Expression>
 ```

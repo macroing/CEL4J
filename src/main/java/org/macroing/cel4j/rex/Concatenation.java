@@ -33,12 +33,15 @@ import org.macroing.cel4j.util.ParameterArguments;
  * <p>
  * This class is indirectly mutable and not thread-safe.
  * <p>
- * A {@code Concatenation} consists of one or more {@code Matcher} instances. If two or more {@code Matcher} instances are present, they are separated with an ampersand character ({@code &}).
+ * A {@code Concatenation} consists of one or more {@code Matcher} instances. If two or more {@code Matcher} instances are present, they are separated with an ampersand character ({@code &}), a comma character ({@code ,}) or a semicolon character
+ * ({@code ;}).
  * <p>
- * To use a {@code Concatenation} in Rex, consider the following example:
+ * To use a {@code Concatenation} in Rex, consider the following examples:
  * <pre>
  * {@code
  * "A" & "B" & "C"
+ * "A", "B", "C"
+ * "A"; "B"; "C"
  * }
  * </pre>
  * 
@@ -282,14 +285,27 @@ public final class Concatenation implements Matcher {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private static String doCreateSourceCode(final List<Matcher> matchables) {
+	private static String doCreateSourceCode(final List<Matcher> matchers) {
 		final StringBuilder stringBuilder = new StringBuilder();
 		
-		for(int i = 0; i < matchables.size(); i++) {
-			stringBuilder.append(i > 0 ? " & " : "");
-			stringBuilder.append(matchables.get(i).getSourceCode());
+		for(int i = 0; i < matchers.size(); i++) {
+			final Matcher matcherA = matchers.get(i > 0 ? i - 1 : i);
+			final Matcher matcherB = matchers.get(i);
+			
+			stringBuilder.append(doGetPreferredConcatenationCharacter(matcherA, matcherB));
+			stringBuilder.append(matcherB.getSourceCode());
 		}
 		
 		return stringBuilder.toString();
+	}
+	
+	private static String doGetPreferredConcatenationCharacter(final Matcher matcherA, final Matcher matcherB) {
+		if(matcherA == matcherB) {
+			return "";
+		} else if(matcherA instanceof GroupReferenceDefinition) {
+			return ";\n";
+		} else {
+			return " & ";
+		}
 	}
 }

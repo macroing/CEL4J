@@ -30,7 +30,9 @@ import org.macroing.cel4j.util.Strings;
 final class RexParser {
 	private static final RexLexer REX_LEXER = new RexLexer();
 	private static final Token ALTERNATION_SEPARATOR = new Token(RexLexer.NAME_SEPARATOR, "|");
-	private static final Token CONCATENATION_SEPARATOR = new Token(RexLexer.NAME_SEPARATOR, "&");
+	private static final Token CONCATENATION_SEPARATOR_0 = new Token(RexLexer.NAME_SEPARATOR, "&");
+	private static final Token CONCATENATION_SEPARATOR_1 = new Token(RexLexer.NAME_SEPARATOR, ",");
+	private static final Token CONCATENATION_SEPARATOR_2 = new Token(RexLexer.NAME_SEPARATOR, ";");
 	private static final Token GROUP_REFERENCE_DEFINITION_ASSIGNMENT = new Token(RexLexer.NAME_OPERATOR, "=");
 	private static final Token GROUP_REFERENCE_OR_GROUP_REFERENCE_DEFINITION_SEPARATOR_L = new Token(RexLexer.NAME_SEPARATOR, "<");
 	private static final Token GROUP_REFERENCE_OR_GROUP_REFERENCE_DEFINITION_SEPARATOR_R = new Token(RexLexer.NAME_SEPARATOR, ">");
@@ -74,7 +76,7 @@ final class RexParser {
 		
 		do {
 			matchers.add(doParseMatcher(tokens, index));
-		} while(doGetNextToken(tokens, index, CONCATENATION_SEPARATOR) && doHasNextTokenOrThrow(tokens, index, "Illegal Concatenation!"));
+		} while(doGetNextToken(tokens, index, CONCATENATION_SEPARATOR_0, CONCATENATION_SEPARATOR_1, CONCATENATION_SEPARATOR_2) && doHasNextTokenOrThrow(tokens, index, "Illegal Concatenation!"));
 		
 		return new Concatenation(matchers);
 	}
@@ -203,8 +205,8 @@ final class RexParser {
 		return false;
 	}
 	
-	private static boolean doGetNextToken(final List<Token> tokens, final int[] index, final Token token) {
-		if(doHasNextToken(tokens, index, token)) {
+	private static boolean doGetNextToken(final List<Token> tokens, final int[] index, final Token... tokenAlternatives) {
+		if(doHasNextToken(tokens, index, tokenAlternatives)) {
 			index[0]++;
 			
 			return true;
@@ -237,8 +239,18 @@ final class RexParser {
 		return index[0] + 1 < tokens.size() && tokens.get(index[0] + 1).getName().equals(name);
 	}
 	
-	private static boolean doHasNextToken(final List<Token> tokens, final int[] index, final Token token) {
-		return index[0] + 1 < tokens.size() && tokens.get(index[0] + 1).equals(token);
+	private static boolean doHasNextToken(final List<Token> tokens, final int[] index, final Token... tokenAlternatives) {
+		if(index[0] + 1 < tokens.size()) {
+			final Token token = tokens.get(index[0] + 1);
+			
+			for(final Token tokenAlternative : tokenAlternatives) {
+				if(token.equals(tokenAlternative)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 	private static boolean doHasNextTokenOrThrow(final List<Token> tokens, final int[] index, final String message) {

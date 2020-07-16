@@ -315,28 +315,17 @@ public final class Expression implements Matcher {
 	private static String doCreateInputForRex() {
 		final
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("<Alternation> = (<Concatenation> & (%CommentOrWhitespace* & '|' & %CommentOrWhitespace* & <Concatenation>)*)");
-		stringBuilder.append("&");
-		stringBuilder.append("<Concatenation> = (<Matcher> & (%CommentOrWhitespace* & '&' & %CommentOrWhitespace* & <Matcher>)*)");
-		stringBuilder.append("&");
-		stringBuilder.append("<Expression> = (<Alternation>)");
-		stringBuilder.append("&");
-		stringBuilder.append("<Group> = (%CommentOrWhitespace* & '(' & %CommentOrWhitespace* & <Alternation> & %CommentOrWhitespace* & ')' & %CommentOrWhitespace* & <Repetition>?)");
-		stringBuilder.append("&");
-		stringBuilder.append("<GroupReference> = (%CommentOrWhitespace* & '<' & %CommentOrWhitespace* & (%JavaIdentifierStart & %JavaIdentifierPart* | %Digit+) & %CommentOrWhitespace* & '>' & %CommentOrWhitespace* & <Repetition>?)");
-		stringBuilder.append("&");
-		stringBuilder.append("<GroupReferenceDefinition> = (%CommentOrWhitespace* & '<' & %CommentOrWhitespace* & %JavaIdentifierStart & %JavaIdentifierPart* & %CommentOrWhitespace* & '>' & %CommentOrWhitespace* & '=' & %CommentOrWhitespace* & <Group>)");
-		stringBuilder.append("&");
-		stringBuilder.append("<Matcher> = (<Group> | <GroupReferenceDefinition> | <GroupReference> | <Regex> | <Symbol> | <SymbolClass>)");
-		stringBuilder.append("&");
-		stringBuilder.append("<Regex> = (%CommentOrWhitespace* & %RegexLiteral)");
-		stringBuilder.append("&");
-		stringBuilder.append("<Repetition> = (%CommentOrWhitespace* & ('*' | '+' | '?'))");
-		stringBuilder.append("&");
-		stringBuilder.append("<Symbol> = (%CommentOrWhitespace* & (%CharacterLiteral | %StringLiteral) & %CommentOrWhitespace* & <Repetition>?)");
-		stringBuilder.append("&");
-		stringBuilder.append("<SymbolClass> = (%CommentOrWhitespace* & '%' & %JavaIdentifierStart & %JavaIdentifierPart* & %CommentOrWhitespace* & <Repetition>?)");
-		stringBuilder.append("&");
+		stringBuilder.append("<Alternation> = (<Concatenation> & (%CommentOrWhitespace* & '|' & %CommentOrWhitespace* & <Concatenation>)*);");
+		stringBuilder.append("<Concatenation> = (<Matcher> & (%CommentOrWhitespace* & ('&' | ',' | ';') & %CommentOrWhitespace* & <Matcher>)*);");
+		stringBuilder.append("<Expression> = (<Alternation>);");
+		stringBuilder.append("<Group> = (%CommentOrWhitespace* & '(' & %CommentOrWhitespace* & <Alternation> & %CommentOrWhitespace* & ')' & %CommentOrWhitespace* & <Repetition>?);");
+		stringBuilder.append("<GroupReference> = (%CommentOrWhitespace* & '<' & %CommentOrWhitespace* & (%JavaIdentifierStart & %JavaIdentifierPart* | %Digit+) & %CommentOrWhitespace* & '>' & %CommentOrWhitespace* & <Repetition>?);");
+		stringBuilder.append("<GroupReferenceDefinition> = (%CommentOrWhitespace* & '<' & %CommentOrWhitespace* & %JavaIdentifierStart & %JavaIdentifierPart* & %CommentOrWhitespace* & '>' & %CommentOrWhitespace* & '=' & %CommentOrWhitespace* & <Group>);");
+		stringBuilder.append("<Matcher> = (<Group> | <GroupReferenceDefinition> | <GroupReference> | <Regex> | <Symbol> | <SymbolClass>);");
+		stringBuilder.append("<Regex> = (%CommentOrWhitespace* & %RegexLiteral);");
+		stringBuilder.append("<Repetition> = (%CommentOrWhitespace* & ('*' | '+' | '?'));");
+		stringBuilder.append("<Symbol> = (%CommentOrWhitespace* & (%CharacterLiteral | %StringLiteral) & %CommentOrWhitespace* & <Repetition>?);");
+		stringBuilder.append("<SymbolClass> = (%CommentOrWhitespace* & '%' & %JavaIdentifierStart & %JavaIdentifierPart* & %CommentOrWhitespace* & <Repetition>?);");
 		stringBuilder.append("<Expression>");
 		
 		return stringBuilder.toString();

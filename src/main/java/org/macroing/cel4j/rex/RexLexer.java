@@ -46,7 +46,7 @@ final class RexLexer extends Lexer {
 	private static final String REGEX_IDENTIFIER = String.format("(?<%s>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)", NAME_IDENTIFIER);
 	private static final String REGEX_OPERATOR = String.format("(?<%s>%%|\\*|\\+|=|\\?)", NAME_OPERATOR);
 	private static final String REGEX_REGEX_LITERAL = String.format("/(?<%s>([^/\\\\]|\\\\([btnfr/'\\\\0-7]|[0-7]{2}|[0-3][0-7]{2}|u+[0-9a-fA-F]{4}))*)/", NAME_REGEX_LITERAL);
-	private static final String REGEX_SEPARATOR = String.format("(?<%s>&|\\(|\\)|,|<|>|\\[|\\]|\\{|\\||\\})", NAME_SEPARATOR);
+	private static final String REGEX_SEPARATOR = String.format("(?<%s>&|\\(|\\)|,|;|<|>|\\[|\\]|\\{|\\||\\})", NAME_SEPARATOR);
 	private static final String REGEX_STRING_LITERAL = String.format("\"(?<%s>([^\"\\\\]|\\\\([btnfr\"'\\\\0-7]|[0-7]{2}|[0-3][0-7]{2}|u+[0-9a-fA-F]{4}))*)\"", NAME_STRING_LITERAL);
 	private static final String REGEX_TRADITIONAL_COMMENT = String.format("(?s)(?<%s>/\\*((?!\\*/).)*\\*/)(?-s)", NAME_TRADITIONAL_COMMENT);
 	private static final String REGEX_WHITESPACE = String.format("(?<%s>\\s)", NAME_WHITESPACE);
