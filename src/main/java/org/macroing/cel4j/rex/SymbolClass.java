@@ -31,12 +31,12 @@ import org.macroing.cel4j.util.ParameterArguments;
  * <p>
  * This class is immutable and thread-safe.
  * <p>
- * A {@code SymbolClass} consists of a percent character ({@code %}) followed by a name and an optional {@link Repetition} instance.
+ * A {@code SymbolClass} consists of a name inside a set of percent characters ({@code %}) and an optional {@link Repetition} instance.
  * <p>
  * To use a {@code SymbolClass} in Rex, consider the following example:
  * <pre>
  * {@code
- * %Digit+
+ * %Digit%+
  * }
  * </pre>
  * 
@@ -321,6 +321,7 @@ public final class SymbolClass implements Matcher {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("%");
 		stringBuilder.append(getName());
+		stringBuilder.append("%");
 		stringBuilder.append(getRepetition().getSourceCode());
 		
 		return stringBuilder.toString();

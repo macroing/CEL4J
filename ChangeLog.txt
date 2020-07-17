@@ -8,6 +8,10 @@
 		* ADD:			Add the TH class.
 		* ADD:			Add the TextArea class.
 
+	CEL4J Rex:
+
+		* CHANGE:		Change the SymbolClass syntax from %Name to %Name%. This allows for syntax highlighting of a User Defined Language (UDL) in Notepad++.
+
 2020-07-16  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Rex:

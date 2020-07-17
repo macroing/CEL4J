@@ -41,7 +41,8 @@ final class RexParser {
 	private static final Token REPETITION_ANY = new Token(RexLexer.NAME_OPERATOR, "*");
 	private static final Token REPETITION_ONE_OR_MORE = new Token(RexLexer.NAME_OPERATOR, "+");
 	private static final Token REPETITION_ZERO_OR_ONE = new Token(RexLexer.NAME_OPERATOR, "?");
-	private static final Token SYMBOL_CLASS_START = new Token(RexLexer.NAME_OPERATOR, "%");
+	private static final Token SYMBOL_CLASS_SEPARATOR_L = new Token(RexLexer.NAME_OPERATOR, "%");
+	private static final Token SYMBOL_CLASS_SEPARATOR_R = new Token(RexLexer.NAME_OPERATOR, "%");
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -168,13 +169,15 @@ final class RexParser {
 			return new Regex(tokens.get(index[0]).getText());
 		} else if(doGetNextToken(tokens, index, RexLexer.NAME_STRING_LITERAL)) {
 			return new Symbol(tokens.get(index[0]).getText(), doParseRepetition(tokens, index));
-		} else if(doGetNextToken(tokens, index, SYMBOL_CLASS_START)) {
+		} else if(doGetNextToken(tokens, index, SYMBOL_CLASS_SEPARATOR_L)) {
 			if(doGetNextTokenOrThrow(tokens, index, RexLexer.NAME_IDENTIFIER, "Illegal SymbolClass!")) {
 				final String name = tokens.get(index[0]).getText();
 				
-				final Repetition repetition = doParseRepetition(tokens, index);
-				
-				return new SymbolClass(name, repetition);
+				if(doGetNextTokenOrThrow(tokens, index, SYMBOL_CLASS_SEPARATOR_R, "Illegal SymbolClass!")) {
+					final Repetition repetition = doParseRepetition(tokens, index);
+					
+					return new SymbolClass(name, repetition);
+				}
 			}
 			
 			throw new IllegalArgumentException("Illegal SymbolClass!");
