@@ -38,6 +38,7 @@
 		* ADD:			Add Javadocs.
 		* ADD:			Add the SymbolClass class with the constants NAME_DIGIT, NAME_JAVA_IDENTIFIER_PART, NAME_JAVA_IDENTIFIER_START, NAME_LETTER, NAME_LETTER_OR_DIGIT, NAME_LOWER_CASE, NAME_UNICODE_IDENTIFIER_PART, NAME_UNICODE_IDENTIFIER_START, NAME_UPPER_CASE and NAME_WHITESPACE that matches different symbol classes. Parsing the SymbolClass class is also added.
 		* ADD:			Add an extends clause for Documentable to the Matcher (previously known as Matchable) interface and add implementations for all classes that implements it.
+		* ADD:			Add a new parser that allows for comments and whitespace.
 		* CHANGE:		Change GroupReferences and GroupReferenceDefinitions from "%Name" and "%Name=('A')" to "<Name>" and "<Name>=('A')", respectively.
 		* CHANGE:		Change the Symbol class from being defined in terms of a char to being defined in terms of a String.
 		* CHANGE:		Change the name of the Matcher class to MatchResult.
@@ -45,12 +46,14 @@
 		* CHANGE:		Change the name of the method getMatchables() in the Concatenation class to getMatchers().
 		* CHANGE:		Split the GroupReference class into GroupReference and GroupReferenceDefinition.
 		* CHANGE:		Change the signatures of the methods matcher(String) and matcher(String, int, int) in the Matcher (previously known as Matchable) interface, to match(String) and match(String, int), respectively. The change was also done in all classes that implements it.
+		* CHANGE:		Change the matching algorithms for all Matcher (previously known as Matchable) implementations.
 		* REMOVE:		Remove the Builder class from the Alternation class.
 		* REMOVE:		Remove the Builder class from the Concatenation class.
 		* REMOVE:		Remove the Builder class from the Expression class.
 		* REMOVE:		Remove the Builder class from the Group class.
 		* REMOVE:		Remove the MatchInfo enum.
 		* REMOVE:		Remove the methods getMaximumCharacterMatch() and getMinimumCharacterMatch() in the Matcher (previously known as Matchable) interface. They have also been removed from all classes that implements it.
+		* REMOVE:		Remove the old parser.
 
 	CEL4J Utilities:
 
