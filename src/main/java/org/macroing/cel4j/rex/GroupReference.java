@@ -285,11 +285,12 @@ public final class GroupReference implements Matcher {
 		
 		try {
 			if(nodeHierarchicalVisitor.visitEnter(this)) {
-				final Optional<Group> optionalGroup = getGroup();
+//				StackOverflowError:
+//				final Optional<Group> optionalGroup = getGroup();
 				
-				if(optionalGroup.isPresent() && !optionalGroup.get().accept(nodeHierarchicalVisitor)) {
-					return nodeHierarchicalVisitor.visitLeave(this);
-				}
+//				if(optionalGroup.isPresent() && !optionalGroup.get().accept(nodeHierarchicalVisitor)) {
+//					return nodeHierarchicalVisitor.visitLeave(this);
+//				}
 			}
 			
 			return nodeHierarchicalVisitor.visitLeave(this);
