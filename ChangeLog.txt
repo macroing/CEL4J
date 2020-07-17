@@ -12,13 +12,20 @@
 
 	CEL4J Rex:
 
-		* CHANGE:		Update the Rex API.
+		* ADD:			Add support for the characters ',' and ';' as delimiters for Concatenations.
+		* ADD:			Add the method newRexExpression() to the Expression class. This method returns an Expression that matches Rex itself.
+		* ADD:			Add the constants NAME_COMMENT, NAME_COMMENT_OR_WHITESPACE, NAME_END_OF_LINE_COMMENT and NAME_TRADITIONAL_COMMENT to the SymbolClass class, as well as the implementations for these names.
+		* ADD:			Add the constants COMMENT, COMMENT_OR_WHITESPACE, END_OF_LINE_COMMENT, TRADITIONAL_COMMENT and WHITESPACE to the Regex class.
+		* CHANGE:		Change the name of the getSource() method in the Matcher class (and all subclasses) to getSourceCode().
+		* CHANGE:		Change the name of the getSource() method in the MatchResult class to getInput().
+		* CHANGE:		Change the name of the getResult() method in the MatchResult class to getMatch().
 
 2020-07-15  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Rex:
 
-		* CHANGE:		Update the Rex API.
+		* ADD:			Add the Regex class with the constants CHARACTER_LITERAL, REGEX_LITERAL and STRING_LITERAL to match Character, Regex and String literals. Parsing the Regex class is also added.
+		* ADD:			Add the constants NAME_CHARACTER_LITERAL, NAME_REGEX_LITERAL and NAME_STRING_LITERAL to the SymbolClass class, as well as the implementations for these names.
 
 2020-07-14  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
@@ -29,7 +36,21 @@
 	CEL4J Rex:
 
 		* ADD:			Add Javadocs.
-		* CHANGE:		Update the Rex API.
+		* ADD:			Add the SymbolClass class with the constants NAME_DIGIT, NAME_JAVA_IDENTIFIER_PART, NAME_JAVA_IDENTIFIER_START, NAME_LETTER, NAME_LETTER_OR_DIGIT, NAME_LOWER_CASE, NAME_UNICODE_IDENTIFIER_PART, NAME_UNICODE_IDENTIFIER_START, NAME_UPPER_CASE and NAME_WHITESPACE that matches different symbol classes. Parsing the SymbolClass class is also added.
+		* ADD:			Add an extends clause for Documentable to the Matcher (previously known as Matchable) interface and add implementations for all classes that implements it.
+		* CHANGE:		Change GroupReferences and GroupReferenceDefinitions from "%Name" and "%Name=('A')" to "<Name>" and "<Name>=('A')", respectively.
+		* CHANGE:		Change the Symbol class from being defined in terms of a char to being defined in terms of a String.
+		* CHANGE:		Change the name of the Matcher class to MatchResult.
+		* CHANGE:		Change the name of the Matchable interface to Matcher.
+		* CHANGE:		Change the name of the method getMatchables() in the Concatenation class to getMatchers().
+		* CHANGE:		Split the GroupReference class into GroupReference and GroupReferenceDefinition.
+		* CHANGE:		Change the signatures of the methods matcher(String) and matcher(String, int, int) in the Matcher (previously known as Matchable) interface, to match(String) and match(String, int), respectively. The change was also done in all classes that implements it.
+		* REMOVE:		Remove the Builder class from the Alternation class.
+		* REMOVE:		Remove the Builder class from the Concatenation class.
+		* REMOVE:		Remove the Builder class from the Expression class.
+		* REMOVE:		Remove the Builder class from the Group class.
+		* REMOVE:		Remove the MatchInfo enum.
+		* REMOVE:		Remove the methods getMaximumCharacterMatch() and getMinimumCharacterMatch() in the Matcher (previously known as Matchable) interface. They have also been removed from all classes that implements it.
 
 	CEL4J Utilities:
 
