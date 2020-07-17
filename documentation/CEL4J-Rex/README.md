@@ -52,12 +52,12 @@ The following example demonstrates various features in Rex by matching itself.
 <Concatenation> = (<Matcher> & (%CommentOrWhitespace%* & ('&' | ',' | ';') & %CommentOrWhitespace%* & <Matcher>)*);
 <Expression> = (<Alternation>);
 <Group> = (%CommentOrWhitespace%* & '(' & %CommentOrWhitespace%* & <Alternation> & %CommentOrWhitespace%* & ')' & %CommentOrWhitespace%* & <Repetition>?);
-<GroupReference> = (%CommentOrWhitespace%* & '<' & %CommentOrWhitespace%* & (%JavaIdentifierStart% & %JavaIdentifierPart%* | %Digit%+) & %CommentOrWhitespace%* & '>' & %CommentOrWhitespace%* & <Repetition>?);
-<GroupReferenceDefinition> = (%CommentOrWhitespace%* & '<' & %CommentOrWhitespace%* & %JavaIdentifierStart% & %JavaIdentifierPart%* & %CommentOrWhitespace%* & '>' & %CommentOrWhitespace%* & '=' & %CommentOrWhitespace%* & <Group>);
+<GroupReference> = (%CommentOrWhitespace%* & '<' & %CommentOrWhitespace%* & (%JavaIdentifier% | %Digit%+) & %CommentOrWhitespace%* & '>' & %CommentOrWhitespace%* & <Repetition>?);
+<GroupReferenceDefinition> = (%CommentOrWhitespace%* & '<' & %CommentOrWhitespace%* & %JavaIdentifier% & %CommentOrWhitespace%* & '>' & %CommentOrWhitespace%* & '=' & %CommentOrWhitespace%* & <Group>);
 <Matcher> = (<Group> | <GroupReferenceDefinition> | <GroupReference> | <Regex> | <Symbol> | <SymbolClass>);
 <Regex> = (%CommentOrWhitespace%* & %RegexLiteral%);
 <Repetition> = (%CommentOrWhitespace%* & ('*' | '+' | '?'));
 <Symbol> = (%CommentOrWhitespace%* & (%CharacterLiteral% | %StringLiteral%) & %CommentOrWhitespace%* & <Repetition>?);
-<SymbolClass> = (%CommentOrWhitespace%* & '%' & %JavaIdentifierStart% & %JavaIdentifierPart%* & '%' & %CommentOrWhitespace%* & <Repetition>?);
+<SymbolClass> = (%CommentOrWhitespace%* & '%' & %JavaIdentifier% & '%' & %CommentOrWhitespace%* & <Repetition>?);
 <Expression>
 ```

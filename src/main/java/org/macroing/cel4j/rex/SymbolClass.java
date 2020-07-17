@@ -70,6 +70,11 @@ public final class SymbolClass implements Matcher {
 	public static final String NAME_END_OF_LINE_COMMENT = "EndOfLineComment";
 	
 	/**
+	 * The name {@code "JavaIdentifier"} is used by a {@code SymbolClass} that matches using {@link Regex#JAVA_IDENTIFIER}.
+	 */
+	public static final String NAME_JAVA_IDENTIFIER = "JavaIdentifier";
+	
+	/**
 	 * The name {@code "JavaIdentifierPart"} is used by a {@code SymbolClass} that matches using {@code Character.isJavaIdentifierPart(char)}.
 	 */
 	public static final String NAME_JAVA_IDENTIFIER_PART = "JavaIdentifierPart";
@@ -263,6 +268,8 @@ public final class SymbolClass implements Matcher {
 				return doMatchCharPredicate(input, index, character -> Character.isDigit(character));
 			case NAME_END_OF_LINE_COMMENT:
 				return doMatchRegex(input, index, Regex.END_OF_LINE_COMMENT);
+			case NAME_JAVA_IDENTIFIER:
+				return doMatchRegex(input, index, Regex.JAVA_IDENTIFIER);
 			case NAME_JAVA_IDENTIFIER_PART:
 				return doMatchCharPredicate(input, index, character -> Character.isJavaIdentifierPart(character));
 			case NAME_JAVA_IDENTIFIER_START:

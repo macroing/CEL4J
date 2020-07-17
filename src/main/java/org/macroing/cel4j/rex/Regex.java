@@ -64,6 +64,11 @@ public final class Regex implements Matcher {
 	public static final Regex END_OF_LINE_COMMENT = new Regex("//.*(?=\\R|$)");
 	
 	/**
+	 * A {@code Regex} that matches a Java identifier.
+	 */
+	public static final Regex JAVA_IDENTIFIER = new Regex("\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*");
+	
+	/**
 	 * A {@code Regex} that matches a Regex literal.
 	 */
 	public static final Regex REGEX_LITERAL = new Regex("/([^/\\\\]|\\\\([btnfr/'\\\\0-7]|[0-7]{2}|[0-3][0-7]{2}|u+[0-9a-fA-F]{4}))*/");

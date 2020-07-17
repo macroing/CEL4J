@@ -319,13 +319,13 @@ public final class Expression implements Matcher {
 		stringBuilder.append("<Concatenation> = (<Matcher> & (%CommentOrWhitespace%* & ('&' | ',' | ';') & %CommentOrWhitespace%* & <Matcher>)*);");
 		stringBuilder.append("<Expression> = (<Alternation>);");
 		stringBuilder.append("<Group> = (%CommentOrWhitespace%* & '(' & %CommentOrWhitespace%* & <Alternation> & %CommentOrWhitespace%* & ')' & %CommentOrWhitespace%* & <Repetition>?);");
-		stringBuilder.append("<GroupReference> = (%CommentOrWhitespace%* & '<' & %CommentOrWhitespace%* & (%JavaIdentifierStart% & %JavaIdentifierPart%* | %Digit%+) & %CommentOrWhitespace%* & '>' & %CommentOrWhitespace%* & <Repetition>?);");
-		stringBuilder.append("<GroupReferenceDefinition> = (%CommentOrWhitespace%* & '<' & %CommentOrWhitespace%* & %JavaIdentifierStart% & %JavaIdentifierPart%* & %CommentOrWhitespace%* & '>' & %CommentOrWhitespace%* & '=' & %CommentOrWhitespace%* & <Group>);");
+		stringBuilder.append("<GroupReference> = (%CommentOrWhitespace%* & '<' & %CommentOrWhitespace%* & (%JavaIdentifier% | %Digit%+) & %CommentOrWhitespace%* & '>' & %CommentOrWhitespace%* & <Repetition>?);");
+		stringBuilder.append("<GroupReferenceDefinition> = (%CommentOrWhitespace%* & '<' & %CommentOrWhitespace%* & %JavaIdentifier% & %CommentOrWhitespace%* & '>' & %CommentOrWhitespace%* & '=' & %CommentOrWhitespace%* & <Group>);");
 		stringBuilder.append("<Matcher> = (<Group> | <GroupReferenceDefinition> | <GroupReference> | <Regex> | <Symbol> | <SymbolClass>);");
 		stringBuilder.append("<Regex> = (%CommentOrWhitespace%* & %RegexLiteral%);");
 		stringBuilder.append("<Repetition> = (%CommentOrWhitespace%* & ('*' | '+' | '?'));");
 		stringBuilder.append("<Symbol> = (%CommentOrWhitespace%* & (%CharacterLiteral% | %StringLiteral%) & %CommentOrWhitespace%* & <Repetition>?);");
-		stringBuilder.append("<SymbolClass> = (%CommentOrWhitespace%* & '%' & %JavaIdentifierStart% & %JavaIdentifierPart%* & '%' & %CommentOrWhitespace%* & <Repetition>?);");
+		stringBuilder.append("<SymbolClass> = (%CommentOrWhitespace%* & '%' & %JavaIdentifier% & '%' & %CommentOrWhitespace%* & <Repetition>?);");
 		stringBuilder.append("<Expression>");
 		
 		return stringBuilder.toString();

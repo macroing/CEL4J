@@ -10,6 +10,8 @@
 
 	CEL4J Rex:
 
+		* ADD:			Add the constant JAVA_IDENTIFIER to the Regex class.
+		* ADD:			Add the constant NAME_JAVA_IDENTIFIER to the SymbolClass class and an implementation of it.
 		* CHANGE:		Change the SymbolClass syntax from %Name to %Name%. This allows for syntax highlighting of a User Defined Language (UDL) in Notepad++.
 
 2020-07-16  Jörgen Lundgren  <joergen.lundgren@macroing.org>
