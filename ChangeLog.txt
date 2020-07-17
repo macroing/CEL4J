@@ -92,25 +92,67 @@
 
 	CEL4J HTML:
 
-		* CHANGE:		Update the HTML Model API.
+		* ADD:			Add the methods createSpanFile(), createSpanFile(String), createSpanFolder(), createSpanFolder(String), createSpanFolderOpen() and createSpanFolderOpen(String) to the FontAwesome class.
 
 2020-07-08  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:
 
-		* CHANGE:		Update the HTML Model API.
+		* ADD:			Add the method addValue(String) to the Attribute class.
+		* ADD:			Add the method createDivAlertDanger(Content, boolean) to the Bootstrap class.
+		* ADD:			Add a generic type T that extends Element to the Content interface and update all classes that use it.
+		* ADD:			Add the method getElements() to the Content interface and add implementations for it in all classes that implements Content.
+		* ADD:			Add the constructors Elements(Display, Content) and Elements(Display, List) to the Elements class.
+		* ADD:			Add the methods createSpanBlog(), createSpanBlog(String), createSpanCog(), createSpanCog(String), createSpanCommentRegular(), createSpanCommentRegular(String), createSpanCommentSolid(), createSpanCommentSolid(String), createSpanEdit(), createSpanEdit(String), createSpanEnvelope() and createSpanEnvelope(String) to the FontAwesome class.
+		* ADD:			Add the methods combine(Span, Span) and combine(Span, Span, boolean) to the Span class.
+		* CHANGE:		Change the generic types of ContentElement from <T extends Content> to <T extends Element, U extends Content<T>> and update all classes that extends it.
 
 2020-07-07  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:
 
-		* CHANGE:		Update the HTML Model API.
+		* ADD:			Add the Bootstrap class.
+		* ADD:			Add the Button class.
+		* ADD:			Add the FontAwesome class.
+		* ADD:			Add the Footer class.
+		* ADD:			Add the Form class.
+		* ADD:			Add the HTML class.
+		* ADD:			Add the Header class.
+		* ADD:			Add the JQuery class.
+		* ADD:			Add the Link class.
+		* ADD:			Add the Main class.
+		* ADD:			Add the Meta class.
+		* ADD:			Add the Nav class.
+		* ADD:			Add the Popper class.
+		* ADD:			Add the Small class.
+		* ADD:			Add the Title class.
+		* ADD:			Add the constant NONE to the Display enum.
+		* ADD:			Add new constructors to most classes.
+		* ADD:			Add Javadocs.
 
 2020-07-06  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:
 
-		* CHANGE:		Update the HTML Model API.
+		* ADD:			Add the A class.
+		* ADD:			Add the Body class.
+		* ADD:			Add the Br class.
+		* ADD:			Add the EmptyElement class.
+		* ADD:			Add the H1 class.
+		* ADD:			Add the H2 class.
+		* ADD:			Add the H3 class.
+		* ADD:			Add the H4 class.
+		* ADD:			Add the H5 class.
+		* ADD:			Add the H6 class.
+		* ADD:			Add the HR class.
+		* ADD:			Add the LI class.
+		* ADD:			Add the OL class.
+		* ADD:			Add the Option class.
+		* ADD:			Add the Script class.
+		* ADD:			Add the Select class.
+		* ADD:			Add the UL class.
+		* ADD:			Add a generic type T that extends Content to the ContentElement class and update all classes that use it.
+		* CHANGE:		Update Javadocs.
 
 	CEL4J Java Binary:
 
@@ -121,7 +163,12 @@
 
 	CEL4J HTML:
 
-		* CHANGE:		Update the HTML Model API.
+		* ADD:			Add the Content interface.
+		* ADD:			Add the ContentElement class.
+		* ADD:			Add the Elements class.
+		* ADD:			Add the P class.
+		* ADD:			Add the Span class.
+		* ADD:			Add the Text class.
 
 	CEL4J Utilities:
 
