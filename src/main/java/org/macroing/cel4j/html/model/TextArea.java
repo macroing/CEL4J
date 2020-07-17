@@ -20,6 +20,14 @@ package org.macroing.cel4j.html.model;
 
 import java.util.Objects;
 
+/**
+ * A {@code TextArea} represents a {@code textarea} element in HTML source code.
+ * <p>
+ * This class is mutable and not thread-safe.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 public final class TextArea extends ContentElement<Element, Text> {
 	/**
 	 * The initial {@link Display} associated with a {@code TextArea} instance.
