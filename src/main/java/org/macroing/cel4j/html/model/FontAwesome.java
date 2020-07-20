@@ -307,6 +307,470 @@ public final class FontAwesome {
 		return doCreateSpan(color, new String[] {"fa", "fa-folder-open"});
 	}
 	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fab} and {@code fa-github}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanGitHub("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fab} and {@code fa-github}
+	 */
+	public static Span createSpanGitHub() {
+		return createSpanGitHub("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fab} and {@code fa-github}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fab} and {@code fa-github}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanGitHub(final String color) {
+		return doCreateSpan(color, new String[] {"fab", "fa-github"});
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-home}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanHome("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-home}
+	 */
+	public static Span createSpanHome() {
+		return createSpanHome("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-home}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-home}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanHome(final String color) {
+		return doCreateSpan(color, new String[] {"fa", "fa-home"});
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-image}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanImage("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-image}
+	 */
+	public static Span createSpanImage() {
+		return createSpanImage("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-image}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-image}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanImage(final String color) {
+		return doCreateSpan(color, new String[] {"fa", "fa-image"});
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-info}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanInfo("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-info}
+	 */
+	public static Span createSpanInfo() {
+		return createSpanInfo("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-info}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-info}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanInfo(final String color) {
+		return doCreateSpan(color, new String[] {"fa", "fa-info"});
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fab} and {@code fa-instagram}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanInstagram("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fab} and {@code fa-instagram}
+	 */
+	public static Span createSpanInstagram() {
+		return createSpanInstagram("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fab} and {@code fa-instagram}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fab} and {@code fa-instagram}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanInstagram(final String color) {
+		return doCreateSpan(color, new String[] {"fab", "fa-instagram"});
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-link}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanLink("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-link}
+	 */
+	public static Span createSpanLink() {
+		return createSpanLink("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-link}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-link}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanLink(final String color) {
+		return doCreateSpan(color, new String[] {"fa", "fa-link"});
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-list}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanList("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-list}
+	 */
+	public static Span createSpanList() {
+		return createSpanList("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-list}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-list}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanList(final String color) {
+		return doCreateSpan(color, new String[] {"fa", "fa-list"});
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-newspaper}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanNewspaper("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-newspaper}
+	 */
+	public static Span createSpanNewspaper() {
+		return createSpanNewspaper("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-newspaper}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-newspaper}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanNewspaper(final String color) {
+		return doCreateSpan(color, new String[] {"fa", "fa-newspaper"});
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-project-diagram}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanProjectDiagram("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-project-diagram}
+	 */
+	public static Span createSpanProjectDiagram() {
+		return createSpanProjectDiagram("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-project-diagram}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-project-diagram}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanProjectDiagram(final String color) {
+		return doCreateSpan(color, new String[] {"fa", "fa-project-diagram"});
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-sign-in}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanSignIn("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-sign-in}
+	 */
+	public static Span createSpanSignIn() {
+		return createSpanSignIn("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-sign-in}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-sign-in}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanSignIn(final String color) {
+		return doCreateSpan(color, new String[] {"fa", "fa-sign-in"});
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-sign-out}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanSignOut("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-sign-out}
+	 */
+	public static Span createSpanSignOut() {
+		return createSpanSignOut("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-sign-out}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-sign-out}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanSignOut(final String color) {
+		return doCreateSpan(color, new String[] {"fa", "fa-sign-out"});
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code far} and {@code fa-star}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanStarRegular("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code far} and {@code fa-star}
+	 */
+	public static Span createSpanStarRegular() {
+		return createSpanStarRegular("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code far} and {@code fa-star}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code far} and {@code fa-star}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanStarRegular(final String color) {
+		return doCreateSpan(color, new String[] {"far", "fa-star"});
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fas} and {@code fa-star}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanStarSolid("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fas} and {@code fa-star}
+	 */
+	public static Span createSpanStarSolid() {
+		return createSpanStarSolid("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fas} and {@code fa-star}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fas} and {@code fa-star}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanStarSolid(final String color) {
+		return doCreateSpan(color, new String[] {"fas", "fa-comment"});
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-user}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanUser("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-user}
+	 */
+	public static Span createSpanUser() {
+		return createSpanUser("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-user}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-user}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanUser(final String color) {
+		return doCreateSpan(color, new String[] {"fa", "fa-user"});
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-trash}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanTrash("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-trash}
+	 */
+	public static Span createSpanTrash() {
+		return createSpanTrash("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-trash}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-trash}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanTrash(final String color) {
+		return doCreateSpan(color, new String[] {"fa", "fa-trash"});
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-wrench}.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FontAwesome.createSpanWrench("");
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-wrench}
+	 */
+	public static Span createSpanWrench() {
+		return createSpanWrench("");
+	}
+	
+	/**
+	 * Returns a {@link Span} instance with the classes {@code fa} and {@code fa-wrench}.
+	 * <p>
+	 * If {@code color} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param color the color of the {@code Span}, or an empty {@code String} to discard it
+	 * @return a {@code Span} instance with the classes {@code fa} and {@code fa-wrench}
+	 * @throws NullPointerException thrown if, and only if, {@code color} is {@code null}
+	 */
+	public static Span createSpanWrench(final String color) {
+		return doCreateSpan(color, new String[] {"fa", "fa-wrench"});
+	}
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private static Span doCreateSpan(final String color, final String[] attributeClassValues) {

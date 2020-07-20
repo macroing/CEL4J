@@ -1,3 +1,10 @@
+2020-07-20  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J HTML:
+
+		* ADD:			Add the methods createDivAlertDark(Content, boolean), createDivAlertInfo(Content, boolean), createDivAlertLight(Content, boolean), createDivAlertPrimary(Content, boolean), createDivAlertSecondary(Content, boolean), createDivAlertSuccess(Content, boolean), createDivAlertWarning(Content, boolean) and createImgThumbnail(String, String, String, String) to the Bootstrap class.
+		* ADD:			Add the methods createSpanGitHub(), createSpanGitHub(String), createSpanHome(), createSpanHome(String), createSpanImage(), createSpanImage(String), createSpanInfo(), createSpanInfo(String), createSpanInstagram(), createSpanInstagram(String), createSpanLink(), createSpanLink(String), createSpanList(), createSpanList(String), createSpanNewspaper(), createSpanNewspaper(String), createSpanProjectDiagram(), createSpanProjectDiagram(String), createSpanSignIn(), createSpanSignIn(String), createSpanSignOut(), createSpanSignOut(String), createSpanStarRegular(), createSpanStarRegular(String), createSpanStarSolid(), createSpanStarSolid(String), createSpanUser(), createSpanUser(String), createSpanTrash(), createSpanTrash(String), createSpanWrench() and createSpanWrench(String) to the FontAwesome class.
+
 2020-07-18  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Rex:

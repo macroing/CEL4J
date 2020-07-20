@@ -45,6 +45,121 @@ public final class Bootstrap {
 	}
 	
 	/**
+	 * Returns an alert {@link Div} instance with a color represented by {@code dark}.
+	 * <p>
+	 * If {@code content} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param content a {@link Content} instance
+	 * @param isDismissible {@code true} if, and only if, the alert is dismissible, {@code false} otherwise
+	 * @return an alert {@code Div} instance with a color represented by {@code dark}
+	 */
+	public static Div createDivAlertDark(final Content<Element> content, final boolean isDismissible) {
+		return doCreateDivAlert(content, isDismissible, "dark");
+	}
+	
+	/**
+	 * Returns an alert {@link Div} instance with a color represented by {@code info}.
+	 * <p>
+	 * If {@code content} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param content a {@link Content} instance
+	 * @param isDismissible {@code true} if, and only if, the alert is dismissible, {@code false} otherwise
+	 * @return an alert {@code Div} instance with a color represented by {@code info}
+	 */
+	public static Div createDivAlertInfo(final Content<Element> content, final boolean isDismissible) {
+		return doCreateDivAlert(content, isDismissible, "info");
+	}
+	
+	/**
+	 * Returns an alert {@link Div} instance with a color represented by {@code light}.
+	 * <p>
+	 * If {@code content} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param content a {@link Content} instance
+	 * @param isDismissible {@code true} if, and only if, the alert is dismissible, {@code false} otherwise
+	 * @return an alert {@code Div} instance with a color represented by {@code light}
+	 */
+	public static Div createDivAlertLight(final Content<Element> content, final boolean isDismissible) {
+		return doCreateDivAlert(content, isDismissible, "light");
+	}
+	
+	/**
+	 * Returns an alert {@link Div} instance with a color represented by {@code primary}.
+	 * <p>
+	 * If {@code content} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param content a {@link Content} instance
+	 * @param isDismissible {@code true} if, and only if, the alert is dismissible, {@code false} otherwise
+	 * @return an alert {@code Div} instance with a color represented by {@code primary}
+	 */
+	public static Div createDivAlertPrimary(final Content<Element> content, final boolean isDismissible) {
+		return doCreateDivAlert(content, isDismissible, "primary");
+	}
+	
+	/**
+	 * Returns an alert {@link Div} instance with a color represented by {@code secondary}.
+	 * <p>
+	 * If {@code content} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param content a {@link Content} instance
+	 * @param isDismissible {@code true} if, and only if, the alert is dismissible, {@code false} otherwise
+	 * @return an alert {@code Div} instance with a color represented by {@code secondary}
+	 */
+	public static Div createDivAlertSecondary(final Content<Element> content, final boolean isDismissible) {
+		return doCreateDivAlert(content, isDismissible, "secondary");
+	}
+	
+	/**
+	 * Returns an alert {@link Div} instance with a color represented by {@code success}.
+	 * <p>
+	 * If {@code content} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param content a {@link Content} instance
+	 * @param isDismissible {@code true} if, and only if, the alert is dismissible, {@code false} otherwise
+	 * @return an alert {@code Div} instance with a color represented by {@code success}
+	 */
+	public static Div createDivAlertSuccess(final Content<Element> content, final boolean isDismissible) {
+		return doCreateDivAlert(content, isDismissible, "success");
+	}
+	
+	/**
+	 * Returns an alert {@link Div} instance with a color represented by {@code warning}.
+	 * <p>
+	 * If {@code content} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param content a {@link Content} instance
+	 * @param isDismissible {@code true} if, and only if, the alert is dismissible, {@code false} otherwise
+	 * @return an alert {@code Div} instance with a color represented by {@code warning}
+	 */
+	public static Div createDivAlertWarning(final Content<Element> content, final boolean isDismissible) {
+		return doCreateDivAlert(content, isDismissible, "warning");
+	}
+	
+	/**
+	 * Returns an {@link Img} instance that represents a thumbnail.
+	 * <p>
+	 * If either {@code alt}, {@code src}, {@code width} or {@code height} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param alt the value associated with the {@link Attribute} with the name {@code "alt"}
+	 * @param src the value associated with the {@code Attribute} with the name {@code "src"}
+	 * @param width the value associated with the {@code Attribute} with the name {@code "width"}
+	 * @param height the value associated with the {@code Attribute} with the name {@code "height"}
+	 * @return an {@code Img} instance that represents a thumbnail
+	 * @throws NullPointerException thrown if, and only if, either {@code alt}, {@code src}, {@code width} or {@code height} are {@code null}
+	 */
+	public static Img createImgThumbnail(final String alt, final String src, final String width, final String height) {
+		final
+		Img img = new Img();
+		img.getAttributeAlt().setValue(alt);
+		img.getAttributeClass().setValue("img-thumbnail");
+		img.getAttributeHeight().setValue(height);
+		img.getAttributeSrc().setValue(src);
+		img.getAttributeWidth().setValue(width);
+		
+		return img;
+	}
+	
+	/**
 	 * Returns a {@link Link} instance that points to Bootstrap.
 	 * <p>
 	 * The current implementation of this method points to Bootstrap version 4.1.0, minified.
