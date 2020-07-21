@@ -1,3 +1,9 @@
+2020-07-21  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J HTML:
+
+		* ADD:			Add the methods createH1(String, String), createH2(String, String), createH3(String, String), createH4(String, String), createH5(String, String) and createH6(String, String) to the Bootstrap class.
+
 2020-07-20  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:

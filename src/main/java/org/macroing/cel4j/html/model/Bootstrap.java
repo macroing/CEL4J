@@ -18,6 +18,8 @@
  */
 package org.macroing.cel4j.html.model;
 
+import java.util.Objects;
+
 /**
  * A class that consists exclusively of static methods that returns {@link Element} instances related to Bootstrap.
  * 
@@ -133,6 +135,174 @@ public final class Bootstrap {
 	 */
 	public static Div createDivAlertWarning(final Content<Element> content, final boolean isDismissible) {
 		return doCreateDivAlert(content, isDismissible, "warning");
+	}
+	
+	/**
+	 * Returns an {@link H1} instance with {@code string} as the default text and {@code stringMuted} as the muted text.
+	 * <p>
+	 * If either {@code string} or {@code stringMuted} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code stringMuted.isEmpty()} returns {@code true}, it will not be added. Otherwise it will be added after a {@link Span} that separates the two.
+	 * 
+	 * @param string the {@code String} associated with a {@link Text} instance in the {@code Span} instance that contains the default text
+	 * @param stringMuted the {@code String} associated with a {@code Text} instance in the {@code Span} instance that contains the muted text
+	 * @return an {@code H1} instance with {@code string} as the default text and {@code stringMuted} as the muted text
+	 * @throws NullPointerException thrown if, and only if, either {@code string} or {@code stringMuted} are {@code null}
+	 */
+	public static H1 createH1(final String string, final String stringMuted) {
+		Objects.requireNonNull(string, "string == null");
+		Objects.requireNonNull(stringMuted, "stringMuted == null");
+		
+		final
+		Elements<Element> elements = new Elements<>(H1.DISPLAY_INITIAL);
+		elements.addElement(new Span(string));
+		
+		if(!stringMuted.isEmpty()) {
+			elements.addElement(new Span(" "));
+			elements.addElement(new Span(stringMuted));
+		}
+		
+		return new H1(elements);
+	}
+	
+	/**
+	 * Returns an {@link H2} instance with {@code string} as the default text and {@code stringMuted} as the muted text.
+	 * <p>
+	 * If either {@code string} or {@code stringMuted} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code stringMuted.isEmpty()} returns {@code true}, it will not be added. Otherwise it will be added after a {@link Span} that separates the two.
+	 * 
+	 * @param string the {@code String} associated with a {@link Text} instance in the {@code Span} instance that contains the default text
+	 * @param stringMuted the {@code String} associated with a {@code Text} instance in the {@code Span} instance that contains the muted text
+	 * @return an {@code H2} instance with {@code string} as the default text and {@code stringMuted} as the muted text
+	 * @throws NullPointerException thrown if, and only if, either {@code string} or {@code stringMuted} are {@code null}
+	 */
+	public static H2 createH2(final String string, final String stringMuted) {
+		Objects.requireNonNull(string, "string == null");
+		Objects.requireNonNull(stringMuted, "stringMuted == null");
+		
+		final
+		Elements<Element> elements = new Elements<>(H2.DISPLAY_INITIAL);
+		elements.addElement(new Span(string));
+		
+		if(!stringMuted.isEmpty()) {
+			elements.addElement(new Span(" "));
+			elements.addElement(new Span(stringMuted));
+		}
+		
+		return new H2(elements);
+	}
+	
+	/**
+	 * Returns an {@link H3} instance with {@code string} as the default text and {@code stringMuted} as the muted text.
+	 * <p>
+	 * If either {@code string} or {@code stringMuted} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code stringMuted.isEmpty()} returns {@code true}, it will not be added. Otherwise it will be added after a {@link Span} that separates the two.
+	 * 
+	 * @param string the {@code String} associated with a {@link Text} instance in the {@code Span} instance that contains the default text
+	 * @param stringMuted the {@code String} associated with a {@code Text} instance in the {@code Span} instance that contains the muted text
+	 * @return an {@code H3} instance with {@code string} as the default text and {@code stringMuted} as the muted text
+	 * @throws NullPointerException thrown if, and only if, either {@code string} or {@code stringMuted} are {@code null}
+	 */
+	public static H3 createH3(final String string, final String stringMuted) {
+		Objects.requireNonNull(string, "string == null");
+		Objects.requireNonNull(stringMuted, "stringMuted == null");
+		
+		final
+		Elements<Element> elements = new Elements<>(H3.DISPLAY_INITIAL);
+		elements.addElement(new Span(string));
+		
+		if(!stringMuted.isEmpty()) {
+			elements.addElement(new Span(" "));
+			elements.addElement(new Span(stringMuted));
+		}
+		
+		return new H3(elements);
+	}
+	
+	/**
+	 * Returns an {@link H4} instance with {@code string} as the default text and {@code stringMuted} as the muted text.
+	 * <p>
+	 * If either {@code string} or {@code stringMuted} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code stringMuted.isEmpty()} returns {@code true}, it will not be added. Otherwise it will be added after a {@link Span} that separates the two.
+	 * 
+	 * @param string the {@code String} associated with a {@link Text} instance in the {@code Span} instance that contains the default text
+	 * @param stringMuted the {@code String} associated with a {@code Text} instance in the {@code Span} instance that contains the muted text
+	 * @return an {@code H4} instance with {@code string} as the default text and {@code stringMuted} as the muted text
+	 * @throws NullPointerException thrown if, and only if, either {@code string} or {@code stringMuted} are {@code null}
+	 */
+	public static H4 createH4(final String string, final String stringMuted) {
+		Objects.requireNonNull(string, "string == null");
+		Objects.requireNonNull(stringMuted, "stringMuted == null");
+		
+		final
+		Elements<Element> elements = new Elements<>(H4.DISPLAY_INITIAL);
+		elements.addElement(new Span(string));
+		
+		if(!stringMuted.isEmpty()) {
+			elements.addElement(new Span(" "));
+			elements.addElement(new Span(stringMuted));
+		}
+		
+		return new H4(elements);
+	}
+	
+	/**
+	 * Returns an {@link H5} instance with {@code string} as the default text and {@code stringMuted} as the muted text.
+	 * <p>
+	 * If either {@code string} or {@code stringMuted} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code stringMuted.isEmpty()} returns {@code true}, it will not be added. Otherwise it will be added after a {@link Span} that separates the two.
+	 * 
+	 * @param string the {@code String} associated with a {@link Text} instance in the {@code Span} instance that contains the default text
+	 * @param stringMuted the {@code String} associated with a {@code Text} instance in the {@code Span} instance that contains the muted text
+	 * @return an {@code H5} instance with {@code string} as the default text and {@code stringMuted} as the muted text
+	 * @throws NullPointerException thrown if, and only if, either {@code string} or {@code stringMuted} are {@code null}
+	 */
+	public static H5 createH5(final String string, final String stringMuted) {
+		Objects.requireNonNull(string, "string == null");
+		Objects.requireNonNull(stringMuted, "stringMuted == null");
+		
+		final
+		Elements<Element> elements = new Elements<>(H5.DISPLAY_INITIAL);
+		elements.addElement(new Span(string));
+		
+		if(!stringMuted.isEmpty()) {
+			elements.addElement(new Span(" "));
+			elements.addElement(new Span(stringMuted));
+		}
+		
+		return new H5(elements);
+	}
+	
+	/**
+	 * Returns an {@link H6} instance with {@code string} as the default text and {@code stringMuted} as the muted text.
+	 * <p>
+	 * If either {@code string} or {@code stringMuted} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code stringMuted.isEmpty()} returns {@code true}, it will not be added. Otherwise it will be added after a {@link Span} that separates the two.
+	 * 
+	 * @param string the {@code String} associated with a {@link Text} instance in the {@code Span} instance that contains the default text
+	 * @param stringMuted the {@code String} associated with a {@code Text} instance in the {@code Span} instance that contains the muted text
+	 * @return an {@code H6} instance with {@code string} as the default text and {@code stringMuted} as the muted text
+	 * @throws NullPointerException thrown if, and only if, either {@code string} or {@code stringMuted} are {@code null}
+	 */
+	public static H6 createH6(final String string, final String stringMuted) {
+		Objects.requireNonNull(string, "string == null");
+		Objects.requireNonNull(stringMuted, "stringMuted == null");
+		
+		final
+		Elements<Element> elements = new Elements<>(H6.DISPLAY_INITIAL);
+		elements.addElement(new Span(string));
+		
+		if(!stringMuted.isEmpty()) {
+			elements.addElement(new Span(" "));
+			elements.addElement(new Span(stringMuted));
+		}
+		
+		return new H6(elements);
 	}
 	
 	/**
