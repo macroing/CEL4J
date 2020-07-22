@@ -138,6 +138,42 @@ public final class Bootstrap {
 	}
 	
 	/**
+	 * Returns a card {@code Div} instance with {@code elements} as its {@link Element} instances.
+	 * <p>
+	 * If either {@code elements} or an {@code Element} in {@code elements} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param elements the {@code Element} instances to add to this {@code Div} instance
+	 * @return a card {@code Div} instance with {@code elements} as its {@code Element} instances
+	 * @throws NullPointerException thrown if, and only if, either {@code elements} or an {@code Element} in {@code elements} are {@code null}
+	 */
+	public static Div createDivCard(final Element... elements) {
+		final
+		Div div = new Div();
+		div.getAttributeClass().setValue("card");
+		div.setContent(new Elements<>(Div.DISPLAY_INITIAL, elements));
+		
+		return div;
+	}
+	
+	/**
+	 * Returns a card body {@code Div} instance with {@code elements} as its {@link Element} instances.
+	 * <p>
+	 * If either {@code elements} or an {@code Element} in {@code elements} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param elements the {@code Element} instances to add to this {@code Div} instance
+	 * @return a card body {@code Div} instance with {@code elements} as its {@code Element} instances
+	 * @throws NullPointerException thrown if, and only if, either {@code elements} or an {@code Element} in {@code elements} are {@code null}
+	 */
+	public static Div createDivCardBody(final Element... elements) {
+		final
+		Div div = new Div();
+		div.getAttributeClass().setValue("card-body");
+		div.setContent(new Elements<>(Div.DISPLAY_INITIAL, elements));
+		
+		return div;
+	}
+	
+	/**
 	 * Returns an {@link H1} instance with {@code string} as the default text and {@code stringMuted} as the muted text.
 	 * <p>
 	 * If either {@code string} or {@code stringMuted} are {@code null}, a {@code NullPointerException} will be thrown.
@@ -163,6 +199,38 @@ public final class Bootstrap {
 		}
 		
 		return new H1(elements);
+	}
+	
+	/**
+	 * Returns a card title {@link H1} instance with {@code string} as the default text and {@code stringMuted} as the muted text.
+	 * <p>
+	 * If either {@code string} or {@code stringMuted} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code stringMuted.isEmpty()} returns {@code true}, it will not be added. Otherwise it will be added after a {@link Span} that separates the two.
+	 * 
+	 * @param string the {@code String} associated with a {@link Text} instance in the {@code Span} instance that contains the default text
+	 * @param stringMuted the {@code String} associated with a {@code Text} instance in the {@code Span} instance that contains the muted text
+	 * @return a card title {@code H1} instance with {@code string} as the default text and {@code stringMuted} as the muted text
+	 * @throws NullPointerException thrown if, and only if, either {@code string} or {@code stringMuted} are {@code null}
+	 */
+	public static H1 createH1CardTitle(final String string, final String stringMuted) {
+		Objects.requireNonNull(string, "string == null");
+		Objects.requireNonNull(stringMuted, "stringMuted == null");
+		
+		final
+		Elements<Element> elements = new Elements<>(H1.DISPLAY_INITIAL);
+		elements.addElement(new Span(string));
+		
+		if(!stringMuted.isEmpty()) {
+			elements.addElement(new Span(" "));
+			elements.addElement(new Span(stringMuted));
+		}
+		
+		final
+		H1 h1 = new H1(elements);
+		h1.getAttributeClass().setValue("card-title");
+		
+		return h1;
 	}
 	
 	/**
@@ -194,6 +262,38 @@ public final class Bootstrap {
 	}
 	
 	/**
+	 * Returns a card title {@link H2} instance with {@code string} as the default text and {@code stringMuted} as the muted text.
+	 * <p>
+	 * If either {@code string} or {@code stringMuted} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code stringMuted.isEmpty()} returns {@code true}, it will not be added. Otherwise it will be added after a {@link Span} that separates the two.
+	 * 
+	 * @param string the {@code String} associated with a {@link Text} instance in the {@code Span} instance that contains the default text
+	 * @param stringMuted the {@code String} associated with a {@code Text} instance in the {@code Span} instance that contains the muted text
+	 * @return a card title {@code H2} instance with {@code string} as the default text and {@code stringMuted} as the muted text
+	 * @throws NullPointerException thrown if, and only if, either {@code string} or {@code stringMuted} are {@code null}
+	 */
+	public static H2 createH2CardTitle(final String string, final String stringMuted) {
+		Objects.requireNonNull(string, "string == null");
+		Objects.requireNonNull(stringMuted, "stringMuted == null");
+		
+		final
+		Elements<Element> elements = new Elements<>(H2.DISPLAY_INITIAL);
+		elements.addElement(new Span(string));
+		
+		if(!stringMuted.isEmpty()) {
+			elements.addElement(new Span(" "));
+			elements.addElement(new Span(stringMuted));
+		}
+		
+		final
+		H2 h2 = new H2(elements);
+		h2.getAttributeClass().setValue("card-title");
+		
+		return h2;
+	}
+	
+	/**
 	 * Returns an {@link H3} instance with {@code string} as the default text and {@code stringMuted} as the muted text.
 	 * <p>
 	 * If either {@code string} or {@code stringMuted} are {@code null}, a {@code NullPointerException} will be thrown.
@@ -219,6 +319,38 @@ public final class Bootstrap {
 		}
 		
 		return new H3(elements);
+	}
+	
+	/**
+	 * Returns a card title {@link H3} instance with {@code string} as the default text and {@code stringMuted} as the muted text.
+	 * <p>
+	 * If either {@code string} or {@code stringMuted} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code stringMuted.isEmpty()} returns {@code true}, it will not be added. Otherwise it will be added after a {@link Span} that separates the two.
+	 * 
+	 * @param string the {@code String} associated with a {@link Text} instance in the {@code Span} instance that contains the default text
+	 * @param stringMuted the {@code String} associated with a {@code Text} instance in the {@code Span} instance that contains the muted text
+	 * @return a card title {@code H3} instance with {@code string} as the default text and {@code stringMuted} as the muted text
+	 * @throws NullPointerException thrown if, and only if, either {@code string} or {@code stringMuted} are {@code null}
+	 */
+	public static H3 createH3CardTitle(final String string, final String stringMuted) {
+		Objects.requireNonNull(string, "string == null");
+		Objects.requireNonNull(stringMuted, "stringMuted == null");
+		
+		final
+		Elements<Element> elements = new Elements<>(H3.DISPLAY_INITIAL);
+		elements.addElement(new Span(string));
+		
+		if(!stringMuted.isEmpty()) {
+			elements.addElement(new Span(" "));
+			elements.addElement(new Span(stringMuted));
+		}
+		
+		final
+		H3 h3 = new H3(elements);
+		h3.getAttributeClass().setValue("card-title");
+		
+		return h3;
 	}
 	
 	/**
@@ -250,6 +382,38 @@ public final class Bootstrap {
 	}
 	
 	/**
+	 * Returns a card title {@link H4} instance with {@code string} as the default text and {@code stringMuted} as the muted text.
+	 * <p>
+	 * If either {@code string} or {@code stringMuted} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code stringMuted.isEmpty()} returns {@code true}, it will not be added. Otherwise it will be added after a {@link Span} that separates the two.
+	 * 
+	 * @param string the {@code String} associated with a {@link Text} instance in the {@code Span} instance that contains the default text
+	 * @param stringMuted the {@code String} associated with a {@code Text} instance in the {@code Span} instance that contains the muted text
+	 * @return a card title {@code H4} instance with {@code string} as the default text and {@code stringMuted} as the muted text
+	 * @throws NullPointerException thrown if, and only if, either {@code string} or {@code stringMuted} are {@code null}
+	 */
+	public static H4 createH4CardTitle(final String string, final String stringMuted) {
+		Objects.requireNonNull(string, "string == null");
+		Objects.requireNonNull(stringMuted, "stringMuted == null");
+		
+		final
+		Elements<Element> elements = new Elements<>(H4.DISPLAY_INITIAL);
+		elements.addElement(new Span(string));
+		
+		if(!stringMuted.isEmpty()) {
+			elements.addElement(new Span(" "));
+			elements.addElement(new Span(stringMuted));
+		}
+		
+		final
+		H4 h4 = new H4(elements);
+		h4.getAttributeClass().setValue("card-title");
+		
+		return h4;
+	}
+	
+	/**
 	 * Returns an {@link H5} instance with {@code string} as the default text and {@code stringMuted} as the muted text.
 	 * <p>
 	 * If either {@code string} or {@code stringMuted} are {@code null}, a {@code NullPointerException} will be thrown.
@@ -278,6 +442,38 @@ public final class Bootstrap {
 	}
 	
 	/**
+	 * Returns a card title {@link H5} instance with {@code string} as the default text and {@code stringMuted} as the muted text.
+	 * <p>
+	 * If either {@code string} or {@code stringMuted} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code stringMuted.isEmpty()} returns {@code true}, it will not be added. Otherwise it will be added after a {@link Span} that separates the two.
+	 * 
+	 * @param string the {@code String} associated with a {@link Text} instance in the {@code Span} instance that contains the default text
+	 * @param stringMuted the {@code String} associated with a {@code Text} instance in the {@code Span} instance that contains the muted text
+	 * @return a card title {@code H5} instance with {@code string} as the default text and {@code stringMuted} as the muted text
+	 * @throws NullPointerException thrown if, and only if, either {@code string} or {@code stringMuted} are {@code null}
+	 */
+	public static H5 createH5CardTitle(final String string, final String stringMuted) {
+		Objects.requireNonNull(string, "string == null");
+		Objects.requireNonNull(stringMuted, "stringMuted == null");
+		
+		final
+		Elements<Element> elements = new Elements<>(H5.DISPLAY_INITIAL);
+		elements.addElement(new Span(string));
+		
+		if(!stringMuted.isEmpty()) {
+			elements.addElement(new Span(" "));
+			elements.addElement(new Span(stringMuted));
+		}
+		
+		final
+		H5 h5 = new H5(elements);
+		h5.getAttributeClass().setValue("card-title");
+		
+		return h5;
+	}
+	
+	/**
 	 * Returns an {@link H6} instance with {@code string} as the default text and {@code stringMuted} as the muted text.
 	 * <p>
 	 * If either {@code string} or {@code stringMuted} are {@code null}, a {@code NullPointerException} will be thrown.
@@ -303,6 +499,38 @@ public final class Bootstrap {
 		}
 		
 		return new H6(elements);
+	}
+	
+	/**
+	 * Returns a card title {@link H6} instance with {@code string} as the default text and {@code stringMuted} as the muted text.
+	 * <p>
+	 * If either {@code string} or {@code stringMuted} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code stringMuted.isEmpty()} returns {@code true}, it will not be added. Otherwise it will be added after a {@link Span} that separates the two.
+	 * 
+	 * @param string the {@code String} associated with a {@link Text} instance in the {@code Span} instance that contains the default text
+	 * @param stringMuted the {@code String} associated with a {@code Text} instance in the {@code Span} instance that contains the muted text
+	 * @return a card title {@code H6} instance with {@code string} as the default text and {@code stringMuted} as the muted text
+	 * @throws NullPointerException thrown if, and only if, either {@code string} or {@code stringMuted} are {@code null}
+	 */
+	public static H6 createH6CardTitle(final String string, final String stringMuted) {
+		Objects.requireNonNull(string, "string == null");
+		Objects.requireNonNull(stringMuted, "stringMuted == null");
+		
+		final
+		Elements<Element> elements = new Elements<>(H6.DISPLAY_INITIAL);
+		elements.addElement(new Span(string));
+		
+		if(!stringMuted.isEmpty()) {
+			elements.addElement(new Span(" "));
+			elements.addElement(new Span(stringMuted));
+		}
+		
+		final
+		H6 h6 = new H6(elements);
+		h6.getAttributeClass().setValue("card-title");
+		
+		return h6;
 	}
 	
 	/**
