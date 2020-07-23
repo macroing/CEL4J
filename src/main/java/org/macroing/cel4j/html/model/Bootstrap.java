@@ -174,6 +174,42 @@ public final class Bootstrap {
 	}
 	
 	/**
+	 * Returns a container {@code Div} instance with {@code elements} as its {@link Element} instances.
+	 * <p>
+	 * If either {@code elements} or an {@code Element} in {@code elements} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param elements the {@code Element} instances to add to this {@code Div} instance
+	 * @return a container {@code Div} instance with {@code elements} as its {@code Element} instances
+	 * @throws NullPointerException thrown if, and only if, either {@code elements} or an {@code Element} in {@code elements} are {@code null}
+	 */
+	public static Div createDivContainer(final Element... elements) {
+		final
+		Div div = new Div();
+		div.getAttributeClass().setValue("container");
+		div.setContent(new Elements<>(Div.DISPLAY_INITIAL, elements));
+		
+		return div;
+	}
+	
+	/**
+	 * Returns a fluid container {@code Div} instance with {@code elements} as its {@link Element} instances.
+	 * <p>
+	 * If either {@code elements} or an {@code Element} in {@code elements} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param elements the {@code Element} instances to add to this {@code Div} instance
+	 * @return a fluid container {@code Div} instance with {@code elements} as its {@code Element} instances
+	 * @throws NullPointerException thrown if, and only if, either {@code elements} or an {@code Element} in {@code elements} are {@code null}
+	 */
+	public static Div createDivContainerFluid(final Element... elements) {
+		final
+		Div div = new Div();
+		div.getAttributeClass().setValue("container-fluid");
+		div.setContent(new Elements<>(Div.DISPLAY_INITIAL, elements));
+		
+		return div;
+	}
+	
+	/**
 	 * Returns an {@link H1} instance with {@code string} as the default text and {@code stringMuted} as the muted text.
 	 * <p>
 	 * If either {@code string} or {@code stringMuted} are {@code null}, a {@code NullPointerException} will be thrown.
