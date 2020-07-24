@@ -138,7 +138,7 @@ public final class Bootstrap {
 	}
 	
 	/**
-	 * Returns a card {@code Div} instance with {@code elements} as its {@link Element} instances.
+	 * Returns a card {@link Div} instance with {@code elements} as its {@link Element} instances.
 	 * <p>
 	 * If either {@code elements} or an {@code Element} in {@code elements} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
@@ -156,7 +156,7 @@ public final class Bootstrap {
 	}
 	
 	/**
-	 * Returns a card body {@code Div} instance with {@code elements} as its {@link Element} instances.
+	 * Returns a card body {@link Div} instance with {@code elements} as its {@link Element} instances.
 	 * <p>
 	 * If either {@code elements} or an {@code Element} in {@code elements} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
@@ -174,7 +174,7 @@ public final class Bootstrap {
 	}
 	
 	/**
-	 * Returns a container {@code Div} instance with {@code elements} as its {@link Element} instances.
+	 * Returns a container {@link Div} instance with {@code elements} as its {@link Element} instances.
 	 * <p>
 	 * If either {@code elements} or an {@code Element} in {@code elements} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
@@ -192,7 +192,7 @@ public final class Bootstrap {
 	}
 	
 	/**
-	 * Returns a fluid container {@code Div} instance with {@code elements} as its {@link Element} instances.
+	 * Returns a fluid container {@link Div} instance with {@code elements} as its {@link Element} instances.
 	 * <p>
 	 * If either {@code elements} or an {@code Element} in {@code elements} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
@@ -205,6 +205,51 @@ public final class Bootstrap {
 		Div div = new Div();
 		div.getAttributeClass().setValue("container-fluid");
 		div.setContent(new Elements<>(Div.DISPLAY_INITIAL, elements));
+		
+		return div;
+	}
+	
+	/**
+	 * Returns a jumbotron {@link Div} instance with {@code stringTitle} as the title, {@code stringLead} as the lead and {@code buttons} as its {@link Button} instances.
+	 * <p>
+	 * If either {@code stringTitle}, {@code stringLead}, {@code buttons} or a {@code Button} in {@code buttons} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param stringTitle the {@code String} associated with a {@link Text} instance in a {@link H1} instance and is used as the title
+	 * @param stringLead the {@code String} associated with a {@code Text} instance in a {@link P} instance and is used as the lead
+	 * @param buttons the {@code Button} instances
+	 * @return a jumbotron {@code Div} instance with {@code stringTitle} as the title, {@code stringLead} as the lead and {@code buttons} as its {@code Button} instances
+	 * @throws NullPointerException thrown if, and only if, either {@code stringTitle}, {@code stringLead}, {@code buttons} or a {@code Button} in {@code buttons} are {@code null}
+	 */
+	public static Div createDivJumbotron(final String stringTitle, final String stringLead, final Button... buttons) {
+		final
+		H1 h1 = new H1(stringTitle);
+		h1.getAttributeClass().setValue("display-4");
+		
+		final
+		P p = new P(stringLead);
+		p.getAttributeClass().setValue("lead");
+		
+		final Element[] elements = new Element[2 + (buttons.length > 0 ? 1 + buttons.length : 0)];
+		
+		elements[0] = h1;
+		elements[1] = p;
+		
+		if(buttons.length > 0) {
+			final
+			HR hR = new HR();
+			hR.getAttributeClass().setValue("my-4");
+			
+			elements[2] = hR;
+			
+			for(int i = 0; i < buttons.length; i++) {
+				elements[3 + i] = Objects.requireNonNull(buttons[i], String.format("buttons[%s] == null", Integer.toString(i)));
+			}
+		}
+		
+		final
+		Div div = new Div();
+		div.getAttributeClass().setValue("jumbotron");
+		div.setContent(new Elements<>(Div.DISPLAY_INITIAL, new Element[] {createDivContainer(elements)}));
 		
 		return div;
 	}
