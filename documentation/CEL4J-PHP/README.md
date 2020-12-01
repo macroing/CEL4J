@@ -101,8 +101,8 @@ import org.macroing.cel4j.php.generator.Property;
 import org.macroing.cel4j.php.generator.PropertyBuilder;
 import org.macroing.cel4j.php.model.PDocument;
 import org.macroing.cel4j.php.model.PType;
-import org.macroing.cel4j.php.util.Document;
-import org.macroing.cel4j.php.util.Pair
+import org.macroing.cel4j.util.Document;
+import org.macroing.cel4j.util.Pair;
 
 public class GeneratorExample {
     public static void main(String[] args) {
