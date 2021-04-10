@@ -16,16 +16,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.java.source.lexical;
+package org.macroing.cel4j.java.source;
 
-import org.macroing.cel4j.java.source.JavaNode;
+import org.macroing.cel4j.node.Node;
 
 /**
- * An {@code InputElement} denotes the nonterminal symbol InputElement, as defined by the Java Language Specification.
+ * A {@code JavaNode} is a {@link Node} that provides a method to retrieve Java source code.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public interface InputElement extends JavaNode {
-	
+public interface JavaNode extends Node {
+	/**
+	 * Returns the source code of this {@code JavaNode} instance.
+	 * 
+	 * @return the source code of this {@code JavaNode} instance
+	 */
+	String getSourceCode();
 }

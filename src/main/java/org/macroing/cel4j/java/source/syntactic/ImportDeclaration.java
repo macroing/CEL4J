@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.java.source.lexical;
+package org.macroing.cel4j.java.source.syntactic;
 
 import org.macroing.cel4j.java.source.JavaNode;
 
 /**
- * An {@code InputElement} denotes the nonterminal symbol InputElement, as defined by the Java Language Specification.
+ * An {@code ImportDeclaration} denotes the nonterminal symbol ImportDeclaration, as defined by the Java Language Specification.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public interface InputElement extends JavaNode {
+public interface ImportDeclaration extends JavaNode {
 	
 }

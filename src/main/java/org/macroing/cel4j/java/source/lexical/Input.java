@@ -32,7 +32,7 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.macroing.cel4j.node.Node;
+import org.macroing.cel4j.java.source.JavaNode;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
 import org.macroing.cel4j.node.NodeTraversalException;
 import org.macroing.cel4j.util.Strings;
@@ -43,7 +43,7 @@ import org.macroing.cel4j.util.Strings;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-public final class Input implements Iterable<InputElement>, Node {
+public final class Input implements Iterable<InputElement>, JavaNode {
 	private static final Map<String, Function<Matcher, InputElement>> FUNCTIONS = doCreateFunctions();
 	private static final Pattern PATTERN = Pattern.compile(Constants.REGEX_INPUT_ELEMENT);
 	
@@ -88,6 +88,7 @@ public final class Input implements Iterable<InputElement>, Node {
 	 * 
 	 * @return the source code of this {@code Input} instance
 	 */
+	@Override
 	public String getSourceCode() {
 		final StringBuilder stringBuilder = new StringBuilder();
 		
