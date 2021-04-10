@@ -8,7 +8,9 @@ Supported Features
 
 Packages
 --------
+* `org.macroing.cel4j.java.source` - The Java Source API.
 * `org.macroing.cel4j.java.source.lexical` - The Java Source Lexical API.
+* `org.macroing.cel4j.java.source.syntactic` - The Java Source Syntactic API.
 
 Examples
 --------
