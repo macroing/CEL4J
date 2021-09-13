@@ -19,6 +19,7 @@
 package org.macroing.cel4j.java.decompiler;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -43,7 +44,6 @@ import org.macroing.cel4j.java.binary.classfile.signature.TypeParameters;
 import org.macroing.cel4j.java.binary.reader.ClassFileReader;
 import org.macroing.cel4j.node.NodeFormatException;
 import org.macroing.cel4j.util.Document;
-import org.macroing.cel4j.util.Strings;
 
 final class JClass extends JType {
 	private static final Map<String, ClassFile> CLASS_FILES = new HashMap<>();
@@ -109,18 +109,21 @@ final class JClass extends JType {
 		
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		final boolean isSeparatingGroups = decompilerConfiguration.isSeparatingGroups();
+		final boolean isSortingGroups = decompilerConfiguration.isSortingGroups();
 		
 		final List<JType> typesToImport = getTypesToImport();
 		
+		Collections.sort(typesToImport, (a, b) -> a.getName().compareTo(b.getName()));
+		
 		final String packageName = getPackageName();
-		final String modifiers = Strings.optional(getModifiers(), "", " ", " ", modifier -> modifier.getKeyword());
+		final String modifiers = JModifier.toExternalForm(getModifiers());
 		final String simpleName = getSimpleName();
 		final String typeParameters = doGenerateTypeParameters(decompilerConfiguration, typesToImport, getTypeParameters());
 		final String extendsClause = doGenerateExtendsClause(decompilerConfiguration, this, typesToImport);
 		final String implementsClause = doGenerateImplementsClause(decompilerConfiguration, getInterfaces(), typesToImport, getClassSignature(), getPackageName());
 		
 		final List<JConstructor> jConstructors = getConstructors();
-		final List<JField> jFields = getFields();
+		final List<JField> jFields = isSortingGroups ? getFieldsSorted() : getFields();
 		final List<JInnerType> jInnerTypes = getInnerTypes();
 		final List<JMethod> jMethods = getMethods();
 		
@@ -138,8 +141,17 @@ final class JClass extends JType {
 		document.linef("%sclass %s%s%s%s {", modifiers, simpleName, typeParameters, extendsClause, implementsClause);
 		document.indent();
 		
-		for(final JField jField : jFields) {
-			jField.decompile(decompilerConfiguration, document);
+		for(int i = 0; i < jFields.size(); i++) {
+			final JField jFieldA = jFields.get(i);
+			final JField jFieldB = jFields.get(i + 1 < jFields.size() ? i + 1 : i);
+			
+			jFieldA.decompile(decompilerConfiguration, document);
+			
+			if(isSeparatingGroups && isSortingGroups && JField.isInDifferentGroups(jFieldA, jFieldB)) {
+				document.line("");
+				document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
+				document.line("");
+			}
 		}
 		
 		if(jFields.size() > 0 && (jConstructors.size() > 0 || jMethods.size() > 0 || jInnerTypes.size() > 0)) {
@@ -216,6 +228,14 @@ final class JClass extends JType {
 	
 	public List<JField> getFields() {
 		return new ArrayList<>(this.fields);
+	}
+	
+	public List<JField> getFieldsSorted() {
+		final List<JField> fields = getFields();
+		
+		Collections.sort(fields);
+		
+		return fields;
 	}
 	
 	public List<JInnerType> getInnerTypes() {
@@ -506,7 +526,6 @@ final class JClass extends JType {
 				fields.add(new JField(classFile, fieldInfo, this));
 			}
 		}
-		
 	}
 	
 	private void doInitializeInnerTypes() {

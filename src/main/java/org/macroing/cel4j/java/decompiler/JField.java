@@ -38,7 +38,7 @@ import org.macroing.cel4j.java.binary.classfile.signature.FieldSignature;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 
-final class JField {
+final class JField implements Comparable<JField> {
 	private final ClassFile classFile;
 	private final FieldInfo fieldInfo;
 	private final JType enclosingType;
@@ -206,8 +206,83 @@ final class JField {
 	}
 	
 	@Override
+	public int compareTo(final JField field) {
+		final JField fieldThis = this;
+		final JField fieldThat = field;
+		
+		final boolean isStaticThis = fieldThis.isStatic();
+		final boolean isStaticThat = fieldThat.isStatic();
+		
+		if(isStaticThis != isStaticThat) {
+			return isStaticThis ? -1 : 1;
+		}
+		
+		final boolean isPublicThis = fieldThis.isPublic();
+		final boolean isPublicThat = fieldThat.isPublic();
+		
+		if(isPublicThis != isPublicThat) {
+			return isPublicThis ? -1 : 1;
+		}
+		
+		final boolean isProtectedThis = fieldThis.isProtected();
+		final boolean isProtectedThat = fieldThat.isProtected();
+		
+		if(isProtectedThis != isProtectedThat) {
+			return isProtectedThis ? -1 : 1;
+		}
+		
+		final boolean isPackageProtectedThis = fieldThis.isPackageProtected();
+		final boolean isPackageProtectedThat = fieldThat.isPackageProtected();
+		
+		if(isPackageProtectedThis != isPackageProtectedThat) {
+			return isPackageProtectedThis ? -1 : 1;
+		}
+		
+		final boolean isPrivateThis = fieldThis.isPrivate();
+		final boolean isPrivateThat = fieldThat.isPrivate();
+		
+		if(isPrivateThis != isPrivateThat) {
+			return isPrivateThis ? -1 : 1;
+		}
+		
+		final int simpleTypeName = fieldThis.getType().getSimpleName().compareTo(fieldThat.getType().getSimpleName());
+		
+		if(simpleTypeName != 0) {
+			return simpleTypeName;
+		}
+		
+		return fieldThis.getName().compareTo(fieldThat.getName());
+	}
+	
+	@Override
 	public int hashCode() {
 		return Objects.hash(this.classFile, this.fieldInfo);
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public static boolean isInDifferentGroups(final JField fieldA, final JField fieldB) {
+		if(fieldA.isStatic() != fieldB.isStatic()) {
+			return true;
+		}
+		
+		if(fieldA.isPublic() != fieldB.isPublic()) {
+			return true;
+		}
+		
+		if(fieldA.isProtected() != fieldB.isProtected()) {
+			return true;
+		}
+		
+		if(fieldA.isPackageProtected() != fieldB.isPackageProtected()) {
+			return true;
+		}
+		
+		if(fieldA.isPrivate() != fieldB.isPrivate()) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

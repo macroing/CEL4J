@@ -52,7 +52,9 @@ final class JMethod {
 	private final ClassFile classFile;
 	private final JType enclosingType;
 	private final JType returnType;
+	private final List<JType> typesToImport;
 	private final MethodInfo methodInfo;
+	private final Optional<CodeAttribute> optionalCodeAttribute;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -61,6 +63,8 @@ final class JMethod {
 		this.methodInfo = Objects.requireNonNull(methodInfo, "methodInfo == null");
 		this.enclosingType = Objects.requireNonNull(enclosingType, "enclosingType == null");
 		this.returnType = JType.valueOf(doGetReturnTypeName(classFile, methodInfo));
+		this.typesToImport = new ArrayList<>();
+		this.optionalCodeAttribute = CodeAttribute.find(this.methodInfo);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -176,10 +180,8 @@ final class JMethod {
 	}
 	
 	public List<Instruction> getInstructions() {
-		final Optional<CodeAttribute> optionalCodeAttribute = CodeAttribute.find(this.methodInfo);
-		
-		if(optionalCodeAttribute.isPresent()) {
-			final CodeAttribute codeAttribute = optionalCodeAttribute.get();
+		if(this.optionalCodeAttribute.isPresent()) {
+			final CodeAttribute codeAttribute = this.optionalCodeAttribute.get();
 			
 			return codeAttribute.getInstructions();
 		}
@@ -278,6 +280,10 @@ final class JMethod {
 	}
 	
 	public List<JType> getTypesToImport() {
+		if(this.typesToImport.size() > 0) {
+			return new ArrayList<>(this.typesToImport);
+		}
+		
 		final Set<JType> typesToImport = new LinkedHashSet<>();
 		
 		doAddTypeToImportIfNecessary(getReturnType(), typesToImport);
@@ -286,7 +292,18 @@ final class JMethod {
 			doAddTypeToImportIfNecessary(parameter.getType(), typesToImport);
 		}
 		
-		return new ArrayList<>(typesToImport);
+		if(this.optionalCodeAttribute.isPresent()) {
+			final List<String> typeNames = Instructions.findTypeNames(this.classFile, this.optionalCodeAttribute.get());
+			
+			for(final String typeName : typeNames) {
+				doAddTypeToImportIfNecessary(JType.valueOf(typeName), typesToImport);
+			}
+		}
+		
+		this.typesToImport.clear();
+		this.typesToImport.addAll(typesToImport);
+		
+		return new ArrayList<>(this.typesToImport);
 	}
 	
 	public Optional<MethodSignature> getMethodSignature() {

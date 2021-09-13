@@ -18,10 +18,13 @@
  */
 package org.macroing.cel4j.java.decompiler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
+import org.macroing.cel4j.java.binary.classfile.attributeinfo.CodeAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.Instruction;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantClassInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantDoubleInfo;
@@ -51,6 +54,39 @@ final class Instructions {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public static List<String> findTypeNames(final ClassFile classFile, final CodeAttribute codeAttribute) {
+		final List<String> typeNames = new ArrayList<>();
+		
+		for(final Instruction instruction : codeAttribute.getInstructions()) {
+			switch(instruction.getOpcode()) {
+				case Instruction.OPCODE_GET_FIELD:
+					doAddTypeNameGetField(classFile, instruction, typeNames);
+					
+					break;
+				case Instruction.OPCODE_GET_STATIC:
+					doAddTypeNameGetStatic(classFile, instruction, typeNames);
+					
+					break;
+				case Instruction.OPCODE_INVOKE_SPECIAL:
+					doAddTypeNameInvokeSpecial(classFile, instruction, typeNames);
+					
+					break;
+				case Instruction.OPCODE_INVOKE_STATIC:
+					doAddTypeNameInvokeStatic(classFile, instruction, typeNames);
+					
+					break;
+				case Instruction.OPCODE_INVOKE_VIRTUAL:
+					doAddTypeNameInvokeVirtual(classFile, instruction, typeNames);
+					
+					break;
+				default:
+					break;
+			}
+		}
+		
+		return typeNames;
+	}
 	
 	public static String toString(final ClassFile classFile, final Instruction instruction) {
 		switch(instruction.getOpcode()) {
@@ -290,5 +326,41 @@ final class Instructions {
 	
 	private static String doToStringPutStatic(final ClassFile classFile, final Instruction instruction) {
 		return doToString(classFile, classFile.getCPInfo((instruction.getOperand(0) << 8) | instruction.getOperand(1), ConstantFieldRefInfo.class));
+	}
+	
+	private static void doAddTypeName(final ClassFile classFile, final ConstantFieldRefInfo constantFieldRefInfo, final List<String> typeNames) {
+		final ConstantUTF8Info constantUTF8Info = ConstantUTF8Info.findByNameIndexByClassIndex(classFile, constantFieldRefInfo);
+		
+		final String className = ClassName.parseClassName(constantUTF8Info.getStringValue()).toExternalForm();
+		
+		typeNames.add(className);
+	}
+	
+	private static void doAddTypeName(final ClassFile classFile, final ConstantMethodRefInfo constantMethodRefInfo, final List<String> typeNames) {
+		final ConstantUTF8Info constantUTF8Info = ConstantUTF8Info.findByNameIndexByClassIndex(classFile, constantMethodRefInfo);
+		
+		final String className = ClassName.parseClassName(constantUTF8Info.getStringValue()).toExternalForm();
+		
+		typeNames.add(className);
+	}
+	
+	private static void doAddTypeNameGetField(final ClassFile classFile, final Instruction instruction, final List<String> typeNames) {
+		doAddTypeName(classFile, classFile.getCPInfo(instruction.getGetFieldIndex(), ConstantFieldRefInfo.class), typeNames);
+	}
+	
+	private static void doAddTypeNameGetStatic(final ClassFile classFile, final Instruction instruction, final List<String> typeNames) {
+		doAddTypeName(classFile, classFile.getCPInfo(instruction.getGetStaticIndex(), ConstantFieldRefInfo.class), typeNames);
+	}
+	
+	private static void doAddTypeNameInvokeSpecial(final ClassFile classFile, final Instruction instruction, final List<String> typeNames) {
+		doAddTypeName(classFile, classFile.getCPInfo((instruction.getOperand(0) << 8) | instruction.getOperand(1), ConstantMethodRefInfo.class), typeNames);
+	}
+	
+	private static void doAddTypeNameInvokeStatic(final ClassFile classFile, final Instruction instruction, final List<String> typeNames) {
+		doAddTypeName(classFile, classFile.getCPInfo((instruction.getOperand(0) << 8) | instruction.getOperand(1), ConstantMethodRefInfo.class), typeNames);
+	}
+	
+	private static void doAddTypeNameInvokeVirtual(final ClassFile classFile, final Instruction instruction, final List<String> typeNames) {
+		doAddTypeName(classFile, classFile.getCPInfo((instruction.getOperand(0) << 8) | instruction.getOperand(1), ConstantMethodRefInfo.class), typeNames);
 	}
 }

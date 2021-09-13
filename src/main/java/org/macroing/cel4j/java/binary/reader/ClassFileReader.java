@@ -348,7 +348,7 @@ public final class ClassFileReader {
 			final CPInfo cPInfo = constantPool.get(attributeNameIndex);
 			
 			if(cPInfo instanceof ConstantUTF8Info) {
-				name = cPInfo.toString();
+				name = ConstantUTF8Info.class.cast(cPInfo).getStringValue();
 			}
 		}
 		

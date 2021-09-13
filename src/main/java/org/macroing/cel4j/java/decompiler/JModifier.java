@@ -18,7 +18,10 @@
  */
 package org.macroing.cel4j.java.decompiler;
 
+import java.util.List;
 import java.util.Objects;
+
+import org.macroing.cel4j.util.Strings;
 
 enum JModifier {
 	ABSTRACT("abstract"),
@@ -48,5 +51,11 @@ enum JModifier {
 	
 	public String getKeyword() {
 		return this.keyword;
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public static String toExternalForm(final List<JModifier> modifiers) {
+		return Strings.optional(modifiers, "", " ", " ", modifier -> modifier.getKeyword());
 	}
 }

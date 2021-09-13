@@ -54,7 +54,7 @@ final class MethodInfoReader {
 		
 		final ConstantUTF8Info constantUTF8Info = ConstantUTF8Info.class.cast(classFile.getCPInfos().get(attributeNameIndex));
 		
-		final String name = constantUTF8Info.toString();
+		final String name = constantUTF8Info.getStringValue();
 		
 		for(final AttributeInfoReader attributeInfoReader : this.attributeInfoReaders) {
 			if(attributeInfoReader.isSupported(name)) {
