@@ -20,6 +20,8 @@ package org.macroing.cel4j.java.decompiler;
 
 import java.util.Objects;
 
+import org.macroing.cel4j.java.binary.classfile.descriptor.ParameterDescriptor;
+
 abstract class JType {
 	protected JType() {
 		
@@ -82,6 +84,14 @@ abstract class JType {
 		} else {
 			return JClass.valueOf(clazz);
 		}
+	}
+	
+	public static JType valueOf(final ParameterDescriptor parameterDescriptor) {
+		final String externalForm = parameterDescriptor.toExternalForm();
+		final String internalForm = parameterDescriptor.toInternalForm();
+		final String name = internalForm.indexOf('[') >= 0 ? internalForm.replace('/', '.') : externalForm;
+		
+		return valueOf(name);
 	}
 	
 	public static JType valueOf(final String name) {

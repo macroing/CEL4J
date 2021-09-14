@@ -28,7 +28,7 @@ public final class DecompilerTest {
 	public static void main(final String[] args) {
 		final
 		Decompiler decompiler = Decompiler.newInstance();
-		decompiler.getDecompilerConfiguration().setDisplayingInstructions(true);
+		decompiler.getDecompilerConfiguration().setDisplayingInstructions(false);
 		decompiler.getDecompilerConfiguration().setSeparatingGroups(true);
 		decompiler.getDecompilerConfiguration().setSortingGroups(true);
 		decompiler.addClass(Person.class);

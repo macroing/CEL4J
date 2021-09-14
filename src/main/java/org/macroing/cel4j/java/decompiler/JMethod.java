@@ -35,21 +35,19 @@ import org.macroing.cel4j.java.binary.classfile.MethodInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.CodeAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.DeprecatedAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.Instruction;
-import org.macroing.cel4j.java.binary.classfile.attributeinfo.MethodParametersAttribute;
-import org.macroing.cel4j.java.binary.classfile.attributeinfo.Parameter;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.java.binary.classfile.descriptor.MethodDescriptor;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ParameterDescriptor;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ReturnDescriptor;
-import org.macroing.cel4j.java.binary.classfile.signature.JavaTypeSignature;
 import org.macroing.cel4j.java.binary.classfile.signature.MethodSignature;
 import org.macroing.cel4j.java.binary.classfile.signature.Result;
 import org.macroing.cel4j.java.binary.classfile.signature.TypeParameters;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 
-final class JMethod {
+final class JMethod implements Comparable<JMethod> {
 	private final ClassFile classFile;
+	private final JParameterList parameterList;
 	private final JType enclosingType;
 	private final JType returnType;
 	private final List<JType> typesToImport;
@@ -62,6 +60,7 @@ final class JMethod {
 		this.classFile = Objects.requireNonNull(classFile, "classFile == null");
 		this.methodInfo = Objects.requireNonNull(methodInfo, "methodInfo == null");
 		this.enclosingType = Objects.requireNonNull(enclosingType, "enclosingType == null");
+		this.parameterList = JParameterList.load(classFile, methodInfo);
 		this.returnType = JType.valueOf(doGetReturnTypeName(classFile, methodInfo));
 		this.typesToImport = new ArrayList<>();
 		this.optionalCodeAttribute = CodeAttribute.find(this.methodInfo);
@@ -86,6 +85,7 @@ final class JMethod {
 		final boolean isDisplayingAttributeInfos = decompilerConfiguration.isDisplayingAttributeInfos();
 		final boolean isDisplayingInstructions = decompilerConfiguration.isDisplayingInstructions();
 		
+		final JParameterList parameterList = getParameterList();
 		final JType enclosingType = getEnclosingType();
 		
 		final List<JType> typesToImport = getTypesToImport();
@@ -93,7 +93,7 @@ final class JMethod {
 		final String modifiers = Strings.optional(doDiscardInterfaceMethodModifiers(decompilerConfiguration, enclosingType, getModifiers()), "", " ", " ", modifier -> modifier.getKeyword());
 		final String returnType = doGenerateReturnTypeWithOptionalTypeParameters(decompilerConfiguration, this, typesToImport);
 		final String name = getName();
-		final String parameters = doGenerateParameters(decompilerConfiguration, this, typesToImport);
+		final String parameters = parameterList.toExternalForm(decompilerConfiguration, this, typesToImport);
 		final String returnStatement = doGenerateDefaultReturnStatement(this);
 		
 		final List<Instruction> instructions = getInstructions();
@@ -167,6 +167,10 @@ final class JMethod {
 		return document;
 	}
 	
+	public JParameterList getParameterList() {
+		return this.parameterList;
+	}
+	
 	public JType getEnclosingType() {
 		return this.enclosingType;
 	}
@@ -229,56 +233,6 @@ final class JMethod {
 		return modifiers;
 	}
 	
-	public List<JParameter> getParameters() {
-		return getParameters((index, fullyQualifiedName) -> "localVariable" + index);
-	}
-	
-	public List<JParameter> getParameters(final JLocalVariableNameGenerator jLocalVariableNameGenerator) {
-		Objects.requireNonNull(jLocalVariableNameGenerator, "jLocalVariableNameGenerator == null");
-		
-		final List<JParameter> jParameters = new ArrayList<>();
-		
-		final MethodDescriptor methodDescriptor = MethodDescriptor.parseMethodDescriptor(this.classFile, this.methodInfo);
-		
-		final List<ParameterDescriptor> parameterDescriptors = methodDescriptor.getParameterDescriptors();
-		
-		final Optional<MethodParametersAttribute> optionalMethodParametersAttribute = MethodParametersAttribute.find(this.methodInfo);
-		
-		if(optionalMethodParametersAttribute.isPresent()) {
-			final MethodParametersAttribute methodParametersAttribute = optionalMethodParametersAttribute.get();
-			
-			final List<Parameter> parameters = methodParametersAttribute.getParameters();
-			
-			for(int i = 0; i < parameters.size(); i++) {
-				final Parameter parameter = parameters.get(i);
-				
-				final ParameterDescriptor parameterDescriptor = parameterDescriptors.get(i);
-				
-				final JType type = JType.valueOf(doGetParameterTypeName(parameterDescriptor));
-				
-				final int nameIndex = parameter.getNameIndex();
-				
-				final String name = nameIndex != 0 ? this.classFile.getCPInfo(nameIndex, ConstantUTF8Info.class).getStringValue() : jLocalVariableNameGenerator.generateLocalVariableName(type, i);
-				
-				final boolean isFinal = parameter.isFinal();
-				
-				jParameters.add(new JParameter(type, name, isFinal));
-			}
-		} else {
-			for(int i = 0; i < parameterDescriptors.size(); i++) {
-				final ParameterDescriptor parameterDescriptor = parameterDescriptors.get(i);
-				
-				final JType type = JType.valueOf(doGetParameterTypeName(parameterDescriptor));
-				
-				final String name = jLocalVariableNameGenerator.generateLocalVariableName(type, i);
-				
-				jParameters.add(new JParameter(type, name));
-			}
-		}
-		
-		return jParameters;
-	}
-	
 	public List<JType> getTypesToImport() {
 		if(this.typesToImport.size() > 0) {
 			return new ArrayList<>(this.typesToImport);
@@ -288,7 +242,7 @@ final class JMethod {
 		
 		doAddTypeToImportIfNecessary(getReturnType(), typesToImport);
 		
-		for(final JParameter parameter : getParameters()) {
+		for(final JParameter parameter : getParameterList().getParameters()) {
 			doAddTypeToImportIfNecessary(parameter.getType(), typesToImport);
 		}
 		
@@ -316,7 +270,7 @@ final class JMethod {
 	
 	@Override
 	public String toString() {
-		return String.format("JMethod: [Name=%s], [ReturnType=%s], [Parameters=%s]", getName(), getReturnType(), getParameters());
+		return String.format("JMethod: [Name=%s], [ReturnType=%s], [Parameters=%s]", getName(), getReturnType(), getParameterList().getParameters());
 	}
 	
 	@Override
@@ -413,8 +367,89 @@ final class JMethod {
 	}
 	
 	@Override
+	public int compareTo(final JMethod method) {
+		final JMethod methodThis = this;
+		final JMethod methodThat = method;
+		
+		final boolean isPublicThis = methodThis.isPublic();
+		final boolean isPublicThat = methodThat.isPublic();
+		
+		if(isPublicThis != isPublicThat) {
+			return isPublicThis ? -1 : 1;
+		}
+		
+		final boolean isProtectedThis = methodThis.isProtected();
+		final boolean isProtectedThat = methodThat.isProtected();
+		
+		if(isProtectedThis != isProtectedThat) {
+			return isProtectedThis ? -1 : 1;
+		}
+		
+		final boolean isPackageProtectedThis = methodThis.isPackageProtected();
+		final boolean isPackageProtectedThat = methodThat.isPackageProtected();
+		
+		if(isPackageProtectedThis != isPackageProtectedThat) {
+			return isPackageProtectedThis ? -1 : 1;
+		}
+		
+		final boolean isPrivateThis = methodThis.isPrivate();
+		final boolean isPrivateThat = methodThat.isPrivate();
+		
+		if(isPrivateThis != isPrivateThat) {
+			return isPrivateThis ? -1 : 1;
+		}
+		
+		final boolean isStaticThis = methodThis.isStatic();
+		final boolean isStaticThat = methodThat.isStatic();
+		
+		if(isStaticThis != isStaticThat) {
+			return isStaticThis ? 1 : -1;
+		}
+		
+		final int returnType = methodThis.getReturnType().getSimpleName().compareTo(methodThat.getReturnType().getSimpleName());
+		
+		if(returnType != 0) {
+			return returnType;
+		}
+		
+		final int name = methodThis.getName().compareTo(methodThat.getName());
+		
+		if(name != 0) {
+			return name;
+		}
+		
+		return methodThis.getParameterList().compareTo(methodThat.getParameterList());
+	}
+	
+	@Override
 	public int hashCode() {
 		return Objects.hash(this.classFile, this.methodInfo);
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public static boolean isInDifferentGroups(final JMethod methodA, final JMethod methodB) {
+		if(methodA.isPublic() != methodB.isPublic()) {
+			return true;
+		}
+		
+		if(methodA.isProtected() != methodB.isProtected()) {
+			return true;
+		}
+		
+		if(methodA.isPackageProtected() != methodB.isPackageProtected()) {
+			return true;
+		}
+		
+		if(methodA.isPrivate() != methodB.isPrivate()) {
+			return true;
+		}
+		
+		if(methodA.isStatic() != methodB.isStatic()) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -499,53 +534,6 @@ final class JMethod {
 		}
 	}
 	
-	private static String doGenerateParameters(final DecompilerConfiguration decompilerConfiguration, final JMethod jMethod, final List<JType> typesToImport) {
-		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
-		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
-		
-		final JLocalVariableNameGenerator jLocalVariableNameGenerator = (type, index) -> decompilerConfiguration.getLocalVariableNameGenerator().generateLocalVariableName(type.getName(), index);
-		
-		final StringBuilder stringBuilder = new StringBuilder();
-		
-		final Optional<MethodSignature> optionalMethodSignature = jMethod.getMethodSignature();
-		
-		final List<JParameter> jParameters = jMethod.getParameters(jLocalVariableNameGenerator);
-		
-		if(jParameters.size() > 0) {
-			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(jMethod.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes);
-			
-			if(optionalMethodSignature.isPresent()) {
-				final MethodSignature methodSignature = optionalMethodSignature.get();
-				
-				final List<JavaTypeSignature> javaTypeSignatures = methodSignature.getJavaTypeSignatures();
-				
-				for(int i = 0; i < javaTypeSignatures.size(); i++) {
-					final JParameter jParameter = jParameters.get(i);
-					
-					final JavaTypeSignature javaTypeSignature = javaTypeSignatures.get(i);
-					
-					stringBuilder.append(i > 0 ? ", " : "");
-					stringBuilder.append(jParameter.isFinal() ? "final " : "");
-					stringBuilder.append(Names.filterPackageNames(jPackageNameFilter, javaTypeSignature.toExternalForm()));
-					stringBuilder.append(" ");
-					stringBuilder.append(jParameter.getName());
-				}
-			} else {
-				for(int i = 0; i < jParameters.size(); i++) {
-					final JParameter jParameter = jParameters.get(i);
-					
-					stringBuilder.append(i > 0 ? ", " : "");
-					stringBuilder.append(jParameter.isFinal() ? "final " : "");
-					stringBuilder.append(Names.filterPackageNames(jPackageNameFilter, jParameter.getType().getName()));
-					stringBuilder.append(" ");
-					stringBuilder.append(jParameter.getName());
-				}
-			}
-		}
-		
-		return stringBuilder.toString();
-	}
-	
 	private static String doGenerateReturnTypeWithOptionalTypeParameters(final DecompilerConfiguration decompilerConfiguration, final JMethod jMethod, final List<JType> typesToImport) {
 		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
@@ -579,14 +567,6 @@ final class JMethod {
 		}
 		
 		return Names.filterPackageNames(jPackageNameFilter, jMethod.getReturnType().getName(), jMethod.getReturnType().isInnerType());
-	}
-	
-	private static String doGetParameterTypeName(final ParameterDescriptor parameterDescriptor) {
-		final String externalForm = parameterDescriptor.toExternalForm();
-		final String internalForm = parameterDescriptor.toInternalForm();
-		final String parameterTypeName = internalForm.indexOf('[') >= 0 ? internalForm.replace('/', '.') : externalForm;
-		
-		return parameterTypeName;
 	}
 	
 	private static String doGetReturnTypeName(final ClassFile classFile, final MethodInfo methodInfo) {

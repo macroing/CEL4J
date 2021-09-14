@@ -125,7 +125,7 @@ final class JClass extends JType {
 		final List<JConstructor> jConstructors = getConstructors();
 		final List<JField> jFields = isSortingGroups ? getFieldsSorted() : getFields();
 		final List<JInnerType> jInnerTypes = getInnerTypes();
-		final List<JMethod> jMethods = getMethods();
+		final List<JMethod> jMethods = isSortingGroups ? getMethodsSorted() : getMethods();
 		
 		document.linef("package %s;", packageName);
 		
@@ -187,9 +187,15 @@ final class JClass extends JType {
 				document.line();
 			}
 			
-			final
-			JMethod jMethod = jMethods.get(i);
-			jMethod.decompile(decompilerConfiguration, document);
+			final JMethod jMethodA = jMethods.get(i);
+			final JMethod jMethodB = jMethods.get(i + 1 < jMethods.size() ? i + 1 : i);
+			
+			jMethodA.decompile(decompilerConfiguration, document);
+			
+			if(isSeparatingGroups && isSortingGroups && JMethod.isInDifferentGroups(jMethodA, jMethodB)) {
+				document.line("");
+				document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
+			}
 		}
 		
 		if((jFields.size() > 0 || jConstructors.size() > 0 || jMethods.size() > 0) && jInnerTypes.size() > 0) {
@@ -248,6 +254,14 @@ final class JClass extends JType {
 	
 	public List<JMethod> getMethods() {
 		return new ArrayList<>(this.methods);
+	}
+	
+	public List<JMethod> getMethodsSorted() {
+		final List<JMethod> methods = getMethods();
+		
+		Collections.sort(methods);
+		
+		return methods;
 	}
 	
 	public List<JModifier> getModifiers() {
