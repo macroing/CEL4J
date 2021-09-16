@@ -2,7 +2,12 @@
 
 	CEL4J Java Binary
 
+		* ADD:			Add the methods excludePackageName(ArrayTypeSignature) and excludePackageName(ArrayTypeSignature, String) to the ArrayTypeSignature class.
+		* ADD:			Add the methods excludePackageName(ClassBound) and excludePackageName(ClassBound, String) to the ClassBound class.
+		* ADD:			Add the methods excludePackageName(ClassSignature) and excludePackageName(ClassSignature, String) to the ClassSignature class.
+		* ADD:			Add the methods excludePackageName(FieldSignature) and excludePackageName(FieldSignature, String) to the FieldSignature interface.
 		* ADD:			Add the methods excludePackageName(MethodSignature) and excludePackageName(MethodSignature, String) to the MethodSignature class.
+		* ADD:			Add the methods excludePackageName(Signature) and excludePackageName(Signature, String) to the Signature interface.
 		* ADD:			Add the method isEmpty() to the ClassBound class.
 		* ADD:			Add the methods isBoolean(), isByte(), isChar(), isDouble(), isFloat(), isInt(), isLong() and isShort() to the BaseType enum in the Descriptor API.
 		* ADD:			Add the methods isBoolean(), isByte(), isChar(), isDouble(), isFloat(), isInt(), isLong() and isShort() to the BaseType enum in the Signature API.

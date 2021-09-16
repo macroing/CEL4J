@@ -18,6 +18,7 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
@@ -34,6 +35,43 @@ import org.macroing.cel4j.scanner.TextScanner;
  * @author J&#246;rgen Lundgren
  */
 public interface FieldSignature extends Signature {
+	/**
+	 * Returns a {@code FieldSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code fieldSignature}.
+	 * <p>
+	 * If {@code fieldSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * FieldSignature.excludePackageName(fieldSignature, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param fieldSignature a {@code FieldSignature} instance
+	 * @return a {@code FieldSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code fieldSignature}
+	 * @throws NullPointerException thrown if, and only if, {@code fieldSignature} is {@code null}
+	 */
+	static FieldSignature excludePackageName(final FieldSignature fieldSignature) {
+		return excludePackageName(fieldSignature, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code FieldSignature} instance that excludes all package names that are equal to {@code packageName} from {@code fieldSignature}.
+	 * <p>
+	 * If either {@code fieldSignature} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param fieldSignature a {@code FieldSignature} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code FieldSignature} instance that excludes all package names that are equal to {@code packageName} from {@code fieldSignature}
+	 * @throws NullPointerException thrown if, and only if, either {@code fieldSignature} or {@code packageName} are {@code null}
+	 */
+	static FieldSignature excludePackageName(final FieldSignature fieldSignature, final String packageName) {
+		Objects.requireNonNull(fieldSignature, "fieldSignature == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, fieldSignature);
+	}
+	
 	/**
 	 * Parses the {@code FieldSignature} of {@code signatureAttribute} in {@code classFile}.
 	 * <p>

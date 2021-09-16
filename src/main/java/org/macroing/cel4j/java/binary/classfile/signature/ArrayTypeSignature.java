@@ -150,6 +150,43 @@ public final class ArrayTypeSignature implements ReferenceTypeSignature {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns an {@code ArrayTypeSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code arrayTypeSignature}.
+	 * <p>
+	 * If {@code arrayTypeSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * ArrayTypeSignature.excludePackageName(arrayTypeSignature, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param arrayTypeSignature an {@code ArrayTypeSignature} instance
+	 * @return an {@code ArrayTypeSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code arrayTypeSignature}
+	 * @throws NullPointerException thrown if, and only if, {@code arrayTypeSignature} is {@code null}
+	 */
+	public static ArrayTypeSignature excludePackageName(final ArrayTypeSignature arrayTypeSignature) {
+		return excludePackageName(arrayTypeSignature, "java.lang");
+	}
+	
+	/**
+	 * Returns an {@code ArrayTypeSignature} instance that excludes all package names that are equal to {@code packageName} from {@code arrayTypeSignature}.
+	 * <p>
+	 * If either {@code arrayTypeSignature} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param arrayTypeSignature an {@code ArrayTypeSignature} instance
+	 * @param packageName the package name to exclude
+	 * @return an {@code ArrayTypeSignature} instance that excludes all package names that are equal to {@code packageName} from {@code arrayTypeSignature}
+	 * @throws NullPointerException thrown if, and only if, either {@code arrayTypeSignature} or {@code packageName} are {@code null}
+	 */
+	public static ArrayTypeSignature excludePackageName(final ArrayTypeSignature arrayTypeSignature, final String packageName) {
+		Objects.requireNonNull(arrayTypeSignature, "arrayTypeSignature == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, arrayTypeSignature);
+	}
+	
+	/**
 	 * Parses {@code string} into an {@code ArrayTypeSignature} instance.
 	 * <p>
 	 * Returns an {@code ArrayTypeSignature} instance.

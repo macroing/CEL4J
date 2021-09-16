@@ -20,6 +20,7 @@ package org.macroing.cel4j.java.binary.classfile.signature;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
@@ -73,8 +74,45 @@ public interface Signature extends Node {
 	 *                                   {@code classFile.getCPInfoCount()}
 	 * @throws NullPointerException thrown if, and only if, {@code classFile} is {@code null}
 	 */
-	public static List<Signature> parseSignatures(final ClassFile classFile) {
+	static List<Signature> parseSignatures(final ClassFile classFile) {
 		return NodeFilter.filter(classFile, node -> node instanceof SignatureAttribute, SignatureAttribute.class).stream().map(signatureAttribute -> parseSignature(classFile, signatureAttribute)).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+	}
+	
+	/**
+	 * Returns a {@code Signature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code signature}.
+	 * <p>
+	 * If {@code signature} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * Signature.excludePackageName(signature, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param signature a {@code Signature} instance
+	 * @return a {@code Signature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code signature}
+	 * @throws NullPointerException thrown if, and only if, {@code signature} is {@code null}
+	 */
+	static Signature excludePackageName(final Signature signature) {
+		return excludePackageName(signature, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code Signature} instance that excludes all package names that are equal to {@code packageName} from {@code signature}.
+	 * <p>
+	 * If either {@code signature} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param signature a {@code Signature} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code Signature} instance that excludes all package names that are equal to {@code packageName} from {@code signature}
+	 * @throws NullPointerException thrown if, and only if, either {@code signature} or {@code packageName} are {@code null}
+	 */
+	static Signature excludePackageName(final Signature signature, final String packageName) {
+		Objects.requireNonNull(signature, "signature == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, signature);
 	}
 	
 	/**
@@ -97,7 +135,7 @@ public interface Signature extends Node {
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
 	 * @throws NullPointerException thrown if, and only if, either {@code classFile} or {@code signatureAttribute} are {@code null}
 	 */
-	public static Signature parseSignature(final ClassFile classFile, final SignatureAttribute signatureAttribute) {
+	static Signature parseSignature(final ClassFile classFile, final SignatureAttribute signatureAttribute) {
 		return parseSignature(classFile.getCPInfo(signatureAttribute.getSignatureIndex(), ConstantUTF8Info.class).getStringValue());
 	}
 	
@@ -115,7 +153,7 @@ public interface Signature extends Node {
 	 * @throws IllegalArgumentException thrown if, and only if, {@code string} is malformed
 	 * @throws NullPointerException thrown if, and only if, {@code string} is {@code null}
 	 */
-	public static Signature parseSignature(final String string) {
+	static Signature parseSignature(final String string) {
 		return Parsers.parseSignature(new TextScanner(string));
 	}
 }

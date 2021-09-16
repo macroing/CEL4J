@@ -166,6 +166,43 @@ public final class ClassBound implements Node {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns a {@code ClassBound} instance that excludes all package names that are equal to {@code "java.lang"} from {@code classBound}.
+	 * <p>
+	 * If {@code classBound} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * ClassBound.excludePackageName(classBound, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param classBound a {@code ClassBound} instance
+	 * @return a {@code ClassBound} instance that excludes all package names that are equal to {@code "java.lang"} from {@code classBound}
+	 * @throws NullPointerException thrown if, and only if, {@code classBound} is {@code null}
+	 */
+	public static ClassBound excludePackageName(final ClassBound classBound) {
+		return excludePackageName(classBound, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code ClassBound} instance that excludes all package names that are equal to {@code packageName} from {@code classBound}.
+	 * <p>
+	 * If either {@code classBound} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param classBound a {@code ClassBound} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code ClassBound} instance that excludes all package names that are equal to {@code packageName} from {@code classBound}
+	 * @throws NullPointerException thrown if, and only if, either {@code classBound} or {@code packageName} are {@code null}
+	 */
+	public static ClassBound excludePackageName(final ClassBound classBound, final String packageName) {
+		Objects.requireNonNull(classBound, "classBound == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, classBound);
+	}
+	
+	/**
 	 * Parses {@code string} into a {@code ClassBound} instance.
 	 * <p>
 	 * Returns a {@code ClassBound} instance.

@@ -193,6 +193,43 @@ public final class ClassSignature implements Signature {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns a {@code ClassSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code classSignature}.
+	 * <p>
+	 * If {@code classSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * ClassSignature.excludePackageName(classSignature, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param classSignature a {@code ClassSignature} instance
+	 * @return a {@code ClassSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code classSignature}
+	 * @throws NullPointerException thrown if, and only if, {@code classSignature} is {@code null}
+	 */
+	public static ClassSignature excludePackageName(final ClassSignature classSignature) {
+		return excludePackageName(classSignature, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code ClassSignature} instance that excludes all package names that are equal to {@code packageName} from {@code classSignature}.
+	 * <p>
+	 * If either {@code classSignature} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param classSignature a {@code ClassSignature} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code ClassSignature} instance that excludes all package names that are equal to {@code packageName} from {@code classSignature}
+	 * @throws NullPointerException thrown if, and only if, either {@code classSignature} or {@code packageName} are {@code null}
+	 */
+	public static ClassSignature excludePackageName(final ClassSignature classSignature, final String packageName) {
+		Objects.requireNonNull(classSignature, "classSignature == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, classSignature);
+	}
+	
+	/**
 	 * Parses {@code string} into a {@code ClassSignature} instance.
 	 * <p>
 	 * Returns a {@code ClassSignature} instance.
