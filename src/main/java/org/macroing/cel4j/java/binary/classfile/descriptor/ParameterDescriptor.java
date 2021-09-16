@@ -18,6 +18,8 @@
  */
 package org.macroing.cel4j.java.binary.classfile.descriptor;
 
+import java.util.Objects;
+
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.scanner.TextScanner;
 
@@ -28,6 +30,16 @@ import org.macroing.cel4j.scanner.TextScanner;
  * @author J&#246;rgen Lundgren
  */
 public interface ParameterDescriptor extends Node {
+	/**
+	 * Returns a {@code Class} representation of this {@code ParameterDescriptor} instance.
+	 * <p>
+	 * If the {@code Class} cannot be found, a {@code ClassNotFoundException} will be thrown.
+	 * 
+	 * @return a {@code Class} representation of this {@code ParameterDescriptor} instance
+	 * @throws ClassNotFoundException thrown if, and only if, the {@code Class} cannot be found
+	 */
+	Class<?> toClass() throws ClassNotFoundException;
+	
 	/**
 	 * Returns a {@code String} representation of this {@code ParameterDescriptor} instance in external form.
 	 * 
@@ -43,6 +55,43 @@ public interface ParameterDescriptor extends Node {
 	String toInternalForm();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns a {@code ParameterDescriptor} instance that excludes all package names that are equal to {@code "java.lang"} from {@code parameterDescriptor}.
+	 * <p>
+	 * If {@code parameterDescriptor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * ParameterDescriptor.excludePackageName(parameterDescriptor, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param parameterDescriptor a {@code ParameterDescriptor} instance
+	 * @return a {@code ParameterDescriptor} instance that excludes all package names that are equal to {@code "java.lang"} from {@code parameterDescriptor}
+	 * @throws NullPointerException thrown if, and only if, {@code parameterDescriptor} is {@code null}
+	 */
+	static ParameterDescriptor excludePackageName(final ParameterDescriptor parameterDescriptor) {
+		return excludePackageName(parameterDescriptor, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code ParameterDescriptor} instance that excludes all package names that are equal to {@code packageName} from {@code parameterDescriptor}.
+	 * <p>
+	 * If either {@code parameterDescriptor} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param parameterDescriptor a {@code ParameterDescriptor} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code ParameterDescriptor} instance that excludes all package names that are equal to {@code packageName} from {@code parameterDescriptor}
+	 * @throws NullPointerException thrown if, and only if, either {@code parameterDescriptor} or {@code packageName} are {@code null}
+	 */
+	static ParameterDescriptor excludePackageName(final ParameterDescriptor parameterDescriptor, final String packageName) {
+		Objects.requireNonNull(parameterDescriptor, "parameterDescriptor == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, parameterDescriptor);
+	}
 	
 	/**
 	 * Parses {@code string} into a {@code ParameterDescriptor} instance.

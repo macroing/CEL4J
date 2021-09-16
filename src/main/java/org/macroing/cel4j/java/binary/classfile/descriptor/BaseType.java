@@ -82,6 +82,35 @@ public enum BaseType implements FieldType {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns a {@code Class} representation of this {@code BaseType} instance.
+	 * 
+	 * @return a {@code Class} representation of this {@code BaseType} instance
+	 */
+	@Override
+	public Class<?> toClass() {
+		switch(getTerm()) {
+			case Constants.BOOLEAN_TERM:
+				return Boolean.TYPE;
+			case Constants.BYTE_TERM:
+				return Byte.TYPE;
+			case Constants.CHAR_TERM:
+				return Character.TYPE;
+			case Constants.DOUBLE_TERM:
+				return Double.TYPE;
+			case Constants.FLOAT_TERM:
+				return Float.TYPE;
+			case Constants.INT_TERM:
+				return Integer.TYPE;
+			case Constants.LONG_TERM:
+				return Long.TYPE;
+			case Constants.SHORT_TERM:
+				return Short.TYPE;
+			default:
+				throw new IllegalStateException();
+		}
+	}
+	
+	/**
 	 * Returns a {@code String} with the term associated with this {@code BaseType} instance.
 	 * 
 	 * @return a {@code String} with the term associated with this {@code BaseType} instance
@@ -129,6 +158,78 @@ public enum BaseType implements FieldType {
 	@Override
 	public String toString() {
 		return String.format("BaseType: [Term=%s], [Type=%s], [ExternalForm=%s], [InternalForm=%s]", getTerm(), getType(), toExternalForm(), toInternalForm());
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code BaseType} instance represents the {@code boolean} type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code BaseType} instance represents the {@code boolean} type, {@code false} otherwise
+	 */
+	public boolean isBoolean() {
+		return getTerm().equals(Constants.BOOLEAN_TERM);
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code BaseType} instance represents the {@code byte} type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code BaseType} instance represents the {@code byte} type, {@code false} otherwise
+	 */
+	public boolean isByte() {
+		return getTerm().equals(Constants.BYTE_TERM);
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code BaseType} instance represents the {@code char} type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code BaseType} instance represents the {@code char} type, {@code false} otherwise
+	 */
+	public boolean isChar() {
+		return getTerm().equals(Constants.CHAR_TERM);
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code BaseType} instance represents the {@code double} type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code BaseType} instance represents the {@code double} type, {@code false} otherwise
+	 */
+	public boolean isDouble() {
+		return getTerm().equals(Constants.DOUBLE_TERM);
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code BaseType} instance represents the {@code float} type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code BaseType} instance represents the {@code float} type, {@code false} otherwise
+	 */
+	public boolean isFloat() {
+		return getTerm().equals(Constants.FLOAT_TERM);
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code BaseType} instance represents the {@code int} type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code BaseType} instance represents the {@code int} type, {@code false} otherwise
+	 */
+	public boolean isInt() {
+		return getTerm().equals(Constants.INT_TERM);
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code BaseType} instance represents the {@code long} type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code BaseType} instance represents the {@code long} type, {@code false} otherwise
+	 */
+	public boolean isLong() {
+		return getTerm().equals(Constants.LONG_TERM);
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code BaseType} instance represents the {@code short} type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code BaseType} instance represents the {@code short} type, {@code false} otherwise
+	 */
+	public boolean isShort() {
+		return getTerm().equals(Constants.SHORT_TERM);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

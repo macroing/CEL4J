@@ -145,6 +145,15 @@ public final class ClassBound implements Node {
 	}
 	
 	/**
+	 * Returns {@code true} if, and only if, this {@code ClassBound} instance is empty, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code ClassBound} instance is empty, {@code false} otherwise
+	 */
+	public boolean isEmpty() {
+		return !this.referenceTypeSignature.isPresent();
+	}
+	
+	/**
 	 * Returns a hash code for this {@code ClassBound} instance.
 	 * 
 	 * @return a hash code for this {@code ClassBound} instance

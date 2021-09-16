@@ -50,7 +50,7 @@ final class JField implements Comparable<JField> {
 		this.classFile = Objects.requireNonNull(classFile, "classFile == null");
 		this.fieldInfo = Objects.requireNonNull(fieldInfo, "fieldInfo == null");
 		this.enclosingType = Objects.requireNonNull(enclosingType, "enclosingType == null");
-		this.type = JType.valueOf(doGetTypeName(classFile, fieldInfo));
+		this.type = JType.valueOf(FieldDescriptor.parseFieldDescriptor(classFile, fieldInfo));
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -324,15 +324,5 @@ final class JField implements Comparable<JField> {
 		}
 		
 		return Names.filterPackageNames(jPackageNameFilter, jField.getType().getName());
-	}
-	
-	private static String doGetTypeName(final ClassFile classFile, final FieldInfo fieldInfo) {
-		final FieldDescriptor fieldDescriptor = FieldDescriptor.parseFieldDescriptor(classFile, fieldInfo);
-		
-		final String externalForm = fieldDescriptor.toExternalForm();
-		final String internalForm = fieldDescriptor.toInternalForm();
-		final String typeName = internalForm.indexOf('[') >= 0 ? internalForm.replace('/', '.') : externalForm;
-		
-		return typeName;
 	}
 }

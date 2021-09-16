@@ -191,22 +191,55 @@ public final class MethodDescriptor implements Node {
 	 * <p>
 	 * If {@code classFile} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If, for any {@code MethodInfo} {@code methodInfo} in {@code classFile}, the {@link CPInfo} on the index {@code methodInfo.getDescriptorIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getStringValue()} method of the
-	 * {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * If, for any {@code MethodInfo} {@code methodInfo} in {@code classFile}, the {@link CPInfo} on the index {@code methodInfo.getDescriptorIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
-	 * If, for any {@code MethodInfo} {@code methodInfo} in {@code classFile}, {@code methodInfo.getDescriptorIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be
-	 * thrown.
+	 * If, for any {@code MethodInfo} {@code methodInfo} in {@code classFile}, {@code methodInfo.getDescriptorIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param classFile a {@link ClassFile} instance
 	 * @return a {@code List} with all {@code MethodDescriptor} instances that were parsed from all {@code MethodInfo} instances in {@code classFile}
-	 * @throws IllegalArgumentException thrown if, and only if, for any {@code MethodInfo} {@code methodInfo} in {@code classFile}, the {@code CPInfo} on the index {@code methodInfo.getDescriptorIndex()} is not a {@code ConstantUTF8Info} instance, or
-	 *                                  the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
-	 * @throws IndexOutOfBoundsException thrown if, and only if, for any {@code MethodInfo} {@code methodInfo} in {@code classFile}, {@code methodInfo.getDescriptorIndex()} is less than {@code 0}, or greater than or equal to
-	 *                                   {@code classFile.getCPInfoCount()}
+	 * @throws IllegalArgumentException thrown if, and only if, for any {@code MethodInfo} {@code methodInfo} in {@code classFile}, the {@code CPInfo} on the index {@code methodInfo.getDescriptorIndex()} is not a {@code ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
+	 * @throws IndexOutOfBoundsException thrown if, and only if, for any {@code MethodInfo} {@code methodInfo} in {@code classFile}, {@code methodInfo.getDescriptorIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
 	 * @throws NullPointerException thrown if, and only if, {@code classFile} is {@code null}
 	 */
 	public static List<MethodDescriptor> parseMethodDescriptors(final ClassFile classFile) {
 		return classFile.getMethodInfos().stream().map(methodInfo -> parseMethodDescriptor(classFile, methodInfo)).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+	}
+	
+	/**
+	 * Returns a {@code MethodDescriptor} instance that excludes all package names that are equal to {@code "java.lang"} from {@code methodDescriptor}.
+	 * <p>
+	 * If {@code methodDescriptor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * MethodDescriptor.excludePackageName(methodDescriptor, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param methodDescriptor a {@code MethodDescriptor} instance
+	 * @return a {@code MethodDescriptor} instance that excludes all package names that are equal to {@code "java.lang"} from {@code methodDescriptor}
+	 * @throws NullPointerException thrown if, and only if, {@code methodDescriptor} is {@code null}
+	 */
+	public static MethodDescriptor excludePackageName(final MethodDescriptor methodDescriptor) {
+		return excludePackageName(methodDescriptor, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code MethodDescriptor} instance that excludes all package names that are equal to {@code packageName} from {@code methodDescriptor}.
+	 * <p>
+	 * If either {@code methodDescriptor} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param methodDescriptor a {@code MethodDescriptor} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code MethodDescriptor} instance that excludes all package names that are equal to {@code packageName} from {@code methodDescriptor}
+	 * @throws NullPointerException thrown if, and only if, either {@code methodDescriptor} or {@code packageName} are {@code null}
+	 */
+	public static MethodDescriptor excludePackageName(final MethodDescriptor methodDescriptor, final String packageName) {
+		Objects.requireNonNull(methodDescriptor, "methodDescriptor == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, methodDescriptor);
 	}
 	
 	/**
@@ -216,16 +249,14 @@ public final class MethodDescriptor implements Node {
 	 * <p>
 	 * If either {@code classFile} or {@code methodInfo} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code classFile} does not contain a {@link MethodInfo} instance that is equal to {@code methodInfo}, the {@link CPInfo} on the index {@code methodInfo.getDescriptorIndex()} is not a {@link ConstantUTF8Info} instance, or the
-	 * {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * If {@code classFile} does not contain a {@link MethodInfo} instance that is equal to {@code methodInfo}, the {@link CPInfo} on the index {@code methodInfo.getDescriptorIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
 	 * If {@code methodInfo.getDescriptorIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param classFile a {@link ClassFile} instance
 	 * @param methodInfo a {@code MethodInfo} instance
 	 * @return a {@code MethodDescriptor} instance
-	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain a {@code MethodInfo} instance that is equal to {@code methodInfo}, the {@code CPInfo} on the index {@code methodInfo.getDescriptorIndex()} is not a
-	 *                                  {@code ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
+	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain a {@code MethodInfo} instance that is equal to {@code methodInfo}, the {@code CPInfo} on the index {@code methodInfo.getDescriptorIndex()} is not a {@code ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code methodInfo.getDescriptorIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
 	 * @throws NullPointerException thrown if, and only if, either {@code classFile} or {@code methodInfo} are {@code null}
 	 */

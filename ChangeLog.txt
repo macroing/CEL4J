@@ -1,3 +1,22 @@
+2021-09-16  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Binary
+
+		* ADD:			Add the methods excludePackageName(MethodSignature) and excludePackageName(MethodSignature, String) to the MethodSignature class.
+		* ADD:			Add the method isEmpty() to the ClassBound class.
+		* ADD:			Add the methods isBoolean(), isByte(), isChar(), isDouble(), isFloat(), isInt(), isLong() and isShort() to the BaseType enum in the Descriptor API.
+		* ADD:			Add the methods isBoolean(), isByte(), isChar(), isDouble(), isFloat(), isInt(), isLong() and isShort() to the BaseType enum in the Signature API.
+		* ADD:			Add the methods excludePackageName(ArrayType) and excludePackageName(ArrayType, String) to the ArrayType class.
+		* ADD:			Add the methods excludePackageName(ClassName) and excludePackageName(ClassName, String) to the ClassName class.
+		* ADD:			Add the methods excludePackageName(ComponentType) and excludePackageName(ComponentType, String) to the ComponentType interface.
+		* ADD:			Add the methods excludePackageName(FieldDescriptor) and excludePackageName(FieldDescriptor, String) to the FieldDescriptor interface.
+		* ADD:			Add the methods excludePackageName(FieldType) and excludePackageName(FieldType, String) to the FieldType interface.
+		* ADD:			Add the methods excludePackageName(MethodDescriptor) and excludePackageName(MethodDescriptor, String) to the MethodDescriptor class.
+		* ADD:			Add the methods excludePackageName(ObjectType) and excludePackageName(ObjectType, String) to the ObjectType class.
+		* ADD:			Add the methods excludePackageName(ParameterDescriptor) and excludePackageName(ParameterDescriptor, String) to the ParameterDescriptor interface.
+		* ADD:			Add the methods excludePackageName(ReturnDescriptor) and excludePackageName(ReturnDescriptor, String) to the ReturnDescriptor interface.
+		* ADD:			Add the method toClass() to ArrayType, BaseType, ComponentType, FieldDescriptor, ObjectType, ParameterDescriptor, ReturnDescriptor and VoidDescriptor.
+
 2021-09-14  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:

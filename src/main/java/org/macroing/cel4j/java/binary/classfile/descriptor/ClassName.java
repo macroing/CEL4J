@@ -118,6 +118,43 @@ public final class ClassName implements Node {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns a {@code ClassName} instance that excludes all package names that are equal to {@code "java.lang"} from {@code className}.
+	 * <p>
+	 * If {@code className} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * ClassName.excludePackageName(className, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param className a {@code ClassName} instance
+	 * @return a {@code ClassName} instance that excludes all package names that are equal to {@code "java.lang"} from {@code className}
+	 * @throws NullPointerException thrown if, and only if, {@code className} is {@code null}
+	 */
+	public static ClassName excludePackageName(final ClassName className) {
+		return excludePackageName(className, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code ClassName} instance that excludes all package names that are equal to {@code packageName} from {@code className}.
+	 * <p>
+	 * If either {@code className} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param className a {@code ClassName} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code ClassName} instance that excludes all package names that are equal to {@code packageName} from {@code className}
+	 * @throws NullPointerException thrown if, and only if, either {@code className} or {@code packageName} are {@code null}
+	 */
+	public static ClassName excludePackageName(final ClassName className, final String packageName) {
+		Objects.requireNonNull(className, "className == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, className);
+	}
+	
+	/**
 	 * Parses {@code string} into a {@code ClassName} instance.
 	 * <p>
 	 * Returns a {@code ClassName} instance.
@@ -144,9 +181,12 @@ public final class ClassName implements Node {
 	 * <p>
 	 * If the {@code String} indirectly referred to by {@code classFile.getSuperClass()} cannot be retrieved, or it is malformed, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
-	 * In order to retrieve the {@code String} to parse, {@code classFile.getSuperClass()} must point to a valid index in the {@code constant_pool} table item. The {@link CPInfo} at that index must be a {@link ConstantClassInfo} instance. The method
-	 * {@code getNameIndex()} of the {@code ConstantClassInfo} instance must also point to a valid index in the {@code constant_pool} table item. The {@code CPInfo} at this index must be a {@link ConstantUTF8Info} instance. The method
-	 * {@code getStringValue()} of the {@code ConstantUTF8Info} instance must return a {@code String} that is not malformed.
+	 * In order to retrieve the {@code String} to parse, the following conditions must be met:
+	 * <ol>
+	 * <li>The {@link CPInfo} returned by {@code classFile.getCPInfo(classFile.getSuperClass())} must be an instance of {@link ConstantClassInfo}.</li>
+	 * <li>The {@code CPInfo} returned by {@code classFile.getCPInfo(constantClassInfo.getNameIndex())} must be an instance of {@link ConstantUTF8Info}.</li>
+	 * <li>The {@code String} returned by {@code constantUTF8Info.getStringValue()} must have the correct format.</li>
+	 * </ol>
 	 * 
 	 * @param classFile a {@link ClassFile}
 	 * @return a {@code ClassName} instance
@@ -166,9 +206,12 @@ public final class ClassName implements Node {
 	 * <p>
 	 * If the {@code String} indirectly referred to by {@code classFile.getThisClass()} cannot be retrieved, or it is malformed, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
-	 * In order to retrieve the {@code String} to parse, {@code classFile.getThisClass()} must point to a valid index in the {@code constant_pool} table item. The {@link CPInfo} at that index must be a {@link ConstantClassInfo} instance. The method
-	 * {@code getNameIndex()} of the {@code ConstantClassInfo} instance must also point to a valid index in the {@code constant_pool} table item. The {@code CPInfo} at this index must be a {@link ConstantUTF8Info} instance. The method
-	 * {@code getStringValue()} of the {@code ConstantUTF8Info} instance must return a {@code String} that is not malformed.
+	 * In order to retrieve the {@code String} to parse, the following conditions must be met:
+	 * <ol>
+	 * <li>The {@link CPInfo} returned by {@code classFile.getCPInfo(classFile.getThisClass())} must be an instance of {@link ConstantClassInfo}.</li>
+	 * <li>The {@code CPInfo} returned by {@code classFile.getCPInfo(constantClassInfo.getNameIndex())} must be an instance of {@link ConstantUTF8Info}.</li>
+	 * <li>The {@code String} returned by {@code constantUTF8Info.getStringValue()} must have the correct format.</li>
+	 * </ol>
 	 * 
 	 * @param classFile a {@link ClassFile}
 	 * @return a {@code ClassName} instance

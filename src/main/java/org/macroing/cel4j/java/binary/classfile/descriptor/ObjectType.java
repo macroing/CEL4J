@@ -42,6 +42,19 @@ public final class ObjectType implements FieldType {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns a {@code Class} representation of this {@code ObjectType} instance.
+	 * <p>
+	 * If the {@code Class} cannot be found, a {@code ClassNotFoundException} will be thrown.
+	 * 
+	 * @return a {@code Class} representation of this {@code ObjectType} instance
+	 * @throws ClassNotFoundException thrown if, and only if, the {@code Class} cannot be found
+	 */
+	@Override
+	public Class<?> toClass() throws ClassNotFoundException {
+		return Class.forName(toExternalForm());
+	}
+	
+	/**
 	 * Returns the {@link ClassName} associated with this {@code ObjectType} instance.
 	 * 
 	 * @return the {@code ClassName} associated with this {@code ObjectType} instance
@@ -168,6 +181,43 @@ public final class ObjectType implements FieldType {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns an {@code ObjectType} instance that excludes all package names that are equal to {@code "java.lang"} from {@code objectType}.
+	 * <p>
+	 * If {@code objectType} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * ObjectType.excludePackageName(objectType, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param objectType an {@code ObjectType} instance
+	 * @return an {@code ObjectType} instance that excludes all package names that are equal to {@code "java.lang"} from {@code objectType}
+	 * @throws NullPointerException thrown if, and only if, {@code objectType} is {@code null}
+	 */
+	public static ObjectType excludePackageName(final ObjectType objectType) {
+		return excludePackageName(objectType, "java.lang");
+	}
+	
+	/**
+	 * Returns an {@code ObjectType} instance that excludes all package names that are equal to {@code packageName} from {@code objectType}.
+	 * <p>
+	 * If either {@code objectType} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param objectType an {@code ObjectType} instance
+	 * @param packageName the package name to exclude
+	 * @return an {@code ObjectType} instance that excludes all package names that are equal to {@code packageName} from {@code objectType}
+	 * @throws NullPointerException thrown if, and only if, either {@code objectType} or {@code packageName} are {@code null}
+	 */
+	public static ObjectType excludePackageName(final ObjectType objectType, final String packageName) {
+		Objects.requireNonNull(objectType, "objectType == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, objectType);
+	}
 	
 	/**
 	 * Parses {@code string} into an {@code ObjectType} instance.

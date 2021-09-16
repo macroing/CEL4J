@@ -30,12 +30,12 @@ import org.macroing.cel4j.scanner.TextScanner;
  * @author J&#246;rgen Lundgren
  */
 public final class Identifier implements Node {
-	private final String internalForm;
+	private final String string;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	Identifier(final String internalForm) {
-		this.internalForm = internalForm;
+	Identifier(final String string) {
+		this.string = string;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,7 +46,7 @@ public final class Identifier implements Node {
 	 * @return a {@code String} representation of this {@code Identifier} instance in external form
 	 */
 	public String toExternalForm() {
-		return this.internalForm.replace('/', '.');
+		return this.string;
 	}
 	
 	/**
@@ -55,7 +55,7 @@ public final class Identifier implements Node {
 	 * @return a {@code String} representation of this {@code Identifier} instance in internal form
 	 */
 	public String toInternalForm() {
-		return this.internalForm;
+		return this.string;
 	}
 	
 	/**
@@ -82,7 +82,7 @@ public final class Identifier implements Node {
 			return true;
 		} else if(!(object instanceof Identifier)) {
 			return false;
-		} else if(!Objects.equals(Identifier.class.cast(object).internalForm, this.internalForm)) {
+		} else if(!Objects.equals(Identifier.class.cast(object).string, this.string)) {
 			return false;
 		} else {
 			return true;
@@ -96,7 +96,7 @@ public final class Identifier implements Node {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.internalForm);
+		return Objects.hash(this.string);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

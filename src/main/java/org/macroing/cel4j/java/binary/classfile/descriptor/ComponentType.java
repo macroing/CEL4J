@@ -18,6 +18,8 @@
  */
 package org.macroing.cel4j.java.binary.classfile.descriptor;
 
+import java.util.Objects;
+
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.scanner.TextScanner;
 
@@ -28,6 +30,16 @@ import org.macroing.cel4j.scanner.TextScanner;
  * @author J&#246;rgen Lundgren
  */
 public interface ComponentType extends Node {
+	/**
+	 * Returns a {@code Class} representation of this {@code ComponentType} instance.
+	 * <p>
+	 * If the {@code Class} cannot be found, a {@code ClassNotFoundException} will be thrown.
+	 * 
+	 * @return a {@code Class} representation of this {@code ComponentType} instance
+	 * @throws ClassNotFoundException thrown if, and only if, the {@code Class} cannot be found
+	 */
+	Class<?> toClass() throws ClassNotFoundException;
+	
 	/**
 	 * Returns a {@code String} representation of this {@code ComponentType} instance in external form.
 	 * 
@@ -43,6 +55,43 @@ public interface ComponentType extends Node {
 	String toInternalForm();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns a {@code ComponentType} instance that excludes all package names that are equal to {@code "java.lang"} from {@code componentType}.
+	 * <p>
+	 * If {@code componentType} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * ComponentType.excludePackageName(componentType, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param componentType a {@code ComponentType} instance
+	 * @return a {@code ComponentType} instance that excludes all package names that are equal to {@code "java.lang"} from {@code componentType}
+	 * @throws NullPointerException thrown if, and only if, {@code componentType} is {@code null}
+	 */
+	static ComponentType excludePackageName(final ComponentType componentType) {
+		return excludePackageName(componentType, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code ComponentType} instance that excludes all package names that are equal to {@code packageName} from {@code componentType}.
+	 * <p>
+	 * If either {@code componentType} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param componentType a {@code ComponentType} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code ComponentType} instance that excludes all package names that are equal to {@code packageName} from {@code componentType}
+	 * @throws NullPointerException thrown if, and only if, either {@code componentType} or {@code packageName} are {@code null}
+	 */
+	static ComponentType excludePackageName(final ComponentType componentType, final String packageName) {
+		Objects.requireNonNull(componentType, "componentType == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, componentType);
+	}
 	
 	/**
 	 * Parses {@code string} into a {@code ComponentType} instance.

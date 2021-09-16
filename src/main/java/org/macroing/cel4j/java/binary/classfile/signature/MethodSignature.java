@@ -242,6 +242,43 @@ public final class MethodSignature implements Signature {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns a {@code MethodSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code methodSignature}.
+	 * <p>
+	 * If {@code methodSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * MethodSignature.excludePackageName(methodSignature, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param methodSignature a {@code MethodSignature} instance
+	 * @return a {@code MethodSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code methodSignature}
+	 * @throws NullPointerException thrown if, and only if, {@code methodSignature} is {@code null}
+	 */
+	public static MethodSignature excludePackageName(final MethodSignature methodSignature) {
+		return excludePackageName(methodSignature, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code MethodSignature} instance that excludes all package names that are equal to {@code packageName} from {@code methodSignature}.
+	 * <p>
+	 * If either {@code methodSignature} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param methodSignature a {@code MethodSignature} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code MethodSignature} instance that excludes all package names that are equal to {@code packageName} from {@code methodSignature}
+	 * @throws NullPointerException thrown if, and only if, either {@code methodSignature} or {@code packageName} are {@code null}
+	 */
+	public static MethodSignature excludePackageName(final MethodSignature methodSignature, final String packageName) {
+		Objects.requireNonNull(methodSignature, "methodSignature == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, methodSignature);
+	}
+	
+	/**
 	 * Parses the {@code MethodSignature} of {@code signatureAttribute} in {@code classFile}.
 	 * <p>
 	 * Returns a {@code MethodSignature} instance.

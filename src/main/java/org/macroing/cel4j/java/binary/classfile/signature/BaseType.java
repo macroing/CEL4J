@@ -129,6 +129,78 @@ public enum BaseType implements JavaTypeSignature {
 		return String.format("BaseType: [Term=%s], [Type=%s], [ExternalForm=%s], [InternalForm=%s]", getTerm(), getType(), toExternalForm(), toInternalForm());
 	}
 	
+	/**
+	 * Returns {@code true} if, and only if, this {@code BaseType} instance represents the {@code boolean} type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code BaseType} instance represents the {@code boolean} type, {@code false} otherwise
+	 */
+	public boolean isBoolean() {
+		return getTerm().equals(Constants.BOOLEAN_TERM);
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code BaseType} instance represents the {@code byte} type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code BaseType} instance represents the {@code byte} type, {@code false} otherwise
+	 */
+	public boolean isByte() {
+		return getTerm().equals(Constants.BYTE_TERM);
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code BaseType} instance represents the {@code char} type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code BaseType} instance represents the {@code char} type, {@code false} otherwise
+	 */
+	public boolean isChar() {
+		return getTerm().equals(Constants.CHAR_TERM);
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code BaseType} instance represents the {@code double} type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code BaseType} instance represents the {@code double} type, {@code false} otherwise
+	 */
+	public boolean isDouble() {
+		return getTerm().equals(Constants.DOUBLE_TERM);
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code BaseType} instance represents the {@code float} type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code BaseType} instance represents the {@code float} type, {@code false} otherwise
+	 */
+	public boolean isFloat() {
+		return getTerm().equals(Constants.FLOAT_TERM);
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code BaseType} instance represents the {@code int} type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code BaseType} instance represents the {@code int} type, {@code false} otherwise
+	 */
+	public boolean isInt() {
+		return getTerm().equals(Constants.INT_TERM);
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code BaseType} instance represents the {@code long} type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code BaseType} instance represents the {@code long} type, {@code false} otherwise
+	 */
+	public boolean isLong() {
+		return getTerm().equals(Constants.LONG_TERM);
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code BaseType} instance represents the {@code short} type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code BaseType} instance represents the {@code short} type, {@code false} otherwise
+	 */
+	public boolean isShort() {
+		return getTerm().equals(Constants.SHORT_TERM);
+	}
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**

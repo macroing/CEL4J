@@ -22,6 +22,8 @@ import java.util.Objects;
 
 final class JVoid extends JType {
 	public static final JVoid VOID = new JVoid(Void.TYPE);
+	public static final String VOID_EXTERNAL_NAME = "void";
+	public static final String VOID_INTERNAL_NAME = "V";
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -80,8 +82,8 @@ final class JVoid extends JType {
 	
 	public static JVoid valueOf(final String name) {
 		switch(name) {
-			case "V":
-			case "void":
+			case VOID_EXTERNAL_NAME:
+			case VOID_INTERNAL_NAME:
 				return VOID;
 			default:
 				throw new JTypeException(String.format("A JVoid must refer to the void type: %s", name));

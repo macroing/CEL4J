@@ -87,6 +87,8 @@ final class JParameter implements Comparable<JParameter> {
 			return false;
 		} else if(!Objects.equals(this.type, JParameter.class.cast(object).type)) {
 			return false;
+		} else if(!Objects.equals(this.javaTypeSignature, JParameter.class.cast(object).javaTypeSignature)) {
+			return false;
 		} else if(!Objects.equals(this.name, JParameter.class.cast(object).name)) {
 			return false;
 		} else if(this.isFinal != JParameter.class.cast(object).isFinal) {
@@ -111,7 +113,7 @@ final class JParameter implements Comparable<JParameter> {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.type, this.name, Boolean.valueOf(this.isFinal));
+		return Objects.hash(this.type, this.javaTypeSignature, this.name, Boolean.valueOf(this.isFinal));
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

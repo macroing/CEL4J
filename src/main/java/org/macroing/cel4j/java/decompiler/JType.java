@@ -20,7 +20,9 @@ package org.macroing.cel4j.java.decompiler;
 
 import java.util.Objects;
 
+import org.macroing.cel4j.java.binary.classfile.descriptor.FieldDescriptor;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ParameterDescriptor;
+import org.macroing.cel4j.java.binary.classfile.descriptor.ReturnDescriptor;
 
 abstract class JType {
 	protected JType() {
@@ -86,35 +88,51 @@ abstract class JType {
 		}
 	}
 	
+	public static JType valueOf(final FieldDescriptor fieldDescriptor) {
+		try {
+			return valueOf(fieldDescriptor.toClass());
+		} catch(final ClassNotFoundException | LinkageError e) {
+			throw new JTypeException(e);
+		}
+	}
+	
 	public static JType valueOf(final ParameterDescriptor parameterDescriptor) {
-		final String externalForm = parameterDescriptor.toExternalForm();
-		final String internalForm = parameterDescriptor.toInternalForm();
-		final String name = internalForm.indexOf('[') >= 0 ? internalForm.replace('/', '.') : externalForm;
-		
-		return valueOf(name);
+		try {
+			return valueOf(parameterDescriptor.toClass());
+		} catch(final ClassNotFoundException | LinkageError e) {
+			throw new JTypeException(e);
+		}
+	}
+	
+	public static JType valueOf(final ReturnDescriptor returnDescriptor) {
+		try {
+			return valueOf(returnDescriptor.toClass());
+		} catch(final ClassNotFoundException | LinkageError e) {
+			throw new JTypeException(e);
+		}
 	}
 	
 	public static JType valueOf(final String name) {
 		switch(name) {
-			case "boolean":
-			case "Z":
-			case "B":
-			case "byte":
-			case "C":
-			case "char":
-			case "D":
-			case "double":
-			case "F":
-			case "float":
-			case "I":
-			case "int":
-			case "J":
-			case "long":
-			case "S":
-			case "short":
+			case JPrimitive.BOOLEAN_EXTERNAL_NAME:
+			case JPrimitive.BOOLEAN_INTERNAL_NAME:
+			case JPrimitive.BYTE_EXTERNAL_NAME:
+			case JPrimitive.BYTE_INTERNAL_NAME:
+			case JPrimitive.CHAR_EXTERNAL_NAME:
+			case JPrimitive.CHAR_INTERNAL_NAME:
+			case JPrimitive.DOUBLE_EXTERNAL_NAME:
+			case JPrimitive.DOUBLE_INTERNAL_NAME:
+			case JPrimitive.FLOAT_EXTERNAL_NAME:
+			case JPrimitive.FLOAT_INTERNAL_NAME:
+			case JPrimitive.INT_EXTERNAL_NAME:
+			case JPrimitive.INT_INTERNAL_NAME:
+			case JPrimitive.LONG_EXTERNAL_NAME:
+			case JPrimitive.LONG_INTERNAL_NAME:
+			case JPrimitive.SHORT_EXTERNAL_NAME:
+			case JPrimitive.SHORT_INTERNAL_NAME:
 				return JPrimitive.valueOf(name);
-			case "V":
-			case "void":
+			case JVoid.VOID_EXTERNAL_NAME:
+			case JVoid.VOID_INTERNAL_NAME:
 				return JVoid.valueOf(name);
 			default:
 				try {

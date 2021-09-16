@@ -38,7 +38,6 @@ import org.macroing.cel4j.java.binary.classfile.attributeinfo.Instruction;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.java.binary.classfile.descriptor.MethodDescriptor;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ParameterDescriptor;
-import org.macroing.cel4j.java.binary.classfile.descriptor.ReturnDescriptor;
 import org.macroing.cel4j.java.binary.classfile.signature.MethodSignature;
 import org.macroing.cel4j.java.binary.classfile.signature.Result;
 import org.macroing.cel4j.java.binary.classfile.signature.TypeParameters;
@@ -61,7 +60,7 @@ final class JMethod implements Comparable<JMethod> {
 		this.methodInfo = Objects.requireNonNull(methodInfo, "methodInfo == null");
 		this.enclosingType = Objects.requireNonNull(enclosingType, "enclosingType == null");
 		this.parameterList = JParameterList.load(classFile, methodInfo);
-		this.returnType = JType.valueOf(doGetReturnTypeName(classFile, methodInfo));
+		this.returnType = JType.valueOf(MethodDescriptor.parseMethodDescriptor(classFile, methodInfo).getReturnDescriptor());
 		this.typesToImport = new ArrayList<>();
 		this.optionalCodeAttribute = CodeAttribute.find(this.methodInfo);
 	}
@@ -567,17 +566,5 @@ final class JMethod implements Comparable<JMethod> {
 		}
 		
 		return Names.filterPackageNames(jPackageNameFilter, jMethod.getReturnType().getName(), jMethod.getReturnType().isInnerType());
-	}
-	
-	private static String doGetReturnTypeName(final ClassFile classFile, final MethodInfo methodInfo) {
-		final MethodDescriptor methodDescriptor = MethodDescriptor.parseMethodDescriptor(classFile, methodInfo);
-		
-		final ReturnDescriptor returnDescriptor = methodDescriptor.getReturnDescriptor();
-		
-		final String externalForm = returnDescriptor.toExternalForm();
-		final String internalForm = returnDescriptor.toInternalForm();
-		final String returnTypeName = internalForm.indexOf('[') >= 0 ? internalForm.replace('/', '.') : externalForm;
-		
-		return returnTypeName;
 	}
 }

@@ -42,6 +42,19 @@ public final class ArrayType implements FieldType {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns a {@code Class} representation of this {@code ArrayType} instance.
+	 * <p>
+	 * If the {@code Class} cannot be found, a {@code ClassNotFoundException} will be thrown.
+	 * 
+	 * @return a {@code Class} representation of this {@code ArrayType} instance
+	 * @throws ClassNotFoundException thrown if, and only if, the {@code Class} cannot be found
+	 */
+	@Override
+	public Class<?> toClass() throws ClassNotFoundException {
+		return Class.forName(toInternalForm().replace("/", "."));
+	}
+	
+	/**
 	 * Returns the {@link ComponentType} associated with this {@code ArrayType} instance.
 	 * 
 	 * @return the {@code ComponentType} associated with this {@code ArrayType} instance
@@ -177,6 +190,43 @@ public final class ArrayType implements FieldType {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns an {@code ArrayType} instance that excludes all package names that are equal to {@code "java.lang"} from {@code arrayType}.
+	 * <p>
+	 * If {@code arrayType} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * ArrayType.excludePackageName(arrayType, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param arrayType an {@code ArrayType} instance
+	 * @return an {@code ArrayType} instance that excludes all package names that are equal to {@code "java.lang"} from {@code arrayType}
+	 * @throws NullPointerException thrown if, and only if, {@code arrayType} is {@code null}
+	 */
+	public static ArrayType excludePackageName(final ArrayType arrayType) {
+		return excludePackageName(arrayType, "java.lang");
+	}
+	
+	/**
+	 * Returns an {@code ArrayType} instance that excludes all package names that are equal to {@code packageName} from {@code arrayType}.
+	 * <p>
+	 * If either {@code arrayType} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param arrayType an {@code ArrayType} instance
+	 * @param packageName the package name to exclude
+	 * @return an {@code ArrayType} instance that excludes all package names that are equal to {@code packageName} from {@code arrayType}
+	 * @throws NullPointerException thrown if, and only if, either {@code arrayType} or {@code packageName} are {@code null}
+	 */
+	public static ArrayType excludePackageName(final ArrayType arrayType, final String packageName) {
+		Objects.requireNonNull(arrayType, "arrayType == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, arrayType);
+	}
 	
 	/**
 	 * Parses {@code string} into an {@code ArrayType} instance.

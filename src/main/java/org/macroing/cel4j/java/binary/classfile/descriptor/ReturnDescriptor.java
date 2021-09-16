@@ -18,6 +18,8 @@
  */
 package org.macroing.cel4j.java.binary.classfile.descriptor;
 
+import java.util.Objects;
+
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.scanner.TextScanner;
 
@@ -28,6 +30,16 @@ import org.macroing.cel4j.scanner.TextScanner;
  * @author J&#246;rgen Lundgren
  */
 public interface ReturnDescriptor extends Node {
+	/**
+	 * Returns a {@code Class} representation of this {@code ReturnDescriptor} instance.
+	 * <p>
+	 * If the {@code Class} cannot be found, a {@code ClassNotFoundException} will be thrown.
+	 * 
+	 * @return a {@code Class} representation of this {@code ReturnDescriptor} instance
+	 * @throws ClassNotFoundException thrown if, and only if, the {@code Class} cannot be found
+	 */
+	Class<?> toClass() throws ClassNotFoundException;
+	
 	/**
 	 * Returns a {@code String} with the term associated with this {@code ReturnDescriptor} instance.
 	 * 
@@ -57,6 +69,43 @@ public interface ReturnDescriptor extends Node {
 	String toInternalForm();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns a {@code ReturnDescriptor} instance that excludes all package names that are equal to {@code "java.lang"} from {@code returnDescriptor}.
+	 * <p>
+	 * If {@code returnDescriptor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * ReturnDescriptor.excludePackageName(returnDescriptor, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param returnDescriptor a {@code ReturnDescriptor} instance
+	 * @return a {@code ReturnDescriptor} instance that excludes all package names that are equal to {@code "java.lang"} from {@code returnDescriptor}
+	 * @throws NullPointerException thrown if, and only if, {@code returnDescriptor} is {@code null}
+	 */
+	static ReturnDescriptor excludePackageName(final ReturnDescriptor returnDescriptor) {
+		return excludePackageName(returnDescriptor, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code ReturnDescriptor} instance that excludes all package names that are equal to {@code packageName} from {@code returnDescriptor}.
+	 * <p>
+	 * If either {@code returnDescriptor} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param returnDescriptor a {@code ReturnDescriptor} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code ReturnDescriptor} instance that excludes all package names that are equal to {@code packageName} from {@code returnDescriptor}
+	 * @throws NullPointerException thrown if, and only if, either {@code returnDescriptor} or {@code packageName} are {@code null}
+	 */
+	static ReturnDescriptor excludePackageName(final ReturnDescriptor returnDescriptor, final String packageName) {
+		Objects.requireNonNull(returnDescriptor, "returnDescriptor == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, returnDescriptor);
+	}
 	
 	/**
 	 * Parses {@code string} into a {@code ReturnDescriptor} instance.

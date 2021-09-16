@@ -47,6 +47,16 @@ public enum VoidDescriptor implements ReturnDescriptor {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns a {@code Class} representation of this {@code VoidDescriptor} instance.
+	 * 
+	 * @return a {@code Class} representation of this {@code VoidDescriptor} instance
+	 */
+	@Override
+	public Class<?> toClass() {
+		return Void.TYPE;
+	}
+	
+	/**
 	 * Returns a {@code String} with the term associated with this {@code VoidDescriptor} instance.
 	 * 
 	 * @return a {@code String} with the term associated with this {@code VoidDescriptor} instance
