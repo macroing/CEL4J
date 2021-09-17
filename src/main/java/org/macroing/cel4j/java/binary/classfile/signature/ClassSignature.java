@@ -262,16 +262,14 @@ public final class ClassSignature implements Signature {
 	}
 	
 	/**
-	 * Returns a {@code ClassSignature} with {@code superClassSignature}, {@code superInterfaceSignatures} and {@code typeParameters} as its associated {@link SuperClassSignature}, {@link SuperInterfaceSignature} instances and {@link TypeParameters},
-	 * respectively.
+	 * Returns a {@code ClassSignature} with {@code superClassSignature}, {@code superInterfaceSignatures} and {@code typeParameters} as its associated {@link SuperClassSignature}, {@link SuperInterfaceSignature} instances and {@link TypeParameters}, respectively.
 	 * <p>
 	 * If either {@code superClassSignature}, {@code superInterfaceSignatures}, any of its elements or {@code typeParameters} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param superClassSignature the associated {@code SuperClassSignature}
 	 * @param superInterfaceSignatures the associated {@code SuperInterfaceSignature} instances
 	 * @param typeParameters the associated {@code TypeParameters}
-	 * @return a {@code ClassSignature} with {@code superClassSignature}, {@code superInterfaceSignatures} and {@code typeParameters} as its associated {@code SuperClassSignature}, {@code SuperInterfaceSignature} instances and {@code TypeParameters},
-	 *         respectively
+	 * @return a {@code ClassSignature} with {@code superClassSignature}, {@code superInterfaceSignatures} and {@code typeParameters} as its associated {@code SuperClassSignature}, {@code SuperInterfaceSignature} instances and {@code TypeParameters}, respectively
 	 * @throws NullPointerException thrown if, and only if, either {@code superClassSignature}, {@code superInterfaceSignatures}, any of its elements or {@code typeParameters} are {@code null}
 	 */
 	public static ClassSignature valueOf(final SuperClassSignature superClassSignature, final List<SuperInterfaceSignature> superInterfaceSignatures, final TypeParameters typeParameters) {
@@ -285,18 +283,14 @@ public final class ClassSignature implements Signature {
 	 * <p>
 	 * If {@code classFile} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, the {@link CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getStringValue()}
-	 * method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
+	 * If, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, the {@link CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
-	 * If, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an
-	 * {@code IndexOutOfBoundsException} will be thrown.
+	 * If, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param classFile a {@link ClassFile} instance
 	 * @return an {@code Optional} of type {@code ClassSignature}
-	 * @throws IllegalArgumentException thrown if, and only if, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, the {@code CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a
-	 *                                  {@code ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
-	 * @throws IndexOutOfBoundsException thrown if, and only if, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to
-	 *                                   {@code classFile.getCPInfoCount()}
+	 * @throws IllegalArgumentException thrown if, and only if, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, the {@code CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@code ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
+	 * @throws IndexOutOfBoundsException thrown if, and only if, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code classFile}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
 	 * @throws NullPointerException thrown if, and only if, {@code classFile} is {@code null}
 	 */
 	public static Optional<ClassSignature> parseClassSignatureOptionally(final ClassFile classFile) {

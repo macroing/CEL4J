@@ -169,6 +169,43 @@ public final class SimpleClassTypeSignature implements Node {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns a {@code SimpleClassTypeSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code simpleClassTypeSignature}.
+	 * <p>
+	 * If {@code simpleClassTypeSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * SimpleClassTypeSignature.excludePackageName(simpleClassTypeSignature, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param simpleClassTypeSignature a {@code SimpleClassTypeSignature} instance
+	 * @return a {@code SimpleClassTypeSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code simpleClassTypeSignature}
+	 * @throws NullPointerException thrown if, and only if, {@code simpleClassTypeSignature} is {@code null}
+	 */
+	public static SimpleClassTypeSignature excludePackageName(final SimpleClassTypeSignature simpleClassTypeSignature) {
+		return excludePackageName(simpleClassTypeSignature, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code SimpleClassTypeSignature} instance that excludes all package names that are equal to {@code packageName} from {@code simpleClassTypeSignature}.
+	 * <p>
+	 * If either {@code simpleClassTypeSignature} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param simpleClassTypeSignature a {@code SimpleClassTypeSignature} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code SimpleClassTypeSignature} instance that excludes all package names that are equal to {@code packageName} from {@code simpleClassTypeSignature}
+	 * @throws NullPointerException thrown if, and only if, either {@code simpleClassTypeSignature} or {@code packageName} are {@code null}
+	 */
+	public static SimpleClassTypeSignature excludePackageName(final SimpleClassTypeSignature simpleClassTypeSignature, final String packageName) {
+		Objects.requireNonNull(simpleClassTypeSignature, "simpleClassTypeSignature == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, simpleClassTypeSignature);
+	}
+	
+	/**
 	 * Parses {@code string} into a {@code SimpleClassTypeSignature} instance.
 	 * <p>
 	 * Returns a {@code SimpleClassTypeSignature} instance.

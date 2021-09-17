@@ -18,6 +18,8 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
+import java.util.Objects;
+
 import org.macroing.cel4j.scanner.TextScanner;
 
 /**
@@ -27,6 +29,43 @@ import org.macroing.cel4j.scanner.TextScanner;
  * @author J&#246;rgen Lundgren
  */
 public interface ReferenceTypeSignature extends FieldSignature, JavaTypeSignature {
+	/**
+	 * Returns a {@code ReferenceTypeSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code referenceTypeSignature}.
+	 * <p>
+	 * If {@code referenceTypeSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * ReferenceTypeSignature.excludePackageName(referenceTypeSignature, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param referenceTypeSignature a {@code ReferenceTypeSignature} instance
+	 * @return a {@code ReferenceTypeSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code referenceTypeSignature}
+	 * @throws NullPointerException thrown if, and only if, {@code referenceTypeSignature} is {@code null}
+	 */
+	static ReferenceTypeSignature excludePackageName(final ReferenceTypeSignature referenceTypeSignature) {
+		return excludePackageName(referenceTypeSignature, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code ReferenceTypeSignature} instance that excludes all package names that are equal to {@code packageName} from {@code referenceTypeSignature}.
+	 * <p>
+	 * If either {@code referenceTypeSignature} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param referenceTypeSignature a {@code ReferenceTypeSignature} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code ReferenceTypeSignature} instance that excludes all package names that are equal to {@code packageName} from {@code referenceTypeSignature}
+	 * @throws NullPointerException thrown if, and only if, either {@code referenceTypeSignature} or {@code packageName} are {@code null}
+	 */
+	static ReferenceTypeSignature excludePackageName(final ReferenceTypeSignature referenceTypeSignature, final String packageName) {
+		Objects.requireNonNull(referenceTypeSignature, "referenceTypeSignature == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, referenceTypeSignature);
+	}
+	
 	/**
 	 * Parses {@code string} into a {@code ReferenceTypeSignature} instance.
 	 * <p>

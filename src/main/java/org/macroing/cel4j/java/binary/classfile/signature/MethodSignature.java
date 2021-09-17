@@ -285,16 +285,14 @@ public final class MethodSignature implements Signature {
 	 * <p>
 	 * If either {@code classFile} or {@code signatureAttribute} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If the {@link CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is
-	 * malformed, an {@code IllegalArgumentException} will be thrown.
+	 * If the {@link CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
 	 * If {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param classFile a {@link ClassFile} instance
 	 * @param signatureAttribute a {@link SignatureAttribute} instance
 	 * @return a {@code MethodSignature} instance
-	 * @throws IllegalArgumentException thrown if, and only if, the {@code CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@code ConstantUTF8Info} instance, or the {@code getStringValue()} method of the
-	 *                                  {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
+	 * @throws IllegalArgumentException thrown if, and only if, the {@code CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@code ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
 	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
 	 * @throws NullPointerException thrown if, and only if, either {@code classFile} or {@code signatureAttribute} are {@code null}
 	 */
@@ -327,21 +325,15 @@ public final class MethodSignature implements Signature {
 	 * <p>
 	 * If either {@code classFile} or {@code methodInfo} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code classFile} does not contain a {@link MethodInfo} instance that is equal to {@code methodInfo}, {@code methodInfo} contains a {@link SignatureAttribute} {@code signatureAttribute} but the {@link CPInfo} on the index
-	 * {@code signatureAttribute.getSignatureIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an
-	 * {@code IllegalArgumentException} will be thrown.
+	 * If {@code classFile} does not contain a {@link MethodInfo} instance that is equal to {@code methodInfo}, {@code methodInfo} contains a {@link SignatureAttribute} {@code signatureAttribute} but the {@link CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@link ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed, an {@code IllegalArgumentException} will be thrown.
 	 * <p>
-	 * If, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code methodInfo}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an
-	 * {@code IndexOutOfBoundsException} will be thrown.
+	 * If, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code methodInfo}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
 	 * 
 	 * @param classFile a {@link ClassFile} instance
 	 * @param methodInfo a {@code MethodInfo} instance
 	 * @return an {@code Optional} of type {@code MethodSignature}
-	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain a {@code MethodInfo} instance that is equal to {@code methodInfo}, {@code methodInfo} contains a {@code SignatureAttribute} {@code signatureAttribute}
-	 *                                  but the  {@code CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@code ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance
-	 *                                  returns a {@code String} that is malformed
-	 * @throws IndexOutOfBoundsException thrown if, and only if, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code methodInfo}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to
-	 *                                   {@code classFile.getCPInfoCount()}
+	 * @throws IllegalArgumentException thrown if, and only if, {@code classFile} does not contain a {@code MethodInfo} instance that is equal to {@code methodInfo}, {@code methodInfo} contains a {@code SignatureAttribute} {@code signatureAttribute} but the  {@code CPInfo} on the index {@code signatureAttribute.getSignatureIndex()} is not a {@code ConstantUTF8Info} instance, or the {@code getStringValue()} method of the {@code ConstantUTF8Info} instance returns a {@code String} that is malformed
+	 * @throws IndexOutOfBoundsException thrown if, and only if, for the {@code SignatureAttribute} {@code signatureAttribute} in {@code methodInfo}, {@code signatureAttribute.getSignatureIndex()} is less than {@code 0}, or greater than or equal to {@code classFile.getCPInfoCount()}
 	 * @throws NullPointerException thrown if, and only if, either {@code classFile} or {@code methodInfo} are {@code null}
 	 */
 	public static Optional<MethodSignature> parseMethodSignatureOptionally(final ClassFile classFile, final MethodInfo methodInfo) {

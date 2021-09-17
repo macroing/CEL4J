@@ -160,6 +160,43 @@ public final class TypeArguments implements Node {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns a {@code TypeArguments} instance that excludes all package names that are equal to {@code "java.lang"} from {@code typeArguments}.
+	 * <p>
+	 * If {@code typeArguments} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * TypeArguments.excludePackageName(typeArguments, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param typeArguments a {@code TypeArguments} instance
+	 * @return a {@code TypeArguments} instance that excludes all package names that are equal to {@code "java.lang"} from {@code typeArguments}
+	 * @throws NullPointerException thrown if, and only if, {@code typeArguments} is {@code null}
+	 */
+	public static TypeArguments excludePackageName(final TypeArguments typeArguments) {
+		return excludePackageName(typeArguments, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code TypeArguments} instance that excludes all package names that are equal to {@code packageName} from {@code typeArguments}.
+	 * <p>
+	 * If either {@code typeArguments} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param typeArguments a {@code TypeArguments} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code TypeArguments} instance that excludes all package names that are equal to {@code packageName} from {@code typeArguments}
+	 * @throws NullPointerException thrown if, and only if, either {@code typeArguments} or {@code packageName} are {@code null}
+	 */
+	public static TypeArguments excludePackageName(final TypeArguments typeArguments, final String packageName) {
+		Objects.requireNonNull(typeArguments, "typeArguments == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, typeArguments);
+	}
+	
+	/**
 	 * Parses {@code string} into a {@code TypeArguments} instance.
 	 * <p>
 	 * Returns a {@code TypeArguments} instance.

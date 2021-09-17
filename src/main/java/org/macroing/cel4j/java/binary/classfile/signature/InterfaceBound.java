@@ -149,6 +149,43 @@ public final class InterfaceBound implements Node {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns an {@code InterfaceBound} instance that excludes all package names that are equal to {@code "java.lang"} from {@code interfaceBound}.
+	 * <p>
+	 * If {@code interfaceBound} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * InterfaceBound.excludePackageName(interfaceBound, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param interfaceBound an {@code InterfaceBound} instance
+	 * @return an {@code InterfaceBound} instance that excludes all package names that are equal to {@code "java.lang"} from {@code interfaceBound}
+	 * @throws NullPointerException thrown if, and only if, {@code interfaceBound} is {@code null}
+	 */
+	public static InterfaceBound excludePackageName(final InterfaceBound interfaceBound) {
+		return excludePackageName(interfaceBound, "java.lang");
+	}
+	
+	/**
+	 * Returns an {@code InterfaceBound} instance that excludes all package names that are equal to {@code packageName} from {@code interfaceBound}.
+	 * <p>
+	 * If either {@code interfaceBound} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param interfaceBound an {@code InterfaceBound} instance
+	 * @param packageName the package name to exclude
+	 * @return an {@code InterfaceBound} instance that excludes all package names that are equal to {@code packageName} from {@code interfaceBound}
+	 * @throws NullPointerException thrown if, and only if, either {@code interfaceBound} or {@code packageName} are {@code null}
+	 */
+	public static InterfaceBound excludePackageName(final InterfaceBound interfaceBound, final String packageName) {
+		Objects.requireNonNull(interfaceBound, "interfaceBound == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, interfaceBound);
+	}
+	
+	/**
 	 * Parses {@code string} into an {@code InterfaceBound} instance.
 	 * <p>
 	 * Returns an {@code InterfaceBound} instance.

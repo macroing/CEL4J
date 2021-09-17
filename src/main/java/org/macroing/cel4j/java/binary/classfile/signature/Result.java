@@ -18,6 +18,8 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
+import java.util.Objects;
+
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.scanner.TextScanner;
 
@@ -43,6 +45,43 @@ public interface Result extends Node {
 	String toInternalForm();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns a {@code Result} instance that excludes all package names that are equal to {@code "java.lang"} from {@code result}.
+	 * <p>
+	 * If {@code result} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * Result.excludePackageName(result, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param result a {@code Result} instance
+	 * @return a {@code Result} instance that excludes all package names that are equal to {@code "java.lang"} from {@code result}
+	 * @throws NullPointerException thrown if, and only if, {@code result} is {@code null}
+	 */
+	static Result excludePackageName(final Result result) {
+		return excludePackageName(result, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code Result} instance that excludes all package names that are equal to {@code packageName} from {@code result}.
+	 * <p>
+	 * If either {@code result} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param result a {@code Result} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code Result} instance that excludes all package names that are equal to {@code packageName} from {@code result}
+	 * @throws NullPointerException thrown if, and only if, either {@code result} or {@code packageName} are {@code null}
+	 */
+	static Result excludePackageName(final Result result, final String packageName) {
+		Objects.requireNonNull(result, "result == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, result);
+	}
 	
 	/**
 	 * Parses {@code string} into a {@code Result} instance.

@@ -193,6 +193,43 @@ public final class TypeParameter implements Node {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns a {@code TypeParameter} instance that excludes all package names that are equal to {@code "java.lang"} from {@code typeParameter}.
+	 * <p>
+	 * If {@code typeParameter} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * TypeParameter.excludePackageName(typeParameter, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param typeParameter a {@code TypeParameter} instance
+	 * @return a {@code TypeParameter} instance that excludes all package names that are equal to {@code "java.lang"} from {@code typeParameter}
+	 * @throws NullPointerException thrown if, and only if, {@code typeParameter} is {@code null}
+	 */
+	public static TypeParameter excludePackageName(final TypeParameter typeParameter) {
+		return excludePackageName(typeParameter, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code TypeParameter} instance that excludes all package names that are equal to {@code packageName} from {@code typeParameter}.
+	 * <p>
+	 * If either {@code typeParameter} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param typeParameter a {@code TypeParameter} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code TypeParameter} instance that excludes all package names that are equal to {@code packageName} from {@code typeParameter}
+	 * @throws NullPointerException thrown if, and only if, either {@code typeParameter} or {@code packageName} are {@code null}
+	 */
+	public static TypeParameter excludePackageName(final TypeParameter typeParameter, final String packageName) {
+		Objects.requireNonNull(typeParameter, "typeParameter == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, typeParameter);
+	}
+	
+	/**
 	 * Parses {@code string} into a {@code TypeParameter} instance.
 	 * <p>
 	 * Returns a {@code TypeParameter} instance.
@@ -211,16 +248,14 @@ public final class TypeParameter implements Node {
 	}
 	
 	/**
-	 * Returns a {@code TypeParameter} with {@code identifier}, {@code classBound} and all {@link InterfaceBound} instances in {@code interfaceBounds} as its associated {@link Identifier}, {@link ClassBound} and {@code InterfaceBound} instances,
-	 * respectively.
+	 * Returns a {@code TypeParameter} with {@code identifier}, {@code classBound} and all {@link InterfaceBound} instances in {@code interfaceBounds} as its associated {@link Identifier}, {@link ClassBound} and {@code InterfaceBound} instances, respectively.
 	 * <p>
 	 * If either {@code identifier}, {@code classBound}, {@code interfaceBounds} or any of its elements are {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param identifier the associated {@code Identifier}
 	 * @param classBound the associated {@code ClassBound}
 	 * @param interfaceBounds the associated {@code InterfaceBound} instances
-	 * @return a {@code TypeParameter} with {@code identifier}, {@code classBound} and all {@code InterfaceBound} instances in {@code interfaceBounds} as its associated {@code Identifier}, {@code ClassBound} and {@code InterfaceBound} instances,
-	 *         respectively
+	 * @return a {@code TypeParameter} with {@code identifier}, {@code classBound} and all {@code InterfaceBound} instances in {@code interfaceBounds} as its associated {@code Identifier}, {@code ClassBound} and {@code InterfaceBound} instances, respectively
 	 * @throws NullPointerException thrown if, and only if, either {@code identifier}, {@code classBound}, {@code interfaceBounds} or any of its elements are {@code null}
 	 */
 	public static TypeParameter valueOf(final Identifier identifier, final ClassBound classBound, final InterfaceBound... interfaceBounds) {

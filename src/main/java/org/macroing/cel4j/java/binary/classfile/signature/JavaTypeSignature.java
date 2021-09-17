@@ -18,6 +18,8 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
+import java.util.Objects;
+
 import org.macroing.cel4j.scanner.TextScanner;
 
 /**
@@ -27,6 +29,43 @@ import org.macroing.cel4j.scanner.TextScanner;
  * @author J&#246;rgen Lundgren
  */
 public interface JavaTypeSignature extends Result {
+	/**
+	 * Returns a {@code JavaTypeSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code javaTypeSignature}.
+	 * <p>
+	 * If {@code javaTypeSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * JavaTypeSignature.excludePackageName(javaTypeSignature, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param javaTypeSignature a {@code JavaTypeSignature} instance
+	 * @return a {@code JavaTypeSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code javaTypeSignature}
+	 * @throws NullPointerException thrown if, and only if, {@code javaTypeSignature} is {@code null}
+	 */
+	static JavaTypeSignature excludePackageName(final JavaTypeSignature javaTypeSignature) {
+		return excludePackageName(javaTypeSignature, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code JavaTypeSignature} instance that excludes all package names that are equal to {@code packageName} from {@code javaTypeSignature}.
+	 * <p>
+	 * If either {@code javaTypeSignature} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param javaTypeSignature a {@code JavaTypeSignature} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code JavaTypeSignature} instance that excludes all package names that are equal to {@code packageName} from {@code javaTypeSignature}
+	 * @throws NullPointerException thrown if, and only if, either {@code javaTypeSignature} or {@code packageName} are {@code null}
+	 */
+	static JavaTypeSignature excludePackageName(final JavaTypeSignature javaTypeSignature, final String packageName) {
+		Objects.requireNonNull(javaTypeSignature, "javaTypeSignature == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, javaTypeSignature);
+	}
+	
 	/**
 	 * Parses {@code string} into a {@code JavaTypeSignature} instance.
 	 * <p>

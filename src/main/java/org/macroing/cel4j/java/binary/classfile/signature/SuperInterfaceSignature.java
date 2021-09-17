@@ -18,6 +18,8 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
+import java.util.Objects;
+
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.scanner.TextScanner;
 
@@ -43,6 +45,43 @@ public interface SuperInterfaceSignature extends Node {
 	String toInternalForm();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns a {@code SuperInterfaceSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code superInterfaceSignature}.
+	 * <p>
+	 * If {@code superInterfaceSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * SuperInterfaceSignature.excludePackageName(superInterfaceSignature, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param superInterfaceSignature a {@code SuperInterfaceSignature} instance
+	 * @return a {@code SuperInterfaceSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code superInterfaceSignature}
+	 * @throws NullPointerException thrown if, and only if, {@code superInterfaceSignature} is {@code null}
+	 */
+	static SuperInterfaceSignature excludePackageName(final SuperInterfaceSignature superInterfaceSignature) {
+		return excludePackageName(superInterfaceSignature, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code SuperInterfaceSignature} instance that excludes all package names that are equal to {@code packageName} from {@code superInterfaceSignature}.
+	 * <p>
+	 * If either {@code superInterfaceSignature} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param superInterfaceSignature a {@code SuperInterfaceSignature} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code SuperInterfaceSignature} instance that excludes all package names that are equal to {@code packageName} from {@code superInterfaceSignature}
+	 * @throws NullPointerException thrown if, and only if, either {@code superInterfaceSignature} or {@code packageName} are {@code null}
+	 */
+	static SuperInterfaceSignature excludePackageName(final SuperInterfaceSignature superInterfaceSignature, final String packageName) {
+		Objects.requireNonNull(superInterfaceSignature, "superInterfaceSignature == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, superInterfaceSignature);
+	}
 	
 	/**
 	 * Parses {@code string} into a {@code SuperInterfaceSignature} instance.

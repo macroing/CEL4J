@@ -198,6 +198,43 @@ public final class ClassTypeSignature implements ReferenceTypeSignature, SuperCl
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns a {@code ClassTypeSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code classTypeSignature}.
+	 * <p>
+	 * If {@code classTypeSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * ClassTypeSignature.excludePackageName(classTypeSignature, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param classTypeSignature a {@code ClassTypeSignature} instance
+	 * @return a {@code ClassTypeSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code classTypeSignature}
+	 * @throws NullPointerException thrown if, and only if, {@code classTypeSignature} is {@code null}
+	 */
+	public static ClassTypeSignature excludePackageName(final ClassTypeSignature classTypeSignature) {
+		return excludePackageName(classTypeSignature, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code ClassTypeSignature} instance that excludes all package names that are equal to {@code packageName} from {@code classTypeSignature}.
+	 * <p>
+	 * If either {@code classTypeSignature} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param classTypeSignature a {@code ClassTypeSignature} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code ClassTypeSignature} instance that excludes all package names that are equal to {@code packageName} from {@code classTypeSignature}
+	 * @throws NullPointerException thrown if, and only if, either {@code classTypeSignature} or {@code packageName} are {@code null}
+	 */
+	public static ClassTypeSignature excludePackageName(final ClassTypeSignature classTypeSignature, final String packageName) {
+		Objects.requireNonNull(classTypeSignature, "classTypeSignature == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, classTypeSignature);
+	}
+	
+	/**
 	 * Parses {@code string} into a {@code ClassTypeSignature} instance.
 	 * <p>
 	 * Returns a {@code ClassTypeSignature} instance.
@@ -230,16 +267,14 @@ public final class ClassTypeSignature implements ReferenceTypeSignature, SuperCl
 	}
 	
 	/**
-	 * Returns a {@code ClassTypeSignature} with {@code simpleClassTypeSignature}, {@code classTypeSignatureSuffixes} and {@code packageSpecifier} as its associated {@link SimpleClassTypeSignature}, {@link ClassTypeSignatureSuffix} instances and
-	 * {@link PackageSpecifier}, respectively.
+	 * Returns a {@code ClassTypeSignature} with {@code simpleClassTypeSignature}, {@code classTypeSignatureSuffixes} and {@code packageSpecifier} as its associated {@link SimpleClassTypeSignature}, {@link ClassTypeSignatureSuffix} instances and {@link PackageSpecifier}, respectively.
 	 * <p>
 	 * If either {@code simpleClassTypeSignature}, {@code classTypeSignatureSuffixes}, any of its elements or {@code packageSpecifier} are {@code null}, a {@code NullPointerException} will be thrown.
 	 * 
 	 * @param simpleClassTypeSignature the associated {@code SimpleClassTypeSignature}
 	 * @param classTypeSignatureSuffixes the associated {@code ClassTypeSignatureSuffix} instances
 	 * @param packageSpecifier the associated {@code PackageSpecifier}
-	 * @return a {@code ClassTypeSignature} with {@code simpleClassTypeSignature}, {@code classTypeSignatureSuffixes} and {@code packageSpecifier} as its associated {@code SimpleClassTypeSignature}, {@code ClassTypeSignatureSuffix} instances and
-	 *         {@code PackageSpecifier}, respectively
+	 * @return a {@code ClassTypeSignature} with {@code simpleClassTypeSignature}, {@code classTypeSignatureSuffixes} and {@code packageSpecifier} as its associated {@code SimpleClassTypeSignature}, {@code ClassTypeSignatureSuffix} instances and {@code PackageSpecifier}, respectively
 	 * @throws NullPointerException thrown if, and only if, either {@code simpleClassTypeSignature}, {@code classTypeSignatureSuffixes}, any of its elements or {@code packageSpecifier} are {@code null}
 	 */
 	public static ClassTypeSignature valueOf(final SimpleClassTypeSignature simpleClassTypeSignature, final List<ClassTypeSignatureSuffix> classTypeSignatureSuffixes, final PackageSpecifier packageSpecifier) {

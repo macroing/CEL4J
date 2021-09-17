@@ -203,6 +203,43 @@ public final class TypeArgument implements Node {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns a {@code TypeArgument} instance that excludes all package names that are equal to {@code "java.lang"} from {@code typeArgument}.
+	 * <p>
+	 * If {@code typeArgument} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * TypeArgument.excludePackageName(typeArgument, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param typeArgument a {@code TypeArgument} instance
+	 * @return a {@code TypeArgument} instance that excludes all package names that are equal to {@code "java.lang"} from {@code typeArgument}
+	 * @throws NullPointerException thrown if, and only if, {@code typeArgument} is {@code null}
+	 */
+	public static TypeArgument excludePackageName(final TypeArgument typeArgument) {
+		return excludePackageName(typeArgument, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code TypeArgument} instance that excludes all package names that are equal to {@code packageName} from {@code typeArgument}.
+	 * <p>
+	 * If either {@code typeArgument} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param typeArgument a {@code TypeArgument} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code TypeArgument} instance that excludes all package names that are equal to {@code packageName} from {@code typeArgument}
+	 * @throws NullPointerException thrown if, and only if, either {@code typeArgument} or {@code packageName} are {@code null}
+	 */
+	public static TypeArgument excludePackageName(final TypeArgument typeArgument, final String packageName) {
+		Objects.requireNonNull(typeArgument, "typeArgument == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, typeArgument);
+	}
+	
+	/**
 	 * Parses {@code string} into a {@code TypeArgument} instance.
 	 * <p>
 	 * Returns a {@code TypeArgument} instance.

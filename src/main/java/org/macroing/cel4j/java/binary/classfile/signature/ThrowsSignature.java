@@ -151,6 +151,43 @@ public final class ThrowsSignature implements Node {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns a {@code ThrowsSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code throwsSignature}.
+	 * <p>
+	 * If {@code throwsSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * ThrowsSignature.excludePackageName(throwsSignature, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param throwsSignature a {@code ThrowsSignature} instance
+	 * @return a {@code ThrowsSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code throwsSignature}
+	 * @throws NullPointerException thrown if, and only if, {@code throwsSignature} is {@code null}
+	 */
+	public static ThrowsSignature excludePackageName(final ThrowsSignature throwsSignature) {
+		return excludePackageName(throwsSignature, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code ThrowsSignature} instance that excludes all package names that are equal to {@code packageName} from {@code throwsSignature}.
+	 * <p>
+	 * If either {@code throwsSignature} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param throwsSignature a {@code ThrowsSignature} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code ThrowsSignature} instance that excludes all package names that are equal to {@code packageName} from {@code throwsSignature}
+	 * @throws NullPointerException thrown if, and only if, either {@code throwsSignature} or {@code packageName} are {@code null}
+	 */
+	public static ThrowsSignature excludePackageName(final ThrowsSignature throwsSignature, final String packageName) {
+		Objects.requireNonNull(throwsSignature, "throwsSignature == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, throwsSignature);
+	}
+	
+	/**
 	 * Parses {@code string} into a {@code ThrowsSignature} instance.
 	 * <p>
 	 * Returns a {@code ThrowsSignature} instance.

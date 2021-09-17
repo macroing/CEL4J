@@ -148,6 +148,43 @@ public final class ClassTypeSignatureSuffix implements Node {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns a {@code ClassTypeSignatureSuffix} instance that excludes all package names that are equal to {@code "java.lang"} from {@code classTypeSignatureSuffix}.
+	 * <p>
+	 * If {@code classTypeSignatureSuffix} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * ClassTypeSignatureSuffix.excludePackageName(classTypeSignatureSuffix, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param classTypeSignatureSuffix a {@code ClassTypeSignatureSuffix} instance
+	 * @return a {@code ClassTypeSignatureSuffix} instance that excludes all package names that are equal to {@code "java.lang"} from {@code classTypeSignatureSuffix}
+	 * @throws NullPointerException thrown if, and only if, {@code classTypeSignatureSuffix} is {@code null}
+	 */
+	public static ClassTypeSignatureSuffix excludePackageName(final ClassTypeSignatureSuffix classTypeSignatureSuffix) {
+		return excludePackageName(classTypeSignatureSuffix, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code ClassTypeSignatureSuffix} instance that excludes all package names that are equal to {@code packageName} from {@code classTypeSignatureSuffix}.
+	 * <p>
+	 * If either {@code classTypeSignatureSuffix} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param classTypeSignatureSuffix a {@code ClassTypeSignatureSuffix} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code ClassTypeSignatureSuffix} instance that excludes all package names that are equal to {@code packageName} from {@code classTypeSignatureSuffix}
+	 * @throws NullPointerException thrown if, and only if, either {@code classTypeSignatureSuffix} or {@code packageName} are {@code null}
+	 */
+	public static ClassTypeSignatureSuffix excludePackageName(final ClassTypeSignatureSuffix classTypeSignatureSuffix, final String packageName) {
+		Objects.requireNonNull(classTypeSignatureSuffix, "classTypeSignatureSuffix == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, classTypeSignatureSuffix);
+	}
+	
+	/**
 	 * Parses {@code string} into a {@code ClassTypeSignatureSuffix} instance.
 	 * <p>
 	 * Returns a {@code ClassTypeSignatureSuffix} instance.

@@ -21,6 +21,8 @@ package org.macroing.cel4j.java.binary.classfile.signature;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
@@ -69,20 +71,18 @@ public final class TypeParameters implements Node {
 	 * <p>
 	 * If {@code nameUpdater} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * The {@code BiFunction} {@code nameUpdater} has two parameter arguments of type {@code String}. They represent the external form of both the optional {@link PackageSpecifier} and the {@link Identifier}, respectively. If no
-	 * {@code PackageSpecifier} is present, an empty {@code String} will be passed as parameter argument. The current name is returned by concatenating the two. It can look like this
-	 * {@code (packageSpecifier, identifier) -> packageSpecifier + identifier;}. If {@code null} is returned, the name will not be added to the {@code List}.
+	 * The {@code BiFunction} {@code nameUpdater} has two parameter arguments of type {@code String}. They represent the external form of both the optional {@link PackageSpecifier} and the {@link Identifier}, respectively. If no {@code PackageSpecifier} is present, an empty {@code String} will be passed as parameter argument. The current name is returned by concatenating the two. It can look like this {@code (packageSpecifier, identifier) -> packageSpecifier + identifier;}. If {@code null} is returned, the name will not be added to the {@code List}.
 	 * 
 	 * @param nameUpdater a {@code BiFunction} that is used to update the names
 	 * @return a {@code List} of type {@code String} that contains all class and interface names in this {@code TypeParameters} instance
 	 * @throws NullPointerException thrown if, and only if, {@code nameUpdater} is {@code null}
 	 */
 	public List<String> collectNames(final BiFunction<String, String, String> nameUpdater) {
-		final TypeParametersNameCollectorNodeHierarchicalVisitor typeParametersNameCollectorNodeHierarchicalVisitor = new TypeParametersNameCollectorNodeHierarchicalVisitor(Objects.requireNonNull(nameUpdater, "nameUpdater == null"));
+		final NameCollectorNodeHierarchicalVisitor nameCollectorNodeHierarchicalVisitor = new NameCollectorNodeHierarchicalVisitor(Objects.requireNonNull(nameUpdater, "nameUpdater == null"));
 		
-		accept(typeParametersNameCollectorNodeHierarchicalVisitor);
+		accept(nameCollectorNodeHierarchicalVisitor);
 		
-		return typeParametersNameCollectorNodeHierarchicalVisitor.getNames();
+		return nameCollectorNodeHierarchicalVisitor.getNames();
 	}
 	
 	/**
@@ -110,16 +110,14 @@ public final class TypeParameters implements Node {
 	 * <p>
 	 * If {@code nameUpdater} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * The {@code BiFunction} {@code nameUpdater} has two parameter arguments of type {@code String}. They represent the external form of both the optional {@link PackageSpecifier} and the {@link Identifier}, respectively. If no
-	 * {@code PackageSpecifier} is present, an empty {@code String} will be passed as parameter argument. The current name is returned by concatenating the two. It can look like this
-	 * {@code (packageSpecifier, identifier) -> packageSpecifier + identifier;}. If {@code null} is returned, the {@link TypeParameter} will be removed.
+	 * The {@code BiFunction} {@code nameUpdater} has two parameter arguments of type {@code String}. They represent the external form of both the optional {@link PackageSpecifier} and the {@link Identifier}, respectively. If no {@code PackageSpecifier} is present, an empty {@code String} will be passed as parameter argument. The current name is returned by concatenating the two. It can look like this {@code (packageSpecifier, identifier) -> packageSpecifier + identifier;}. If {@code null} is returned, the {@link TypeParameter} will be removed.
 	 * 
 	 * @param nameUpdater a {@code BiFunction} that is used to update the names
 	 * @return a {@code String} representation of this {@code TypeParameters} instance in external form, with names updated by {@code nameUpdater}
 	 * @throws NullPointerException thrown if, and only if, {@code nameUpdater} is {@code null}
 	 */
 	public String toExternalForm(final BiFunction<String, String, String> nameUpdater) {
-		final NodeHierarchicalVisitor nodeHierarchicalVisitor = new TypeParametersNameUpdaterNodeHierarchicalVisitor(Objects.requireNonNull(nameUpdater, "nameUpdater == null"));
+		final NodeHierarchicalVisitor nodeHierarchicalVisitor = new NameUpdaterNodeHierarchicalVisitor(Objects.requireNonNull(nameUpdater, "nameUpdater == null"));
 		
 		accept(nodeHierarchicalVisitor);
 		
@@ -132,7 +130,7 @@ public final class TypeParameters implements Node {
 	 * @return a {@code String} representation of this {@code TypeParameters} instance in internal form
 	 */
 	public String toInternalForm() {
-		return String.format("<%s>", this.typeParameters.stream().map(typeParameter -> typeParameter.toInternalForm()).<StringBuilder>collect(StringBuilder::new, StringBuilder::append, StringBuilder::append));
+		return String.format("<%s>", this.typeParameters.stream().map(typeParameter -> typeParameter.toInternalForm()).collect(StringBuilder::new, StringBuilder::append, StringBuilder::append));
 	}
 	
 	/**
@@ -219,6 +217,43 @@ public final class TypeParameters implements Node {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns a {@code TypeParameters} instance that excludes all package names that are equal to {@code "java.lang"} from {@code typeParameters}.
+	 * <p>
+	 * If {@code typeParameters} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * TypeParameters.excludePackageName(typeParameters, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param typeParameters a {@code TypeParameters} instance
+	 * @return a {@code TypeParameters} instance that excludes all package names that are equal to {@code "java.lang"} from {@code typeParameters}
+	 * @throws NullPointerException thrown if, and only if, {@code typeParameters} is {@code null}
+	 */
+	public static TypeParameters excludePackageName(final TypeParameters typeParameters) {
+		return excludePackageName(typeParameters, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code TypeParameters} instance that excludes all package names that are equal to {@code packageName} from {@code typeParameters}.
+	 * <p>
+	 * If either {@code typeParameters} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param typeParameters a {@code TypeParameters} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code TypeParameters} instance that excludes all package names that are equal to {@code packageName} from {@code typeParameters}
+	 * @throws NullPointerException thrown if, and only if, either {@code typeParameters} or {@code packageName} are {@code null}
+	 */
+	public static TypeParameters excludePackageName(final TypeParameters typeParameters, final String packageName) {
+		Objects.requireNonNull(typeParameters, "typeParameters == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, typeParameters);
+	}
+	
+	/**
 	 * Parses {@code string} into a {@code TypeParameters} instance.
 	 * <p>
 	 * Returns a {@code TypeParameters} instance.
@@ -248,5 +283,142 @@ public final class TypeParameters implements Node {
 	 */
 	public static TypeParameters valueOf(final TypeParameter typeParameter, final TypeParameter... typeParameters) {
 		return new TypeParameters(ParameterArguments.requireNonNullList(Lists.toList(typeParameter, typeParameters), "typeParameters"));
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static final class NameCollectorNodeHierarchicalVisitor implements NodeHierarchicalVisitor {
+		private final BiFunction<String, String, String> nameUpdater;
+		private final List<String> names;
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		public NameCollectorNodeHierarchicalVisitor(final BiFunction<String, String, String> nameUpdater) {
+			this.nameUpdater = Objects.requireNonNull(nameUpdater, "nameUpdater == null");
+			this.names = new ArrayList<>();
+		}
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		public List<String> getNames() {
+			return new ArrayList<>(this.names);
+		}
+		
+		@Override
+		public boolean visitEnter(final Node node) {
+			if(node instanceof ClassTypeSignature) {
+				final ClassTypeSignature classTypeSignature = ClassTypeSignature.class.cast(node);
+				
+				final Optional<PackageSpecifier> optionalPackageSpecifier = classTypeSignature.getPackageSpecifier();
+				
+				final SimpleClassTypeSignature simpleClassTypeSignature = classTypeSignature.getSimpleClassTypeSignature();
+				
+				final Identifier identifier = simpleClassTypeSignature.getIdentifier();
+				
+				final String name = this.nameUpdater.apply((optionalPackageSpecifier.isPresent() ? optionalPackageSpecifier.get().toExternalForm() : ""), identifier.toExternalForm());
+				
+				if(name != null) {
+					this.names.add(name);
+				}
+			} else if(node instanceof TypeParameters) {
+				this.names.clear();
+			}
+			
+			return true;
+		}
+		
+		@Override
+		public boolean visitLeave(final Node node) {
+			return true;
+		}
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static final class NameUpdaterNodeHierarchicalVisitor implements NodeHierarchicalVisitor {
+		private final AtomicBoolean hasAddedExtends;
+		private final AtomicBoolean hasAddedTypeParameter;
+		private final BiFunction<String, String, String> nameUpdater;
+		private final StringBuilder stringBuilder;
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		public NameUpdaterNodeHierarchicalVisitor(final BiFunction<String, String, String> nameUpdater) {
+			this.hasAddedExtends = new AtomicBoolean();
+			this.hasAddedTypeParameter = new AtomicBoolean();
+			this.nameUpdater = Objects.requireNonNull(nameUpdater, "nameUpdater == null");
+			this.stringBuilder = new StringBuilder();
+		}
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		@Override
+		public String toString() {
+			return this.stringBuilder.toString();
+		}
+		
+		@Override
+		public boolean visitEnter(final Node node) {
+			if(node instanceof ClassTypeSignature) {
+				final ClassTypeSignature classTypeSignature = ClassTypeSignature.class.cast(node);
+				
+				final List<ClassTypeSignatureSuffix> classTypeSignatureSuffixes = classTypeSignature.getClassTypeSignatureSuffixes();
+				
+				final Optional<PackageSpecifier> optionalPackageSpecifier = classTypeSignature.getPackageSpecifier();
+				
+				final SimpleClassTypeSignature simpleClassTypeSignature = classTypeSignature.getSimpleClassTypeSignature();
+				
+				final Identifier identifier = simpleClassTypeSignature.getIdentifier();
+				
+				final Optional<TypeArguments> optionalTypeArguments = simpleClassTypeSignature.getTypeArguments();
+				
+				final String name = this.nameUpdater.apply((optionalPackageSpecifier.isPresent() ? optionalPackageSpecifier.get().toExternalForm() : ""), identifier.toExternalForm());
+				
+				if(name != null) {
+					if(this.hasAddedExtends.compareAndSet(false, true)) {
+						this.stringBuilder.append(" extends ");
+					} else {
+						this.stringBuilder.append(" & ");
+					}
+					
+					this.stringBuilder.append(name);
+					
+					if(optionalTypeArguments.isPresent()) {
+						final TypeArguments typeArguments = optionalTypeArguments.get();
+						
+						this.stringBuilder.append(typeArguments.toExternalForm());
+					}
+					
+					this.stringBuilder.append(classTypeSignatureSuffixes.stream().map(classTypeSignatureSuffix -> classTypeSignatureSuffix.toExternalForm()).collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString());
+				}
+			} else if(node instanceof TypeParameter) {
+				this.hasAddedExtends.set(false);
+				
+				if(this.hasAddedTypeParameter.get()) {
+					this.stringBuilder.append(", ");
+				}
+				
+				this.stringBuilder.append(TypeParameter.class.cast(node).getIdentifier().toExternalForm());
+			} else if(node instanceof TypeParameters) {
+				this.hasAddedExtends.set(false);
+				this.hasAddedTypeParameter.set(false);
+				
+				this.stringBuilder.setLength(0);
+				this.stringBuilder.append("<");
+			}
+			
+			return true;
+		}
+		
+		@Override
+		public boolean visitLeave(final Node node) {
+			if(node instanceof TypeParameter) {
+				this.hasAddedTypeParameter.set(true);
+			} else if(node instanceof TypeParameters) {
+				this.stringBuilder.append(">");
+			}
+			
+			return true;
+		}
 	}
 }

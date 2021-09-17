@@ -1,3 +1,22 @@
+2021-09-17  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Binary
+
+		* ADD:			Add the methods excludePackageName(ClassTypeSignature) and excludePackageName(ClassTypeSignature, String) to the ClassTypeSignature class.
+		* ADD:			Add the methods excludePackageName(ClassTypeSignatureSuffix) and excludePackageName(ClassTypeSignatureSuffix, String) to the ClassTypeSignatureSuffix class.
+		* ADD:			Add the methods excludePackageName(InterfaceBound) and excludePackageName(InterfaceBound, String) to the InterfaceBound class.
+		* ADD:			Add the methods excludePackageName(JavaTypeSignature) and excludePackageName(JavaTypeSignature, String) to the JavaTypeSignature interface.
+		* ADD:			Add the methods excludePackageName(ReferenceTypeSignature) and excludePackageName(ReferenceTypeSignature, String) to the ReferenceTypeSignature interface.
+		* ADD:			Add the methods excludePackageName(Result) and excludePackageName(Result, String) to the Result interface.
+		* ADD:			Add the methods excludePackageName(SimpleClassTypeSignature) and excludePackageName(SimpleClassTypeSignature, String) to the SimpleClassTypeSignature class.
+		* ADD:			Add the methods excludePackageName(SuperClassSignature) and excludePackageName(SuperClassSignature, String) to the SuperClassSignature interface.
+		* ADD:			Add the methods excludePackageName(SuperInterfaceSignature) and excludePackageName(SuperInterfaceSignature, String) to the SuperInterfaceSignature interface.
+		* ADD:			Add the methods excludePackageName(ThrowsSignature) and excludePackageName(ThrowsSignature, String) to the ThrowsSignature class.
+		* ADD:			Add the methods excludePackageName(TypeArgument) and excludePackageName(TypeArgument, String) to the TypeArgument class.
+		* ADD:			Add the methods excludePackageName(TypeArguments) and excludePackageName(TypeArguments, String) to the TypeArguments class.
+		* ADD:			Add the methods excludePackageName(TypeParameter) and excludePackageName(TypeParameter, String) to the TypeParameter class.
+		* ADD:			Add the methods excludePackageName(TypeParameters) and excludePackageName(TypeParameters, String) to the TypeParameters class.
+
 2021-09-16  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary

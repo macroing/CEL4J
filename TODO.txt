@@ -1,0 +1,7 @@
+CEL4J Java Binary:
+
+	* ADD:			Add the ModuleAttribute class.
+	* ADD:			Add the PermittedSubclassesAttribute class.
+	* ADD:			Add the RecordAttribute class.
+	* ADD:			Add the RuntimeInvisibleTypeAnnotationsAttribute class.
+	* ADD:			Add the RuntimeVisibleTypeAnnotationsAttribute class.

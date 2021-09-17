@@ -18,6 +18,8 @@
  */
 package org.macroing.cel4j.java.binary.classfile.signature;
 
+import java.util.Objects;
+
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.scanner.TextScanner;
 
@@ -43,6 +45,43 @@ public interface SuperClassSignature extends Node {
 	String toInternalForm();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns a {@code SuperClassSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code superClassSignature}.
+	 * <p>
+	 * If {@code superClassSignature} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * SuperClassSignature.excludePackageName(superClassSignature, "java.lang");
+	 * }
+	 * </pre>
+	 * 
+	 * @param superClassSignature a {@code SuperClassSignature} instance
+	 * @return a {@code SuperClassSignature} instance that excludes all package names that are equal to {@code "java.lang"} from {@code superClassSignature}
+	 * @throws NullPointerException thrown if, and only if, {@code superClassSignature} is {@code null}
+	 */
+	static SuperClassSignature excludePackageName(final SuperClassSignature superClassSignature) {
+		return excludePackageName(superClassSignature, "java.lang");
+	}
+	
+	/**
+	 * Returns a {@code SuperClassSignature} instance that excludes all package names that are equal to {@code packageName} from {@code superClassSignature}.
+	 * <p>
+	 * If either {@code superClassSignature} or {@code packageName} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param superClassSignature a {@code SuperClassSignature} instance
+	 * @param packageName the package name to exclude
+	 * @return a {@code SuperClassSignature} instance that excludes all package names that are equal to {@code packageName} from {@code superClassSignature}
+	 * @throws NullPointerException thrown if, and only if, either {@code superClassSignature} or {@code packageName} are {@code null}
+	 */
+	static SuperClassSignature excludePackageName(final SuperClassSignature superClassSignature, final String packageName) {
+		Objects.requireNonNull(superClassSignature, "superClassSignature == null");
+		Objects.requireNonNull(packageName, "packageName == null");
+		
+		return Filters.excludePackageName(packageName, superClassSignature);
+	}
 	
 	/**
 	 * Parses {@code string} into a {@code SuperClassSignature} instance.
