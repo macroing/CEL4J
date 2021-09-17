@@ -38,9 +38,7 @@ import org.macroing.cel4j.java.binary.classfile.attributeinfo.Parameter;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.java.binary.classfile.descriptor.MethodDescriptor;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ParameterDescriptor;
-import org.macroing.cel4j.java.binary.classfile.signature.JavaTypeSignature;
 import org.macroing.cel4j.java.binary.classfile.signature.MethodSignature;
-import org.macroing.cel4j.java.binary.classfile.signature.TypeParameters;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 
@@ -76,8 +74,8 @@ final class JConstructor {
 		
 		final String simpleName = getEnclosingType().getSimpleName();
 		final String modifiers = Strings.optional(getModifiers(), "", " ", " ", modifier -> modifier.getKeyword());
-		final String type = doGenerateTypeWithOptionalTypeParameters(decompilerConfiguration, this, simpleName);
-		final String parameters = doGenerateParameters(decompilerConfiguration, this);
+		final String type = UtilitiesToRefactor.generateTypeWithOptionalTypeParameters(decompilerConfiguration, this, simpleName);
+		final String parameters = UtilitiesToRefactor.generateParameters(decompilerConfiguration, this);
 		
 		final List<Instruction> instructions = getInstructions();
 		
@@ -287,86 +285,5 @@ final class JConstructor {
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.classFile, this.methodInfo);
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	private static String doGenerateParameters(final DecompilerConfiguration decompilerConfiguration, final JConstructor jConstructor) {
-		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
-		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
-		
-		final JLocalVariableNameGenerator jLocalVariableNameGenerator = (type, index) -> decompilerConfiguration.getLocalVariableNameGenerator().generateLocalVariableName(type.getName(), index);
-		
-		final StringBuilder stringBuilder = new StringBuilder();
-		
-		final Optional<MethodSignature> optionalMethodSignature = jConstructor.getMethodSignature();
-		
-		final List<JParameter> jParameters = jConstructor.getParameters(jLocalVariableNameGenerator);
-		
-		if(jParameters.size() > 0) {
-			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(jConstructor.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames, new ArrayList<>(), isImportingTypes);
-			
-			if(optionalMethodSignature.isPresent()) {
-				final MethodSignature methodSignature = optionalMethodSignature.get();
-				
-				final List<JavaTypeSignature> javaTypeSignatures = methodSignature.getJavaTypeSignatures();
-				
-				for(int i = 0; i < javaTypeSignatures.size(); i++) {
-					final JParameter jParameter = jParameters.get(i);
-					
-					final JavaTypeSignature javaTypeSignature = javaTypeSignatures.get(i);
-					
-					stringBuilder.append(i > 0 ? ", " : "");
-					stringBuilder.append(jParameter.isFinal() ? "final " : "");
-					stringBuilder.append(Names.filterPackageNames(jPackageNameFilter, javaTypeSignature.toExternalForm()));
-					stringBuilder.append(" ");
-					stringBuilder.append(jParameter.getName());
-				}
-			} else {
-				for(int i = 0; i < jParameters.size(); i++) {
-					final JParameter jParameter = jParameters.get(i);
-					
-					stringBuilder.append(i > 0 ? ", " : "");
-					stringBuilder.append(jParameter.isFinal() ? "final " : "");
-					stringBuilder.append(Names.filterPackageNames(jPackageNameFilter, jParameter.getType().getName()));
-					stringBuilder.append(" ");
-					stringBuilder.append(jParameter.getName());
-				}
-			}
-		}
-		
-		return stringBuilder.toString();
-	}
-	
-	private static String doGenerateTypeWithOptionalTypeParameters(final DecompilerConfiguration decompilerConfiguration, final JConstructor jConstructor, final String simpleName) {
-		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
-		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
-		
-		final Optional<MethodSignature> optionalMethodSignature = jConstructor.getMethodSignature();
-		
-		final JType enclosingType = jConstructor.getEnclosingType();
-		
-		if(optionalMethodSignature.isPresent()) {
-			final MethodSignature methodSignature = optionalMethodSignature.get();
-			
-			final Optional<TypeParameters> optionalTypeParameters = methodSignature.getTypeParameters();
-			
-			final StringBuilder stringBuilder = new StringBuilder();
-			
-			if(optionalTypeParameters.isPresent()) {
-				final TypeParameters typeParameters = optionalTypeParameters.get();
-				
-				final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(enclosingType.getPackageName(), isDiscardingUnnecessaryPackageNames, new ArrayList<>(), isImportingTypes);
-				
-				stringBuilder.append(Names.filterPackageNames(jPackageNameFilter, typeParameters.toExternalForm()));
-				stringBuilder.append(" ");
-			}
-			
-			stringBuilder.append(Objects.requireNonNull(simpleName, "simpleName == null"));
-			
-			return stringBuilder.toString();
-		}
-		
-		return Objects.requireNonNull(simpleName, "simpleName == null");
 	}
 }

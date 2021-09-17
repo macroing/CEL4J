@@ -20,30 +20,131 @@ package org.macroing.cel4j.java.decompiler;
 
 import java.util.Objects;
 
+/**
+ * A {@code JPrimitive} is a {@link JType} implementation that represents a primitive type.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 final class JPrimitive extends JType {
+	/**
+	 * The {@code JPrimitive} instance for the {@code boolean} type.
+	 */
 	public static final JPrimitive BOOLEAN = new JPrimitive(Boolean.TYPE);
+	
+	/**
+	 * The {@code JPrimitive} instance for the {@code byte} type.
+	 */
 	public static final JPrimitive BYTE = new JPrimitive(Byte.TYPE);
+	
+	/**
+	 * The {@code JPrimitive} instance for the {@code char} type.
+	 */
 	public static final JPrimitive CHAR = new JPrimitive(Character.TYPE);
+	
+	/**
+	 * The {@code JPrimitive} instance for the {@code double} type.
+	 */
 	public static final JPrimitive DOUBLE = new JPrimitive(Double.TYPE);
+	
+	/**
+	 * The {@code JPrimitive} instance for the {@code float} type.
+	 */
 	public static final JPrimitive FLOAT = new JPrimitive(Float.TYPE);
+	
+	/**
+	 * The {@code JPrimitive} instance for the {@code int} type.
+	 */
 	public static final JPrimitive INT = new JPrimitive(Integer.TYPE);
+	
+	/**
+	 * The {@code JPrimitive} instance for the {@code long} type.
+	 */
 	public static final JPrimitive LONG = new JPrimitive(Long.TYPE);
+	
+	/**
+	 * The {@code JPrimitive} instance for the {@code short} type.
+	 */
 	public static final JPrimitive SHORT = new JPrimitive(Short.TYPE);
+	
+	/**
+	 * The external name of the {@code boolean} type.
+	 */
 	public static final String BOOLEAN_EXTERNAL_NAME = "boolean";
+	
+	/**
+	 * The internal name of the {@code boolean} type.
+	 */
 	public static final String BOOLEAN_INTERNAL_NAME = "Z";
+	
+	/**
+	 * The external name of the {@code byte} type.
+	 */
 	public static final String BYTE_EXTERNAL_NAME = "byte";
+	
+	/**
+	 * The internal name of the {@code byte} type.
+	 */
 	public static final String BYTE_INTERNAL_NAME = "B";
+	
+	/**
+	 * The external name of the {@code char} type.
+	 */
 	public static final String CHAR_EXTERNAL_NAME = "char";
+	
+	/**
+	 * The internal name of the {@code char} type.
+	 */
 	public static final String CHAR_INTERNAL_NAME = "C";
+	
+	/**
+	 * The external name of the {@code double} type.
+	 */
 	public static final String DOUBLE_EXTERNAL_NAME = "double";
+	
+	/**
+	 * The internal name of the {@code double} type.
+	 */
 	public static final String DOUBLE_INTERNAL_NAME = "D";
+	
+	/**
+	 * The external name of the {@code float} type.
+	 */
 	public static final String FLOAT_EXTERNAL_NAME = "float";
+	
+	/**
+	 * The internal name of the {@code float} type.
+	 */
 	public static final String FLOAT_INTERNAL_NAME = "F";
+	
+	/**
+	 * The external name of the {@code int} type.
+	 */
 	public static final String INT_EXTERNAL_NAME = "int";
+	
+	/**
+	 * The internal name of the {@code int} type.
+	 */
 	public static final String INT_INTERNAL_NAME = "I";
+	
+	/**
+	 * The external name of the {@code long} type.
+	 */
 	public static final String LONG_EXTERNAL_NAME = "long";
+	
+	/**
+	 * The internal name of the {@code long} type.
+	 */
 	public static final String LONG_INTERNAL_NAME = "J";
+	
+	/**
+	 * The external name of the {@code short} type.
+	 */
 	public static final String SHORT_EXTERNAL_NAME = "short";
+	
+	/**
+	 * The internal name of the {@code short} type.
+	 */
 	public static final String SHORT_INTERNAL_NAME = "S";
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,16 +159,52 @@ final class JPrimitive extends JType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * Returns the name of this {@code JPrimitive} instance.
+	 * 
+	 * @return the name of this {@code JPrimitive} instance
+	 */
 	@Override
 	public String getName() {
 		return this.clazz.getName();
 	}
 	
+	/**
+	 * Returns a {@code String} representation of this {@code JPrimitive} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code JPrimitive} instance
+	 */
 	@Override
 	public String toString() {
-		return String.format("JPrimitive: [Name=%s]", getName());
+		if(this == BOOLEAN) {
+			return "JPrimitive.BOOLEAN";
+		} else if(this == BYTE) {
+			return "JPrimitive.BYTE";
+		} else if(this == CHAR) {
+			return "JPrimitive.CHAR";
+		} else if(this == DOUBLE) {
+			return "JPrimitive.DOUBLE";
+		} else if(this == FLOAT) {
+			return "JPrimitive.FLOAT";
+		} else if(this == INT) {
+			return "JPrimitive.INT";
+		} else if(this == LONG) {
+			return "JPrimitive.LONG";
+		} else if(this == SHORT) {
+			return "JPrimitive.SHORT";
+		} else {
+			return "";
+		}
 	}
 	
+	/**
+	 * Compares {@code object} to this {@code JPrimitive} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code JPrimitive}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code JPrimitive} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code JPrimitive}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -81,11 +218,21 @@ final class JPrimitive extends JType {
 		}
 	}
 	
+	/**
+	 * Returns {@code false}.
+	 * 
+	 * @return {@code false}
+	 */
 	@Override
 	public boolean isInnerType() {
 		return false;
 	}
 	
+	/**
+	 * Returns a hash code for this {@code JPrimitive} instance.
+	 * 
+	 * @return a hash code for this {@code JPrimitive} instance
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.clazz);
@@ -93,7 +240,21 @@ final class JPrimitive extends JType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * Returns a {@code JPrimitive} instance that represents {@code clazz}.
+	 * <p>
+	 * If {@code clazz} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code clazz} is invalid, a {@code JTypeException} will be thrown.
+	 * 
+	 * @param clazz a {@code Class} instance
+	 * @return a {@code JPrimitive} instance that represents {@code clazz}
+	 * @throws JTypeException thrown if, and only if, {@code clazz} is invalid
+	 * @throws NullPointerException thrown if, and only if, {@code clazz} is {@code null}
+	 */
 	public static JPrimitive valueOf(final Class<?> clazz) {
+		Objects.requireNonNull(clazz, "clazz == null");
+		
 		if(clazz == Boolean.TYPE) {
 			return BOOLEAN;
 		} else if(clazz == Byte.TYPE) {
@@ -115,6 +276,18 @@ final class JPrimitive extends JType {
 		}
 	}
 	
+	/**
+	 * Returns a {@code JPrimitive} instance given {@code name} in external or internal format.
+	 * <p>
+	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code name} is invalid, a {@code JTypeException} will be thrown.
+	 * 
+	 * @param name the name in external or internal format
+	 * @return a {@code JPrimitive} instance given {@code name} in external or internal format
+	 * @throws JTypeException thrown if, and only if, {@code name} is invalid
+	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 */
 	public static JPrimitive valueOf(final String name) {
 		switch(name) {
 			case BOOLEAN_EXTERNAL_NAME:

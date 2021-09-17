@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.FieldInfo;
@@ -67,12 +69,15 @@ final class JField implements Comparable<JField> {
 		Objects.requireNonNull(decompilerConfiguration, "decompilerConfiguration == null");
 		Objects.requireNonNull(document, "document == null");
 		
-		final String accessModifiers = Strings.optional(getModifiers(), "", " ", " ", modifier -> modifier.getKeyword());
-		final String type = doGenerateType(decompilerConfiguration, this);
-		final String name = getName();
-		final String assignment = doGenerateAssignment(this);
+		final boolean isDisplayingAttributeInfos = decompilerConfiguration.isDisplayingAttributeInfos();
 		
-		document.linef("%s%s %s%s;", accessModifiers, type, name, assignment);
+		final String accessModifiers = Strings.optional(getModifiers(), "", " ", " ", modifier -> modifier.getKeyword());
+		final String type = UtilitiesToRefactor.generateType(decompilerConfiguration, this);
+		final String name = getName();
+		final String assignment = UtilitiesToRefactor.generateAssignment(this);
+		final String attributeInfoComment = isDisplayingAttributeInfos ? doGenerateAttributeInfoComment() : "";
+		
+		document.linef("%s%s %s%s;%s", accessModifiers, type, name, assignment, attributeInfoComment);
 		
 		return document;
 	}
@@ -287,42 +292,13 @@ final class JField implements Comparable<JField> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private static String doGenerateAssignment(final JField jField) {
-		final Optional<Object> optionalAssignment = jField.getAssignment();
+	private String doGenerateAttributeInfoComment() {
+		final List<AttributeInfo> attributeInfos = this.fieldInfo.getAttributeInfos();
 		
-		if(optionalAssignment.isPresent()) {
-			final Object assignment = optionalAssignment.get();
-			
-			if(assignment instanceof Double) {
-				return " = " + assignment + "D";
-			} else if(assignment instanceof Float) {
-				return " = " + assignment + "F";
-			} else if(assignment instanceof Long) {
-				return " = " + assignment + "L";
-			} else if(assignment instanceof String) {
-				return " = \"" + assignment + "\"";
-			} else {
-				return " = " + assignment;
-			}
+		if(attributeInfos.isEmpty()) {
+			return "";
 		}
 		
-		return "";
-	}
-	
-	private static String doGenerateType(final DecompilerConfiguration decompilerConfiguration, final JField jField) {
-		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
-		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
-		
-		final Optional<FieldSignature> optionalFieldSignature = jField.getFieldSignature();
-		
-		final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(jField.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames, new ArrayList<>(), isImportingTypes);
-		
-		if(optionalFieldSignature.isPresent()) {
-			final FieldSignature fieldSignature = optionalFieldSignature.get();
-			
-			return Names.filterPackageNames(jPackageNameFilter, fieldSignature.toExternalForm());
-		}
-		
-		return Names.filterPackageNames(jPackageNameFilter, jField.getType().getName());
+		return attributeInfos.stream().map(attributeInfo -> attributeInfo.getName()).collect(Collectors.joining(", ", "//", ""));
 	}
 }

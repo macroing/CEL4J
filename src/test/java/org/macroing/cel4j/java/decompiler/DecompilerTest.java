@@ -28,7 +28,16 @@ public final class DecompilerTest {
 	public static void main(final String[] args) {
 		final
 		Decompiler decompiler = Decompiler.newInstance();
+		decompiler.getDecompilerConfiguration().setAnnotatingDeprecatedMethods(true);
+		decompiler.getDecompilerConfiguration().setAnnotatingOverriddenMethods(true);
+		decompiler.getDecompilerConfiguration().setDiscardingAbstractInterfaceMethodModifier(true);
+		decompiler.getDecompilerConfiguration().setDiscardingExtendsObject(true);
+		decompiler.getDecompilerConfiguration().setDiscardingPublicInterfaceMethodModifier(true);
+		decompiler.getDecompilerConfiguration().setDiscardingUnnecessaryPackageNames(true);
+		decompiler.getDecompilerConfiguration().setDisplayingAttributeInfos(true);
+		decompiler.getDecompilerConfiguration().setDisplayingConfigurationParameters(true);
 		decompiler.getDecompilerConfiguration().setDisplayingInstructions(false);
+		decompiler.getDecompilerConfiguration().setImportingTypes(true);
 		decompiler.getDecompilerConfiguration().setSeparatingGroups(true);
 		decompiler.getDecompilerConfiguration().setSortingGroups(true);
 		decompiler.addClass(Person.class);

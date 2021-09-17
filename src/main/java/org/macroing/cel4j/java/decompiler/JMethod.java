@@ -39,8 +39,6 @@ import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.java.binary.classfile.descriptor.MethodDescriptor;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ParameterDescriptor;
 import org.macroing.cel4j.java.binary.classfile.signature.MethodSignature;
-import org.macroing.cel4j.java.binary.classfile.signature.Result;
-import org.macroing.cel4j.java.binary.classfile.signature.TypeParameters;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 
@@ -90,10 +88,10 @@ final class JMethod implements Comparable<JMethod> {
 		final List<JType> typesToImport = getTypesToImport();
 		
 		final String modifiers = Strings.optional(doDiscardInterfaceMethodModifiers(decompilerConfiguration, enclosingType, getModifiers()), "", " ", " ", modifier -> modifier.getKeyword());
-		final String returnType = doGenerateReturnTypeWithOptionalTypeParameters(decompilerConfiguration, this, typesToImport);
+		final String returnType = UtilitiesToRefactor.generateReturnTypeWithOptionalTypeParameters(decompilerConfiguration, this, typesToImport);
 		final String name = getName();
 		final String parameters = parameterList.toExternalForm(decompilerConfiguration, this, typesToImport);
-		final String returnStatement = doGenerateDefaultReturnStatement(this);
+		final String returnStatement = UtilitiesToRefactor.generateDefaultReturnStatement(this);
 		
 		final List<Instruction> instructions = getInstructions();
 		
@@ -179,7 +177,7 @@ final class JMethod implements Comparable<JMethod> {
 	}
 	
 	public List<AttributeInfo> getAttributeInfos() {
-		return new ArrayList<>(this.methodInfo.getAttributeInfos());
+		return this.methodInfo.getAttributeInfos();
 	}
 	
 	public List<Instruction> getInstructions() {
@@ -501,70 +499,5 @@ final class JMethod implements Comparable<JMethod> {
 		}
 		
 		return newModifiers;
-	}
-	
-	private static String doGenerateDefaultReturnStatement(final JMethod jMethod) {
-		final JType returnType = jMethod.getReturnType();
-		
-		if(returnType instanceof JVoid) {
-			return "";
-		} else if(returnType instanceof JPrimitive) {
-			final JPrimitive jPrimitive = JPrimitive.class.cast(returnType);
-			
-			if(jPrimitive.equals(JPrimitive.BOOLEAN)) {
-				return "return false;";
-			} else if(jPrimitive.equals(JPrimitive.BYTE)) {
-				return "return 0;";
-			} else if(jPrimitive.equals(JPrimitive.CHAR)) {
-				return "return '\\u0000';";
-			} else if(jPrimitive.equals(JPrimitive.DOUBLE)) {
-				return "return 0.0D;";
-			} else if(jPrimitive.equals(JPrimitive.FLOAT)) {
-				return "return 0.0F;";
-			} else if(jPrimitive.equals(JPrimitive.INT)) {
-				return "return 0;";
-			} else if(jPrimitive.equals(JPrimitive.LONG)) {
-				return "return 0L;";
-			} else {
-				return "return 0;";
-			}
-		} else {
-			return "return null;";
-		}
-	}
-	
-	private static String doGenerateReturnTypeWithOptionalTypeParameters(final DecompilerConfiguration decompilerConfiguration, final JMethod jMethod, final List<JType> typesToImport) {
-		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
-		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
-		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
-		
-		final Optional<MethodSignature> optionalMethodSignature = jMethod.getMethodSignature();
-		
-		final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(jMethod.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes);
-		
-		if(optionalMethodSignature.isPresent()) {
-			final MethodSignature methodSignature = optionalMethodSignature.get();
-			
-			final Optional<TypeParameters> optionalTypeParameters = methodSignature.getTypeParameters();
-			
-			final Result result = methodSignature.getResult();
-			
-			final StringBuilder stringBuilder = new StringBuilder();
-			
-			if(optionalTypeParameters.isPresent()) {
-				final TypeParameters typeParameters = optionalTypeParameters.get();
-				
-				final String string = isDiscardingExtendsObject ? typeParameters.toExternalForm().replaceAll(" extends java\\.lang\\.Object", "") : typeParameters.toExternalForm();
-				
-				stringBuilder.append(Names.filterPackageNames(jPackageNameFilter, string));
-				stringBuilder.append(" ");
-			}
-			
-			stringBuilder.append(Names.filterPackageNames(jPackageNameFilter, result.toExternalForm(), jMethod.getReturnType().isInnerType()));
-			
-			return stringBuilder.toString();
-		}
-		
-		return Names.filterPackageNames(jPackageNameFilter, jMethod.getReturnType().getName(), jMethod.getReturnType().isInnerType());
 	}
 }

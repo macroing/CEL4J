@@ -22,6 +22,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * A {@code JArray} is a {@link JType} implementation that represents an array type.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 final class JArray extends JType {
 	private static final Map<String, JArray> J_ARRAYS = new HashMap<>();
 	
@@ -31,26 +37,57 @@ final class JArray extends JType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private JArray(final JType componentType) {
-		this.componentType = componentType;
+	/**
+	 * Constructs a new {@code JArray} instance.
+	 * <p>
+	 * If {@code componentType} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param componentType the {@link JType} instance that represents the component type
+	 * @throws NullPointerException thrown if, and only if, {@code componentType} is {@code null}
+	 */
+	public JArray(final JType componentType) {
+		this.componentType = Objects.requireNonNull(componentType, "componentType == null");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * Returns the {@link JType} instance that represents the component type of this {@code JArray} instance.
+	 * 
+	 * @return the {@code JType} instance that represents the component type of this {@code JArray} instance
+	 */
 	public JType getComponentType() {
 		return this.componentType;
 	}
 	
+	/**
+	 * Returns the name of this {@code JArray} instance.
+	 * 
+	 * @return the name of this {@code JArray} instance
+	 */
 	@Override
 	public String getName() {
 		return getComponentType().getName() + "[]";
 	}
 	
+	/**
+	 * Returns a {@code String} representation of this {@code JArray} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code JArray} instance
+	 */
 	@Override
 	public String toString() {
-		return String.format("JArray: [Name=%s], [ComponentType=%s]", getName(), getComponentType());
+		return String.format("new JArray(%s)", getComponentType());
 	}
 	
+	/**
+	 * Compares {@code object} to this {@code JArray} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code JArray}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code JArray} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code JArray}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -64,11 +101,21 @@ final class JArray extends JType {
 		}
 	}
 	
+	/**
+	 * Returns {@code false}.
+	 * 
+	 * @return {@code false}
+	 */
 	@Override
 	public boolean isInnerType() {
 		return false;
 	}
 	
+	/**
+	 * Returns a hash code for this {@code JArray} instance.
+	 * 
+	 * @return a hash code for this {@code JArray} instance
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(getComponentType());
@@ -76,7 +123,23 @@ final class JArray extends JType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * Returns a {@code JArray} instance that represents {@code clazz}.
+	 * <p>
+	 * If {@code clazz} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code clazz.isArray() == false}, a {@code JTypeException} will be thrown.
+	 * <p>
+	 * This method will cache all {@code JArray} instances.
+	 * 
+	 * @param clazz a {@code Class} instance
+	 * @return a {@code JArray} instance that represents {@code clazz}
+	 * @throws JTypeException thrown if, and only if, {@code clazz.isArray() == false}
+	 * @throws NullPointerException thrown if, and only if, {@code clazz} is {@code null}
+	 */
 	public static JArray valueOf(final Class<?> clazz) {
+		Objects.requireNonNull(clazz, "clazz == null");
+		
 		if(!clazz.isArray()) {
 			throw new JTypeException(String.format("A JArray must refer to an array: %s", clazz));
 		}
@@ -86,18 +149,31 @@ final class JArray extends JType {
 		}
 	}
 	
-	public static JArray valueOf(final String name) {
-		if(!name.startsWith("[")) {
-			throw new JTypeException(String.format("A JArray must refer to an array: %s", name));
-		}
-		
+	/**
+	 * Returns a {@code JArray} instance that represents {@code Class.forName(className)}.
+	 * <p>
+	 * If {@code className} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code Class.forName(className)} fails or {@code Class.forName(className).isArray() == false}, a {@code JTypeException} will be thrown.
+	 * <p>
+	 * This method will cache all {@code JArray} instances.
+	 * 
+	 * @param className the fully qualified name of the desired class
+	 * @return a {@code JArray} instance that represents {@code Class.forName(className)}
+	 * @throws JTypeException thrown if, and only if, {@code Class.forName(className)} fails or {@code Class.forName(className).isArray() == false}
+	 * @throws NullPointerException thrown if, and only if, {@code className} is {@code null}
+	 */
+	public static JArray valueOf(final String className) {
 		try {
-			return valueOf(Class.forName(name));
+			return valueOf(Class.forName(Objects.requireNonNull(className, "className == null")));
 		} catch(final ClassNotFoundException | LinkageError e) {
 			throw new JTypeException(e);
 		}
 	}
 	
+	/**
+	 * Clears the cache.
+	 */
 	public static void clearCache() {
 		synchronized(J_ARRAYS) {
 			J_ARRAYS.clear();

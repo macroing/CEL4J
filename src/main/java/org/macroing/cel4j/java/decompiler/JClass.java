@@ -29,6 +29,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.FieldInfo;
 import org.macroing.cel4j.java.binary.classfile.MethodInfo;
@@ -107,6 +108,7 @@ final class JClass extends JType {
 		Objects.requireNonNull(decompilerConfiguration, "decompilerConfiguration == null");
 		Objects.requireNonNull(document, "document == null");
 		
+		final boolean isDisplayingAttributeInfos = decompilerConfiguration.isDisplayingAttributeInfos();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		final boolean isSeparatingGroups = decompilerConfiguration.isSeparatingGroups();
 		final boolean isSortingGroups = decompilerConfiguration.isSortingGroups();
@@ -118,9 +120,9 @@ final class JClass extends JType {
 		final String packageName = getPackageName();
 		final String modifiers = JModifier.toExternalForm(getModifiers());
 		final String simpleName = getSimpleName();
-		final String typeParameters = doGenerateTypeParameters(decompilerConfiguration, typesToImport, getTypeParameters());
-		final String extendsClause = doGenerateExtendsClause(decompilerConfiguration, this, typesToImport);
-		final String implementsClause = doGenerateImplementsClause(decompilerConfiguration, getInterfaces(), typesToImport, getClassSignature(), getPackageName());
+		final String typeParameters = UtilitiesToRefactor.generateTypeParameters(decompilerConfiguration, typesToImport, getTypeParameters());
+		final String extendsClause = UtilitiesToRefactor.generateExtendsClause(decompilerConfiguration, this, typesToImport);
+		final String implementsClause = UtilitiesToRefactor.generateImplementsClause(decompilerConfiguration, getInterfaces(), typesToImport, getClassSignature(), getPackageName());
 		
 		final List<JConstructor> jConstructors = getConstructors();
 		final List<JField> jFields = isSortingGroups ? getFieldsSorted() : getFields();
@@ -138,6 +140,17 @@ final class JClass extends JType {
 		}
 		
 		document.linef("");
+		
+		if(isDisplayingAttributeInfos) {
+			document.line("/*");
+			
+			for(final AttributeInfo attributeInfo : getAssociatedClassFile().getAttributeInfos()) {
+				document.linef(" * %s", attributeInfo.getName());
+			}
+			
+			document.line(" */");
+		}
+		
 		document.linef("%sclass %s%s%s%s {", modifiers, simpleName, typeParameters, extendsClause, implementsClause);
 		document.indent();
 		
@@ -614,107 +627,5 @@ final class JClass extends JType {
 			
 			superInterfaceSignatures.addAll(classSignature.getSuperInterfaceSignatures());
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	private static String doGenerateExtendsClause(final DecompilerConfiguration decompilerConfiguration, final JClass jClass, final List<JType> typesToImport) {
-		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
-		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
-		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
-		
-		final StringBuilder stringBuilder = new StringBuilder();
-		
-		jClass.getSuperClass().ifPresent(superClass -> {
-			if(!(isDiscardingExtendsObject && superClass.isObject())) {
-				stringBuilder.append(" ");
-				stringBuilder.append("extends");
-				stringBuilder.append(" ");
-				
-				final Optional<ClassSignature> optionalClassSignature = jClass.getClassSignature();
-				
-				final String string0 = optionalClassSignature.isPresent() ? optionalClassSignature.get().getSuperClassSignature().toExternalForm() : superClass.getName();
-				final String string1 = isDiscardingUnnecessaryPackageNames ? Names.filterPackageNames(JPackageNameFilter.newUnnecessaryPackageName(jClass.getPackageName(), isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes), string0) : string0;
-				
-				stringBuilder.append(string1);
-			}
-		});
-		
-		return stringBuilder.toString();
-	}
-	
-	private static String doGenerateImplementsClause(final DecompilerConfiguration decompilerConfiguration, final List<JInterface> jInterfaces, final List<JType> typesToImport, final Optional<ClassSignature> optionalClassSignature, final String packageName) {
-		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
-		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
-		
-		final StringBuilder stringBuilder = new StringBuilder();
-		
-		if(jInterfaces.size() > 0) {
-			stringBuilder.append(" ");
-			stringBuilder.append("implements");
-			stringBuilder.append(" ");
-			
-			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(packageName, isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes);
-			
-			if(optionalClassSignature.isPresent()) {
-				final ClassSignature classSignature = optionalClassSignature.get();
-				
-				final List<SuperInterfaceSignature> superInterfaceSignatures = classSignature.getSuperInterfaceSignatures();
-				
-				for(int i = 0; i < superInterfaceSignatures.size(); i++) {
-					final SuperInterfaceSignature superInterfaceSignature = superInterfaceSignatures.get(i);
-					
-					final String string0 = superInterfaceSignature.toExternalForm();
-					final String string1 = isDiscardingUnnecessaryPackageNames ? Names.filterPackageNames(jPackageNameFilter, string0) : string0;
-					
-					stringBuilder.append(i > 0 ? ", " : "");
-					stringBuilder.append(string1);
-				}
-			} else {
-				for(int i = 0; i < jInterfaces.size(); i++) {
-					final String string0 = jInterfaces.get(i).getName();
-					final String string1 = isDiscardingUnnecessaryPackageNames ? Names.filterPackageNames(jPackageNameFilter, string0) : string0;
-					
-					stringBuilder.append(i > 0 ? ", " : "");
-					stringBuilder.append(string1);
-				}
-			}
-		}
-		
-		return stringBuilder.toString();
-	}
-	
-	private static String doGenerateTypeParameters(final DecompilerConfiguration decompilerConfiguration, final List<JType> typesToImport, final Optional<TypeParameters> optionalTypeParameters) {
-		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
-		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
-		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
-		
-		if(optionalTypeParameters.isPresent()) {
-			final TypeParameters typeParameters = optionalTypeParameters.get();
-			
-			final String typeParametersToExternalForm = typeParameters.toExternalForm((packageName0, simpleName) -> {
-				if(packageName0.equals("java.lang.")) {
-					if(simpleName.equals("Object")) {
-						return isDiscardingExtendsObject ? null : isDiscardingUnnecessaryPackageNames ? "Object" : packageName0 + simpleName;
-					} else if(isDiscardingUnnecessaryPackageNames) {
-						return simpleName;
-					}
-				}
-				
-				if(isImportingTypes) {
-					for(final JType typeToImport : typesToImport) {
-						if(typeToImport.getName().equals(packageName0 + simpleName)) {
-							return simpleName;
-						}
-					}
-				}
-				
-				return packageName0 + simpleName;
-			});
-			
-			return typeParametersToExternalForm;
-		}
-		
-		return "";
 	}
 }
