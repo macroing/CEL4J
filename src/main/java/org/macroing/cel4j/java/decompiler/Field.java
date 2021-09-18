@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.CPInfo;
@@ -38,8 +37,13 @@ import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.java.binary.classfile.descriptor.FieldDescriptor;
 import org.macroing.cel4j.java.binary.classfile.signature.FieldSignature;
 import org.macroing.cel4j.util.Document;
-import org.macroing.cel4j.util.Strings;
 
+/**
+ * A {@code Field} represents a field.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 final class Field implements Comparable<Field> {
 	private final ClassFile classFile;
 	private final FieldInfo fieldInfo;
@@ -57,39 +61,110 @@ final class Field implements Comparable<Field> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * Returns the {@link ClassFile} instance associated with this {@code Field} instance.
+	 * 
+	 * @return the {@code ClassFile} instance associated with this {@code Field} instance
+	 */
+	public ClassFile getClassFile() {
+		return this.classFile;
+	}
+	
+	/**
+	 * Decompiles this {@code Field} instance.
+	 * <p>
+	 * Returns a {@link Document} instance.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * field.decompile(new DecompilerConfiguration());
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Document} instance
+	 */
 	public Document decompile() {
 		return decompile(new DecompilerConfiguration());
 	}
 	
+	/**
+	 * Decompiles this {@code Field} instance.
+	 * <p>
+	 * Returns a {@link Document} instance.
+	 * <p>
+	 * If {@code decompilerConfiguration} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * field.decompile(decompilerConfiguration, new Document());
+	 * }
+	 * </pre>
+	 * 
+	 * @param decompilerConfiguration a {@link DecompilerConfiguration} instance
+	 * @return a {@code Document} instance
+	 * @throws NullPointerException thrown if, and only if, {@code decompilerConfiguration} is {@code null}
+	 */
 	public Document decompile(final DecompilerConfiguration decompilerConfiguration) {
 		return decompile(decompilerConfiguration, new Document());
 	}
 	
+	/**
+	 * Decompiles this {@code Field} instance.
+	 * <p>
+	 * Returns {@code document}.
+	 * <p>
+	 * If either {@code decompilerConfiguration} or {@code document} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param decompilerConfiguration a {@link DecompilerConfiguration} instance
+	 * @param document a {@link Document} instance
+	 * @return {@code document}
+	 * @throws NullPointerException thrown if, and only if, either {@code decompilerConfiguration} or {@code document} are {@code null}
+	 */
 	public Document decompile(final DecompilerConfiguration decompilerConfiguration, final Document document) {
 		Objects.requireNonNull(decompilerConfiguration, "decompilerConfiguration == null");
 		Objects.requireNonNull(document, "document == null");
 		
-		final boolean isDisplayingAttributeInfos = decompilerConfiguration.isDisplayingAttributeInfos();
-		
-		final String accessModifiers = Strings.optional(getModifiers(), "", " ", " ", modifier -> modifier.getKeyword());
+		final String modifiers = Modifier.toExternalForm(getModifiers());
 		final String type = UtilitiesToRefactor.generateType(decompilerConfiguration, this);
 		final String name = getName();
 		final String assignment = UtilitiesToRefactor.generateAssignment(this);
-		final String attributeInfoComment = isDisplayingAttributeInfos ? doGenerateAttributeInfoComment() : "";
 		
-		document.linef("%s%s %s%s;%s", accessModifiers, type, name, assignment, attributeInfoComment);
+		doGenerateComment(decompilerConfiguration, document);
+		
+		document.linef("%s%s %s%s;", modifiers, type, name, assignment);
 		
 		return document;
 	}
 	
-	public Type getEnclosingType() {
-		return this.enclosingType;
+	/**
+	 * Returns the {@link FieldInfo} instance associated with this {@code Field} instance.
+	 * 
+	 * @return the {@code FieldInfo} instance associated with this {@code Field} instance
+	 */
+	public FieldInfo getFieldInfo() {
+		return this.fieldInfo;
 	}
 	
-	public Type getType() {
-		return this.type;
+	/**
+	 * Returns a {@code List} that contains all {@link AttributeInfo} instances associated with this {@code Field} instance.
+	 * <p>
+	 * Modifications to the returned {@code List} will not affect this {@code Field} instance.
+	 * 
+	 * @return a {@code List} that contains all {@code AttributeInfo} instances associated with this {@code Field} instance
+	 */
+	public List<AttributeInfo> getAttributeInfos() {
+		return this.fieldInfo.getAttributeInfos();
 	}
 	
+	/**
+	 * Returns a {@code List} that contains all {@link Modifier} instances associated with this {@code Field} instance.
+	 * <p>
+	 * Modifications to the returned {@code List} will not affect this {@code Field} instance.
+	 * 
+	 * @return a {@code List} that contains all {@code Modifier} instances associated with this {@code Field} instance
+	 */
 	public List<Modifier> getModifiers() {
 		final List<Modifier> modifiers = new ArrayList<>();
 		
@@ -120,19 +195,25 @@ final class Field implements Comparable<Field> {
 		return modifiers;
 	}
 	
+	/**
+	 * Returns the optional {@link FieldSignature} instance associated with this {@code Field} instance.
+	 * 
+	 * @return the optional {@code FieldSignature} instance associated with this {@code Field} instance
+	 */
 	public Optional<FieldSignature> getFieldSignature() {
 		return FieldSignature.parseFieldSignatureOptionally(this.classFile, this.fieldInfo);
 	}
 	
+	/**
+	 * Returns the optionally assigned {@code Object} instance associated with this {@code Field} instance.
+	 * 
+	 * @return the optionally assigned {@code Object} instance associated with this {@code Field} instance
+	 */
 	public Optional<Object> getAssignment() {
 		final Optional<ConstantValueAttribute> optionalConstantValueAttribute = ConstantValueAttribute.find(this.fieldInfo);
 		
 		if(optionalConstantValueAttribute.isPresent()) {
-			final ConstantValueAttribute constantValueAttribute = optionalConstantValueAttribute.get();
-			
-			final int constantValueIndex = constantValueAttribute.getConstantValueIndex();
-			
-			final CPInfo cPInfo = this.classFile.getCPInfo(constantValueIndex);
+			final CPInfo cPInfo = this.classFile.getCPInfo(optionalConstantValueAttribute.get().getConstantValueIndex());
 			
 			if(cPInfo instanceof ConstantDoubleInfo) {
 				return Optional.of(Double.valueOf(ConstantDoubleInfo.class.cast(cPInfo).getDoubleValue()));
@@ -150,15 +231,51 @@ final class Field implements Comparable<Field> {
 		return Optional.empty();
 	}
 	
+	/**
+	 * Returns the name of this {@code Field} instance.
+	 * 
+	 * @return the name of this {@code Field} instance
+	 */
 	public String getName() {
 		return ConstantUTF8Info.findByNameIndex(this.classFile, this.fieldInfo).getStringValue();
 	}
 	
+	/**
+	 * Returns a {@code String} representation of this {@code Field} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code Field} instance
+	 */
 	@Override
 	public String toString() {
-		return String.format("JField: [Name=%s], [Type=%s], [Assignment=%s]", getName(), getType(), getAssignment());
+		return "Field";
 	}
 	
+	/**
+	 * Returns the enclosing {@link Type} instance associated with this {@code Field} instance.
+	 * 
+	 * @return the enclosing {@code Type} instance associated with this {@code Field} instance
+	 */
+	public Type getEnclosingType() {
+		return this.enclosingType;
+	}
+	
+	/**
+	 * Returns the {@link Type} instance associated with this {@code Field} instance.
+	 * 
+	 * @return the {@code Type} instance associated with this {@code Field} instance
+	 */
+	public Type getType() {
+		return this.type;
+	}
+	
+	/**
+	 * Compares {@code object} to this {@code Field} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code Field}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code Field} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code Field}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -174,42 +291,98 @@ final class Field implements Comparable<Field> {
 		}
 	}
 	
+	/**
+	 * Returns {@code true} if, and only if, this {@code Field} instance is final, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code Field} instance is final, {@code false} otherwise
+	 */
 	public boolean isFinal() {
 		return this.fieldInfo.isFinal();
 	}
 	
+	/**
+	 * Returns {@code true} if, and only if, this {@code Field} instance is package protected, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code Field} instance is package protected, {@code false} otherwise
+	 */
 	public boolean isPackageProtected() {
 		return !isPrivate() && !isProtected() && !isPublic();
 	}
 	
+	/**
+	 * Returns {@code true} if, and only if, this {@code Field} instance is private, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code Field} instance is private, {@code false} otherwise
+	 */
 	public boolean isPrivate() {
 		return this.fieldInfo.isPrivate();
 	}
 	
+	/**
+	 * Returns {@code true} if, and only if, this {@code Field} instance is protected, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code Field} instance is protected, {@code false} otherwise
+	 */
 	public boolean isProtected() {
 		return this.fieldInfo.isProtected();
 	}
 	
+	/**
+	 * Returns {@code true} if, and only if, this {@code Field} instance is public, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code Field} instance is public, {@code false} otherwise
+	 */
 	public boolean isPublic() {
 		return this.fieldInfo.isPublic();
 	}
 	
+	/**
+	 * Returns {@code true} if, and only if, this {@code Field} instance is static, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code Field} instance is static, {@code false} otherwise
+	 */
 	public boolean isStatic() {
 		return this.fieldInfo.isStatic();
 	}
 	
+	/**
+	 * Returns {@code true} if, and only if, this {@code Field} instance is synthetic, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code Field} instance is synthetic, {@code false} otherwise
+	 */
 	public boolean isSynthetic() {
 		return this.fieldInfo.isSynthetic();
 	}
 	
+	/**
+	 * Returns {@code true} if, and only if, this {@code Field} instance is transient, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code Field} instance is transient, {@code false} otherwise
+	 */
 	public boolean isTransient() {
 		return this.fieldInfo.isTransient();
 	}
 	
+	/**
+	 * Returns {@code true} if, and only if, this {@code Field} instance is volatile, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code Field} instance is volatile, {@code false} otherwise
+	 */
 	public boolean isVolatile() {
 		return this.fieldInfo.isVolatile();
 	}
 	
+	/**
+	 * Compares this {@code Field} instance with {@code field} for order.
+	 * <p>
+	 * Returns a negative integer, zero or a positive integer as this {@code Field} instance is less than, equal to or greater than {@code field}.
+	 * <p>
+	 * If {@code field} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param field a {@code Field} instance
+	 * @return a negative integer, zero or a positive integer as this {@code Field} instance is less than, equal to or greater than {@code field}
+	 * @throws NullPointerException thrown if, and only if, {@code field} is {@code null}
+	 */
 	@Override
 	public int compareTo(final Field field) {
 		final Field fieldThis = this;
@@ -259,6 +432,20 @@ final class Field implements Comparable<Field> {
 		return fieldThis.getName().compareTo(fieldThat.getName());
 	}
 	
+	/**
+	 * Returns the {@link AttributeInfo} count associated with this {@code Field} instance.
+	 * 
+	 * @return the {@code AttributeInfo} count associated with this {@code Field} instance
+	 */
+	public int getAttributeInfoCount() {
+		return this.fieldInfo.getAttributeInfoCount();
+	}
+	
+	/**
+	 * Returns a hash code for this {@code Field} instance.
+	 * 
+	 * @return a hash code for this {@code Field} instance
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.classFile, this.fieldInfo);
@@ -266,7 +453,17 @@ final class Field implements Comparable<Field> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public static boolean isInDifferentGroups(final Field fieldA, final Field fieldB) {
+	/**
+	 * Returns {@code true} if, and only if, {@code fieldA} and {@code fieldB} are in different groups, {@code false} otherwise.
+	 * <p>
+	 * If either {@code fieldA} or {@code fieldB} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param fieldA a {@code Field} instance
+	 * @param fieldB a {@code Field} instance
+	 * @return {@code true} if, and only if, {@code fieldA} and {@code fieldB} are in different groups, {@code false} otherwise
+	 * @throws NullPointerException thrown if, and only if, either {@code fieldA} or {@code fieldB} are {@code null}
+	 */
+	public static boolean inDifferentGroups(final Field fieldA, final Field fieldB) {
 		if(fieldA.isStatic() != fieldB.isStatic()) {
 			return true;
 		}
@@ -292,13 +489,19 @@ final class Field implements Comparable<Field> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private String doGenerateAttributeInfoComment() {
-		final List<AttributeInfo> attributeInfos = this.fieldInfo.getAttributeInfos();
+	private void doGenerateComment(final DecompilerConfiguration decompilerConfiguration, final Document document) {
+		final List<AttributeInfo> attributeInfos = getAttributeInfos();
 		
-		if(attributeInfos.isEmpty()) {
-			return "";
+		final boolean isDisplayingAttributeInfos = decompilerConfiguration.isDisplayingAttributeInfos() && attributeInfos.size() > 0;
+		
+		if(isDisplayingAttributeInfos) {
+			document.linef("/*");
+			
+			for(final AttributeInfo attributeInfo : attributeInfos) {
+				document.linef(" * %s", attributeInfo.getName());
+			}
+			
+			document.linef(" */");
 		}
-		
-		return attributeInfos.stream().map(attributeInfo -> attributeInfo.getName()).collect(Collectors.joining(", ", "//", ""));
 	}
 }

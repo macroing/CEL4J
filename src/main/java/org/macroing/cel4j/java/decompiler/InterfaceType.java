@@ -186,7 +186,7 @@ final class InterfaceType extends Type {
 		}
 		
 		for(final Method method : this.methods) {
-			final List<Type> methodTypesToImport = method.getTypesToImport();
+			final List<Type> methodTypesToImport = method.getImportableTypes();
 			
 			for(final Type methodTypeToImport : methodTypesToImport) {
 				doAddTypeToImportIfNecessary(methodTypeToImport, typesToImport);

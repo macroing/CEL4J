@@ -116,9 +116,6 @@ final class Constructor {
 		Objects.requireNonNull(decompilerConfiguration, "decompilerConfiguration == null");
 		Objects.requireNonNull(document, "document == null");
 		
-		final boolean isDisplayingAttributeInfos = decompilerConfiguration.isDisplayingAttributeInfos();
-		final boolean isDisplayingInstructions = decompilerConfiguration.isDisplayingInstructions();
-		
 		final ParameterList parameterList = getParameterList();
 		
 		final String simpleName = getEnclosingType().getSimpleName();
@@ -126,7 +123,7 @@ final class Constructor {
 		final String type = UtilitiesToRefactor.generateTypeWithOptionalTypeParameters(decompilerConfiguration, this, simpleName);
 		final String parameters = parameterList.toExternalForm(decompilerConfiguration, this, new ArrayList<>());
 		
-		final List<Instruction> instructions = getInstructions();
+		doGenerateComment(decompilerConfiguration, document);
 		
 		if(isDeprecated()) {
 			document.linef("@Deprecated");
@@ -134,71 +131,11 @@ final class Constructor {
 		
 		document.linef("%s%s(%s) {", modifiers, type, parameters);
 		document.indent();
-		
-		if(isDisplayingAttributeInfos) {
-			document.linef("/*");
-			
-			for(final AttributeInfo attributeInfo : getAttributeInfos()) {
-				document.linef(" * %s", attributeInfo.getName());
-			}
-			
-			document.linef(" */");
-		}
-		
-		if(isDisplayingAttributeInfos && isDisplayingInstructions) {
-			document.line();
-		}
-		
-		if(isDisplayingInstructions) {
-			document.linef("/*");
-			document.linef(" * %-15s    %-5s    %-13s    %-13s    %-20s    %-20s    %s", "Mnemonic", "Index", "Opcode (Hex.)", "Opcode (Dec.)", "Operands", "Branch Offsets", "Data");
-			document.linef(" * ");
-			
-			final AtomicInteger index = new AtomicInteger();
-			
-			for(final Instruction instruction : instructions) {
-				final String mnemonic = instruction.getMnemonic();
-				final String indexAsString = String.format("%04d", Integer.valueOf(index.get()));
-				final String opcodeHex = String.format("0x%02X", Integer.valueOf(instruction.getOpcode()));
-				final String opcodeDec = String.format("%03d", Integer.valueOf(instruction.getOpcode()));
-				final String operands = Strings.optional(IntStream.of(instruction.getOperands()).boxed().collect(Collectors.toList()), "{", "}", ", ");
-				final String branchOffsets = Arrays.toString(instruction.getBranchOffsets(index.get()));
-				final String description = Instructions.toString(this.classFile, instruction);
-				
-				document.linef(" * %-15s    %-5s    %-13s    %-13s    %-20s    %-20s    %s", mnemonic, indexAsString, opcodeHex, opcodeDec, operands, branchOffsets, description);
-				
-				index.addAndGet(instruction.getLength());
-			}
-			
-			document.linef(" */");
-		}
-		
-		if(!isDisplayingAttributeInfos && !isDisplayingInstructions) {
-			document.line();
-		}
-		
+		document.line();
 		document.outdent();
 		document.linef("}");
 		
 		return document;
-	}
-	
-	/**
-	 * Returns the {@link ParameterList} instance associated with this {@code Constructor} instance.
-	 * 
-	 * @return the {@code ParameterList} instance associated with this {@code Constructor} instance
-	 */
-	public ParameterList getParameterList() {
-		return this.parameterList;
-	}
-	
-	/**
-	 * Returns the enclosing {@link Type} instance associated with this {@code Constructor} instance.
-	 * 
-	 * @return the enclosing {@code Type} instance associated with this {@code Constructor} instance
-	 */
-	public Type getEnclosingType() {
-		return this.enclosingType;
 	}
 	
 	/**
@@ -249,12 +186,21 @@ final class Constructor {
 	}
 	
 	/**
-	 * Returns the optional super {@link MethodSignature} instance associated with this {@code Constructor} instance.
+	 * Returns the optional {@link MethodSignature} instance associated with this {@code Constructor} instance.
 	 * 
-	 * @return the optional super {@code MethodSignature} instance associated with this {@code Constructor} instance
+	 * @return the optional {@code MethodSignature} instance associated with this {@code Constructor} instance
 	 */
 	public Optional<MethodSignature> getOptionalMethodSignature() {
 		return MethodSignature.parseMethodSignatureOptionally(this.classFile, this.methodInfo);
+	}
+	
+	/**
+	 * Returns the {@link ParameterList} instance associated with this {@code Constructor} instance.
+	 * 
+	 * @return the {@code ParameterList} instance associated with this {@code Constructor} instance
+	 */
+	public ParameterList getParameterList() {
+		return this.parameterList;
 	}
 	
 	/**
@@ -273,7 +219,16 @@ final class Constructor {
 	 */
 	@Override
 	public String toString() {
-		return String.format("JConstructor: [Name=%s]", getName());
+		return "Constructor";
+	}
+	
+	/**
+	 * Returns the enclosing {@link Type} instance associated with this {@code Constructor} instance.
+	 * 
+	 * @return the enclosing {@code Type} instance associated with this {@code Constructor} instance
+	 */
+	public Type getEnclosingType() {
+		return this.enclosingType;
 	}
 	
 	/**
@@ -379,5 +334,54 @@ final class Constructor {
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.classFile, this.methodInfo);
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private void doGenerateComment(final DecompilerConfiguration decompilerConfiguration, final Document document) {
+		final List<AttributeInfo> attributeInfos = getAttributeInfos();
+		final List<Instruction> instructions = getInstructions();
+		
+		final boolean isDisplayingAttributeInfos = decompilerConfiguration.isDisplayingAttributeInfos() && attributeInfos.size() > 0;
+		final boolean isDisplayingInstructions = decompilerConfiguration.isDisplayingInstructions() && instructions.size() > 0;
+		
+		if(isDisplayingAttributeInfos || isDisplayingInstructions) {
+			document.line("/*");
+		}
+		
+		if(isDisplayingAttributeInfos) {
+			for(final AttributeInfo attributeInfo : attributeInfos) {
+				document.linef(" * %s", attributeInfo.getName());
+			}
+		}
+		
+		if(isDisplayingAttributeInfos && isDisplayingInstructions) {
+			document.line(" * ");
+		}
+		
+		if(isDisplayingInstructions) {
+			document.linef(" * %-15s    %-5s    %-13s    %-13s    %-20s    %-20s    %s", "Mnemonic", "Index", "Opcode (Hex.)", "Opcode (Dec.)", "Operands", "Branch Offsets", "Data");
+			document.linef(" * ");
+			
+			final AtomicInteger index = new AtomicInteger();
+			
+			for(final Instruction instruction : instructions) {
+				final String mnemonic = instruction.getMnemonic();
+				final String indexAsString = String.format("%04d", Integer.valueOf(index.get()));
+				final String opcodeHex = String.format("0x%02X", Integer.valueOf(instruction.getOpcode()));
+				final String opcodeDec = String.format("%03d", Integer.valueOf(instruction.getOpcode()));
+				final String operands = Strings.optional(IntStream.of(instruction.getOperands()).boxed().collect(Collectors.toList()), "{", "}", ", ");
+				final String branchOffsets = Arrays.toString(instruction.getBranchOffsets(index.get()));
+				final String description = Instructions.toString(this.classFile, instruction);
+				
+				document.linef(" * %-15s    %-5s    %-13s    %-13s    %-20s    %-20s    %s", mnemonic, indexAsString, opcodeHex, opcodeDec, operands, branchOffsets, description);
+				
+				index.addAndGet(instruction.getLength());
+			}
+		}
+		
+		if(isDisplayingAttributeInfos || isDisplayingInstructions) {
+			document.linef(" */");
+		}
 	}
 }

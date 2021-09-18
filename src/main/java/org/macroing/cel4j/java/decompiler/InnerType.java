@@ -28,7 +28,6 @@ import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantClassInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ClassName;
 import org.macroing.cel4j.util.Document;
-import org.macroing.cel4j.util.Strings;
 
 final class InnerType {
 	private final ClassFile classFile;
@@ -45,14 +44,58 @@ final class InnerType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * Decompiles this {@code InnerType} instance.
+	 * <p>
+	 * Returns a {@link Document} instance.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * innerType.decompile(new DecompilerConfiguration());
+	 * }
+	 * </pre>
+	 * 
+	 * @return a {@code Document} instance
+	 */
 	public Document decompile() {
 		return decompile(new DecompilerConfiguration());
 	}
 	
+	/**
+	 * Decompiles this {@code InnerType} instance.
+	 * <p>
+	 * Returns a {@link Document} instance.
+	 * <p>
+	 * If {@code decompilerConfiguration} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * Calling this method is equivalent to the following:
+	 * <pre>
+	 * {@code
+	 * innerType.decompile(decompilerConfiguration, new Document());
+	 * }
+	 * </pre>
+	 * 
+	 * @param decompilerConfiguration a {@link DecompilerConfiguration} instance
+	 * @return a {@code Document} instance
+	 * @throws NullPointerException thrown if, and only if, {@code decompilerConfiguration} is {@code null}
+	 */
 	public Document decompile(final DecompilerConfiguration decompilerConfiguration) {
 		return decompile(decompilerConfiguration, new Document());
 	}
 	
+	/**
+	 * Decompiles this {@code InnerType} instance.
+	 * <p>
+	 * Returns {@code document}.
+	 * <p>
+	 * If either {@code decompilerConfiguration} or {@code document} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param decompilerConfiguration a {@link DecompilerConfiguration} instance
+	 * @param document a {@link Document} instance
+	 * @return {@code document}
+	 * @throws NullPointerException thrown if, and only if, either {@code decompilerConfiguration} or {@code document} are {@code null}
+	 */
 	public Document decompile(final DecompilerConfiguration decompilerConfiguration, final Document document) {
 		Objects.requireNonNull(decompilerConfiguration, "decompilerConfiguration == null");
 		Objects.requireNonNull(document, "document == null");
@@ -60,20 +103,16 @@ final class InnerType {
 		final Type type = getType();
 		
 		if(type instanceof AnnotationType) {
-			doDecompileJAnnotation(decompilerConfiguration, document, AnnotationType.class.cast(type));
+			doDecompileAnnotationType(decompilerConfiguration, document, AnnotationType.class.cast(type));
 		} else if(type instanceof ClassType) {
-			doDecompileJClass(decompilerConfiguration, document, ClassType.class.cast(type));
+			doDecompileClassType(decompilerConfiguration, document, ClassType.class.cast(type));
 		} else if(type instanceof EnumType) {
-			doDecompileJEnum(decompilerConfiguration, document, EnumType.class.cast(type));
+			doDecompileEnumType(decompilerConfiguration, document, EnumType.class.cast(type));
 		} else if(type instanceof InterfaceType) {
-			doDecompileJInterface(decompilerConfiguration, document, InterfaceType.class.cast(type));
+			doDecompileInterfaceType(decompilerConfiguration, document, InterfaceType.class.cast(type));
 		}
 		
 		return document;
-	}
-	
-	public Type getType() {
-		return this.type;
 	}
 	
 	public List<Modifier> getModifiers() {
@@ -102,6 +141,10 @@ final class InnerType {
 	
 	public String getSimpleName() {
 		return this.innerClass.getInnerNameIndex() != 0 ? this.classFile.getCPInfo(this.innerClass.getInnerNameIndex(), ConstantUTF8Info.class).getStringValue() : "";
+	}
+	
+	public Type getType() {
+		return this.type;
 	}
 	
 	@Override
@@ -159,23 +202,23 @@ final class InnerType {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@SuppressWarnings("unused")
-	private void doDecompileJAnnotation(final DecompilerConfiguration decompilerConfiguration, final Document document, final AnnotationType jAnnotation) {
+	private void doDecompileAnnotationType(final DecompilerConfiguration decompilerConfiguration, final Document document, final AnnotationType annotationType) {
 //		TODO: Implement!
 	}
 	
-	private void doDecompileJClass(final DecompilerConfiguration decompilerConfiguration, final Document document, final ClassType jClass) {
+	private void doDecompileClassType(final DecompilerConfiguration decompilerConfiguration, final Document document, final ClassType classType) {
 		final boolean isSeparatingGroups = decompilerConfiguration.isSeparatingGroups();
 		
-		final String modifiers = Strings.optional(getModifiers(), "", " ", " ", modifier -> modifier.getKeyword());
+		final String modifiers = Modifier.toExternalForm(getModifiers());
 		final String simpleName = getSimpleName();
-		final String typeParameters = UtilitiesToRefactor.generateTypeParameters(decompilerConfiguration, jClass.getImportableTypes(), jClass.getOptionalTypeParameters());
-		final String extendsClause = UtilitiesToRefactor.generateExtendsClause(decompilerConfiguration, jClass);
-		final String implementsClause = UtilitiesToRefactor.generateImplementsClause(decompilerConfiguration, jClass.getInterfaceTypes(), new ArrayList<>(), jClass.getOptionalClassSignature(), jClass.getPackageName());
+		final String typeParameters = UtilitiesToRefactor.generateTypeParameters(decompilerConfiguration, classType.getImportableTypes(), classType.getOptionalTypeParameters());
+		final String extendsClause = UtilitiesToRefactor.generateExtendsClause(decompilerConfiguration, classType);
+		final String implementsClause = UtilitiesToRefactor.generateImplementsClause(decompilerConfiguration, classType.getInterfaceTypes(), new ArrayList<>(), classType.getOptionalClassSignature(), classType.getPackageName());
 		
-		final List<Constructor> jConstructors = jClass.getConstructors();
-		final List<Field> jFields = jClass.getFields();
-		final List<InnerType> jInnerTypes = jClass.getInnerTypes();
-		final List<Method> jMethods = jClass.getMethods();
+		final List<Constructor> jConstructors = classType.getConstructors();
+		final List<Field> jFields = classType.getFields();
+		final List<InnerType> jInnerTypes = classType.getInnerTypes();
+		final List<Method> jMethods = classType.getMethods();
 		
 		document.linef("%sclass %s%s%s%s {", modifiers, simpleName, typeParameters, extendsClause, implementsClause);
 		document.indent();
@@ -240,10 +283,6 @@ final class InnerType {
 					document.line("");
 				}
 			}
-			
-//			final
-//			JInnerType jInnerType = jInnerTypes.get(i);
-//			jInnerType.decompile(decompilerConfiguration, document);
 		}
 		
 		document.outdent();
@@ -251,12 +290,12 @@ final class InnerType {
 	}
 	
 	@SuppressWarnings("unused")
-	private void doDecompileJEnum(final DecompilerConfiguration decompilerConfiguration, final Document document, final EnumType jEnum) {
+	private void doDecompileEnumType(final DecompilerConfiguration decompilerConfiguration, final Document document, final EnumType enumType) {
 //		TODO: Implement!
 	}
 	
 	@SuppressWarnings("unused")
-	private void doDecompileJInterface(final DecompilerConfiguration decompilerConfiguration, final Document document, final InterfaceType jInterface) {
+	private void doDecompileInterfaceType(final DecompilerConfiguration decompilerConfiguration, final Document document, final InterfaceType interfaceType) {
 //		TODO: Implement!
 	}
 }

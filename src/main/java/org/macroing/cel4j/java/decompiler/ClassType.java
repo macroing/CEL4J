@@ -208,9 +208,11 @@ final class ClassType extends Type {
 			
 			jFieldA.decompile(decompilerConfiguration, document);
 			
-			if(isSeparatingGroups && isSortingGroups && Field.isInDifferentGroups(jFieldA, jFieldB)) {
+			if(isSeparatingGroups && isSortingGroups && Field.inDifferentGroups(jFieldA, jFieldB)) {
 				document.line("");
 				document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
+				document.line("");
+			} else if(jFieldA != jFieldB && isDisplayingAttributeInfos && jFieldB.getAttributeInfoCount() > 0) {
 				document.line("");
 			}
 		}
@@ -253,7 +255,7 @@ final class ClassType extends Type {
 			
 			jMethodA.decompile(decompilerConfiguration, document);
 			
-			if(isSeparatingGroups && isSortingGroups && Method.isInDifferentGroups(jMethodA, jMethodB)) {
+			if(isSeparatingGroups && isSortingGroups && Method.inDifferentGroups(jMethodA, jMethodB)) {
 				document.line("");
 				document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
 			}
@@ -287,6 +289,17 @@ final class ClassType extends Type {
 		document.line("}");
 		
 		return document;
+	}
+	
+	/**
+	 * Returns a {@code List} that contains all {@link AttributeInfo} instances associated with this {@code ClassType} instance.
+	 * <p>
+	 * Modifications to the returned {@code List} will not affect this {@code ClassType} instance.
+	 * 
+	 * @return a {@code List} that contains all {@code AttributeInfo} instances associated with this {@code ClassType} instance
+	 */
+	public List<AttributeInfo> getAttributeInfos() {
+		return this.classFile.getAttributeInfos();
 	}
 	
 	/**
@@ -385,15 +398,15 @@ final class ClassType extends Type {
 	 * @return a {@code List} that contains all {@code Type} instances associated with this {@code ClassType} instance that are importable
 	 */
 	public List<Type> getImportableTypes() {
-		final Set<Type> typesToImport = new LinkedHashSet<>();
+		final Set<Type> importableTypes = new LinkedHashSet<>();
 		
-		this.constructors.forEach(constructor -> constructor.getParameterList().getParameters().forEach(parameter -> doAddTypeToImportIfNecessary(parameter.getType(), typesToImport)));
-		this.fields.forEach(field -> doAddTypeToImportIfNecessary(field.getType(), typesToImport));
-		this.interfaceTypes.forEach(interfaceType -> doAddTypeToImportIfNecessary(interfaceType, typesToImport));
-		this.methods.forEach(method -> method.getTypesToImport().forEach(type -> doAddTypeToImportIfNecessary(type, typesToImport)));
-		this.optionalTypeParameters.ifPresent(typeParameters -> typeParameters.collectNames().forEach(name -> doAddTypeToImportIfNecessary(Type.valueOf(name), typesToImport)));
+		this.constructors.forEach(constructor -> constructor.getParameterList().getParameters().forEach(parameter -> doAddTypeToImportIfNecessary(parameter.getType(), importableTypes)));
+		this.fields.forEach(field -> doAddTypeToImportIfNecessary(field.getType(), importableTypes));
+		this.interfaceTypes.forEach(interfaceType -> doAddTypeToImportIfNecessary(interfaceType, importableTypes));
+		this.methods.forEach(method -> method.getImportableTypes().forEach(type -> doAddTypeToImportIfNecessary(type, importableTypes)));
+		this.optionalTypeParameters.ifPresent(typeParameters -> typeParameters.collectNames().forEach(name -> doAddTypeToImportIfNecessary(Type.valueOf(name), importableTypes)));
 		
-		return new ArrayList<>(typesToImport);
+		return new ArrayList<>(importableTypes);
 	}
 	
 	/**

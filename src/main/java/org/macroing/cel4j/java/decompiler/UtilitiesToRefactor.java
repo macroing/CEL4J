@@ -37,8 +37,8 @@ final class UtilitiesToRefactor {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public static String generateAssignment(final Field jField) {
-		final Optional<Object> optionalAssignment = jField.getAssignment();
+	public static String generateAssignment(final Field field) {
+		final Optional<Object> optionalAssignment = field.getAssignment();
 		
 		if(optionalAssignment.isPresent()) {
 			final Object assignment = optionalAssignment.get();
@@ -59,27 +59,27 @@ final class UtilitiesToRefactor {
 		return "";
 	}
 	
-	public static String generateDefaultReturnStatement(final Method jMethod) {
-		final Type returnType = jMethod.getReturnType();
+	public static String generateDefaultReturnStatement(final Method method) {
+		final Type returnType = method.getReturnType();
 		
 		if(returnType instanceof VoidType) {
 			return "";
 		} else if(returnType instanceof PrimitiveType) {
-			final PrimitiveType jPrimitive = PrimitiveType.class.cast(returnType);
+			final PrimitiveType primitiveType = PrimitiveType.class.cast(returnType);
 			
-			if(jPrimitive.equals(PrimitiveType.BOOLEAN)) {
+			if(primitiveType.equals(PrimitiveType.BOOLEAN)) {
 				return "return false;";
-			} else if(jPrimitive.equals(PrimitiveType.BYTE)) {
+			} else if(primitiveType.equals(PrimitiveType.BYTE)) {
 				return "return 0;";
-			} else if(jPrimitive.equals(PrimitiveType.CHAR)) {
+			} else if(primitiveType.equals(PrimitiveType.CHAR)) {
 				return "return '\\u0000';";
-			} else if(jPrimitive.equals(PrimitiveType.DOUBLE)) {
+			} else if(primitiveType.equals(PrimitiveType.DOUBLE)) {
 				return "return 0.0D;";
-			} else if(jPrimitive.equals(PrimitiveType.FLOAT)) {
+			} else if(primitiveType.equals(PrimitiveType.FLOAT)) {
 				return "return 0.0F;";
-			} else if(jPrimitive.equals(PrimitiveType.INT)) {
+			} else if(primitiveType.equals(PrimitiveType.INT)) {
 				return "return 0;";
-			} else if(jPrimitive.equals(PrimitiveType.LONG)) {
+			} else if(primitiveType.equals(PrimitiveType.LONG)) {
 				return "return 0L;";
 			} else {
 				return "return 0;";
@@ -89,27 +89,27 @@ final class UtilitiesToRefactor {
 		}
 	}
 	
-	public static String generateExtendsClause(final DecompilerConfiguration decompilerConfiguration, final ClassType jClass) {
-		return generateExtendsClause(decompilerConfiguration, jClass, new ArrayList<>());
+	public static String generateExtendsClause(final DecompilerConfiguration decompilerConfiguration, final ClassType classType) {
+		return generateExtendsClause(decompilerConfiguration, classType, new ArrayList<>());
 	}
 	
-	public static String generateExtendsClause(final DecompilerConfiguration decompilerConfiguration, final ClassType jClass, final List<Type> typesToImport) {
+	public static String generateExtendsClause(final DecompilerConfiguration decompilerConfiguration, final ClassType classType, final List<Type> importableTypes) {
 		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
 		final StringBuilder stringBuilder = new StringBuilder();
 		
-		jClass.getOptionalSuperClassType().ifPresent(superClass -> {
+		classType.getOptionalSuperClassType().ifPresent(superClass -> {
 			if(!(isDiscardingExtendsObject && superClass.isObject())) {
 				stringBuilder.append(" ");
 				stringBuilder.append("extends");
 				stringBuilder.append(" ");
 				
-				final Optional<ClassSignature> optionalClassSignature = jClass.getOptionalClassSignature();
+				final Optional<ClassSignature> optionalClassSignature = classType.getOptionalClassSignature();
 				
 				final String string0 = optionalClassSignature.isPresent() ? optionalClassSignature.get().getSuperClassSignature().toExternalForm() : superClass.getName();
-				final String string1 = isDiscardingUnnecessaryPackageNames ? Names.filterPackageNames(JPackageNameFilter.newUnnecessaryPackageName(jClass.getPackageName(), isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes), string0) : string0;
+				final String string1 = isDiscardingUnnecessaryPackageNames ? Names.filterPackageNames(JPackageNameFilter.newUnnecessaryPackageName(classType.getPackageName(), isDiscardingUnnecessaryPackageNames, importableTypes, isImportingTypes), string0) : string0;
 				
 				stringBuilder.append(string1);
 			}
@@ -118,18 +118,18 @@ final class UtilitiesToRefactor {
 		return stringBuilder.toString();
 	}
 	
-	public static String generateExtendsClause(final DecompilerConfiguration decompilerConfiguration, final List<InterfaceType> jInterfaces, final List<Type> typesToImport, final Optional<ClassSignature> optionalClassSignature, final String packageName) {
+	public static String generateExtendsClause(final DecompilerConfiguration decompilerConfiguration, final List<InterfaceType> interfaceTypes, final List<Type> importableTypes, final Optional<ClassSignature> optionalClassSignature, final String packageName) {
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
 		final StringBuilder stringBuilder = new StringBuilder();
 		
-		if(jInterfaces.size() > 0) {
+		if(interfaceTypes.size() > 0) {
 			stringBuilder.append(" ");
 			stringBuilder.append("extends");
 			stringBuilder.append(" ");
 			
-			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(packageName, isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes);
+			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(packageName, isDiscardingUnnecessaryPackageNames, importableTypes, isImportingTypes);
 			
 			if(optionalClassSignature.isPresent()) {
 				final ClassSignature classSignature = optionalClassSignature.get();
@@ -146,8 +146,8 @@ final class UtilitiesToRefactor {
 					stringBuilder.append(string1);
 				}
 			} else {
-				for(int i = 0; i < jInterfaces.size(); i++) {
-					final String string0 = jInterfaces.get(i).getName();
+				for(int i = 0; i < interfaceTypes.size(); i++) {
+					final String string0 = interfaceTypes.get(i).getName();
 					final String string1 = isDiscardingUnnecessaryPackageNames ? Names.filterPackageNames(jPackageNameFilter, string0) : string0;
 					
 					stringBuilder.append(i > 0 ? ", " : "");
@@ -159,18 +159,18 @@ final class UtilitiesToRefactor {
 		return stringBuilder.toString();
 	}
 	
-	public static String generateImplementsClause(final DecompilerConfiguration decompilerConfiguration, final List<InterfaceType> jInterfaces, final List<Type> typesToImport, final Optional<ClassSignature> optionalClassSignature, final String packageName) {
+	public static String generateImplementsClause(final DecompilerConfiguration decompilerConfiguration, final List<InterfaceType> interfaceTypes, final List<Type> importableTypes, final Optional<ClassSignature> optionalClassSignature, final String packageName) {
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
 		final StringBuilder stringBuilder = new StringBuilder();
 		
-		if(jInterfaces.size() > 0) {
+		if(interfaceTypes.size() > 0) {
 			stringBuilder.append(" ");
 			stringBuilder.append("implements");
 			stringBuilder.append(" ");
 			
-			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(packageName, isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes);
+			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(packageName, isDiscardingUnnecessaryPackageNames, importableTypes, isImportingTypes);
 			
 			if(optionalClassSignature.isPresent()) {
 				final ClassSignature classSignature = optionalClassSignature.get();
@@ -187,8 +187,8 @@ final class UtilitiesToRefactor {
 					stringBuilder.append(string1);
 				}
 			} else {
-				for(int i = 0; i < jInterfaces.size(); i++) {
-					final String string0 = jInterfaces.get(i).getName();
+				for(int i = 0; i < interfaceTypes.size(); i++) {
+					final String string0 = interfaceTypes.get(i).getName();
 					final String string1 = isDiscardingUnnecessaryPackageNames ? Names.filterPackageNames(jPackageNameFilter, string0) : string0;
 					
 					stringBuilder.append(i > 0 ? ", " : "");
@@ -200,14 +200,14 @@ final class UtilitiesToRefactor {
 		return stringBuilder.toString();
 	}
 	
-	public static String generateReturnTypeWithOptionalTypeParameters(final DecompilerConfiguration decompilerConfiguration, final Method jMethod, final List<Type> typesToImport) {
+	public static String generateReturnTypeWithOptionalTypeParameters(final DecompilerConfiguration decompilerConfiguration, final Method method, final List<Type> importableTypes) {
 		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
-		final Optional<MethodSignature> optionalMethodSignature = jMethod.getMethodSignature();
+		final Optional<MethodSignature> optionalMethodSignature = method.getMethodSignature();
 		
-		final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(jMethod.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes);
+		final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(method.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames, importableTypes, isImportingTypes);
 		
 		if(optionalMethodSignature.isPresent()) {
 			final MethodSignature methodSignature = optionalMethodSignature.get();
@@ -227,21 +227,21 @@ final class UtilitiesToRefactor {
 				stringBuilder.append(" ");
 			}
 			
-			stringBuilder.append(Names.filterPackageNames(jPackageNameFilter, result.toExternalForm(), jMethod.getReturnType().isInnerType()));
+			stringBuilder.append(Names.filterPackageNames(jPackageNameFilter, result.toExternalForm(), method.getReturnType().isInnerType()));
 			
 			return stringBuilder.toString();
 		}
 		
-		return Names.filterPackageNames(jPackageNameFilter, jMethod.getReturnType().getName(), jMethod.getReturnType().isInnerType());
+		return Names.filterPackageNames(jPackageNameFilter, method.getReturnType().getName(), method.getReturnType().isInnerType());
 	}
 	
-	public static String generateType(final DecompilerConfiguration decompilerConfiguration, final Field jField) {
+	public static String generateType(final DecompilerConfiguration decompilerConfiguration, final Field field) {
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
-		final Optional<FieldSignature> optionalFieldSignature = jField.getFieldSignature();
+		final Optional<FieldSignature> optionalFieldSignature = field.getFieldSignature();
 		
-		final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(jField.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames, new ArrayList<>(), isImportingTypes);
+		final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(field.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames, new ArrayList<>(), isImportingTypes);
 		
 		if(optionalFieldSignature.isPresent()) {
 			final FieldSignature fieldSignature = optionalFieldSignature.get();
@@ -249,10 +249,10 @@ final class UtilitiesToRefactor {
 			return Names.filterPackageNames(jPackageNameFilter, fieldSignature.toExternalForm());
 		}
 		
-		return Names.filterPackageNames(jPackageNameFilter, jField.getType().getName());
+		return Names.filterPackageNames(jPackageNameFilter, field.getType().getName());
 	}
 	
-	public static String generateTypeParameters(final DecompilerConfiguration decompilerConfiguration, final List<Type> typesToImport, final Optional<TypeParameters> optionalTypeParameters) {
+	public static String generateTypeParameters(final DecompilerConfiguration decompilerConfiguration, final List<Type> importableTypes, final Optional<TypeParameters> optionalTypeParameters) {
 		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
@@ -270,8 +270,8 @@ final class UtilitiesToRefactor {
 				}
 				
 				if(isImportingTypes) {
-					for(final Type typeToImport : typesToImport) {
-						if(typeToImport.getName().equals(packageName0 + simpleName)) {
+					for(final Type importableType : importableTypes) {
+						if(importableType.getName().equals(packageName0 + simpleName)) {
 							return simpleName;
 						}
 					}
@@ -286,13 +286,13 @@ final class UtilitiesToRefactor {
 		return "";
 	}
 	
-	public static String generateTypeWithOptionalTypeParameters(final DecompilerConfiguration decompilerConfiguration, final Constructor jConstructor, final String simpleName) {
+	public static String generateTypeWithOptionalTypeParameters(final DecompilerConfiguration decompilerConfiguration, final Constructor constructor, final String simpleName) {
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
-		final Optional<MethodSignature> optionalMethodSignature = jConstructor.getOptionalMethodSignature();
+		final Optional<MethodSignature> optionalMethodSignature = constructor.getOptionalMethodSignature();
 		
-		final Type enclosingType = jConstructor.getEnclosingType();
+		final Type enclosingType = constructor.getEnclosingType();
 		
 		if(optionalMethodSignature.isPresent()) {
 			final MethodSignature methodSignature = optionalMethodSignature.get();
