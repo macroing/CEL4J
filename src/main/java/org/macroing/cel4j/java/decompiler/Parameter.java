@@ -20,32 +20,32 @@ package org.macroing.cel4j.java.decompiler;
 
 import java.util.Objects;
 
-import org.macroing.cel4j.java.binary.classfile.ClassFile;
-import org.macroing.cel4j.java.binary.classfile.attributeinfo.Parameter;
-import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
-import org.macroing.cel4j.java.binary.classfile.descriptor.ParameterDescriptor;
 import org.macroing.cel4j.java.binary.classfile.signature.JavaTypeSignature;
 
-final class JParameter implements Comparable<JParameter> {
-	private final JType type;
+final class Parameter implements Comparable<Parameter> {
+	private final Type type;
 	private final JavaTypeSignature javaTypeSignature;
 	private final String name;
 	private final boolean isFinal;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	JParameter(final JType type, final String name) {
+	public Parameter(final Type type) {
+		this(type, "");
+	}
+	
+	public Parameter(final Type type, final String name) {
 		this(type, name, false);
 	}
 	
-	JParameter(final JType type, final String name, final boolean isFinal) {
+	public Parameter(final Type type, final String name, final boolean isFinal) {
 		this.type = Objects.requireNonNull(type, "type == null");
 		this.name = Objects.requireNonNull(name, "name == null");
 		this.isFinal = isFinal;
 		this.javaTypeSignature = null;
 	}
 	
-	JParameter(final JType type, final String name, final boolean isFinal, final JavaTypeSignature javaTypeSignature) {
+	public Parameter(final Type type, final String name, final boolean isFinal, final JavaTypeSignature javaTypeSignature) {
 		this.type = Objects.requireNonNull(type, "type == null");
 		this.name = Objects.requireNonNull(name, "name == null");
 		this.isFinal = isFinal;
@@ -54,7 +54,7 @@ final class JParameter implements Comparable<JParameter> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public JType getType() {
+	public Type getType() {
 		return this.type;
 	}
 	
@@ -83,15 +83,15 @@ final class JParameter implements Comparable<JParameter> {
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
-		} else if(!(object instanceof JParameter)) {
+		} else if(!(object instanceof Parameter)) {
 			return false;
-		} else if(!Objects.equals(this.type, JParameter.class.cast(object).type)) {
+		} else if(!Objects.equals(this.type, Parameter.class.cast(object).type)) {
 			return false;
-		} else if(!Objects.equals(this.javaTypeSignature, JParameter.class.cast(object).javaTypeSignature)) {
+		} else if(!Objects.equals(this.javaTypeSignature, Parameter.class.cast(object).javaTypeSignature)) {
 			return false;
-		} else if(!Objects.equals(this.name, JParameter.class.cast(object).name)) {
+		} else if(!Objects.equals(this.name, Parameter.class.cast(object).name)) {
 			return false;
-		} else if(this.isFinal != JParameter.class.cast(object).isFinal) {
+		} else if(this.isFinal != Parameter.class.cast(object).isFinal) {
 			return false;
 		} else {
 			return true;
@@ -107,54 +107,12 @@ final class JParameter implements Comparable<JParameter> {
 	}
 	
 	@Override
-	public int compareTo(final JParameter parameter) {
+	public int compareTo(final Parameter parameter) {
 		return getType().getSimpleName().compareTo(parameter.getType().getSimpleName());
 	}
 	
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.type, this.javaTypeSignature, this.name, Boolean.valueOf(this.isFinal));
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	public static JParameter valueOf(final JavaTypeSignature javaTypeSignature, final ParameterDescriptor parameterDescriptor) {
-		final JType type = JType.valueOf(parameterDescriptor);
-		
-		final String name = "";
-		
-		final boolean isFinal = false;
-		
-		return new JParameter(type, name, isFinal, javaTypeSignature);
-	}
-	
-	public static JParameter valueOf(final JavaTypeSignature javaTypeSignature, final ParameterDescriptor parameterDescriptor, final ClassFile classFile, final Parameter parameter) {
-		final JType type = JType.valueOf(parameterDescriptor);
-		
-		final String name = parameter.getNameIndex() != 0 ? classFile.getCPInfo(parameter.getNameIndex(), ConstantUTF8Info.class).getStringValue() : "";
-		
-		final boolean isFinal = parameter.isFinal();
-		
-		return new JParameter(type, name, isFinal, javaTypeSignature);
-	}
-	
-	public static JParameter valueOf(final ParameterDescriptor parameterDescriptor) {
-		final JType type = JType.valueOf(parameterDescriptor);
-		
-		final String name = "";
-		
-		final boolean isFinal = false;
-		
-		return new JParameter(type, name, isFinal);
-	}
-	
-	public static JParameter valueOf(final ParameterDescriptor parameterDescriptor, final ClassFile classFile, final Parameter parameter) {
-		final JType type = JType.valueOf(parameterDescriptor);
-		
-		final String name = parameter.getNameIndex() != 0 ? classFile.getCPInfo(parameter.getNameIndex(), ConstantUTF8Info.class).getStringValue() : "";
-		
-		final boolean isFinal = parameter.isFinal();
-		
-		return new JParameter(type, name, isFinal);
 	}
 }

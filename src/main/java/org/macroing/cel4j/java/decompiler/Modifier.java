@@ -23,7 +23,7 @@ import java.util.Objects;
 
 import org.macroing.cel4j.util.Strings;
 
-enum JModifier {
+enum Modifier {
 	ABSTRACT("abstract"),
 	DEFAULT("default"),
 	FINAL("final"),
@@ -43,7 +43,7 @@ enum JModifier {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private JModifier(final String keyword) {
+	private Modifier(final String keyword) {
 		this.keyword = Objects.requireNonNull(keyword, "keyword == null");
 	}
 	
@@ -55,7 +55,7 @@ enum JModifier {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public static String toExternalForm(final List<JModifier> modifiers) {
+	public static String toExternalForm(final List<Modifier> modifiers) {
 		return Strings.optional(modifiers, "", " ", " ", modifier -> modifier.getKeyword());
 	}
 }

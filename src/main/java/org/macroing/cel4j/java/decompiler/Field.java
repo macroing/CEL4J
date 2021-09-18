@@ -40,19 +40,19 @@ import org.macroing.cel4j.java.binary.classfile.signature.FieldSignature;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 
-final class JField implements Comparable<JField> {
+final class Field implements Comparable<Field> {
 	private final ClassFile classFile;
 	private final FieldInfo fieldInfo;
-	private final JType enclosingType;
-	private final JType type;
+	private final Type enclosingType;
+	private final Type type;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	JField(final ClassFile classFile, final FieldInfo fieldInfo, final JType enclosingType) {
+	Field(final ClassFile classFile, final FieldInfo fieldInfo, final Type enclosingType) {
 		this.classFile = Objects.requireNonNull(classFile, "classFile == null");
 		this.fieldInfo = Objects.requireNonNull(fieldInfo, "fieldInfo == null");
 		this.enclosingType = Objects.requireNonNull(enclosingType, "enclosingType == null");
-		this.type = JType.valueOf(FieldDescriptor.parseFieldDescriptor(classFile, fieldInfo));
+		this.type = Type.valueOf(FieldDescriptor.parseFieldDescriptor(classFile, fieldInfo));
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,39 +82,39 @@ final class JField implements Comparable<JField> {
 		return document;
 	}
 	
-	public JType getEnclosingType() {
+	public Type getEnclosingType() {
 		return this.enclosingType;
 	}
 	
-	public JType getType() {
+	public Type getType() {
 		return this.type;
 	}
 	
-	public List<JModifier> getModifiers() {
-		final List<JModifier> modifiers = new ArrayList<>();
+	public List<Modifier> getModifiers() {
+		final List<Modifier> modifiers = new ArrayList<>();
 		
 		if(isPrivate()) {
-			modifiers.add(JModifier.PRIVATE);
+			modifiers.add(Modifier.PRIVATE);
 		} else if(isProtected()) {
-			modifiers.add(JModifier.PROTECTED);
+			modifiers.add(Modifier.PROTECTED);
 		} else if(isPublic()) {
-			modifiers.add(JModifier.PUBLIC);
+			modifiers.add(Modifier.PUBLIC);
 		}
 		
 		if(isStatic()) {
-			modifiers.add(JModifier.STATIC);
+			modifiers.add(Modifier.STATIC);
 		}
 		
 		if(isFinal()) {
-			modifiers.add(JModifier.FINAL);
+			modifiers.add(Modifier.FINAL);
 		}
 		
 		if(isTransient()) {
-			modifiers.add(JModifier.TRANSIENT);
+			modifiers.add(Modifier.TRANSIENT);
 		}
 		
 		if(isVolatile()) {
-			modifiers.add(JModifier.VOLATILE);
+			modifiers.add(Modifier.VOLATILE);
 		}
 		
 		return modifiers;
@@ -163,11 +163,11 @@ final class JField implements Comparable<JField> {
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
-		} else if(!(object instanceof JField)) {
+		} else if(!(object instanceof Field)) {
 			return false;
-		} else if(!Objects.equals(this.classFile, JField.class.cast(object).classFile)) {
+		} else if(!Objects.equals(this.classFile, Field.class.cast(object).classFile)) {
 			return false;
-		} else if(!Objects.equals(this.fieldInfo, JField.class.cast(object).fieldInfo)) {
+		} else if(!Objects.equals(this.fieldInfo, Field.class.cast(object).fieldInfo)) {
 			return false;
 		} else {
 			return true;
@@ -211,9 +211,9 @@ final class JField implements Comparable<JField> {
 	}
 	
 	@Override
-	public int compareTo(final JField field) {
-		final JField fieldThis = this;
-		final JField fieldThat = field;
+	public int compareTo(final Field field) {
+		final Field fieldThis = this;
+		final Field fieldThat = field;
 		
 		final boolean isStaticThis = fieldThis.isStatic();
 		final boolean isStaticThat = fieldThat.isStatic();
@@ -266,7 +266,7 @@ final class JField implements Comparable<JField> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public static boolean isInDifferentGroups(final JField fieldA, final JField fieldB) {
+	public static boolean isInDifferentGroups(final Field fieldA, final Field fieldB) {
 		if(fieldA.isStatic() != fieldB.isStatic()) {
 			return true;
 		}

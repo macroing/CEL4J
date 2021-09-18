@@ -40,25 +40,25 @@ final class SourceCodeGenerator {
 		return this.document.toString();
 	}
 	
-	public void generate(final JType jType) {
+	public void generate(final Type jType) {
 		if(this.decompilerConfiguration.isDisplayingConfigurationParameters()) {
 			doGenerateTraditionalComment(doGenerateTraditionalCommentAtTop(jType));
 		}
 		
-		if(jType instanceof JAnnotation) {
-			JAnnotation.class.cast(jType).decompile(this.decompilerConfiguration, this.document);
-		} else if(jType instanceof JClass) {
-			JClass.class.cast(jType).decompile(this.decompilerConfiguration, this.document);
-		} else if(jType instanceof JEnum) {
-			JEnum.class.cast(jType).decompile(this.decompilerConfiguration, this.document);
-		} else if(jType instanceof JInterface) {
-			JInterface.class.cast(jType).decompile(this.decompilerConfiguration, this.document);
+		if(jType instanceof AnnotationType) {
+			AnnotationType.class.cast(jType).decompile(this.decompilerConfiguration, this.document);
+		} else if(jType instanceof ClassType) {
+			ClassType.class.cast(jType).decompile(this.decompilerConfiguration, this.document);
+		} else if(jType instanceof EnumType) {
+			EnumType.class.cast(jType).decompile(this.decompilerConfiguration, this.document);
+		} else if(jType instanceof InterfaceType) {
+			InterfaceType.class.cast(jType).decompile(this.decompilerConfiguration, this.document);
 		}
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private String doGenerateTraditionalCommentAtTop(final JType jType) {
+	private String doGenerateTraditionalCommentAtTop(final Type jType) {
 		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
 		
 		final

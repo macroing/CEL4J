@@ -24,8 +24,8 @@ import org.macroing.cel4j.java.binary.classfile.descriptor.FieldDescriptor;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ParameterDescriptor;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ReturnDescriptor;
 
-abstract class JType {
-	protected JType() {
+abstract class Type {
+	protected Type() {
 		
 	}
 	
@@ -49,20 +49,20 @@ abstract class JType {
 	}
 	
 	@SuppressWarnings("static-method")
-	public boolean hasMethod(final JMethod jMethod) {
+	public boolean hasMethod(final Method jMethod) {
 		Objects.requireNonNull(jMethod, "jMethod == null");
 		
 		return false;
 	}
 	
 	@SuppressWarnings("static-method")
-	public boolean hasMethodInherited(final JMethod jMethod) {
+	public boolean hasMethodInherited(final Method jMethod) {
 		Objects.requireNonNull(jMethod, "jMethod == null");
 		
 		return false;
 	}
 	
-	public final boolean hasMethodOverridden(final JMethod jMethod) {
+	public final boolean hasMethodOverridden(final Method jMethod) {
 		return hasMethod(jMethod) && hasMethodInherited(jMethod);
 	}
 	
@@ -70,75 +70,75 @@ abstract class JType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public static JType valueOf(final Class<?> clazz) {
+	public static Type valueOf(final Class<?> clazz) {
 		if(clazz == Void.TYPE) {
-			return JVoid.valueOf(clazz);
+			return VoidType.valueOf(clazz);
 		} else if(clazz.isAnnotation()) {
-			return JAnnotation.valueOf(clazz);
+			return AnnotationType.valueOf(clazz);
 		} else if(clazz.isArray()) {
-			return JArray.valueOf(clazz);
+			return ArrayType.valueOf(clazz);
 		} else if(clazz.isEnum()) {
-			return JEnum.valueOf(clazz);
+			return EnumType.valueOf(clazz);
 		} else if(clazz.isInterface()) {
-			return JInterface.valueOf(clazz);
+			return InterfaceType.valueOf(clazz);
 		} else if(clazz.isPrimitive()) {
-			return JPrimitive.valueOf(clazz);
+			return PrimitiveType.valueOf(clazz);
 		} else {
-			return JClass.valueOf(clazz);
+			return ClassType.valueOf(clazz);
 		}
 	}
 	
-	public static JType valueOf(final FieldDescriptor fieldDescriptor) {
+	public static Type valueOf(final FieldDescriptor fieldDescriptor) {
 		try {
 			return valueOf(fieldDescriptor.toClass());
 		} catch(final ClassNotFoundException | LinkageError e) {
-			throw new JTypeException(e);
+			throw new TypeException(e);
 		}
 	}
 	
-	public static JType valueOf(final ParameterDescriptor parameterDescriptor) {
+	public static Type valueOf(final ParameterDescriptor parameterDescriptor) {
 		try {
 			return valueOf(parameterDescriptor.toClass());
 		} catch(final ClassNotFoundException | LinkageError e) {
-			throw new JTypeException(e);
+			throw new TypeException(e);
 		}
 	}
 	
-	public static JType valueOf(final ReturnDescriptor returnDescriptor) {
+	public static Type valueOf(final ReturnDescriptor returnDescriptor) {
 		try {
 			return valueOf(returnDescriptor.toClass());
 		} catch(final ClassNotFoundException | LinkageError e) {
-			throw new JTypeException(e);
+			throw new TypeException(e);
 		}
 	}
 	
-	public static JType valueOf(final String name) {
+	public static Type valueOf(final String name) {
 		switch(name) {
-			case JPrimitive.BOOLEAN_EXTERNAL_NAME:
-			case JPrimitive.BOOLEAN_INTERNAL_NAME:
-			case JPrimitive.BYTE_EXTERNAL_NAME:
-			case JPrimitive.BYTE_INTERNAL_NAME:
-			case JPrimitive.CHAR_EXTERNAL_NAME:
-			case JPrimitive.CHAR_INTERNAL_NAME:
-			case JPrimitive.DOUBLE_EXTERNAL_NAME:
-			case JPrimitive.DOUBLE_INTERNAL_NAME:
-			case JPrimitive.FLOAT_EXTERNAL_NAME:
-			case JPrimitive.FLOAT_INTERNAL_NAME:
-			case JPrimitive.INT_EXTERNAL_NAME:
-			case JPrimitive.INT_INTERNAL_NAME:
-			case JPrimitive.LONG_EXTERNAL_NAME:
-			case JPrimitive.LONG_INTERNAL_NAME:
-			case JPrimitive.SHORT_EXTERNAL_NAME:
-			case JPrimitive.SHORT_INTERNAL_NAME:
-				return JPrimitive.valueOf(name);
-			case JVoid.VOID_EXTERNAL_NAME:
-			case JVoid.VOID_INTERNAL_NAME:
-				return JVoid.valueOf(name);
+			case PrimitiveType.BOOLEAN_EXTERNAL_NAME:
+			case PrimitiveType.BOOLEAN_INTERNAL_NAME:
+			case PrimitiveType.BYTE_EXTERNAL_NAME:
+			case PrimitiveType.BYTE_INTERNAL_NAME:
+			case PrimitiveType.CHAR_EXTERNAL_NAME:
+			case PrimitiveType.CHAR_INTERNAL_NAME:
+			case PrimitiveType.DOUBLE_EXTERNAL_NAME:
+			case PrimitiveType.DOUBLE_INTERNAL_NAME:
+			case PrimitiveType.FLOAT_EXTERNAL_NAME:
+			case PrimitiveType.FLOAT_INTERNAL_NAME:
+			case PrimitiveType.INT_EXTERNAL_NAME:
+			case PrimitiveType.INT_INTERNAL_NAME:
+			case PrimitiveType.LONG_EXTERNAL_NAME:
+			case PrimitiveType.LONG_INTERNAL_NAME:
+			case PrimitiveType.SHORT_EXTERNAL_NAME:
+			case PrimitiveType.SHORT_INTERNAL_NAME:
+				return PrimitiveType.valueOf(name);
+			case VoidType.VOID_EXTERNAL_NAME:
+			case VoidType.VOID_INTERNAL_NAME:
+				return VoidType.valueOf(name);
 			default:
 				try {
 					return valueOf(Class.forName(name));
 				} catch(final ClassNotFoundException | LinkageError e) {
-					throw new JTypeException(e);
+					throw new TypeException(e);
 				}
 		}
 	}

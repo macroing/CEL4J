@@ -30,17 +30,17 @@ import org.macroing.cel4j.java.binary.classfile.descriptor.ClassName;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 
-final class JInnerType {
+final class InnerType {
 	private final ClassFile classFile;
 	private final InnerClass innerClass;
-	private final JType type;
+	private final Type type;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	JInnerType(final ClassFile classFile, final InnerClass innerClass) {
+	InnerType(final ClassFile classFile, final InnerClass innerClass) {
 		this.classFile = Objects.requireNonNull(classFile, "classFile == null");
 		this.innerClass = Objects.requireNonNull(innerClass, "innerClass == null");
-		this.type = JType.valueOf(ClassName.parseClassName(classFile.getCPInfo(classFile.getCPInfo(innerClass.getInnerClassInfoIndex(), ConstantClassInfo.class).getNameIndex(), ConstantUTF8Info.class).getStringValue()).toExternalForm());
+		this.type = Type.valueOf(ClassName.parseClassName(classFile.getCPInfo(classFile.getCPInfo(innerClass.getInnerClassInfoIndex(), ConstantClassInfo.class).getNameIndex(), ConstantUTF8Info.class).getStringValue()).toExternalForm());
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,44 +57,44 @@ final class JInnerType {
 		Objects.requireNonNull(decompilerConfiguration, "decompilerConfiguration == null");
 		Objects.requireNonNull(document, "document == null");
 		
-		final JType type = getType();
+		final Type type = getType();
 		
-		if(type instanceof JAnnotation) {
-			doDecompileJAnnotation(decompilerConfiguration, document, JAnnotation.class.cast(type));
-		} else if(type instanceof JClass) {
-			doDecompileJClass(decompilerConfiguration, document, JClass.class.cast(type));
-		} else if(type instanceof JEnum) {
-			doDecompileJEnum(decompilerConfiguration, document, JEnum.class.cast(type));
-		} else if(type instanceof JInterface) {
-			doDecompileJInterface(decompilerConfiguration, document, JInterface.class.cast(type));
+		if(type instanceof AnnotationType) {
+			doDecompileJAnnotation(decompilerConfiguration, document, AnnotationType.class.cast(type));
+		} else if(type instanceof ClassType) {
+			doDecompileJClass(decompilerConfiguration, document, ClassType.class.cast(type));
+		} else if(type instanceof EnumType) {
+			doDecompileJEnum(decompilerConfiguration, document, EnumType.class.cast(type));
+		} else if(type instanceof InterfaceType) {
+			doDecompileJInterface(decompilerConfiguration, document, InterfaceType.class.cast(type));
 		}
 		
 		return document;
 	}
 	
-	public JType getType() {
+	public Type getType() {
 		return this.type;
 	}
 	
-	public List<JModifier> getModifiers() {
-		final List<JModifier> modifiers = new ArrayList<>();
+	public List<Modifier> getModifiers() {
+		final List<Modifier> modifiers = new ArrayList<>();
 		
 		if(isPrivate()) {
-			modifiers.add(JModifier.PRIVATE);
+			modifiers.add(Modifier.PRIVATE);
 		} else if(isProtected()) {
-			modifiers.add(JModifier.PROTECTED);
+			modifiers.add(Modifier.PROTECTED);
 		} else if(isPublic()) {
-			modifiers.add(JModifier.PUBLIC);
+			modifiers.add(Modifier.PUBLIC);
 		}
 		
 		if(isStatic()) {
-			modifiers.add(JModifier.STATIC);
+			modifiers.add(Modifier.STATIC);
 		}
 		
 		if(isAbstract()) {
-			modifiers.add(JModifier.ABSTRACT);
+			modifiers.add(Modifier.ABSTRACT);
 		} else if(isFinal()) {
-			modifiers.add(JModifier.FINAL);
+			modifiers.add(Modifier.FINAL);
 		}
 		
 		return modifiers;
@@ -108,11 +108,11 @@ final class JInnerType {
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
-		} else if(!(object instanceof JInnerType)) {
+		} else if(!(object instanceof InnerType)) {
 			return false;
-		} else if(!Objects.equals(this.classFile, JInnerType.class.cast(object).classFile)) {
+		} else if(!Objects.equals(this.classFile, InnerType.class.cast(object).classFile)) {
 			return false;
-		} else if(!Objects.equals(this.innerClass, JInnerType.class.cast(object).innerClass)) {
+		} else if(!Objects.equals(this.innerClass, InnerType.class.cast(object).innerClass)) {
 			return false;
 		} else {
 			return true;
@@ -159,28 +159,28 @@ final class JInnerType {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@SuppressWarnings("unused")
-	private void doDecompileJAnnotation(final DecompilerConfiguration decompilerConfiguration, final Document document, final JAnnotation jAnnotation) {
+	private void doDecompileJAnnotation(final DecompilerConfiguration decompilerConfiguration, final Document document, final AnnotationType jAnnotation) {
 //		TODO: Implement!
 	}
 	
-	private void doDecompileJClass(final DecompilerConfiguration decompilerConfiguration, final Document document, final JClass jClass) {
+	private void doDecompileJClass(final DecompilerConfiguration decompilerConfiguration, final Document document, final ClassType jClass) {
 		final boolean isSeparatingGroups = decompilerConfiguration.isSeparatingGroups();
 		
 		final String modifiers = Strings.optional(getModifiers(), "", " ", " ", modifier -> modifier.getKeyword());
 		final String simpleName = getSimpleName();
-		final String typeParameters = UtilitiesToRefactor.generateTypeParameters(decompilerConfiguration, jClass.getTypesToImport(), jClass.getTypeParameters());
+		final String typeParameters = UtilitiesToRefactor.generateTypeParameters(decompilerConfiguration, jClass.getImportableTypes(), jClass.getOptionalTypeParameters());
 		final String extendsClause = UtilitiesToRefactor.generateExtendsClause(decompilerConfiguration, jClass);
-		final String implementsClause = UtilitiesToRefactor.generateImplementsClause(decompilerConfiguration, jClass.getInterfaces(), new ArrayList<>(), jClass.getClassSignature(), jClass.getPackageName());
+		final String implementsClause = UtilitiesToRefactor.generateImplementsClause(decompilerConfiguration, jClass.getInterfaceTypes(), new ArrayList<>(), jClass.getOptionalClassSignature(), jClass.getPackageName());
 		
-		final List<JConstructor> jConstructors = jClass.getConstructors();
-		final List<JField> jFields = jClass.getFields();
-		final List<JInnerType> jInnerTypes = jClass.getInnerTypes();
-		final List<JMethod> jMethods = jClass.getMethods();
+		final List<Constructor> jConstructors = jClass.getConstructors();
+		final List<Field> jFields = jClass.getFields();
+		final List<InnerType> jInnerTypes = jClass.getInnerTypes();
+		final List<Method> jMethods = jClass.getMethods();
 		
 		document.linef("%sclass %s%s%s%s {", modifiers, simpleName, typeParameters, extendsClause, implementsClause);
 		document.indent();
 		
-		for(final JField jField : jFields) {
+		for(final Field jField : jFields) {
 			jField.decompile(decompilerConfiguration, document);
 		}
 		
@@ -199,7 +199,7 @@ final class JInnerType {
 			}
 			
 			final
-			JConstructor jConstructor = jConstructors.get(i);
+			Constructor jConstructor = jConstructors.get(i);
 			jConstructor.decompile(decompilerConfiguration, document);
 		}
 		
@@ -218,7 +218,7 @@ final class JInnerType {
 			}
 			
 			final
-			JMethod jMethod = jMethods.get(i);
+			Method jMethod = jMethods.get(i);
 			jMethod.decompile(decompilerConfiguration, document);
 		}
 		
@@ -251,12 +251,12 @@ final class JInnerType {
 	}
 	
 	@SuppressWarnings("unused")
-	private void doDecompileJEnum(final DecompilerConfiguration decompilerConfiguration, final Document document, final JEnum jEnum) {
+	private void doDecompileJEnum(final DecompilerConfiguration decompilerConfiguration, final Document document, final EnumType jEnum) {
 //		TODO: Implement!
 	}
 	
 	@SuppressWarnings("unused")
-	private void doDecompileJInterface(final DecompilerConfiguration decompilerConfiguration, final Document document, final JInterface jInterface) {
+	private void doDecompileJInterface(final DecompilerConfiguration decompilerConfiguration, final Document document, final InterfaceType jInterface) {
 //		TODO: Implement!
 	}
 }

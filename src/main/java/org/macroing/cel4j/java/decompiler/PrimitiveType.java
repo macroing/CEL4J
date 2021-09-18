@@ -21,51 +21,51 @@ package org.macroing.cel4j.java.decompiler;
 import java.util.Objects;
 
 /**
- * A {@code JPrimitive} is a {@link JType} implementation that represents a primitive type.
+ * A {@code PrimitiveType} is a {@link Type} implementation that represents a primitive type.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-final class JPrimitive extends JType {
+final class PrimitiveType extends Type {
 	/**
-	 * The {@code JPrimitive} instance for the {@code boolean} type.
+	 * The {@code PrimitiveType} instance for the {@code boolean} type.
 	 */
-	public static final JPrimitive BOOLEAN = new JPrimitive(Boolean.TYPE);
+	public static final PrimitiveType BOOLEAN = new PrimitiveType(Boolean.TYPE);
 	
 	/**
-	 * The {@code JPrimitive} instance for the {@code byte} type.
+	 * The {@code PrimitiveType} instance for the {@code byte} type.
 	 */
-	public static final JPrimitive BYTE = new JPrimitive(Byte.TYPE);
+	public static final PrimitiveType BYTE = new PrimitiveType(Byte.TYPE);
 	
 	/**
-	 * The {@code JPrimitive} instance for the {@code char} type.
+	 * The {@code PrimitiveType} instance for the {@code char} type.
 	 */
-	public static final JPrimitive CHAR = new JPrimitive(Character.TYPE);
+	public static final PrimitiveType CHAR = new PrimitiveType(Character.TYPE);
 	
 	/**
-	 * The {@code JPrimitive} instance for the {@code double} type.
+	 * The {@code PrimitiveType} instance for the {@code double} type.
 	 */
-	public static final JPrimitive DOUBLE = new JPrimitive(Double.TYPE);
+	public static final PrimitiveType DOUBLE = new PrimitiveType(Double.TYPE);
 	
 	/**
-	 * The {@code JPrimitive} instance for the {@code float} type.
+	 * The {@code PrimitiveType} instance for the {@code float} type.
 	 */
-	public static final JPrimitive FLOAT = new JPrimitive(Float.TYPE);
+	public static final PrimitiveType FLOAT = new PrimitiveType(Float.TYPE);
 	
 	/**
-	 * The {@code JPrimitive} instance for the {@code int} type.
+	 * The {@code PrimitiveType} instance for the {@code int} type.
 	 */
-	public static final JPrimitive INT = new JPrimitive(Integer.TYPE);
+	public static final PrimitiveType INT = new PrimitiveType(Integer.TYPE);
 	
 	/**
-	 * The {@code JPrimitive} instance for the {@code long} type.
+	 * The {@code PrimitiveType} instance for the {@code long} type.
 	 */
-	public static final JPrimitive LONG = new JPrimitive(Long.TYPE);
+	public static final PrimitiveType LONG = new PrimitiveType(Long.TYPE);
 	
 	/**
-	 * The {@code JPrimitive} instance for the {@code short} type.
+	 * The {@code PrimitiveType} instance for the {@code short} type.
 	 */
-	public static final JPrimitive SHORT = new JPrimitive(Short.TYPE);
+	public static final PrimitiveType SHORT = new PrimitiveType(Short.TYPE);
 	
 	/**
 	 * The external name of the {@code boolean} type.
@@ -153,16 +153,16 @@ final class JPrimitive extends JType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private JPrimitive(final Class<?> clazz) {
+	private PrimitiveType(final Class<?> clazz) {
 		this.clazz = clazz;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns the name of this {@code JPrimitive} instance.
+	 * Returns the name of this {@code PrimitiveType} instance.
 	 * 
-	 * @return the name of this {@code JPrimitive} instance
+	 * @return the name of this {@code PrimitiveType} instance
 	 */
 	@Override
 	public String getName() {
@@ -170,48 +170,48 @@ final class JPrimitive extends JType {
 	}
 	
 	/**
-	 * Returns a {@code String} representation of this {@code JPrimitive} instance.
+	 * Returns a {@code String} representation of this {@code PrimitiveType} instance.
 	 * 
-	 * @return a {@code String} representation of this {@code JPrimitive} instance
+	 * @return a {@code String} representation of this {@code PrimitiveType} instance
 	 */
 	@Override
 	public String toString() {
 		if(this == BOOLEAN) {
-			return "JPrimitive.BOOLEAN";
+			return "PrimitiveType.BOOLEAN";
 		} else if(this == BYTE) {
-			return "JPrimitive.BYTE";
+			return "PrimitiveType.BYTE";
 		} else if(this == CHAR) {
-			return "JPrimitive.CHAR";
+			return "PrimitiveType.CHAR";
 		} else if(this == DOUBLE) {
-			return "JPrimitive.DOUBLE";
+			return "PrimitiveType.DOUBLE";
 		} else if(this == FLOAT) {
-			return "JPrimitive.FLOAT";
+			return "PrimitiveType.FLOAT";
 		} else if(this == INT) {
-			return "JPrimitive.INT";
+			return "PrimitiveType.INT";
 		} else if(this == LONG) {
-			return "JPrimitive.LONG";
+			return "PrimitiveType.LONG";
 		} else if(this == SHORT) {
-			return "JPrimitive.SHORT";
+			return "PrimitiveType.SHORT";
 		} else {
 			return "";
 		}
 	}
 	
 	/**
-	 * Compares {@code object} to this {@code JPrimitive} instance for equality.
+	 * Compares {@code object} to this {@code PrimitiveType} instance for equality.
 	 * <p>
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code JPrimitive}, and their respective values are equal, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code PrimitiveType}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object the {@code Object} to compare to this {@code JPrimitive} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code JPrimitive}, and their respective values are equal, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code PrimitiveType} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code PrimitiveType}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
-		} else if(!(object instanceof JPrimitive)) {
+		} else if(!(object instanceof PrimitiveType)) {
 			return false;
-		} else if(!Objects.equals(this.clazz, JPrimitive.class.cast(object).clazz)) {
+		} else if(!Objects.equals(this.clazz, PrimitiveType.class.cast(object).clazz)) {
 			return false;
 		} else {
 			return true;
@@ -229,9 +229,9 @@ final class JPrimitive extends JType {
 	}
 	
 	/**
-	 * Returns a hash code for this {@code JPrimitive} instance.
+	 * Returns a hash code for this {@code PrimitiveType} instance.
 	 * 
-	 * @return a hash code for this {@code JPrimitive} instance
+	 * @return a hash code for this {@code PrimitiveType} instance
 	 */
 	@Override
 	public int hashCode() {
@@ -241,18 +241,18 @@ final class JPrimitive extends JType {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code JPrimitive} instance that represents {@code clazz}.
+	 * Returns a {@code PrimitiveType} instance that represents {@code clazz}.
 	 * <p>
 	 * If {@code clazz} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code clazz} is invalid, a {@code JTypeException} will be thrown.
+	 * If {@code clazz} is invalid, a {@code TypeException} will be thrown.
 	 * 
 	 * @param clazz a {@code Class} instance
-	 * @return a {@code JPrimitive} instance that represents {@code clazz}
-	 * @throws JTypeException thrown if, and only if, {@code clazz} is invalid
+	 * @return a {@code PrimitiveType} instance that represents {@code clazz}
 	 * @throws NullPointerException thrown if, and only if, {@code clazz} is {@code null}
+	 * @throws TypeException thrown if, and only if, {@code clazz} is invalid
 	 */
-	public static JPrimitive valueOf(final Class<?> clazz) {
+	public static PrimitiveType valueOf(final Class<?> clazz) {
 		Objects.requireNonNull(clazz, "clazz == null");
 		
 		if(clazz == Boolean.TYPE) {
@@ -272,23 +272,23 @@ final class JPrimitive extends JType {
 		} else if(clazz == Short.TYPE) {
 			return SHORT;
 		} else {
-			throw new JTypeException(String.format("A JPrimitive must refer to a primitive type: %s", clazz));
+			throw new TypeException(String.format("A PrimitiveType must refer to a primitive type: %s", clazz));
 		}
 	}
 	
 	/**
-	 * Returns a {@code JPrimitive} instance given {@code name} in external or internal format.
+	 * Returns a {@code PrimitiveType} instance given {@code name} in external or internal format.
 	 * <p>
 	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code name} is invalid, a {@code JTypeException} will be thrown.
+	 * If {@code name} is invalid, a {@code TypeException} will be thrown.
 	 * 
 	 * @param name the name in external or internal format
-	 * @return a {@code JPrimitive} instance given {@code name} in external or internal format
-	 * @throws JTypeException thrown if, and only if, {@code name} is invalid
+	 * @return a {@code PrimitiveType} instance given {@code name} in external or internal format
 	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 * @throws TypeException thrown if, and only if, {@code name} is invalid
 	 */
-	public static JPrimitive valueOf(final String name) {
+	public static PrimitiveType valueOf(final String name) {
 		switch(name) {
 			case BOOLEAN_EXTERNAL_NAME:
 			case BOOLEAN_INTERNAL_NAME:
@@ -315,7 +315,7 @@ final class JPrimitive extends JType {
 			case SHORT_INTERNAL_NAME:
 				return SHORT;
 			default:
-				throw new JTypeException(String.format("A JPrimitive must refer to a primitive type: %s", name));
+				throw new TypeException(String.format("A PrimitiveType must refer to a primitive type: %s", name));
 		}
 	}
 }

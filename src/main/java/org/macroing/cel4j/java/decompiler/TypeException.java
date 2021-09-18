@@ -18,24 +18,24 @@
  */
 package org.macroing.cel4j.java.decompiler;
 
-final class JTypeException extends RuntimeException {
+final class TypeException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public JTypeException() {
+	public TypeException() {
 		
 	}
 	
-	public JTypeException(final String message) {
+	public TypeException(final String message) {
 		super(message);
 	}
 	
-	public JTypeException(final String message, final Throwable cause) {
+	public TypeException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 	
-	public JTypeException(final Throwable cause) {
+	public TypeException(final Throwable cause) {
 		super(cause);
 	}
 }

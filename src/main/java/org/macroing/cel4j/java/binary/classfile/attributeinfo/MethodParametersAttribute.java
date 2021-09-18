@@ -27,7 +27,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
+import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.MethodInfo;
+import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
@@ -96,6 +98,21 @@ public final class MethodParametersAttribute extends AttributeInfo {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
+	 * Returns a {@code List} with the values of the {@code isFinal()} method of all currently added {@link Parameter} instances.
+	 * 
+	 * @return a {@code List} with the values of the {@code isFinal()} method of all currently added {@code Parameter} instances
+	 */
+	public List<Boolean> getParameterIsFinals() {
+		final List<Boolean> parameterIsFinals = new ArrayList<>();
+		
+		for(final Parameter parameter : this.parameters) {
+			parameterIsFinals.add(Boolean.valueOf(parameter.isFinal()));
+		}
+		
+		return parameterIsFinals;
+	}
+	
+	/**
 	 * Returns a {@code List} with all currently added {@link Parameter} instances.
 	 * <p>
 	 * Modifying the returned {@code List} will not affect this {@code MethodParametersAttribute} instance.
@@ -104,6 +121,33 @@ public final class MethodParametersAttribute extends AttributeInfo {
 	 */
 	public List<Parameter> getParameters() {
 		return new ArrayList<>(this.parameters);
+	}
+	
+	/**
+	 * Returns a {@code List} with the names of all currently added {@link Parameter} instances.
+	 * <p>
+	 * If {@code classFile} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If, for any {@link Parameter} {@code parameter} in this {@code MethodParametersAttribute} instance, {@code parameter.getNameIndex()} is less than {@code 0} or greater than or equal to {@code classFile.getCPInfoCount()}, an {@code IndexOutOfBoundsException} will be thrown.
+	 * <p>
+	 * If, for any {@code Parameter} {@code parameter} in this {@code MethodParametersAttribute} instance, {@code classFile.getCPInfo(parameter.getNameIndex())} is not of type {@link ConstantUTF8Info}, an {@code IllegalArgumentException} will be thrown.
+	 * 
+	 * @param classFile a {@link ClassFile} instance
+	 * @return a {@code List} with the names of all currently added {@code Parameter} instances
+	 * @throws IllegalArgumentException thrown if, and only if, {@code parameter.getNameIndex()} is less than {@code 0} or greater than or equal to {@code classFile.getCPInfoCount()} for any {@code Parameter} {@code parameter} in this {@code MethodParametersAttribute} instance
+	 * @throws IndexOutOfBoundsException thrown if, and only if, {@code classFile.getCPInfo(parameter.getNameIndex())} is not of type {@code ConstantUTF8Info} for any {@code Parameter} {@code parameter} in this {@code MethodParametersAttribute} instance
+	 * @throws NullPointerException thrown if, and only if, {@code classFile} is {@code null}
+	 */
+	public List<String> getParameterNames(final ClassFile classFile) {
+		Objects.requireNonNull(classFile, "classFile == null");
+		
+		final List<String> parameterNames = new ArrayList<>();
+		
+		for(final Parameter parameter : this.parameters) {
+			parameterNames.add(parameter.getNameIndex() != 0 ? classFile.getCPInfo(parameter.getNameIndex(), ConstantUTF8Info.class).getStringValue() : "");
+		}
+		
+		return parameterNames;
 	}
 	
 	/**

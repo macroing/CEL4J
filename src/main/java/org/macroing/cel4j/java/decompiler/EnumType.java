@@ -32,21 +32,21 @@ import org.macroing.cel4j.node.NodeFormatException;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 
-final class JEnum extends JType {
+final class EnumType extends Type {
 	private static final Map<String, ClassFile> CLASS_FILES = new HashMap<>();
-	private static final Map<String, JEnum> J_ENUMS = new HashMap<>();
+	private static final Map<String, EnumType> J_ENUMS = new HashMap<>();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private final AtomicBoolean hasInitialized;
 	private final Class<?> associatedClass;
 	private final ClassFile associatedClassFile;
-	private final List<JModifier> modifiers;
+	private final List<Modifier> modifiers;
 	private final String name;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private JEnum(final Class<?> associatedClass, final ClassFile associatedClassFile) {
+	private EnumType(final Class<?> associatedClass, final ClassFile associatedClassFile) {
 		this.hasInitialized = new AtomicBoolean();
 		this.associatedClass = associatedClass;
 		this.associatedClassFile = associatedClassFile;
@@ -90,7 +90,7 @@ final class JEnum extends JType {
 		return document;
 	}
 	
-	public List<JModifier> getModifiers() {
+	public List<Modifier> getModifiers() {
 		return new ArrayList<>(this.modifiers);
 	}
 	
@@ -103,11 +103,11 @@ final class JEnum extends JType {
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
-		} else if(!(object instanceof JEnum)) {
+		} else if(!(object instanceof EnumType)) {
 			return false;
-		} else if(!Objects.equals(this.associatedClass, JEnum.class.cast(object).associatedClass)) {
+		} else if(!Objects.equals(this.associatedClass, EnumType.class.cast(object).associatedClass)) {
 			return false;
-		} else if(!Objects.equals(this.associatedClassFile, JEnum.class.cast(object).associatedClassFile)) {
+		} else if(!Objects.equals(this.associatedClassFile, EnumType.class.cast(object).associatedClassFile)) {
 			return false;
 		} else {
 			return true;
@@ -130,29 +130,29 @@ final class JEnum extends JType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public static JEnum valueOf(final Class<?> associatedClass) {
+	public static EnumType valueOf(final Class<?> associatedClass) {
 		if(!associatedClass.isEnum()) {
-			throw new JTypeException(String.format("A JEnum must refer to an enumeration: %s", associatedClass));
+			throw new TypeException(String.format("A JEnum must refer to an enumeration: %s", associatedClass));
 		}
 		
 		try {
 			synchronized(J_ENUMS) {
 				final
-				JEnum jEnum = J_ENUMS.computeIfAbsent(associatedClass.getName(), name -> new JEnum(associatedClass, CLASS_FILES.computeIfAbsent(name, name0 -> new ClassFileReader().read(associatedClass))));
+				EnumType jEnum = J_ENUMS.computeIfAbsent(associatedClass.getName(), name -> new EnumType(associatedClass, CLASS_FILES.computeIfAbsent(name, name0 -> new ClassFileReader().read(associatedClass))));
 				jEnum.doInitialize();
 				
 				return jEnum;
 			}
 		} catch(final NodeFormatException e) {
-			throw new JTypeException(e);
+			throw new TypeException(e);
 		}
 	}
 	
-	public static JEnum valueOf(final String name) {
+	public static EnumType valueOf(final String name) {
 		try {
 			return valueOf(Class.forName(name));
 		} catch(final ClassNotFoundException | LinkageError e) {
-			throw new JTypeException(e);
+			throw new TypeException(e);
 		}
 	}
 	
@@ -173,10 +173,10 @@ final class JEnum extends JType {
 	}
 	
 	private void doInitializeModifiers() {
-		final List<JModifier> modifiers = this.modifiers;
+		final List<Modifier> modifiers = this.modifiers;
 		
 		if(isPublic()) {
-			modifiers.add(JModifier.PUBLIC);
+			modifiers.add(Modifier.PUBLIC);
 		}
 	}
 }

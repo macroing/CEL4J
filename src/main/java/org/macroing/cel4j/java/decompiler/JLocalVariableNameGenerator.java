@@ -19,5 +19,5 @@
 package org.macroing.cel4j.java.decompiler;
 
 interface JLocalVariableNameGenerator {
-	String generateLocalVariableName(final JType type, final int index);
+	String generateLocalVariableName(final Type type, final int index);
 }

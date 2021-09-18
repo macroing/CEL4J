@@ -27,7 +27,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 final class DecompilerImpl extends AbstractDecompiler {
-	private final Map<Class<?>, Consumer<String>> classes = new LinkedHashMap<>();
+	private final Map<Class<?>, Consumer<String>> classes;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -37,6 +37,8 @@ final class DecompilerImpl extends AbstractDecompiler {
 	
 	public DecompilerImpl(final Consumer<String> defaultSourceConsumer) {
 		super(defaultSourceConsumer);
+		
+		this.classes = new LinkedHashMap<>();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,16 +51,16 @@ final class DecompilerImpl extends AbstractDecompiler {
 	@Override
 	public void decompile() {
 		try {
-			for(final JClassInfo jClassInfo : doCreateJClassInfos()) {
-				final Consumer<String> sourceConsumer = jClassInfo.getSourceConsumer();
+			for(final ClassInfo classInfo : doCreateClassInfos()) {
+				final Consumer<String> sourceConsumer = classInfo.getSourceConsumer();
 				
-				final JType jType = jClassInfo.getJType();
+				final Type type = classInfo.getType();
 				
-				notifyOfProgress("Decompiling " + jType.getName() + "...");
+				notifyOfProgress("Decompiling " + type.getName() + "...");
 				
 				final
 				SourceCodeGenerator sourceCodeGenerator = new SourceCodeGenerator(getDecompilerConfiguration());
-				sourceCodeGenerator.generate(jType);
+				sourceCodeGenerator.generate(type);
 				
 				final String source = sourceCodeGenerator.toString();
 				
@@ -71,35 +73,35 @@ final class DecompilerImpl extends AbstractDecompiler {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private List<JClassInfo> doCreateJClassInfos() {
-		final List<JClassInfo> jClassInfos = new ArrayList<>();
+	private List<ClassInfo> doCreateClassInfos() {
+		final List<ClassInfo> classInfos = new ArrayList<>();
 		
 		for(final Entry<Class<?>, Consumer<String>> entry : this.classes.entrySet()) {
 			final Consumer<String> sourceConsumer = entry.getValue();
 			
 			final Class<?> clazz = entry.getKey();
 			
-			jClassInfos.add(new JClassInfo(sourceConsumer, clazz));
+			classInfos.add(new ClassInfo(sourceConsumer, clazz));
 		}
 		
-		return jClassInfos;
+		return classInfos;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private static final class JClassInfo {
+	private static final class ClassInfo {
 		private final Consumer<String> sourceConsumer;
-		private final JType jType;
+		private final Type type;
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		public JClassInfo(final Consumer<String> sourceConsumer, final Class<?> clazz) {
-			this(sourceConsumer, JType.valueOf(clazz));
+		public ClassInfo(final Consumer<String> sourceConsumer, final Class<?> clazz) {
+			this(sourceConsumer, Type.valueOf(clazz));
 		}
 		
-		public JClassInfo(final Consumer<String> sourceConsumer, final JType jType) {
+		public ClassInfo(final Consumer<String> sourceConsumer, final Type type) {
 			this.sourceConsumer = Objects.requireNonNull(sourceConsumer, "sourceConsumer == null");
-			this.jType = Objects.requireNonNull(jType, "jType == null");
+			this.type = Objects.requireNonNull(type, "type == null");
 		}
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,8 +110,8 @@ final class DecompilerImpl extends AbstractDecompiler {
 			return this.sourceConsumer;
 		}
 		
-		public JType getJType() {
-			return this.jType;
+		public Type getType() {
+			return this.type;
 		}
 	}
 }

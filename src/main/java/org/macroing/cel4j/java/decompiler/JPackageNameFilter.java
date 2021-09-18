@@ -26,7 +26,7 @@ interface JPackageNameFilter {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	static JPackageNameFilter newUnnecessaryPackageName(final String packageName, final boolean isDiscardingUnnecessaryPackageNames, final List<JType> typesToImport, final boolean isImportingTypes) {
+	static JPackageNameFilter newUnnecessaryPackageName(final String packageName, final boolean isDiscardingUnnecessaryPackageNames, final List<Type> typesToImport, final boolean isImportingTypes) {
 		Objects.requireNonNull(packageName, "packageName == null");
 		
 		return (packageName0, simpleName) -> {
@@ -36,7 +36,7 @@ interface JPackageNameFilter {
 				}
 				
 				if(isImportingTypes) {
-					for(final JType typeToImport : typesToImport) {
+					for(final Type typeToImport : typesToImport) {
 						if(packageName0.equals(typeToImport.getPackageName())) {
 							return false;
 						}

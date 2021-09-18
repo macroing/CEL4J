@@ -42,23 +42,23 @@ import org.macroing.cel4j.java.binary.classfile.signature.MethodSignature;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 
-final class JMethod implements Comparable<JMethod> {
+final class Method implements Comparable<Method> {
 	private final ClassFile classFile;
-	private final JParameterList parameterList;
-	private final JType enclosingType;
-	private final JType returnType;
-	private final List<JType> typesToImport;
+	private final ParameterList parameterList;
+	private final Type enclosingType;
+	private final Type returnType;
+	private final List<Type> typesToImport;
 	private final MethodInfo methodInfo;
 	private final Optional<CodeAttribute> optionalCodeAttribute;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	JMethod(final ClassFile classFile, final MethodInfo methodInfo, final JType enclosingType) {
+	Method(final ClassFile classFile, final MethodInfo methodInfo, final Type enclosingType) {
 		this.classFile = Objects.requireNonNull(classFile, "classFile == null");
 		this.methodInfo = Objects.requireNonNull(methodInfo, "methodInfo == null");
 		this.enclosingType = Objects.requireNonNull(enclosingType, "enclosingType == null");
-		this.parameterList = JParameterList.load(classFile, methodInfo);
-		this.returnType = JType.valueOf(MethodDescriptor.parseMethodDescriptor(classFile, methodInfo).getReturnDescriptor());
+		this.parameterList = ParameterList.load(classFile, methodInfo);
+		this.returnType = Type.valueOf(MethodDescriptor.parseMethodDescriptor(classFile, methodInfo).getReturnDescriptor());
 		this.typesToImport = new ArrayList<>();
 		this.optionalCodeAttribute = CodeAttribute.find(this.methodInfo);
 	}
@@ -82,10 +82,10 @@ final class JMethod implements Comparable<JMethod> {
 		final boolean isDisplayingAttributeInfos = decompilerConfiguration.isDisplayingAttributeInfos();
 		final boolean isDisplayingInstructions = decompilerConfiguration.isDisplayingInstructions();
 		
-		final JParameterList parameterList = getParameterList();
-		final JType enclosingType = getEnclosingType();
+		final ParameterList parameterList = getParameterList();
+		final Type enclosingType = getEnclosingType();
 		
-		final List<JType> typesToImport = getTypesToImport();
+		final List<Type> typesToImport = getTypesToImport();
 		
 		final String modifiers = Strings.optional(doDiscardInterfaceMethodModifiers(decompilerConfiguration, enclosingType, getModifiers()), "", " ", " ", modifier -> modifier.getKeyword());
 		final String returnType = UtilitiesToRefactor.generateReturnTypeWithOptionalTypeParameters(decompilerConfiguration, this, typesToImport);
@@ -164,15 +164,15 @@ final class JMethod implements Comparable<JMethod> {
 		return document;
 	}
 	
-	public JParameterList getParameterList() {
+	public ParameterList getParameterList() {
 		return this.parameterList;
 	}
 	
-	public JType getEnclosingType() {
+	public Type getEnclosingType() {
 		return this.enclosingType;
 	}
 	
-	public JType getReturnType() {
+	public Type getReturnType() {
 		return this.returnType;
 	}
 	
@@ -190,56 +190,56 @@ final class JMethod implements Comparable<JMethod> {
 		return new ArrayList<>();
 	}
 	
-	public List<JModifier> getModifiers() {
-		final List<JModifier> modifiers = new ArrayList<>();
+	public List<Modifier> getModifiers() {
+		final List<Modifier> modifiers = new ArrayList<>();
 		
 		if(isPrivate()) {
-			modifiers.add(JModifier.PRIVATE);
+			modifiers.add(Modifier.PRIVATE);
 		} else if(isProtected()) {
-			modifiers.add(JModifier.PROTECTED);
+			modifiers.add(Modifier.PROTECTED);
 		} else if(isPublic()) {
-			modifiers.add(JModifier.PUBLIC);
+			modifiers.add(Modifier.PUBLIC);
 		}
 		
 		if(isStatic()) {
-			modifiers.add(JModifier.STATIC);
+			modifiers.add(Modifier.STATIC);
 		}
 		
 		if(isEnclosedByInterface() && !isAbstract() && !isStatic()) {
-			modifiers.add(JModifier.DEFAULT);
+			modifiers.add(Modifier.DEFAULT);
 		}
 		
 		if(isAbstract()) {
-			modifiers.add(JModifier.ABSTRACT);
+			modifiers.add(Modifier.ABSTRACT);
 		} else if(isFinal()) {
-			modifiers.add(JModifier.FINAL);
+			modifiers.add(Modifier.FINAL);
 		}
 		
 		if(isSynchronized()) {
-			modifiers.add(JModifier.SYNCHRONIZED);
+			modifiers.add(Modifier.SYNCHRONIZED);
 		}
 		
 		if(isNative()) {
-			modifiers.add(JModifier.NATIVE);
+			modifiers.add(Modifier.NATIVE);
 		}
 		
 		if(isStrict()) {
-			modifiers.add(JModifier.STRICT_F_P);
+			modifiers.add(Modifier.STRICT_F_P);
 		}
 		
 		return modifiers;
 	}
 	
-	public List<JType> getTypesToImport() {
+	public List<Type> getTypesToImport() {
 		if(this.typesToImport.size() > 0) {
 			return new ArrayList<>(this.typesToImport);
 		}
 		
-		final Set<JType> typesToImport = new LinkedHashSet<>();
+		final Set<Type> typesToImport = new LinkedHashSet<>();
 		
 		doAddTypeToImportIfNecessary(getReturnType(), typesToImport);
 		
-		for(final JParameter parameter : getParameterList().getParameters()) {
+		for(final Parameter parameter : getParameterList().getParameters()) {
 			doAddTypeToImportIfNecessary(parameter.getType(), typesToImport);
 		}
 		
@@ -247,7 +247,7 @@ final class JMethod implements Comparable<JMethod> {
 			final List<String> typeNames = Instructions.findTypeNames(this.classFile, this.optionalCodeAttribute.get());
 			
 			for(final String typeName : typeNames) {
-				doAddTypeToImportIfNecessary(JType.valueOf(typeName), typesToImport);
+				doAddTypeToImportIfNecessary(Type.valueOf(typeName), typesToImport);
 			}
 		}
 		
@@ -274,11 +274,11 @@ final class JMethod implements Comparable<JMethod> {
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
-		} else if(!(object instanceof JMethod)) {
+		} else if(!(object instanceof Method)) {
 			return false;
-		} else if(!Objects.equals(this.classFile, JMethod.class.cast(object).classFile)) {
+		} else if(!Objects.equals(this.classFile, Method.class.cast(object).classFile)) {
 			return false;
-		} else if(!Objects.equals(this.methodInfo, JMethod.class.cast(object).methodInfo)) {
+		} else if(!Objects.equals(this.methodInfo, Method.class.cast(object).methodInfo)) {
 			return false;
 		} else {
 			return true;
@@ -298,7 +298,7 @@ final class JMethod implements Comparable<JMethod> {
 	}
 	
 	public boolean isEnclosedByInterface() {
-		return this.enclosingType instanceof JInterface;
+		return this.enclosingType instanceof InterfaceType;
 	}
 	
 	public boolean isNative() {
@@ -321,9 +321,9 @@ final class JMethod implements Comparable<JMethod> {
 		return this.methodInfo.isPublic();
 	}
 	
-	public boolean isSignatureEqualTo(final JMethod jMethod) {
-		final JMethod jMethodThis = this;
-		final JMethod jMethodThat = jMethod;
+	public boolean isSignatureEqualTo(final Method jMethod) {
+		final Method jMethodThis = this;
+		final Method jMethodThat = jMethod;
 		
 		final String nameThis = jMethodThis.getName();
 		final String nameThat = jMethodThat.getName();
@@ -364,9 +364,9 @@ final class JMethod implements Comparable<JMethod> {
 	}
 	
 	@Override
-	public int compareTo(final JMethod method) {
-		final JMethod methodThis = this;
-		final JMethod methodThat = method;
+	public int compareTo(final Method method) {
+		final Method methodThis = this;
+		final Method methodThat = method;
 		
 		final boolean isPublicThis = methodThis.isPublic();
 		final boolean isPublicThat = methodThat.isPublic();
@@ -425,7 +425,7 @@ final class JMethod implements Comparable<JMethod> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public static boolean isInDifferentGroups(final JMethod methodA, final JMethod methodB) {
+	public static boolean isInDifferentGroups(final Method methodA, final Method methodB) {
 		if(methodA.isPublic() != methodB.isPublic()) {
 			return true;
 		}
@@ -451,18 +451,18 @@ final class JMethod implements Comparable<JMethod> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private void doAddTypeToImportIfNecessary(final JType typeToImport, final Set<JType> typesToImport) {
-		JType type = typeToImport;
+	private void doAddTypeToImportIfNecessary(final Type typeToImport, final Set<Type> typesToImport) {
+		Type type = typeToImport;
 		
-		while(type instanceof JArray) {
-			type = JArray.class.cast(type).getComponentType();
+		while(type instanceof ArrayType) {
+			type = ArrayType.class.cast(type).getComponentType();
 		}
 		
-		if(type instanceof JPrimitive) {
+		if(type instanceof PrimitiveType) {
 			return;
 		}
 		
-		if(type instanceof JVoid) {
+		if(type instanceof VoidType) {
 			return;
 		}
 		
@@ -482,16 +482,16 @@ final class JMethod implements Comparable<JMethod> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private static List<JModifier> doDiscardInterfaceMethodModifiers(final DecompilerConfiguration decompilerConfiguration, final JType enclosingType, final List<JModifier> oldModifiers) {
+	private static List<Modifier> doDiscardInterfaceMethodModifiers(final DecompilerConfiguration decompilerConfiguration, final Type enclosingType, final List<Modifier> oldModifiers) {
 		final boolean isDiscardingAbstractInterfaceMethodModifier = decompilerConfiguration.isDiscardingAbstractInterfaceMethodModifier();
 		final boolean isDiscardingPublicInterfaceMethodModifier = decompilerConfiguration.isDiscardingPublicInterfaceMethodModifier();
 		
-		final List<JModifier> newModifiers = new ArrayList<>();
+		final List<Modifier> newModifiers = new ArrayList<>();
 		
-		for(final JModifier oldModifier : oldModifiers) {
-			if(enclosingType instanceof JInterface && oldModifier == JModifier.ABSTRACT && isDiscardingAbstractInterfaceMethodModifier) {
+		for(final Modifier oldModifier : oldModifiers) {
+			if(enclosingType instanceof InterfaceType && oldModifier == Modifier.ABSTRACT && isDiscardingAbstractInterfaceMethodModifier) {
 				continue;
-			} else if(enclosingType instanceof JInterface && oldModifier == JModifier.PUBLIC && isDiscardingPublicInterfaceMethodModifier) {
+			} else if(enclosingType instanceof InterfaceType && oldModifier == Modifier.PUBLIC && isDiscardingPublicInterfaceMethodModifier) {
 				continue;
 			} else {
 				newModifiers.add(oldModifier);

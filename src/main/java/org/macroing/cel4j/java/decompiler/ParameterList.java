@@ -26,29 +26,28 @@ import java.util.Optional;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.MethodInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.MethodParametersAttribute;
-import org.macroing.cel4j.java.binary.classfile.attributeinfo.Parameter;
 import org.macroing.cel4j.java.binary.classfile.descriptor.MethodDescriptor;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ParameterDescriptor;
 import org.macroing.cel4j.java.binary.classfile.signature.JavaTypeSignature;
 import org.macroing.cel4j.java.binary.classfile.signature.MethodSignature;
 import org.macroing.cel4j.util.ParameterArguments;
 
-final class JParameterList implements Comparable<JParameterList> {
-	private final List<JParameter> parameters;
+final class ParameterList implements Comparable<ParameterList> {
+	private final List<Parameter> parameters;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public JParameterList(final List<JParameter> parameters) {
+	public ParameterList(final List<Parameter> parameters) {
 		this.parameters = ParameterArguments.requireNonNullList(parameters, "parameters");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public List<JParameter> getParameters() {
+	public List<Parameter> getParameters() {
 		return new ArrayList<>(this.parameters);
 	}
 	
-	public String toExternalForm(final DecompilerConfiguration decompilerConfiguration, final JMethod jMethod, final List<JType> typesToImport) {
+	public String toExternalForm(final DecompilerConfiguration decompilerConfiguration, final Constructor constructor, final List<Type> typesToImport) {
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
@@ -56,7 +55,29 @@ final class JParameterList implements Comparable<JParameterList> {
 		
 		final StringBuilder stringBuilder = new StringBuilder();
 		
-		final List<JParameter> parameters = this.parameters;
+		final List<Parameter> parameters = this.parameters;
+		
+		if(parameters.size() > 0) {
+			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(constructor.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes);
+			
+			for(int i = 0; i < parameters.size(); i++) {
+				stringBuilder.append(i > 0 ? ", " : "");
+				stringBuilder.append(parameters.get(i).toExternalForm(jPackageNameFilter, localVariableNameGenerator, i));
+			}
+		}
+		
+		return stringBuilder.toString();
+	}
+	
+	public String toExternalForm(final DecompilerConfiguration decompilerConfiguration, final Method jMethod, final List<Type> typesToImport) {
+		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
+		
+		final LocalVariableNameGenerator localVariableNameGenerator = decompilerConfiguration.getLocalVariableNameGenerator();
+		
+		final StringBuilder stringBuilder = new StringBuilder();
+		
+		final List<Parameter> parameters = this.parameters;
 		
 		if(parameters.size() > 0) {
 			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(jMethod.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes);
@@ -71,12 +92,12 @@ final class JParameterList implements Comparable<JParameterList> {
 	}
 	
 	@Override
-	public int compareTo(final JParameterList parameterList) {
-		final JParameterList parameterListThis = this;
-		final JParameterList parameterListThat = parameterList;
+	public int compareTo(final ParameterList parameterList) {
+		final ParameterList parameterListThis = this;
+		final ParameterList parameterListThat = parameterList;
 		
-		final List<JParameter> parametersThis = parameterListThis.getParameters();
-		final List<JParameter> parametersThat = parameterListThat.getParameters();
+		final List<Parameter> parametersThis = parameterListThis.getParameters();
+		final List<Parameter> parametersThat = parameterListThat.getParameters();
 		
 		final int parameterCount = Math.min(parametersThis.size(), parametersThat.size());
 		
@@ -97,11 +118,11 @@ final class JParameterList implements Comparable<JParameterList> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public static JParameterList load(final ClassFile classFile, final MethodInfo methodInfo) {
+	public static ParameterList load(final ClassFile classFile, final MethodInfo methodInfo) {
 		Objects.requireNonNull(classFile, "classFile == null");
 		Objects.requireNonNull(methodInfo, "methodInfo == null");
 		
-		final List<JParameter> jParameters = new ArrayList<>();
+		final List<Parameter> jParameters = new ArrayList<>();
 		
 		final MethodDescriptor methodDescriptor = MethodDescriptor.parseMethodDescriptor(classFile, methodInfo);
 		
@@ -113,19 +134,20 @@ final class JParameterList implements Comparable<JParameterList> {
 		if(optionalMethodParametersAttribute.isPresent()) {
 			final MethodParametersAttribute methodParametersAttribute = optionalMethodParametersAttribute.get();
 			
-			final List<Parameter> parameters = methodParametersAttribute.getParameters();
+			final List<Boolean> parameterIsFinals = methodParametersAttribute.getParameterIsFinals();
+			final List<String> parameterNames = methodParametersAttribute.getParameterNames(classFile);
 			
 			if(optionalMethodSignature.isPresent()) {
 				final MethodSignature methodSignature = optionalMethodSignature.get();
 				
 				final List<JavaTypeSignature> javaTypeSignatures = methodSignature.getJavaTypeSignatures();
 				
-				for(int i = 0; i < parameters.size(); i++) {
-					jParameters.add(JParameter.valueOf(javaTypeSignatures.get(i), parameterDescriptors.get(i), classFile, parameters.get(i)));
+				for(int i = 0; i < parameterNames.size(); i++) {
+					jParameters.add(new Parameter(Type.valueOf(parameterDescriptors.get(i)), parameterNames.get(i), parameterIsFinals.get(i).booleanValue(), javaTypeSignatures.get(i)));
 				}
 			} else {
-				for(int i = 0; i < parameters.size(); i++) {
-					jParameters.add(JParameter.valueOf(parameterDescriptors.get(i), classFile, parameters.get(i)));
+				for(int i = 0; i < parameterNames.size(); i++) {
+					jParameters.add(new Parameter(Type.valueOf(parameterDescriptors.get(i)), parameterNames.get(i), parameterIsFinals.get(i).booleanValue()));
 				}
 			}
 		} else {
@@ -134,16 +156,23 @@ final class JParameterList implements Comparable<JParameterList> {
 				
 				final List<JavaTypeSignature> javaTypeSignatures = methodSignature.getJavaTypeSignatures();
 				
-				for(int i = 0; i < parameterDescriptors.size(); i++) {
-					jParameters.add(JParameter.valueOf(javaTypeSignatures.get(i), parameterDescriptors.get(i)));
+//				TODO: Find out why parameterDescriptors.size() can be different from javaTypeSignatures.size().
+				if(parameterDescriptors.size() == javaTypeSignatures.size()) {
+					for(int i = 0; i < parameterDescriptors.size(); i++) {
+						jParameters.add(new Parameter(Type.valueOf(parameterDescriptors.get(i)), "", false, javaTypeSignatures.get(i)));
+					}
+				} else {
+					for(int i = 0; i < parameterDescriptors.size(); i++) {
+						jParameters.add(new Parameter(Type.valueOf(parameterDescriptors.get(i))));
+					}
 				}
 			} else {
 				for(int i = 0; i < parameterDescriptors.size(); i++) {
-					jParameters.add(JParameter.valueOf(parameterDescriptors.get(i)));
+					jParameters.add(new Parameter(Type.valueOf(parameterDescriptors.get(i))));
 				}
 			}
 		}
 		
-		return new JParameterList(jParameters);
+		return new ParameterList(jParameters);
 	}
 }

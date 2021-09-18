@@ -43,19 +43,19 @@ import org.macroing.cel4j.node.NodeFormatException;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 
-final class JInterface extends JType {
+final class InterfaceType extends Type {
 	private static final Map<String, ClassFile> CLASS_FILES = new HashMap<>();
-	private static final Map<String, JInterface> J_INTERFACES = new HashMap<>();
+	private static final Map<String, InterfaceType> J_INTERFACES = new HashMap<>();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private final AtomicBoolean hasInitialized;
 	private final Class<?> associatedClass;
 	private final ClassFile associatedClassFile;
-	private final List<JField> fields;
-	private final List<JInterface> interfaces;
-	private final List<JMethod> methods;
-	private final List<JModifier> modifiers;
+	private final List<Field> fields;
+	private final List<InterfaceType> interfaces;
+	private final List<Method> methods;
+	private final List<Modifier> modifiers;
 	private final List<SuperInterfaceSignature> superInterfaceSignatures;
 	private final Optional<ClassSignature> optionalClassSignature;
 	private final Optional<SuperClassSignature> optionalSuperClassSignature;
@@ -64,7 +64,7 @@ final class JInterface extends JType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private JInterface(final Class<?> associatedClass, final ClassFile associatedClassFile) {
+	private InterfaceType(final Class<?> associatedClass, final ClassFile associatedClassFile) {
 		this.hasInitialized = new AtomicBoolean();
 		this.associatedClass = associatedClass;
 		this.associatedClassFile = associatedClassFile;
@@ -104,7 +104,7 @@ final class JInterface extends JType {
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		final boolean isSeparatingGroups = decompilerConfiguration.isSeparatingGroups();
 		
-		final List<JType> typesToImport = getTypesToImport();
+		final List<Type> typesToImport = getTypesToImport();
 		
 		final String packageName = getPackageName();
 		final String modifiers = Strings.optional(getModifiers(), "", " ", " ", modifier -> modifier.getKeyword());
@@ -112,15 +112,15 @@ final class JInterface extends JType {
 		final String typeParameters = UtilitiesToRefactor.generateTypeParameters(decompilerConfiguration, typesToImport, getTypeParameters());
 		final String extendsClause = UtilitiesToRefactor.generateExtendsClause(decompilerConfiguration, getInterfaces(), typesToImport, getClassSignature(), getPackageName());
 		
-		final List<JField> jFields = getFields();
-		final List<JMethod> jMethods = getMethods();
+		final List<Field> jFields = getFields();
+		final List<Method> jMethods = getMethods();
 		
 		document.linef("package %s;", packageName);
 		
 		if(isImportingTypes && typesToImport.size() > 0) {
 			document.line();
 			
-			for(final JType typeToImport : typesToImport) {
+			for(final Type typeToImport : typesToImport) {
 				document.linef("import %s;", typeToImport.getName());
 			}
 		}
@@ -129,7 +129,7 @@ final class JInterface extends JType {
 		document.linef("%sinterface %s%s%s {", modifiers, simpleName, typeParameters, extendsClause);
 		document.indent();
 		
-		for(final JField jField : jFields) {
+		for(final Field jField : jFields) {
 			jField.decompile(decompilerConfiguration, document);
 		}
 		
@@ -148,7 +148,7 @@ final class JInterface extends JType {
 			}
 			
 			final
-			JMethod jMethod = jMethods.get(i);
+			Method jMethod = jMethods.get(i);
 			jMethod.decompile(decompilerConfiguration, document);
 		}
 		
@@ -158,37 +158,37 @@ final class JInterface extends JType {
 		return document;
 	}
 	
-	public List<JField> getFields() {
+	public List<Field> getFields() {
 		return this.fields;
 	}
 	
-	public List<JInterface> getInterfaces() {
+	public List<InterfaceType> getInterfaces() {
 		return this.interfaces;
 	}
 	
-	public List<JMethod> getMethods() {
+	public List<Method> getMethods() {
 		return this.methods;
 	}
 	
-	public List<JModifier> getModifiers() {
+	public List<Modifier> getModifiers() {
 		return new ArrayList<>(this.modifiers);
 	}
 	
-	public List<JType> getTypesToImport() {
-		final Set<JType> typesToImport = new LinkedHashSet<>();
+	public List<Type> getTypesToImport() {
+		final Set<Type> typesToImport = new LinkedHashSet<>();
 		
-		for(final JField field : this.fields) {
+		for(final Field field : this.fields) {
 			doAddTypeToImportIfNecessary(field.getType(), typesToImport);
 		}
 		
-		for(final JInterface jInterface : this.interfaces) {
+		for(final InterfaceType jInterface : this.interfaces) {
 			doAddTypeToImportIfNecessary(jInterface, typesToImport);
 		}
 		
-		for(final JMethod method : this.methods) {
-			final List<JType> methodTypesToImport = method.getTypesToImport();
+		for(final Method method : this.methods) {
+			final List<Type> methodTypesToImport = method.getTypesToImport();
 			
-			for(final JType methodTypeToImport : methodTypesToImport) {
+			for(final Type methodTypeToImport : methodTypesToImport) {
 				doAddTypeToImportIfNecessary(methodTypeToImport, typesToImport);
 			}
 		}
@@ -201,7 +201,7 @@ final class JInterface extends JType {
 			final List<String> names = typeParameters.collectNames();
 			
 			for(final String name : names) {
-				final JType jType = JType.valueOf(name);
+				final Type jType = Type.valueOf(name);
 				
 				doAddTypeToImportIfNecessary(jType, typesToImport);
 			}
@@ -218,8 +218,8 @@ final class JInterface extends JType {
 		return ClassSignature.parseClassSignatureOptionally(this.associatedClassFile);
 	}
 	
-	public Optional<JClass> getSuperClass() {
-		return hasSuperClass() ? Optional.of(JClass.valueOf(ClassName.parseClassNameSuperClass(this.associatedClassFile).toExternalForm())) : Optional.empty();
+	public Optional<ClassType> getSuperClass() {
+		return hasSuperClass() ? Optional.of(ClassType.valueOf(ClassName.parseClassNameSuperClass(this.associatedClassFile).toExternalForm())) : Optional.empty();
 	}
 	
 	public Optional<SuperClassSignature> getSuperClassSignature() {
@@ -239,11 +239,11 @@ final class JInterface extends JType {
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
-		} else if(!(object instanceof JInterface)) {
+		} else if(!(object instanceof InterfaceType)) {
 			return false;
-		} else if(!Objects.equals(this.associatedClass, JInterface.class.cast(object).associatedClass)) {
+		} else if(!Objects.equals(this.associatedClass, InterfaceType.class.cast(object).associatedClass)) {
 			return false;
-		} else if(!Objects.equals(this.associatedClassFile, JInterface.class.cast(object).associatedClassFile)) {
+		} else if(!Objects.equals(this.associatedClassFile, InterfaceType.class.cast(object).associatedClassFile)) {
 			return false;
 		} else {
 			return true;
@@ -251,8 +251,8 @@ final class JInterface extends JType {
 	}
 	
 	@Override
-	public boolean hasMethod(final JMethod jMethod) {
-		for(final JMethod jMethod0 : getMethods()) {
+	public boolean hasMethod(final Method jMethod) {
+		for(final Method jMethod0 : getMethods()) {
 			if(jMethod.isSignatureEqualTo(jMethod0)) {
 				return true;
 			}
@@ -262,17 +262,17 @@ final class JInterface extends JType {
 	}
 	
 	@Override
-	public boolean hasMethodInherited(final JMethod jMethod) {
-		for(final JInterface jInterface : getInterfaces()) {
+	public boolean hasMethodInherited(final Method jMethod) {
+		for(final InterfaceType jInterface : getInterfaces()) {
 			if(jInterface.hasMethod(jMethod) || jInterface.hasMethodInherited(jMethod)) {
 				return true;
 			}
 		}
 		
-		final Optional<JClass> optionalSuperClass = getSuperClass();
+		final Optional<ClassType> optionalSuperClass = getSuperClass();
 		
 		if(optionalSuperClass.isPresent()) {
-			final JClass superClass = optionalSuperClass.get();
+			final ClassType superClass = optionalSuperClass.get();
 			
 			if(superClass.hasMethod(jMethod) || superClass.hasMethodInherited(jMethod)) {
 				return true;
@@ -302,29 +302,29 @@ final class JInterface extends JType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public static JInterface valueOf(final Class<?> associatedClass) {
+	public static InterfaceType valueOf(final Class<?> associatedClass) {
 		if(!associatedClass.isInterface()) {
-			throw new JTypeException(String.format("A JInterface must refer to an interface: %s", associatedClass));
+			throw new TypeException(String.format("A JInterface must refer to an interface: %s", associatedClass));
 		}
 		
 		try {
 			synchronized(J_INTERFACES) {
 				final
-				JInterface jInterface = J_INTERFACES.computeIfAbsent(associatedClass.getName(), name -> new JInterface(associatedClass, CLASS_FILES.computeIfAbsent(name, name0 -> new ClassFileReader().read(associatedClass))));
+				InterfaceType jInterface = J_INTERFACES.computeIfAbsent(associatedClass.getName(), name -> new InterfaceType(associatedClass, CLASS_FILES.computeIfAbsent(name, name0 -> new ClassFileReader().read(associatedClass))));
 				jInterface.doInitialize();
 				
 				return jInterface;
 			}
 		} catch(final NodeFormatException e) {
-			throw new JTypeException(e);
+			throw new TypeException(e);
 		}
 	}
 	
-	public static JInterface valueOf(final String name) {
+	public static InterfaceType valueOf(final String name) {
 		try {
 			return valueOf(Class.forName(name));
 		} catch(final ClassNotFoundException | LinkageError e) {
-			throw new JTypeException(e);
+			throw new TypeException(e);
 		}
 	}
 	
@@ -338,18 +338,18 @@ final class JInterface extends JType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private void doAddTypeToImportIfNecessary(final JType typeToImport, final Set<JType> typesToImport) {
-		JType type = typeToImport;
+	private void doAddTypeToImportIfNecessary(final Type typeToImport, final Set<Type> typesToImport) {
+		Type type = typeToImport;
 		
-		while(type instanceof JArray) {
-			type = JArray.class.cast(type).getComponentType();
+		while(type instanceof ArrayType) {
+			type = ArrayType.class.cast(type).getComponentType();
 		}
 		
-		if(type instanceof JPrimitive) {
+		if(type instanceof PrimitiveType) {
 			return;
 		}
 		
-		if(type instanceof JVoid) {
+		if(type instanceof VoidType) {
 			return;
 		}
 		
@@ -380,7 +380,7 @@ final class JInterface extends JType {
 	private void doInitializeFields() {
 		for(final FieldInfo fieldInfo : this.associatedClassFile.getFieldInfos()) {
 			if(fieldInfo.isInterfaceCompatible()) {
-				this.fields.add(new JField(this.associatedClassFile, fieldInfo, this));
+				this.fields.add(new Field(this.associatedClassFile, fieldInfo, this));
 			}
 		}
 	}
@@ -392,7 +392,7 @@ final class JInterface extends JType {
 			final String interfaceNameInternalForm = ConstantUTF8Info.findByNameIndex(this.associatedClassFile, this.associatedClassFile.getCPInfo(interfaceIndex, ConstantClassInfo.class)).getStringValue();
 			final String interfaceNameExternalForm = ClassName.parseClassName(interfaceNameInternalForm).toExternalForm();
 			
-			this.interfaces.add(JInterface.valueOf(interfaceNameExternalForm));
+			this.interfaces.add(InterfaceType.valueOf(interfaceNameExternalForm));
 		}
 	}
 	
@@ -401,16 +401,16 @@ final class JInterface extends JType {
 			final String name = ConstantUTF8Info.findByNameIndex(this.associatedClassFile, methodInfo).getStringValue();
 			
 			if(!name.equals("<clinit>") && !name.equals("<init>")) {
-				this.methods.add(new JMethod(this.associatedClassFile, methodInfo, this));
+				this.methods.add(new Method(this.associatedClassFile, methodInfo, this));
 			}
 		}
 	}
 	
 	private void doInitializeModifiers() {
-		final List<JModifier> modifiers = this.modifiers;
+		final List<Modifier> modifiers = this.modifiers;
 		
 		if(isPublic()) {
-			modifiers.add(JModifier.PUBLIC);
+			modifiers.add(Modifier.PUBLIC);
 		}
 	}
 	

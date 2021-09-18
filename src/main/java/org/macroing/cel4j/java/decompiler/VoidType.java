@@ -21,16 +21,16 @@ package org.macroing.cel4j.java.decompiler;
 import java.util.Objects;
 
 /**
- * A {@code JVoid} is a {@link JType} implementation that represents the {@code void} type.
+ * A {@code VoidType} is a {@link Type} implementation that represents the {@code void} type.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-final class JVoid extends JType {
+final class VoidType extends Type {
 	/**
-	 * The {@code JVoid} instance for the {@code void} type.
+	 * The {@code VoidType} instance for the {@code void} type.
 	 */
-	public static final JVoid VOID = new JVoid(Void.TYPE);
+	public static final VoidType VOID = new VoidType(Void.TYPE);
 	
 	/**
 	 * The external name of the {@code void} type.
@@ -48,16 +48,16 @@ final class JVoid extends JType {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private JVoid(final Class<?> clazz) {
+	private VoidType(final Class<?> clazz) {
 		this.clazz = clazz;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns the name of this {@code JVoid} instance.
+	 * Returns the name of this {@code VoidType} instance.
 	 * 
-	 * @return the name of this {@code JVoid} instance
+	 * @return the name of this {@code VoidType} instance
 	 */
 	@Override
 	public String getName() {
@@ -65,30 +65,30 @@ final class JVoid extends JType {
 	}
 	
 	/**
-	 * Returns a {@code String} representation of this {@code JVoid} instance.
+	 * Returns a {@code String} representation of this {@code VoidType} instance.
 	 * 
-	 * @return a {@code String} representation of this {@code JVoid} instance
+	 * @return a {@code String} representation of this {@code VoidType} instance
 	 */
 	@Override
 	public String toString() {
-		return "JVoid.VOID";
+		return "VoidType.VOID";
 	}
 	
 	/**
-	 * Compares {@code object} to this {@code JVoid} instance for equality.
+	 * Compares {@code object} to this {@code VoidType} instance for equality.
 	 * <p>
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code JVoid}, and their respective values are equal, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code VoidType}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object the {@code Object} to compare to this {@code JVoid} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code JVoid}, and their respective values are equal, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code VoidType} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code VoidType}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
-		} else if(!(object instanceof JVoid)) {
+		} else if(!(object instanceof VoidType)) {
 			return false;
-		} else if(!Objects.equals(this.clazz, JVoid.class.cast(object).clazz)) {
+		} else if(!Objects.equals(this.clazz, VoidType.class.cast(object).clazz)) {
 			return false;
 		} else {
 			return true;
@@ -106,9 +106,9 @@ final class JVoid extends JType {
 	}
 	
 	/**
-	 * Returns a hash code for this {@code JVoid} instance.
+	 * Returns a hash code for this {@code VoidType} instance.
 	 * 
-	 * @return a hash code for this {@code JVoid} instance
+	 * @return a hash code for this {@code VoidType} instance
 	 */
 	@Override
 	public int hashCode() {
@@ -118,46 +118,46 @@ final class JVoid extends JType {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a {@code JVoid} instance that represents {@code clazz}.
+	 * Returns a {@code VoidType} instance that represents {@code clazz}.
 	 * <p>
 	 * If {@code clazz} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code clazz} is invalid, a {@code JTypeException} will be thrown.
+	 * If {@code clazz} is invalid, a {@code TypeException} will be thrown.
 	 * 
 	 * @param clazz a {@code Class} instance
-	 * @return a {@code JVoid} instance that represents {@code clazz}
-	 * @throws JTypeException thrown if, and only if, {@code clazz} is invalid
+	 * @return a {@code VoidType} instance that represents {@code clazz}
 	 * @throws NullPointerException thrown if, and only if, {@code clazz} is {@code null}
+	 * @throws TypeException thrown if, and only if, {@code clazz} is invalid
 	 */
-	public static JVoid valueOf(final Class<?> clazz) {
+	public static VoidType valueOf(final Class<?> clazz) {
 		Objects.requireNonNull(clazz, "clazz == null");
 		
 		if(clazz == Void.TYPE) {
 			return VOID;
 		}
 		
-		throw new JTypeException(String.format("A JVoid must refer to the void type: %s", clazz));
+		throw new TypeException(String.format("A VoidType must refer to the void type: %s", clazz));
 	}
 	
 	/**
-	 * Returns a {@code JVoid} instance given {@code name} in external or internal format.
+	 * Returns a {@code VoidType} instance given {@code name} in external or internal format.
 	 * <p>
 	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code name} is invalid, a {@code JTypeException} will be thrown.
+	 * If {@code name} is invalid, a {@code TypeException} will be thrown.
 	 * 
 	 * @param name the name in external or internal format
-	 * @return a {@code JVoid} instance given {@code name} in external or internal format
-	 * @throws JTypeException thrown if, and only if, {@code name} is invalid
+	 * @return a {@code VoidType} instance given {@code name} in external or internal format
 	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 * @throws TypeException thrown if, and only if, {@code name} is invalid
 	 */
-	public static JVoid valueOf(final String name) {
+	public static VoidType valueOf(final String name) {
 		switch(name) {
 			case VOID_EXTERNAL_NAME:
 			case VOID_INTERNAL_NAME:
 				return VOID;
 			default:
-				throw new JTypeException(String.format("A JVoid must refer to the void type: %s", name));
+				throw new TypeException(String.format("A VoidType must refer to the void type: %s", name));
 		}
 	}
 }
