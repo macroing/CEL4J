@@ -19,15 +19,11 @@
 package org.macroing.cel4j.java.decompiler;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
@@ -39,8 +35,6 @@ import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.java.binary.classfile.descriptor.MethodDescriptor;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ParameterDescriptor;
 import org.macroing.cel4j.java.binary.classfile.signature.MethodSignature;
-import org.macroing.cel4j.util.Document;
-import org.macroing.cel4j.util.Strings;
 
 /**
  * A {@code Method} represents a method.
@@ -78,105 +72,6 @@ final class Method implements Comparable<Method> {
 	 */
 	public ClassFile getClassFile() {
 		return this.classFile;
-	}
-	
-	/**
-	 * Decompiles this {@code Method} instance.
-	 * <p>
-	 * Returns a {@link Document} instance.
-	 * <p>
-	 * Calling this method is equivalent to the following:
-	 * <pre>
-	 * {@code
-	 * method.decompile(new DecompilerConfiguration());
-	 * }
-	 * </pre>
-	 * 
-	 * @return a {@code Document} instance
-	 */
-	public Document decompile() {
-		return decompile(new DecompilerConfiguration());
-	}
-	
-	/**
-	 * Decompiles this {@code Method} instance.
-	 * <p>
-	 * Returns a {@link Document} instance.
-	 * <p>
-	 * If {@code decompilerConfiguration} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * <p>
-	 * Calling this method is equivalent to the following:
-	 * <pre>
-	 * {@code
-	 * method.decompile(decompilerConfiguration, new Document());
-	 * }
-	 * </pre>
-	 * 
-	 * @param decompilerConfiguration a {@link DecompilerConfiguration} instance
-	 * @return a {@code Document} instance
-	 * @throws NullPointerException thrown if, and only if, {@code decompilerConfiguration} is {@code null}
-	 */
-	public Document decompile(final DecompilerConfiguration decompilerConfiguration) {
-		return decompile(decompilerConfiguration, new Document());
-	}
-	
-	/**
-	 * Decompiles this {@code Method} instance.
-	 * <p>
-	 * Returns {@code document}.
-	 * <p>
-	 * If either {@code decompilerConfiguration} or {@code document} are {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param decompilerConfiguration a {@link DecompilerConfiguration} instance
-	 * @param document a {@link Document} instance
-	 * @return {@code document}
-	 * @throws NullPointerException thrown if, and only if, either {@code decompilerConfiguration} or {@code document} are {@code null}
-	 */
-	public Document decompile(final DecompilerConfiguration decompilerConfiguration, final Document document) {
-		Objects.requireNonNull(decompilerConfiguration, "decompilerConfiguration == null");
-		Objects.requireNonNull(document, "document == null");
-		
-		final boolean isAnnotatingDeprecatedMethods = decompilerConfiguration.isAnnotatingDeprecatedMethods();
-		final boolean isAnnotatingOverriddenMethods = decompilerConfiguration.isAnnotatingOverriddenMethods();
-		
-		final ParameterList parameterList = getParameterList();
-		final Type enclosingType = getEnclosingType();
-		
-		final List<Type> importableTypes = getImportableTypes();
-		
-		final String modifiers = Modifier.toExternalForm(doDiscardInterfaceMethodModifiers(decompilerConfiguration, enclosingType, getModifiers()));
-		final String returnType = UtilitiesToRefactor.generateReturnTypeWithOptionalTypeParameters(decompilerConfiguration, this, importableTypes);
-		final String name = getName();
-		final String parameters = parameterList.toExternalForm(decompilerConfiguration, this, importableTypes);
-		final String returnStatement = UtilitiesToRefactor.generateDefaultReturnStatement(this);
-		
-		doGenerateComment(decompilerConfiguration, document);
-		
-		if(isAnnotatingDeprecatedMethods && isDeprecated()) {
-			document.linef("@Deprecated");
-		}
-		
-		if(isAnnotatingOverriddenMethods && enclosingType.hasMethodOverridden(this) && !isPrivate() && !isStatic()) {
-			document.linef("@Override");
-		}
-		
-		if(isAbstract() || isNative()) {
-			document.linef("%s%s %s(%s);", modifiers, returnType, name, parameters);
-		} else {
-			document.linef("%s%s %s(%s) {", modifiers, returnType, name, parameters);
-			document.indent();
-			
-			if(!returnStatement.isEmpty()) {
-				document.linef("%s", returnStatement);
-			} else {
-				document.line();
-			}
-			
-			document.outdent();
-			document.linef("}");
-		}
-		
-		return document;
 	}
 	
 	/**
@@ -656,73 +551,5 @@ final class Method implements Comparable<Method> {
 		}
 		
 		importableTypes.add(type);
-	}
-	
-	private void doGenerateComment(final DecompilerConfiguration decompilerConfiguration, final Document document) {
-		final List<AttributeInfo> attributeInfos = getAttributeInfos();
-		final List<Instruction> instructions = getInstructions();
-		
-		final boolean isDisplayingAttributeInfos = decompilerConfiguration.isDisplayingAttributeInfos() && attributeInfos.size() > 0;
-		final boolean isDisplayingInstructions = decompilerConfiguration.isDisplayingInstructions() && instructions.size() > 0;
-		
-		if(isDisplayingAttributeInfos || isDisplayingInstructions) {
-			document.line("/*");
-		}
-		
-		if(isDisplayingAttributeInfos) {
-			for(final AttributeInfo attributeInfo : attributeInfos) {
-				document.linef(" * %s", attributeInfo.getName());
-			}
-		}
-		
-		if(isDisplayingAttributeInfos && isDisplayingInstructions) {
-			document.line(" * ");
-		}
-		
-		if(isDisplayingInstructions) {
-			document.linef(" * %-15s    %-5s    %-13s    %-13s    %-20s    %-20s    %s", "Mnemonic", "Index", "Opcode (Hex.)", "Opcode (Dec.)", "Operands", "Branch Offsets", "Data");
-			document.linef(" * ");
-			
-			final AtomicInteger index = new AtomicInteger();
-			
-			for(final Instruction instruction : instructions) {
-				final String mnemonic = instruction.getMnemonic();
-				final String indexAsString = String.format("%04d", Integer.valueOf(index.get()));
-				final String opcodeHex = String.format("0x%02X", Integer.valueOf(instruction.getOpcode()));
-				final String opcodeDec = String.format("%03d", Integer.valueOf(instruction.getOpcode()));
-				final String operands = Strings.optional(IntStream.of(instruction.getOperands()).boxed().collect(Collectors.toList()), "{", "}", ", ");
-				final String branchOffsets = Arrays.toString(instruction.getBranchOffsets(index.get()));
-				final String description = Instructions.toString(this.classFile, instruction);
-				
-				document.linef(" * %-15s    %-5s    %-13s    %-13s    %-20s    %-20s    %s", mnemonic, indexAsString, opcodeHex, opcodeDec, operands, branchOffsets, description);
-				
-				index.addAndGet(instruction.getLength());
-			}
-		}
-		
-		if(isDisplayingAttributeInfos || isDisplayingInstructions) {
-			document.linef(" */");
-		}
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	private static List<Modifier> doDiscardInterfaceMethodModifiers(final DecompilerConfiguration decompilerConfiguration, final Type enclosingType, final List<Modifier> oldModifiers) {
-		final boolean isDiscardingAbstractInterfaceMethodModifier = decompilerConfiguration.isDiscardingAbstractInterfaceMethodModifier();
-		final boolean isDiscardingPublicInterfaceMethodModifier = decompilerConfiguration.isDiscardingPublicInterfaceMethodModifier();
-		
-		final List<Modifier> newModifiers = new ArrayList<>();
-		
-		for(final Modifier oldModifier : oldModifiers) {
-			if(enclosingType instanceof InterfaceType && oldModifier == Modifier.ABSTRACT && isDiscardingAbstractInterfaceMethodModifier) {
-				continue;
-			} else if(enclosingType instanceof InterfaceType && oldModifier == Modifier.PUBLIC && isDiscardingPublicInterfaceMethodModifier) {
-				continue;
-			} else {
-				newModifiers.add(oldModifier);
-			}
-		}
-		
-		return newModifiers;
 	}
 }

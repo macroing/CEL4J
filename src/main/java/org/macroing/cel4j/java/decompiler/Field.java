@@ -36,7 +36,6 @@ import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantStringInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.java.binary.classfile.descriptor.FieldDescriptor;
 import org.macroing.cel4j.java.binary.classfile.signature.FieldSignature;
-import org.macroing.cel4j.util.Document;
 
 /**
  * A {@code Field} represents a field.
@@ -68,74 +67,6 @@ final class Field implements Comparable<Field> {
 	 */
 	public ClassFile getClassFile() {
 		return this.classFile;
-	}
-	
-	/**
-	 * Decompiles this {@code Field} instance.
-	 * <p>
-	 * Returns a {@link Document} instance.
-	 * <p>
-	 * Calling this method is equivalent to the following:
-	 * <pre>
-	 * {@code
-	 * field.decompile(new DecompilerConfiguration());
-	 * }
-	 * </pre>
-	 * 
-	 * @return a {@code Document} instance
-	 */
-	public Document decompile() {
-		return decompile(new DecompilerConfiguration());
-	}
-	
-	/**
-	 * Decompiles this {@code Field} instance.
-	 * <p>
-	 * Returns a {@link Document} instance.
-	 * <p>
-	 * If {@code decompilerConfiguration} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * <p>
-	 * Calling this method is equivalent to the following:
-	 * <pre>
-	 * {@code
-	 * field.decompile(decompilerConfiguration, new Document());
-	 * }
-	 * </pre>
-	 * 
-	 * @param decompilerConfiguration a {@link DecompilerConfiguration} instance
-	 * @return a {@code Document} instance
-	 * @throws NullPointerException thrown if, and only if, {@code decompilerConfiguration} is {@code null}
-	 */
-	public Document decompile(final DecompilerConfiguration decompilerConfiguration) {
-		return decompile(decompilerConfiguration, new Document());
-	}
-	
-	/**
-	 * Decompiles this {@code Field} instance.
-	 * <p>
-	 * Returns {@code document}.
-	 * <p>
-	 * If either {@code decompilerConfiguration} or {@code document} are {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param decompilerConfiguration a {@link DecompilerConfiguration} instance
-	 * @param document a {@link Document} instance
-	 * @return {@code document}
-	 * @throws NullPointerException thrown if, and only if, either {@code decompilerConfiguration} or {@code document} are {@code null}
-	 */
-	public Document decompile(final DecompilerConfiguration decompilerConfiguration, final Document document) {
-		Objects.requireNonNull(decompilerConfiguration, "decompilerConfiguration == null");
-		Objects.requireNonNull(document, "document == null");
-		
-		final String modifiers = Modifier.toExternalForm(getModifiers());
-		final String type = UtilitiesToRefactor.generateType(decompilerConfiguration, this);
-		final String name = getName();
-		final String assignment = UtilitiesToRefactor.generateAssignment(this);
-		
-		doGenerateComment(decompilerConfiguration, document);
-		
-		document.linef("%s%s %s%s;", modifiers, type, name, assignment);
-		
-		return document;
 	}
 	
 	/**
@@ -485,23 +416,5 @@ final class Field implements Comparable<Field> {
 		}
 		
 		return false;
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	private void doGenerateComment(final DecompilerConfiguration decompilerConfiguration, final Document document) {
-		final List<AttributeInfo> attributeInfos = getAttributeInfos();
-		
-		final boolean isDisplayingAttributeInfos = decompilerConfiguration.isDisplayingAttributeInfos() && attributeInfos.size() > 0;
-		
-		if(isDisplayingAttributeInfos) {
-			document.linef("/*");
-			
-			for(final AttributeInfo attributeInfo : attributeInfos) {
-				document.linef(" * %s", attributeInfo.getName());
-			}
-			
-			document.linef(" */");
-		}
 	}
 }

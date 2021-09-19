@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
+import org.macroing.cel4j.java.binary.classfile.attributeinfo.InnerClassesAttribute;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ClassName;
 import org.macroing.cel4j.java.binary.reader.ClassFileReader;
 import org.macroing.cel4j.node.NodeFormatException;
@@ -120,15 +121,13 @@ final class AnnotationType extends Type {
 	}
 	
 	/**
-	 * Returns {@code false}.
-	 * <p>
-	 * This method has not been implemented yet.
+	 * Returns {@code true} if, and only if, this {@code AnnotationType} instance is an inner annotation, {@code false} otherwise.
 	 * 
-	 * @return {@code false}
+	 * @return {@code true} if, and only if, this {@code AnnotationType} instance is an inner annotation, {@code false} otherwise
 	 */
 	@Override
 	public boolean isInnerType() {
-		return false;//TODO: Implement!
+		return InnerClassesAttribute.find(this.classFile).filter(innerClassesAttribute -> innerClassesAttribute.getInnerClasses().stream().anyMatch(innerClass -> innerClass.getOuterClassInfoIndex() != 0)).isPresent();
 	}
 	
 	/**

@@ -19,6 +19,7 @@
 package org.macroing.cel4j.java.decompiler;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -28,9 +29,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
-import org.macroing.cel4j.java.binary.classfile.FieldInfo;
-import org.macroing.cel4j.java.binary.classfile.MethodInfo;
+import org.macroing.cel4j.java.binary.classfile.attributeinfo.InnerClassesAttribute;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantClassInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ClassName;
@@ -38,23 +39,30 @@ import org.macroing.cel4j.java.binary.classfile.signature.ClassSignature;
 import org.macroing.cel4j.java.binary.classfile.signature.SuperClassSignature;
 import org.macroing.cel4j.java.binary.classfile.signature.SuperInterfaceSignature;
 import org.macroing.cel4j.java.binary.classfile.signature.TypeParameters;
+import org.macroing.cel4j.java.binary.classfile.support.MethodInfos;
 import org.macroing.cel4j.java.binary.reader.ClassFileReader;
 import org.macroing.cel4j.node.NodeFormatException;
 
+/**
+ * An {@code InterfaceType} is a {@link Type} implementation that represents an interface type.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 final class InterfaceType extends Type {
 	private static final Map<String, ClassFile> CLASS_FILES = new HashMap<>();
-	private static final Map<String, InterfaceType> J_INTERFACES = new HashMap<>();
+	private static final Map<String, InterfaceType> INTERFACE_TYPES = new HashMap<>();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private final AtomicBoolean hasInitialized;
-	private final Class<?> associatedClass;
-	private final ClassFile associatedClassFile;
+	private final ClassFile classFile;
 	private final List<Field> fields;
-	private final List<InterfaceType> interfaces;
+	private final List<InterfaceType> interfaceTypes;
 	private final List<Method> methods;
 	private final List<Modifier> modifiers;
 	private final List<SuperInterfaceSignature> superInterfaceSignatures;
+	private final List<Type> importableTypes;
 	private final Optional<ClassSignature> optionalClassSignature;
 	private final Optional<SuperClassSignature> optionalSuperClassSignature;
 	private final Optional<TypeParameters> optionalTypeParameters;
@@ -62,148 +70,267 @@ final class InterfaceType extends Type {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private InterfaceType(final Class<?> associatedClass, final ClassFile associatedClassFile) {
+	private InterfaceType(final ClassFile classFile) {
 		this.hasInitialized = new AtomicBoolean();
-		this.associatedClass = associatedClass;
-		this.associatedClassFile = associatedClassFile;
+		this.classFile = classFile;
 		this.fields = new ArrayList<>();
-		this.interfaces = new ArrayList<>();
+		this.interfaceTypes = new ArrayList<>();
 		this.methods = new ArrayList<>();
 		this.modifiers = new ArrayList<>();
 		this.superInterfaceSignatures = new ArrayList<>();
-		this.optionalClassSignature = ClassSignature.parseClassSignatureOptionally(this.associatedClassFile);
+		this.importableTypes = new ArrayList<>();
+		this.optionalClassSignature = ClassSignature.parseClassSignatureOptionally(this.classFile);
 		this.optionalSuperClassSignature = this.optionalClassSignature.isPresent() ? Optional.of(this.optionalClassSignature.get().getSuperClassSignature()) : Optional.empty();
 		this.optionalTypeParameters = this.optionalClassSignature.isPresent() ? this.optionalClassSignature.get().getTypeParameters() : Optional.empty();
-		this.name = ClassName.parseClassNameThisClass(this.associatedClassFile).toExternalForm();
+		this.name = ClassName.parseClassNameThisClass(this.classFile).toExternalForm();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public Class<?> getAssociatedClass() {
-		return this.associatedClass;
+	/**
+	 * Returns the {@link ClassFile} instance associated with this {@code InterfaceType} instance.
+	 * 
+	 * @return the {@code ClassFile} instance associated with this {@code InterfaceType} instance
+	 */
+	public ClassFile getClassFile() {
+		return this.classFile;
 	}
 	
-	public ClassFile getAssociatedClassFile() {
-		return this.associatedClassFile;
+	/**
+	 * Returns a {@code List} that contains all {@link AttributeInfo} instances associated with this {@code InterfaceType} instance.
+	 * <p>
+	 * Modifications to the returned {@code List} will not affect this {@code InterfaceType} instance.
+	 * 
+	 * @return a {@code List} that contains all {@code AttributeInfo} instances associated with this {@code InterfaceType} instance
+	 */
+	public List<AttributeInfo> getAttributeInfos() {
+		return this.classFile.getAttributeInfos();
 	}
 	
+	/**
+	 * Returns a {@code List} that contains all {@link Field} instances associated with this {@code InterfaceType} instance.
+	 * <p>
+	 * Modifications to the returned {@code List} will not affect this {@code InterfaceType} instance.
+	 * 
+	 * @return a {@code List} that contains all {@code Field} instances associated with this {@code InterfaceType} instance
+	 */
 	public List<Field> getFields() {
 		return this.fields;
 	}
 	
-	public List<InterfaceType> getInterfaces() {
-		return this.interfaces;
+	/**
+	 * Returns a {@code List} that contains all {@link Field} instances associated with this {@code InterfaceType} instance sorted according to their natural order.
+	 * <p>
+	 * Modifications to the returned {@code List} will not affect this {@code InterfaceType} instance.
+	 * 
+	 * @return a {@code List} that contains all {@code Field} instances associated with this {@code InterfaceType} instance sorted according to their natural order
+	 */
+	public List<Field> getFieldsSorted() {
+		return getFields().stream().sorted().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 	}
 	
+	/**
+	 * Returns a {@code List} that contains all {@link InterfaceType} instances associated with this {@code InterfaceType} instance.
+	 * <p>
+	 * Modifications to the returned {@code List} will not affect this {@code InterfaceType} instance.
+	 * 
+	 * @return a {@code List} that contains all {@code InterfaceType} instances associated with this {@code InterfaceType} instance
+	 */
+	public List<InterfaceType> getInterfaceTypes() {
+		return this.interfaceTypes;
+	}
+	
+	/**
+	 * Returns a {@code List} that contains all {@link Method} instances associated with this {@code InterfaceType} instance.
+	 * <p>
+	 * Modifications to the returned {@code List} will not affect this {@code InterfaceType} instance.
+	 * 
+	 * @return a {@code List} that contains all {@code Method} instances associated with this {@code InterfaceType} instance
+	 */
 	public List<Method> getMethods() {
 		return this.methods;
 	}
 	
+	/**
+	 * Returns a {@code List} that contains all {@link Method} instances associated with this {@code InterfaceType} instance sorted according to their natural order.
+	 * <p>
+	 * Modifications to the returned {@code List} will not affect this {@code InterfaceType} instance.
+	 * 
+	 * @return a {@code List} that contains all {@code Method} instances associated with this {@code InterfaceType} instance sorted according to their natural order
+	 */
+	public List<Method> getMethodsSorted() {
+		return getMethods().stream().sorted().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+	}
+	
+	/**
+	 * Returns a {@code List} that contains all {@link Modifier} instances associated with this {@code InterfaceType} instance.
+	 * <p>
+	 * Modifications to the returned {@code List} will not affect this {@code InterfaceType} instance.
+	 * 
+	 * @return a {@code List} that contains all {@code Modifier} instances associated with this {@code InterfaceType} instance
+	 */
 	public List<Modifier> getModifiers() {
 		return new ArrayList<>(this.modifiers);
 	}
 	
-	public List<Type> getTypesToImport() {
-		final Set<Type> typesToImport = new LinkedHashSet<>();
-		
-		for(final Field field : this.fields) {
-			doAddTypeToImportIfNecessary(field.getType(), typesToImport);
+	/**
+	 * Returns a {@code List} that contains all {@link Type} instances associated with this {@code InterfaceType} instance that are importable.
+	 * <p>
+	 * Modifications to the returned {@code List} will not affect this {@code InterfaceType} instance.
+	 * 
+	 * @return a {@code List} that contains all {@code Type} instances associated with this {@code InterfaceType} instance that are importable
+	 */
+	@Override
+	public List<Type> getImportableTypes() {
+		if(this.importableTypes.isEmpty()) {
+			this.importableTypes.addAll(doGetImportableTypesSorted());
 		}
 		
-		for(final InterfaceType jInterface : this.interfaces) {
-			doAddTypeToImportIfNecessary(jInterface, typesToImport);
-		}
-		
-		for(final Method method : this.methods) {
-			final List<Type> methodTypesToImport = method.getImportableTypes();
-			
-			for(final Type methodTypeToImport : methodTypesToImport) {
-				doAddTypeToImportIfNecessary(methodTypeToImport, typesToImport);
-			}
-		}
-		
-		final Optional<TypeParameters> optionalTypeParameters = getTypeParameters();
-		
-		if(optionalTypeParameters.isPresent()) {
-			final TypeParameters typeParameters = optionalTypeParameters.get();
-			
-			final List<String> names = typeParameters.collectNames();
-			
-			for(final String name : names) {
-				final Type jType = Type.valueOf(name);
-				
-				doAddTypeToImportIfNecessary(jType, typesToImport);
-			}
-		}
-		
-		return new ArrayList<>(typesToImport);
+		return new ArrayList<>(this.importableTypes);
 	}
 	
+	/**
+	 * Returns a {@code List} that contains all {@link SuperInterfaceSignature} instances associated with this {@code InterfaceType} instance.
+	 * <p>
+	 * Modifications to the returned {@code List} will not affect this {@code InterfaceType} instance.
+	 * 
+	 * @return a {@code List} that contains all {@code SuperInterfaceSignature} instances associated with this {@code InterfaceType} instance
+	 */
 	public List<SuperInterfaceSignature> getSuperInterfaceSignatures() {
 		return new ArrayList<>(this.superInterfaceSignatures);
 	}
 	
-	public Optional<ClassSignature> getClassSignature() {
-		return ClassSignature.parseClassSignatureOptionally(this.associatedClassFile);
+	/**
+	 * Returns the optional {@link ClassSignature} instance associated with this {@code InterfaceType} instance.
+	 * 
+	 * @return the optional {@code ClassSignature} instance associated with this {@code InterfaceType} instance
+	 */
+	public Optional<ClassSignature> getOptionalClassSignature() {
+		return ClassSignature.parseClassSignatureOptionally(this.classFile);
 	}
 	
-	public Optional<ClassType> getSuperClass() {
-		return hasSuperClass() ? Optional.of(ClassType.valueOf(ClassName.parseClassNameSuperClass(this.associatedClassFile).toExternalForm())) : Optional.empty();
+	/**
+	 * Returns the optional super {@code ClassType} instance associated with this {@code InterfaceType} instance.
+	 * 
+	 * @return the optional super {@code ClassType} instance associated with this {@code InterfaceType} instance
+	 */
+	public Optional<ClassType> getOptionalSuperClassType() {
+		return hasSuperClass() ? Optional.of(ClassType.valueOf(ClassName.parseClassNameSuperClass(this.classFile).toExternalForm())) : Optional.empty();
 	}
 	
-	public Optional<SuperClassSignature> getSuperClassSignature() {
+	/**
+	 * Returns the optional {@link SuperClassSignature} instance associated with this {@code InterfaceType} instance.
+	 * 
+	 * @return the optional {@code SuperClassSignature} instance associated with this {@code InterfaceType} instance
+	 */
+	public Optional<SuperClassSignature> getOptionalSuperClassSignature() {
 		return this.optionalSuperClassSignature;
 	}
 	
-	public Optional<TypeParameters> getTypeParameters() {
+	/**
+	 * Returns the optional {@link TypeParameters} instance associated with this {@code InterfaceType} instance.
+	 * 
+	 * @return the optional {@code TypeParameters} instance associated with this {@code InterfaceType} instance
+	 */
+	public Optional<TypeParameters> getOptionalTypeParameters() {
 		return this.optionalTypeParameters;
 	}
 	
+	/**
+	 * Returns the name of this {@code InterfaceType} instance.
+	 * 
+	 * @return the name of this {@code InterfaceType} instance
+	 */
 	@Override
 	public String getName() {
 		return this.name;
 	}
 	
+	/**
+	 * Returns a {@code String} representation of this {@code InterfaceType} instance.
+	 * 
+	 * @return a {@code String} representation of this {@code InterfaceType} instance
+	 */
+	@Override
+	public String toString() {
+		return String.format("InterfaceType.valueOf(%s.class)", getName());
+	}
+	
+	/**
+	 * Compares {@code object} to this {@code InterfaceType} instance for equality.
+	 * <p>
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code InterfaceType}, and their respective values are equal, {@code false} otherwise.
+	 * 
+	 * @param object the {@code Object} to compare to this {@code InterfaceType} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code InterfaceType}, and their respective values are equal, {@code false} otherwise
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
 		} else if(!(object instanceof InterfaceType)) {
 			return false;
-		} else if(!Objects.equals(this.associatedClass, InterfaceType.class.cast(object).associatedClass)) {
-			return false;
-		} else if(!Objects.equals(this.associatedClassFile, InterfaceType.class.cast(object).associatedClassFile)) {
+		} else if(!Objects.equals(this.classFile, InterfaceType.class.cast(object).classFile)) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 	
-	@Override
-	public boolean hasMethod(final Method jMethod) {
-		for(final Method jMethod0 : getMethods()) {
-			if(jMethod.isSignatureEqualTo(jMethod0)) {
-				return true;
-			}
-		}
-		
-		return false;
+	/**
+	 * Returns {@code true} if, and only if, this {@code InterfaceType} instance has {@link Field} instances, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code InterfaceType} instance has {@code Field} instances, {@code false} otherwise
+	 */
+	public boolean hasFields() {
+		return this.fields.size() > 0;
 	}
 	
+	/**
+	 * Returns {@code true} if, and only if, this {@code InterfaceType} instance has a {@link Method} instance with a signature that is equal to the signature of {@code method}, {@code false} otherwise.
+	 * <p>
+	 * If {@code method} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * This method will only check the current {@code InterfaceType} instance. The method {@link #hasMethodInherited(Method)} checks in extended {@code InterfaceType} instances and the optionally extended {@link ClassType} instance.
+	 * 
+	 * @param method a {@code Method} instance
+	 * @return {@code true} if, and only if, this {@code InterfaceType} instance has a {@code Method} instance with a signature that is equal to the signature of {@code method}, {@code false} otherwise
+	 * @throws NullPointerException thrown if, and only if, {@code method} is {@code null}
+	 */
 	@Override
-	public boolean hasMethodInherited(final Method jMethod) {
-		for(final InterfaceType jInterface : getInterfaces()) {
-			if(jInterface.hasMethod(jMethod) || jInterface.hasMethodInherited(jMethod)) {
+	public boolean hasMethod(final Method method) {
+		Objects.requireNonNull(method, "method == null");
+		
+		return getMethods().stream().anyMatch(currentMethod -> method.isSignatureEqualTo(currentMethod));
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code InterfaceType} instance has inherited a {@link Method} instance with a signature that is equal to the signature of {@code method}, {@code false} otherwise.
+	 * <p>
+	 * If {@code method} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * This method will only check the extended {@code InterfaceType} instances and the optionally extended {@link ClassType} instance. The method {@link #hasMethod(Method)} checks in the current {@code InterfaceType} instance.
+	 * 
+	 * @param method a {@code Method} instance
+	 * @return {@code true} if, and only if, this {@code InterfaceType} instance has inherited a {@code Method} instance with a signature that is equal to the signature of {@code method}, {@code false} otherwise
+	 * @throws NullPointerException thrown if, and only if, {@code method} is {@code null}
+	 */
+	@Override
+	public boolean hasMethodInherited(final Method method) {
+		Objects.requireNonNull(method, "method == null");
+		
+		for(final InterfaceType interfaceType : getInterfaceTypes()) {
+			if(interfaceType.hasMethod(method) || interfaceType.hasMethodInherited(method)) {
 				return true;
 			}
 		}
 		
-		final Optional<ClassType> optionalSuperClass = getSuperClass();
+		final Optional<ClassType> optionalSuperClassType = getOptionalSuperClassType();
 		
-		if(optionalSuperClass.isPresent()) {
-			final ClassType superClass = optionalSuperClass.get();
+		if(optionalSuperClassType.isPresent()) {
+			final ClassType superClassType = optionalSuperClassType.get();
 			
-			if(superClass.hasMethod(jMethod) || superClass.hasMethodInherited(jMethod)) {
+			if(superClassType.hasMethod(method) || superClassType.hasMethodInherited(method)) {
 				return true;
 			}
 		}
@@ -211,64 +338,144 @@ final class InterfaceType extends Type {
 		return false;
 	}
 	
-	public boolean hasSuperClass() {
-		return this.associatedClassFile.getSuperClass() >= 1;
+	/**
+	 * Returns {@code true} if, and only if, this {@code InterfaceType} instance has {@link Method} instances, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code InterfaceType} instance has {@code Method} instances, {@code false} otherwise
+	 */
+	public boolean hasMethods() {
+		return this.methods.size() > 0;
 	}
 	
+	/**
+	 * Returns {@code true} if, and only if, this {@code InterfaceType} instance is extending a super class, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code InterfaceType} instance is extending a super class, {@code false} otherwise
+	 */
+	public boolean hasSuperClass() {
+		return this.classFile.getSuperClass() >= 1;
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code InterfaceType} instance is an inner interface, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code InterfaceType} instance is an inner interface, {@code false} otherwise
+	 */
 	@Override
 	public boolean isInnerType() {
-		return false;//TODO: Implement!
+		return InnerClassesAttribute.find(this.classFile).filter(innerClassesAttribute -> innerClassesAttribute.getInnerClasses().stream().anyMatch(innerClass -> innerClass.getOuterClassInfoIndex() != 0)).isPresent();
 	}
 	
+	/**
+	 * Returns {@code true} if, and only if, this {@code InterfaceType} instance is public, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code InterfaceType} instance is public, {@code false} otherwise
+	 */
 	public boolean isPublic() {
-		return this.associatedClassFile.isPublic();
+		return this.classFile.isPublic();
 	}
 	
+	/**
+	 * Returns a hash code for this {@code InterfaceType} instance.
+	 * 
+	 * @return a hash code for this {@code InterfaceType} instance
+	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.associatedClass, this.associatedClassFile);
+		return Objects.hash(this.classFile);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public static InterfaceType valueOf(final Class<?> associatedClass) {
-		if(!associatedClass.isInterface()) {
-			throw new TypeException(String.format("A JInterface must refer to an interface: %s", associatedClass));
+	/**
+	 * Returns an {@code InterfaceType} instance that represents {@code clazz}.
+	 * <p>
+	 * If {@code clazz} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code clazz.isInterface() == false}, a {@code TypeException} will be thrown.
+	 * <p>
+	 * This method will cache all {@code InterfaceType} instances.
+	 * 
+	 * @param clazz a {@code Class} instance
+	 * @return an {@code InterfaceType} instance that represents {@code clazz}
+	 * @throws NullPointerException thrown if, and only if, {@code clazz} is {@code null}
+	 * @throws TypeException thrown if, and only if, {@code clazz.isInterface() == false}
+	 */
+	public static InterfaceType valueOf(final Class<?> clazz) {
+		Objects.requireNonNull(clazz, "clazz == null");
+		
+		if(!clazz.isInterface()) {
+			throw new TypeException(String.format("An InterfaceType must refer to an interface type: %s", clazz));
 		}
 		
 		try {
-			synchronized(J_INTERFACES) {
+			synchronized(INTERFACE_TYPES) {
 				final
-				InterfaceType jInterface = J_INTERFACES.computeIfAbsent(associatedClass.getName(), name -> new InterfaceType(associatedClass, CLASS_FILES.computeIfAbsent(name, name0 -> new ClassFileReader().read(associatedClass))));
-				jInterface.doInitialize();
+				InterfaceType interfaceType = INTERFACE_TYPES.computeIfAbsent(clazz.getName(), name -> new InterfaceType(CLASS_FILES.computeIfAbsent(name, key -> new ClassFileReader().read(clazz))));
+				interfaceType.doInitialize();
 				
-				return jInterface;
+				return interfaceType;
 			}
 		} catch(final NodeFormatException e) {
 			throw new TypeException(e);
 		}
 	}
 	
-	public static InterfaceType valueOf(final String name) {
+	/**
+	 * Returns an {@code InterfaceType} instance that represents {@code Class.forName(className)}.
+	 * <p>
+	 * If {@code className} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code Class.forName(className)} fails or {@code Class.forName(className).isInterface() == false}, a {@code TypeException} will be thrown.
+	 * <p>
+	 * This method will cache all {@code InterfaceType} instances.
+	 * 
+	 * @param className the fully qualified name of the desired class
+	 * @return an {@code InterfaceType} instance that represents {@code Class.forName(className)}
+	 * @throws NullPointerException thrown if, and only if, {@code className} is {@code null}
+	 * @throws TypeException thrown if, and only if, {@code Class.forName(className)} fails or {@code Class.forName(className).isInterface() == false}
+	 */
+	public static InterfaceType valueOf(final String className) {
 		try {
-			return valueOf(Class.forName(name));
+			return valueOf(Class.forName(Objects.requireNonNull(className, "className == null")));
 		} catch(final ClassNotFoundException | LinkageError e) {
 			throw new TypeException(e);
 		}
 	}
 	
+	/**
+	 * Clears the cache.
+	 */
 	public static void clearCache() {
-		synchronized(J_INTERFACES) {
-			J_INTERFACES.clear();
-			
+		synchronized(INTERFACE_TYPES) {
 			CLASS_FILES.clear();
+			INTERFACE_TYPES.clear();
 		}
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private void doAddTypeToImportIfNecessary(final Type typeToImport, final Set<Type> typesToImport) {
-		Type type = typeToImport;
+	private List<Type> doGetImportableTypes() {
+		final Set<Type> importableTypes = new LinkedHashSet<>();
+		
+		this.fields.forEach(field -> doAddImportableTypeIfNecessary(field.getType(), importableTypes));
+		this.interfaceTypes.forEach(interfaceType -> doAddImportableTypeIfNecessary(interfaceType, importableTypes));
+		this.methods.forEach(method -> method.getImportableTypes().forEach(type -> doAddImportableTypeIfNecessary(type, importableTypes)));
+		this.optionalTypeParameters.ifPresent(typeParameters -> typeParameters.collectNames().forEach(name -> doAddImportableTypeIfNecessary(Type.valueOf(name), importableTypes)));
+		
+		return new ArrayList<>(importableTypes);
+	}
+	
+	private List<Type> doGetImportableTypesSorted() {
+		final List<Type> importableTypes = doGetImportableTypes();
+		
+		Collections.sort(importableTypes, (a, b) -> a.getName().compareTo(b.getName()));
+		
+		return importableTypes;
+	}
+	
+	private void doAddImportableTypeIfNecessary(final Type importableType, final Set<Type> importableTypes) {
+		Type type = importableType;
 		
 		while(type instanceof ArrayType) {
 			type = ArrayType.class.cast(type).getComponentType();
@@ -293,13 +500,13 @@ final class InterfaceType extends Type {
 			return;
 		}
 		
-		typesToImport.add(type);
+		importableTypes.add(type);
 	}
 	
 	private void doInitialize() {
 		if(this.hasInitialized.compareAndSet(false, true)) {
 			doInitializeFields();
-			doInitializeInterfaces();
+			doInitializeInterfaceTypes();
 			doInitializeMethods();
 			doInitializeModifiers();
 			doInitializeSuperInterfaceSignatures();
@@ -307,32 +514,25 @@ final class InterfaceType extends Type {
 	}
 	
 	private void doInitializeFields() {
-		for(final FieldInfo fieldInfo : this.associatedClassFile.getFieldInfos()) {
-			if(fieldInfo.isInterfaceCompatible()) {
-				this.fields.add(new Field(this.associatedClassFile, fieldInfo, this));
-			}
-		}
+		this.classFile.getFieldInfos().stream().filter(fieldInfo -> fieldInfo.isInterfaceCompatible()).forEach(fieldInfo -> this.fields.add(new Field(this.classFile, fieldInfo, this)));
 	}
 	
-	private void doInitializeInterfaces() {
-		final List<Integer> interfaceIndices = this.associatedClassFile.getInterfaces();
+	private void doInitializeInterfaceTypes() {
+		final ClassFile classFile = this.classFile;
+		
+		final List<Integer> interfaceIndices = this.classFile.getInterfaces();
+		final List<InterfaceType> interfaceTypes = this.interfaceTypes;
 		
 		for(final int interfaceIndex : interfaceIndices) {
-			final String interfaceNameInternalForm = ConstantUTF8Info.findByNameIndex(this.associatedClassFile, this.associatedClassFile.getCPInfo(interfaceIndex, ConstantClassInfo.class)).getStringValue();
+			final String interfaceNameInternalForm = ConstantUTF8Info.findByNameIndex(classFile, classFile.getCPInfo(interfaceIndex, ConstantClassInfo.class)).getStringValue();
 			final String interfaceNameExternalForm = ClassName.parseClassName(interfaceNameInternalForm).toExternalForm();
 			
-			this.interfaces.add(InterfaceType.valueOf(interfaceNameExternalForm));
+			interfaceTypes.add(InterfaceType.valueOf(interfaceNameExternalForm));
 		}
 	}
 	
 	private void doInitializeMethods() {
-		for(final MethodInfo methodInfo : this.associatedClassFile.getMethodInfos()) {
-			final String name = ConstantUTF8Info.findByNameIndex(this.associatedClassFile, methodInfo).getStringValue();
-			
-			if(!name.equals("<clinit>") && !name.equals("<init>")) {
-				this.methods.add(new Method(this.associatedClassFile, methodInfo, this));
-			}
-		}
+		MethodInfos.findMethods(this.classFile).forEach(methodInfo -> this.methods.add(new Method(this.classFile, methodInfo, this)));
 	}
 	
 	private void doInitializeModifiers() {
@@ -344,14 +544,6 @@ final class InterfaceType extends Type {
 	}
 	
 	private void doInitializeSuperInterfaceSignatures() {
-		final List<SuperInterfaceSignature> superInterfaceSignatures = this.superInterfaceSignatures;
-		
-		final Optional<ClassSignature> optionalClassSignature = this.optionalClassSignature;
-		
-		if(optionalClassSignature.isPresent()) {
-			final ClassSignature classSignature = optionalClassSignature.get();
-			
-			superInterfaceSignatures.addAll(classSignature.getSuperInterfaceSignatures());
-		}
+		this.optionalClassSignature.ifPresent(classSignature -> this.superInterfaceSignatures.addAll(classSignature.getSuperInterfaceSignatures()));
 	}
 }

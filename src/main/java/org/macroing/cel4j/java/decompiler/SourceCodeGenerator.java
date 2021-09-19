@@ -18,11 +18,19 @@
  */
 package org.macroing.cel4j.java.decompiler;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
+import org.macroing.cel4j.java.binary.classfile.ClassFile;
+import org.macroing.cel4j.java.binary.classfile.attributeinfo.Instruction;
 import org.macroing.cel4j.util.Document;
+import org.macroing.cel4j.util.Strings;
 
 final class SourceCodeGenerator {
 	private final DecompilerConfiguration decompilerConfiguration;
@@ -59,6 +67,27 @@ final class SourceCodeGenerator {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private List<Modifier> doDiscardInterfaceMethodModifiers(final Type enclosingType, final List<Modifier> oldModifiers) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
+		
+		final boolean isDiscardingAbstractInterfaceMethodModifier = decompilerConfiguration.isDiscardingAbstractInterfaceMethodModifier();
+		final boolean isDiscardingPublicInterfaceMethodModifier = decompilerConfiguration.isDiscardingPublicInterfaceMethodModifier();
+		
+		final List<Modifier> newModifiers = new ArrayList<>();
+		
+		for(final Modifier oldModifier : oldModifiers) {
+			if(enclosingType instanceof InterfaceType && oldModifier == Modifier.ABSTRACT && isDiscardingAbstractInterfaceMethodModifier) {
+				continue;
+			} else if(enclosingType instanceof InterfaceType && oldModifier == Modifier.PUBLIC && isDiscardingPublicInterfaceMethodModifier) {
+				continue;
+			} else {
+				newModifiers.add(oldModifier);
+			}
+		}
+		
+		return newModifiers;
+	}
 	
 	private String doGenerateTraditionalCommentAtTop(final Type jType) {
 		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
@@ -190,7 +219,7 @@ final class SourceCodeGenerator {
 			final Constructor constructorA = constructors.get(i);
 			final Constructor constructorB = constructors.get(i + 1 < constructors.size() ? i + 1 : i);
 			
-			constructorA.decompile(decompilerConfiguration, this.document);
+			doGenerateConstructor(constructorA);
 			
 			if(isSeparatingGroups && isSortingGroups && Constructor.inDifferentGroups(constructorA, constructorB)) {
 				doGenerateSeparator(true, true, false);
@@ -211,7 +240,7 @@ final class SourceCodeGenerator {
 			final Field fieldA = fields.get(i);
 			final Field fieldB = fields.get(i + 1 < fields.size() ? i + 1 : i);
 			
-			fieldA.decompile(decompilerConfiguration, this.document);
+			doGenerateField(fieldA);
 			
 			if(isSeparatingGroups && isSortingGroups && Field.inDifferentGroups(fieldA, fieldB)) {
 				doGenerateSeparator(true, true, true);
@@ -248,10 +277,7 @@ final class SourceCodeGenerator {
 		
 		for(int i = 0; i < innerTypes.size(); i++) {
 			doGenerateSeparator(i > 0, i > 0 && isSeparatingGroups, i > 0 && isSeparatingGroups);
-			
-			final
-			InnerType innerType = innerTypes.get(i);
-			innerType.decompile(decompilerConfiguration, this.document);
+			doGenerateInnerType(innerTypes.get(i));
 		}
 	}
 	
@@ -269,7 +295,7 @@ final class SourceCodeGenerator {
 			final Method methodA = methods.get(i);
 			final Method methodB = methods.get(i + 1 < methods.size() ? i + 1 : i);
 			
-			methodA.decompile(decompilerConfiguration, this.document);
+			doGenerateMethod(methodA);
 			
 			if(isSeparatingGroups && isSortingGroups && Method.inDifferentGroups(methodA, methodB)) {
 				doGenerateSeparator(true, true, false);
@@ -282,6 +308,84 @@ final class SourceCodeGenerator {
 		Document document = this.document;
 		document.linef("package %s;", classType.getPackageName());
 		document.linef("");
+	}
+	
+	private void doGenerateConstructor(final Constructor constructor) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
+		
+		final Document document = this.document;
+		
+		final ParameterList parameterList = constructor.getParameterList();
+		
+		final String simpleName = constructor.getEnclosingType().getSimpleName();
+		final String modifiers = Modifier.toExternalForm(constructor.getModifiers());
+		final String type = UtilitiesToRefactor.generateTypeWithOptionalTypeParameters(decompilerConfiguration, constructor, simpleName);
+		final String parameters = parameterList.toExternalForm(decompilerConfiguration, constructor, new ArrayList<>());
+		
+		doGenerateConstructorComment(constructor);
+		
+		if(constructor.isDeprecated()) {
+			document.linef("@Deprecated");
+		}
+		
+		document.linef("%s%s(%s) {", modifiers, type, parameters);
+		document.indent();
+		document.line();
+		document.outdent();
+		document.linef("}");
+	}
+	
+	private void doGenerateConstructorComment(final Constructor constructor) {
+		final ClassFile classFile = constructor.getClassFile();
+		
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
+		
+		final Document document = this.document;
+		
+		final List<AttributeInfo> attributeInfos = constructor.getAttributeInfos();
+		final List<Instruction> instructions = constructor.getInstructions();
+		
+		final boolean isDisplayingAttributeInfos = decompilerConfiguration.isDisplayingAttributeInfos() && attributeInfos.size() > 0;
+		final boolean isDisplayingInstructions = decompilerConfiguration.isDisplayingInstructions() && instructions.size() > 0;
+		
+		if(isDisplayingAttributeInfos || isDisplayingInstructions) {
+			document.line("/*");
+		}
+		
+		if(isDisplayingAttributeInfos) {
+			for(final AttributeInfo attributeInfo : attributeInfos) {
+				document.linef(" * %s", attributeInfo.getName());
+			}
+		}
+		
+		if(isDisplayingAttributeInfos && isDisplayingInstructions) {
+			document.line(" * ");
+		}
+		
+		if(isDisplayingInstructions) {
+			document.linef(" * %-15s    %-5s    %-13s    %-13s    %-20s    %-20s    %s", "Mnemonic", "Index", "Opcode (Hex.)", "Opcode (Dec.)", "Operands", "Branch Offsets", "Data");
+			document.linef(" * ");
+			
+			final AtomicInteger index = new AtomicInteger();
+			
+			for(final Instruction instruction : instructions) {
+				final String mnemonic = instruction.getMnemonic();
+				final String indexAsString = String.format("%04d", Integer.valueOf(index.get()));
+				final String opcodeHex = String.format("0x%02X", Integer.valueOf(instruction.getOpcode()));
+				final String opcodeDec = String.format("%03d", Integer.valueOf(instruction.getOpcode()));
+				final String operands = Strings.optional(IntStream.of(instruction.getOperands()).boxed().collect(Collectors.toList()), "{", "}", ", ");
+				final String branchOffsets = Arrays.toString(instruction.getBranchOffsets(index.get()));
+				final String description = Instructions.toString(classFile, instruction);
+				
+				document.linef(" * %-15s    %-5s    %-13s    %-13s    %-20s    %-20s    %s", mnemonic, indexAsString, opcodeHex, opcodeDec, operands, branchOffsets, description);
+				
+				index.addAndGet(instruction.getLength());
+			}
+		}
+		
+		if(isDisplayingAttributeInfos || isDisplayingInstructions) {
+			document.linef(" */");
+		}
 	}
 	
 	private void doGenerateEnumType(final EnumType enumType) {
@@ -299,19 +403,99 @@ final class SourceCodeGenerator {
 		document.linef("}");
 	}
 	
+	private void doGenerateField(final Field field) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
+		
+		final Document document = this.document;
+		
+		final String modifiers = Modifier.toExternalForm(field.getModifiers());
+		final String type = UtilitiesToRefactor.generateType(decompilerConfiguration, field);
+		final String name = field.getName();
+		final String assignment = UtilitiesToRefactor.generateAssignment(field);
+		
+		doGenerateFieldComment(field);
+		
+		document.linef("%s%s %s%s;", modifiers, type, name, assignment);
+	}
+	
+	private void doGenerateFieldComment(final Field field) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
+		
+		final Document document = this.document;
+		
+		final List<AttributeInfo> attributeInfos = field.getAttributeInfos();
+		
+		final boolean isDisplayingAttributeInfos = decompilerConfiguration.isDisplayingAttributeInfos() && attributeInfos.size() > 0;
+		
+		if(isDisplayingAttributeInfos) {
+			document.linef("/*");
+			
+			for(final AttributeInfo attributeInfo : attributeInfos) {
+				document.linef(" * %s", attributeInfo.getName());
+			}
+			
+			document.linef(" */");
+		}
+	}
+	
+	private void doGenerateInnerType(final InnerType innerType) {
+		final Type type = innerType.getType();
+		
+		if(type instanceof ClassType) {
+			doGenerateInnerTypeClassType(innerType, ClassType.class.cast(type));
+		}
+	}
+	
+	private void doGenerateInnerTypeClassType(final InnerType innerType, final ClassType classType) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
+		
+		final boolean hasSeparatorA = (classType.hasFields()) && (classType.hasConstructors() || classType.hasMethods() || classType.hasInnerTypes());
+		final boolean hasSeparatorB = (classType.hasFields() || classType.hasConstructors()) && (classType.hasMethods() || classType.hasInnerTypes());
+		final boolean hasSeparatorC = (classType.hasFields() || classType.hasConstructors() || classType.hasMethods()) && (classType.hasInnerTypes());
+		final boolean hasSeparatorG = decompilerConfiguration.isSeparatingGroups() && decompilerConfiguration.isSortingGroups();
+		
+		doGenerateClassTypeComment(classType);
+		doGenerateInnerTypeClassTypeClassDeclarationTop(innerType, classType);
+		doGenerateClassTypeFields(classType);
+		doGenerateSeparator(hasSeparatorA, hasSeparatorA && hasSeparatorG, hasSeparatorA && hasSeparatorG);
+		doGenerateClassTypeConstructors(classType);
+		doGenerateSeparator(hasSeparatorB, hasSeparatorB && hasSeparatorG, hasSeparatorB && hasSeparatorG);
+		doGenerateClassTypeMethods(classType);
+		doGenerateSeparator(hasSeparatorC, hasSeparatorC && hasSeparatorG, hasSeparatorC && hasSeparatorG);
+		doGenerateClassTypeInnerTypes(classType);
+		doGenerateClassTypeClassDeclarationBottom();
+	}
+	
+	private void doGenerateInnerTypeClassTypeClassDeclarationTop(final InnerType innerType, final ClassType classType) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
+		
+		final List<Type> importableTypes = classType.getImportableTypes();
+		
+		final String modifiers = Modifier.toExternalForm(innerType.getModifiers());
+		final String simpleName = innerType.getSimpleName();
+		final String typeParameters = UtilitiesToRefactor.generateTypeParameters(decompilerConfiguration, importableTypes, classType.getOptionalTypeParameters());
+		final String extendsClause = UtilitiesToRefactor.generateExtendsClause(decompilerConfiguration, classType, importableTypes);
+		final String implementsClause = UtilitiesToRefactor.generateImplementsClause(decompilerConfiguration, classType.getInterfaceTypes(), importableTypes, classType.getOptionalClassSignature(), classType.getPackageName());
+		
+		final
+		Document document = this.document;
+		document.linef("%sclass %s%s%s%s {", modifiers, simpleName, typeParameters, extendsClause, implementsClause);
+		document.indent();
+	}
+	
 	private void doGenerateInterfaceType(final InterfaceType interfaceType) {
 		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
 		
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		final boolean isSeparatingGroups = decompilerConfiguration.isSeparatingGroups();
 		
-		final List<Type> importableTypes = interfaceType.getTypesToImport();
+		final List<Type> importableTypes = interfaceType.getImportableTypes();
 		
 		final String packageName = interfaceType.getPackageName();
 		final String modifiers = Modifier.toExternalForm(interfaceType.getModifiers());
 		final String simpleName = interfaceType.getSimpleName();
-		final String typeParameters = UtilitiesToRefactor.generateTypeParameters(decompilerConfiguration, importableTypes, interfaceType.getTypeParameters());
-		final String extendsClause = UtilitiesToRefactor.generateExtendsClause(decompilerConfiguration, interfaceType.getInterfaces(), importableTypes, interfaceType.getClassSignature(), interfaceType.getPackageName());
+		final String typeParameters = UtilitiesToRefactor.generateTypeParameters(decompilerConfiguration, importableTypes, interfaceType.getOptionalTypeParameters());
+		final String extendsClause = UtilitiesToRefactor.generateExtendsClause(decompilerConfiguration, interfaceType.getInterfaceTypes(), importableTypes, interfaceType.getOptionalClassSignature(), interfaceType.getPackageName());
 		
 		final List<Field> fields = interfaceType.getFields();
 		final List<Method> methods = interfaceType.getMethods();
@@ -333,7 +517,7 @@ final class SourceCodeGenerator {
 		document.indent();
 		
 		for(final Field field : fields) {
-			field.decompile(decompilerConfiguration, document);
+			doGenerateField(field);
 		}
 		
 		if(fields.size() > 0 && methods.size() > 0) {
@@ -350,13 +534,110 @@ final class SourceCodeGenerator {
 				document.line();
 			}
 			
-			final
-			Method method = methods.get(i);
-			method.decompile(decompilerConfiguration, document);
+			doGenerateMethod(methods.get(i));
 		}
 		
 		document.outdent();
 		document.linef("}");
+	}
+	
+	private void doGenerateMethod(final Method method) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
+		
+		final Document document = this.document;
+		
+		final boolean isAnnotatingDeprecatedMethods = decompilerConfiguration.isAnnotatingDeprecatedMethods();
+		final boolean isAnnotatingOverriddenMethods = decompilerConfiguration.isAnnotatingOverriddenMethods();
+		
+		final ParameterList parameterList = method.getParameterList();
+		final Type enclosingType = method.getEnclosingType();
+		
+		final List<Type> importableTypes = method.getImportableTypes();
+		
+		final String modifiers = Modifier.toExternalForm(doDiscardInterfaceMethodModifiers(enclosingType, method.getModifiers()));
+		final String returnType = UtilitiesToRefactor.generateReturnTypeWithOptionalTypeParameters(decompilerConfiguration, method, importableTypes);
+		final String name = method.getName();
+		final String parameters = parameterList.toExternalForm(decompilerConfiguration, method, importableTypes);
+		final String returnStatement = UtilitiesToRefactor.generateDefaultReturnStatement(method);
+		
+		doGenerateMethodComment(method);
+		
+		if(isAnnotatingDeprecatedMethods && method.isDeprecated()) {
+			document.linef("@Deprecated");
+		}
+		
+		if(isAnnotatingOverriddenMethods && enclosingType.hasMethodOverridden(method) && !method.isPrivate() && !method.isStatic()) {
+			document.linef("@Override");
+		}
+		
+		if(method.isAbstract() || method.isNative()) {
+			document.linef("%s%s %s(%s);", modifiers, returnType, name, parameters);
+		} else {
+			document.linef("%s%s %s(%s) {", modifiers, returnType, name, parameters);
+			document.indent();
+			
+			if(!returnStatement.isEmpty()) {
+				document.linef("%s", returnStatement);
+			} else {
+				document.line();
+			}
+			
+			document.outdent();
+			document.linef("}");
+		}
+	}
+	
+	private void doGenerateMethodComment(final Method method) {
+		final ClassFile classFile = method.getClassFile();
+		
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
+		
+		final Document document = this.document;
+		
+		final List<AttributeInfo> attributeInfos = method.getAttributeInfos();
+		final List<Instruction> instructions = method.getInstructions();
+		
+		final boolean isDisplayingAttributeInfos = decompilerConfiguration.isDisplayingAttributeInfos() && attributeInfos.size() > 0;
+		final boolean isDisplayingInstructions = decompilerConfiguration.isDisplayingInstructions() && instructions.size() > 0;
+		
+		if(isDisplayingAttributeInfos || isDisplayingInstructions) {
+			document.line("/*");
+		}
+		
+		if(isDisplayingAttributeInfos) {
+			for(final AttributeInfo attributeInfo : attributeInfos) {
+				document.linef(" * %s", attributeInfo.getName());
+			}
+		}
+		
+		if(isDisplayingAttributeInfos && isDisplayingInstructions) {
+			document.line(" * ");
+		}
+		
+		if(isDisplayingInstructions) {
+			document.linef(" * %-15s    %-5s    %-13s    %-13s    %-20s    %-20s    %s", "Mnemonic", "Index", "Opcode (Hex.)", "Opcode (Dec.)", "Operands", "Branch Offsets", "Data");
+			document.linef(" * ");
+			
+			final AtomicInteger index = new AtomicInteger();
+			
+			for(final Instruction instruction : instructions) {
+				final String mnemonic = instruction.getMnemonic();
+				final String indexAsString = String.format("%04d", Integer.valueOf(index.get()));
+				final String opcodeHex = String.format("0x%02X", Integer.valueOf(instruction.getOpcode()));
+				final String opcodeDec = String.format("%03d", Integer.valueOf(instruction.getOpcode()));
+				final String operands = Strings.optional(IntStream.of(instruction.getOperands()).boxed().collect(Collectors.toList()), "{", "}", ", ");
+				final String branchOffsets = Arrays.toString(instruction.getBranchOffsets(index.get()));
+				final String description = Instructions.toString(classFile, instruction);
+				
+				document.linef(" * %-15s    %-5s    %-13s    %-13s    %-20s    %-20s    %s", mnemonic, indexAsString, opcodeHex, opcodeDec, operands, branchOffsets, description);
+				
+				index.addAndGet(instruction.getLength());
+			}
+		}
+		
+		if(isDisplayingAttributeInfos || isDisplayingInstructions) {
+			document.linef(" */");
+		}
 	}
 	
 	private void doGenerateSeparator(final boolean isEmptyLineTop, final boolean isSeparatorMiddle, final boolean isEmptyLineBottom) {

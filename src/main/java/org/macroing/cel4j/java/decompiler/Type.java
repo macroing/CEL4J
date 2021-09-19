@@ -18,6 +18,8 @@
  */
 package org.macroing.cel4j.java.decompiler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.macroing.cel4j.java.binary.classfile.descriptor.FieldDescriptor;
@@ -30,6 +32,11 @@ abstract class Type {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	@SuppressWarnings("static-method")
+	public List<Type> getImportableTypes() {
+		return new ArrayList<>();
+	}
 	
 	public abstract String getName();
 	
