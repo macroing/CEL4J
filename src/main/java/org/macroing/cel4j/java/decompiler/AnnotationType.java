@@ -29,8 +29,6 @@ import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ClassName;
 import org.macroing.cel4j.java.binary.reader.ClassFileReader;
 import org.macroing.cel4j.node.NodeFormatException;
-import org.macroing.cel4j.util.Document;
-import org.macroing.cel4j.util.Strings;
 
 /**
  * An {@code AnnotationType} is a {@link Type} implementation that represents an annotation type.
@@ -67,76 +65,6 @@ final class AnnotationType extends Type {
 	 */
 	public ClassFile getClassFile() {
 		return this.classFile;
-	}
-	
-	/**
-	 * Decompiles this {@code AnnotationType} instance.
-	 * <p>
-	 * Returns a {@link Document} instance.
-	 * <p>
-	 * Calling this method is equivalent to the following:
-	 * <pre>
-	 * {@code
-	 * annotationType.decompile(new DecompilerConfiguration());
-	 * }
-	 * </pre>
-	 * 
-	 * @return a {@code Document} instance
-	 */
-	public Document decompile() {
-		return decompile(new DecompilerConfiguration());
-	}
-	
-	/**
-	 * Decompiles this {@code AnnotationType} instance.
-	 * <p>
-	 * Returns a {@link Document} instance.
-	 * <p>
-	 * If {@code decompilerConfiguration} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * <p>
-	 * Calling this method is equivalent to the following:
-	 * <pre>
-	 * {@code
-	 * annotationType.decompile(decompilerConfiguration, new Document());
-	 * }
-	 * </pre>
-	 * 
-	 * @param decompilerConfiguration a {@link DecompilerConfiguration} instance
-	 * @return a {@code Document} instance
-	 * @throws NullPointerException thrown if, and only if, {@code decompilerConfiguration} is {@code null}
-	 */
-	public Document decompile(final DecompilerConfiguration decompilerConfiguration) {
-		return decompile(decompilerConfiguration, new Document());
-	}
-	
-	/**
-	 * Decompiles this {@code AnnotationType} instance.
-	 * <p>
-	 * Returns {@code document}.
-	 * <p>
-	 * If either {@code decompilerConfiguration} or {@code document} are {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param decompilerConfiguration a {@link DecompilerConfiguration} instance
-	 * @param document a {@link Document} instance
-	 * @return {@code document}
-	 * @throws NullPointerException thrown if, and only if, either {@code decompilerConfiguration} or {@code document} are {@code null}
-	 */
-	public Document decompile(final DecompilerConfiguration decompilerConfiguration, final Document document) {
-		Objects.requireNonNull(decompilerConfiguration, "decompilerConfiguration == null");
-		Objects.requireNonNull(document, "document == null");
-		
-		final String packageName = getPackageName();
-		final String modifiers = Strings.optional(getModifiers(), "", " ", " ", modifier -> modifier.getKeyword());
-		final String simpleName = getSimpleName();
-		
-		document.linef("package %s;", packageName);
-		document.linef("");
-		document.linef("%s@interface %s {", modifiers, simpleName);
-		document.indent();
-		document.outdent();
-		document.line("}");
-		
-		return document;
 	}
 	
 	/**

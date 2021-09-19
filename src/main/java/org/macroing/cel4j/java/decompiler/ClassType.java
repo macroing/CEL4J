@@ -43,7 +43,6 @@ import org.macroing.cel4j.java.binary.classfile.signature.TypeParameters;
 import org.macroing.cel4j.java.binary.classfile.support.MethodInfos;
 import org.macroing.cel4j.java.binary.reader.ClassFileReader;
 import org.macroing.cel4j.node.NodeFormatException;
-import org.macroing.cel4j.util.Document;
 
 /**
  * A {@code ClassType} is a {@link Type} implementation that represents a class type.
@@ -66,6 +65,7 @@ final class ClassType extends Type {
 	private final List<Method> methods;
 	private final List<Modifier> modifiers;
 	private final List<SuperInterfaceSignature> superInterfaceSignatures;
+	private final List<Type> importableTypes;
 	private final Optional<ClassSignature> optionalClassSignature;
 	private final Optional<SuperClassSignature> optionalSuperClassSignature;
 	private final Optional<TypeParameters> optionalTypeParameters;
@@ -83,6 +83,7 @@ final class ClassType extends Type {
 		this.methods = new ArrayList<>();
 		this.modifiers = new ArrayList<>();
 		this.superInterfaceSignatures = new ArrayList<>();
+		this.importableTypes = new ArrayList<>();
 		this.optionalClassSignature = ClassSignature.parseClassSignatureOptionally(this.classFile);
 		this.optionalSuperClassSignature = this.optionalClassSignature.isPresent() ? Optional.of(this.optionalClassSignature.get().getSuperClassSignature()) : Optional.empty();
 		this.optionalTypeParameters = this.optionalClassSignature.isPresent() ? this.optionalClassSignature.get().getTypeParameters() : Optional.empty();
@@ -98,197 +99,6 @@ final class ClassType extends Type {
 	 */
 	public ClassFile getClassFile() {
 		return this.classFile;
-	}
-	
-	/**
-	 * Decompiles this {@code ClassType} instance.
-	 * <p>
-	 * Returns a {@link Document} instance.
-	 * <p>
-	 * Calling this method is equivalent to the following:
-	 * <pre>
-	 * {@code
-	 * classType.decompile(new DecompilerConfiguration());
-	 * }
-	 * </pre>
-	 * 
-	 * @return a {@code Document} instance
-	 */
-	public Document decompile() {
-		return decompile(new DecompilerConfiguration());
-	}
-	
-	/**
-	 * Decompiles this {@code ClassType} instance.
-	 * <p>
-	 * Returns a {@link Document} instance.
-	 * <p>
-	 * If {@code decompilerConfiguration} is {@code null}, a {@code NullPointerException} will be thrown.
-	 * <p>
-	 * Calling this method is equivalent to the following:
-	 * <pre>
-	 * {@code
-	 * classType.decompile(decompilerConfiguration, new Document());
-	 * }
-	 * </pre>
-	 * 
-	 * @param decompilerConfiguration a {@link DecompilerConfiguration} instance
-	 * @return a {@code Document} instance
-	 * @throws NullPointerException thrown if, and only if, {@code decompilerConfiguration} is {@code null}
-	 */
-	public Document decompile(final DecompilerConfiguration decompilerConfiguration) {
-		return decompile(decompilerConfiguration, new Document());
-	}
-	
-	/**
-	 * Decompiles this {@code ClassType} instance.
-	 * <p>
-	 * Returns {@code document}.
-	 * <p>
-	 * If either {@code decompilerConfiguration} or {@code document} are {@code null}, a {@code NullPointerException} will be thrown.
-	 * 
-	 * @param decompilerConfiguration a {@link DecompilerConfiguration} instance
-	 * @param document a {@link Document} instance
-	 * @return {@code document}
-	 * @throws NullPointerException thrown if, and only if, either {@code decompilerConfiguration} or {@code document} are {@code null}
-	 */
-	public Document decompile(final DecompilerConfiguration decompilerConfiguration, final Document document) {
-		Objects.requireNonNull(decompilerConfiguration, "decompilerConfiguration == null");
-		Objects.requireNonNull(document, "document == null");
-		
-		final boolean isDisplayingAttributeInfos = decompilerConfiguration.isDisplayingAttributeInfos();
-		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
-		final boolean isSeparatingGroups = decompilerConfiguration.isSeparatingGroups();
-		final boolean isSortingGroups = decompilerConfiguration.isSortingGroups();
-		
-		final List<Type> importableTypes = getImportableTypes();
-		
-		Collections.sort(importableTypes, (a, b) -> a.getName().compareTo(b.getName()));
-		
-		final String packageName = getPackageName();
-		final String modifiers = Modifier.toExternalForm(getModifiers());
-		final String simpleName = getSimpleName();
-		final String typeParameters = UtilitiesToRefactor.generateTypeParameters(decompilerConfiguration, importableTypes, getOptionalTypeParameters());
-		final String extendsClause = UtilitiesToRefactor.generateExtendsClause(decompilerConfiguration, this, importableTypes);
-		final String implementsClause = UtilitiesToRefactor.generateImplementsClause(decompilerConfiguration, getInterfaceTypes(), importableTypes, getOptionalClassSignature(), getPackageName());
-		
-		final List<Constructor> jConstructors = getConstructors();
-		final List<Field> jFields = isSortingGroups ? getFieldsSorted() : getFields();
-		final List<InnerType> jInnerTypes = getInnerTypes();
-		final List<Method> jMethods = isSortingGroups ? getMethodsSorted() : getMethods();
-		
-		document.linef("package %s;", packageName);
-		
-		if(isImportingTypes && importableTypes.size() > 0) {
-			document.line();
-			
-			for(final Type importableType : importableTypes) {
-				document.linef("import %s;", importableType.getName());
-			}
-		}
-		
-		document.linef("");
-		
-		if(isDisplayingAttributeInfos) {
-			document.line("/*");
-			
-			for(final AttributeInfo attributeInfo : getClassFile().getAttributeInfos()) {
-				document.linef(" * %s", attributeInfo.getName());
-			}
-			
-			document.line(" */");
-		}
-		
-		document.linef("%sclass %s%s%s%s {", modifiers, simpleName, typeParameters, extendsClause, implementsClause);
-		document.indent();
-		
-		for(int i = 0; i < jFields.size(); i++) {
-			final Field jFieldA = jFields.get(i);
-			final Field jFieldB = jFields.get(i + 1 < jFields.size() ? i + 1 : i);
-			
-			jFieldA.decompile(decompilerConfiguration, document);
-			
-			if(isSeparatingGroups && isSortingGroups && Field.inDifferentGroups(jFieldA, jFieldB)) {
-				document.line("");
-				document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
-				document.line("");
-			} else if(jFieldA != jFieldB && isDisplayingAttributeInfos && jFieldB.getAttributeInfoCount() > 0) {
-				document.line("");
-			}
-		}
-		
-		if(jFields.size() > 0 && (jConstructors.size() > 0 || jMethods.size() > 0 || jInnerTypes.size() > 0)) {
-			document.line();
-			
-			if(isSeparatingGroups) {
-				document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
-				document.line("");
-			}
-		}
-		
-		for(int i = 0; i < jConstructors.size(); i++) {
-			if(i > 0) {
-				document.line();
-			}
-			
-			final
-			Constructor jConstructor = jConstructors.get(i);
-			jConstructor.decompile(decompilerConfiguration, document);
-		}
-		
-		if((jFields.size() > 0 || jConstructors.size() > 0) && (jMethods.size() > 0 || jInnerTypes.size() > 0)) {
-			document.line();
-			
-			if(isSeparatingGroups) {
-				document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
-				document.line("");
-			}
-		}
-		
-		for(int i = 0; i < jMethods.size(); i++) {
-			if(i > 0) {
-				document.line();
-			}
-			
-			final Method jMethodA = jMethods.get(i);
-			final Method jMethodB = jMethods.get(i + 1 < jMethods.size() ? i + 1 : i);
-			
-			jMethodA.decompile(decompilerConfiguration, document);
-			
-			if(isSeparatingGroups && isSortingGroups && Method.inDifferentGroups(jMethodA, jMethodB)) {
-				document.line("");
-				document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
-			}
-		}
-		
-		if((jFields.size() > 0 || jConstructors.size() > 0 || jMethods.size() > 0) && jInnerTypes.size() > 0) {
-			document.line();
-			
-			if(isSeparatingGroups) {
-				document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
-				document.line("");
-			}
-		}
-		
-		for(int i = 0; i < jInnerTypes.size(); i++) {
-			if(i > 0) {
-				document.line();
-				
-				if(isSeparatingGroups) {
-					document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
-					document.line("");
-				}
-			}
-			
-			final
-			InnerType jInnerType = jInnerTypes.get(i);
-			jInnerType.decompile(decompilerConfiguration, document);
-		}
-		
-		document.outdent();
-		document.line("}");
-		
-		return document;
 	}
 	
 	/**
@@ -311,6 +121,17 @@ final class ClassType extends Type {
 	 */
 	public List<Constructor> getConstructors() {
 		return new ArrayList<>(this.constructors);
+	}
+	
+	/**
+	 * Returns a {@code List} that contains all {@link Constructor} instances associated with this {@code ClassType} instance sorted according to their natural order.
+	 * <p>
+	 * Modifications to the returned {@code List} will not affect this {@code ClassType} instance.
+	 * 
+	 * @return a {@code List} that contains all {@code Constructor} instances associated with this {@code ClassType} instance sorted according to their natural order
+	 */
+	public List<Constructor> getConstructorsSorted() {
+		return getConstructors().stream().sorted().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 	}
 	
 	/**
@@ -398,15 +219,11 @@ final class ClassType extends Type {
 	 * @return a {@code List} that contains all {@code Type} instances associated with this {@code ClassType} instance that are importable
 	 */
 	public List<Type> getImportableTypes() {
-		final Set<Type> importableTypes = new LinkedHashSet<>();
+		if(this.importableTypes.isEmpty()) {
+			this.importableTypes.addAll(doGetImportableTypesSorted());
+		}
 		
-		this.constructors.forEach(constructor -> constructor.getParameterList().getParameters().forEach(parameter -> doAddTypeToImportIfNecessary(parameter.getType(), importableTypes)));
-		this.fields.forEach(field -> doAddTypeToImportIfNecessary(field.getType(), importableTypes));
-		this.interfaceTypes.forEach(interfaceType -> doAddTypeToImportIfNecessary(interfaceType, importableTypes));
-		this.methods.forEach(method -> method.getImportableTypes().forEach(type -> doAddTypeToImportIfNecessary(type, importableTypes)));
-		this.optionalTypeParameters.ifPresent(typeParameters -> typeParameters.collectNames().forEach(name -> doAddTypeToImportIfNecessary(Type.valueOf(name), importableTypes)));
-		
-		return new ArrayList<>(importableTypes);
+		return new ArrayList<>(this.importableTypes);
 	}
 	
 	/**
@@ -498,6 +315,33 @@ final class ClassType extends Type {
 	}
 	
 	/**
+	 * Returns {@code true} if, and only if, this {@code ClassType} instance has {@link Constructor} instances, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code ClassType} instance has {@code Constructor} instances, {@code false} otherwise
+	 */
+	public boolean hasConstructors() {
+		return this.constructors.size() > 0;
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code ClassType} instance has {@link Field} instances, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code ClassType} instance has {@code Field} instances, {@code false} otherwise
+	 */
+	public boolean hasFields() {
+		return this.fields.size() > 0;
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code ClassType} instance has {@link InnerType} instances, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code ClassType} instance has {@code InnerType} instances, {@code false} otherwise
+	 */
+	public boolean hasInnerTypes() {
+		return this.innerTypes.size() > 0;
+	}
+	
+	/**
 	 * Returns {@code true} if, and only if, this {@code ClassType} instance has a {@link Method} instance with a signature that is equal to the signature of {@code method}, {@code false} otherwise.
 	 * <p>
 	 * If {@code method} is {@code null}, a {@code NullPointerException} will be thrown.
@@ -547,6 +391,15 @@ final class ClassType extends Type {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Returns {@code true} if, and only if, this {@code ClassType} instance has {@link Method} instances, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code ClassType} instance has {@code Method} instances, {@code false} otherwise
+	 */
+	public boolean hasMethods() {
+		return this.methods.size() > 0;
 	}
 	
 	/**
@@ -692,8 +545,28 @@ final class ClassType extends Type {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private void doAddTypeToImportIfNecessary(final Type typeToImport, final Set<Type> typesToImport) {
-		Type type = typeToImport;
+	private List<Type> doGetImportableTypes() {
+		final Set<Type> importableTypes = new LinkedHashSet<>();
+		
+		this.constructors.forEach(constructor -> constructor.getParameterList().getParameters().forEach(parameter -> doAddImportableTypeIfNecessary(parameter.getType(), importableTypes)));
+		this.fields.forEach(field -> doAddImportableTypeIfNecessary(field.getType(), importableTypes));
+		this.interfaceTypes.forEach(interfaceType -> doAddImportableTypeIfNecessary(interfaceType, importableTypes));
+		this.methods.forEach(method -> method.getImportableTypes().forEach(type -> doAddImportableTypeIfNecessary(type, importableTypes)));
+		this.optionalTypeParameters.ifPresent(typeParameters -> typeParameters.collectNames().forEach(name -> doAddImportableTypeIfNecessary(Type.valueOf(name), importableTypes)));
+		
+		return new ArrayList<>(importableTypes);
+	}
+	
+	private List<Type> doGetImportableTypesSorted() {
+		final List<Type> importableTypes = doGetImportableTypes();
+		
+		Collections.sort(importableTypes, (a, b) -> a.getName().compareTo(b.getName()));
+		
+		return importableTypes;
+	}
+	
+	private void doAddImportableTypeIfNecessary(final Type importableType, final Set<Type> importableTypes) {
+		Type type = importableType;
 		
 		while(type instanceof ArrayType) {
 			type = ArrayType.class.cast(type).getComponentType();
@@ -718,7 +591,7 @@ final class ClassType extends Type {
 			return;
 		}
 		
-		typesToImport.add(type);
+		importableTypes.add(type);
 	}
 	
 	private void doInitialize() {

@@ -36,7 +36,7 @@ public final class DecompilerTest {
 		decompiler.getDecompilerConfiguration().setDiscardingUnnecessaryPackageNames(true);
 		decompiler.getDecompilerConfiguration().setDisplayingAttributeInfos(true);
 		decompiler.getDecompilerConfiguration().setDisplayingConfigurationParameters(true);
-		decompiler.getDecompilerConfiguration().setDisplayingInstructions(false);
+		decompiler.getDecompilerConfiguration().setDisplayingInstructions(true);
 		decompiler.getDecompilerConfiguration().setImportingTypes(true);
 		decompiler.getDecompilerConfiguration().setSeparatingGroups(true);
 		decompiler.getDecompilerConfiguration().setSortingGroups(true);

@@ -138,21 +138,19 @@ final class Method implements Comparable<Method> {
 		
 		final boolean isAnnotatingDeprecatedMethods = decompilerConfiguration.isAnnotatingDeprecatedMethods();
 		final boolean isAnnotatingOverriddenMethods = decompilerConfiguration.isAnnotatingOverriddenMethods();
-		final boolean isDisplayingAttributeInfos = decompilerConfiguration.isDisplayingAttributeInfos();
-		final boolean isDisplayingInstructions = decompilerConfiguration.isDisplayingInstructions();
 		
 		final ParameterList parameterList = getParameterList();
 		final Type enclosingType = getEnclosingType();
 		
 		final List<Type> importableTypes = getImportableTypes();
 		
-		final String modifiers = Strings.optional(doDiscardInterfaceMethodModifiers(decompilerConfiguration, enclosingType, getModifiers()), "", " ", " ", modifier -> modifier.getKeyword());
+		final String modifiers = Modifier.toExternalForm(doDiscardInterfaceMethodModifiers(decompilerConfiguration, enclosingType, getModifiers()));
 		final String returnType = UtilitiesToRefactor.generateReturnTypeWithOptionalTypeParameters(decompilerConfiguration, this, importableTypes);
 		final String name = getName();
 		final String parameters = parameterList.toExternalForm(decompilerConfiguration, this, importableTypes);
 		final String returnStatement = UtilitiesToRefactor.generateDefaultReturnStatement(this);
 		
-		final List<Instruction> instructions = getInstructions();
+		doGenerateComment(decompilerConfiguration, document);
 		
 		if(isAnnotatingDeprecatedMethods && isDeprecated()) {
 			document.linef("@Deprecated");
@@ -168,51 +166,9 @@ final class Method implements Comparable<Method> {
 			document.linef("%s%s %s(%s) {", modifiers, returnType, name, parameters);
 			document.indent();
 			
-			if(isDisplayingAttributeInfos) {
-				document.line("/*");
-				
-				for(final AttributeInfo attributeInfo : getAttributeInfos()) {
-					document.linef(" * %s", attributeInfo.getName());
-				}
-				
-				document.line(" */");
-			}
-			
-			if(isDisplayingAttributeInfos && isDisplayingInstructions) {
-				document.line();
-			}
-			
-			if(isDisplayingInstructions) {
-				document.linef("/*");
-				document.linef(" * %-15s    %-5s    %-13s    %-13s    %-20s    %-20s    %s", "Mnemonic", "Index", "Opcode (Hex.)", "Opcode (Dec.)", "Operands", "Branch Offsets", "Data");
-				document.linef(" * ");
-				
-				final AtomicInteger index = new AtomicInteger();
-				
-				for(final Instruction instruction : instructions) {
-					final String mnemonic = instruction.getMnemonic();
-					final String indexAsString = String.format("%04d", Integer.valueOf(index.get()));
-					final String opcodeHex = String.format("0x%02X", Integer.valueOf(instruction.getOpcode()));
-					final String opcodeDec = String.format("%03d", Integer.valueOf(instruction.getOpcode()));
-					final String operands = Strings.optional(IntStream.of(instruction.getOperands()).boxed().collect(Collectors.toList()), "{", "}", ", ");
-					final String branchOffsets = Arrays.toString(instruction.getBranchOffsets(index.get()));
-					final String description = Instructions.toString(this.classFile, instruction);
-					
-					document.linef(" * %-15s    %-5s    %-13s    %-13s    %-20s    %-20s    %s", mnemonic, indexAsString, opcodeHex, opcodeDec, operands, branchOffsets, description);
-					
-					index.addAndGet(instruction.getLength());
-				}
-				
-				document.line(" */");
-			}
-			
 			if(!returnStatement.isEmpty()) {
-				if(isDisplayingAttributeInfos || isDisplayingInstructions) {
-					document.line();
-				}
-				
 				document.linef("%s", returnStatement);
-			} else if(!isDisplayingAttributeInfos && !isDisplayingInstructions) {
+			} else {
 				document.line();
 			}
 			
@@ -306,28 +262,9 @@ final class Method implements Comparable<Method> {
 	 * @return a {@code List} that contains all {@code Type} instances associated with this {@code Method} instance that are importable
 	 */
 	public List<Type> getImportableTypes() {
-		if(this.importableTypes.size() > 0) {
-			return new ArrayList<>(this.importableTypes);
+		if(this.importableTypes.isEmpty()) {
+			this.importableTypes.addAll(doGetImportableTypes());
 		}
-		
-		final Set<Type> importableTypes = new LinkedHashSet<>();
-		
-		doAddTypeToImportIfNecessary(getReturnType(), importableTypes);
-		
-		for(final Parameter parameter : getParameterList().getParameters()) {
-			doAddTypeToImportIfNecessary(parameter.getType(), importableTypes);
-		}
-		
-		if(this.optionalCodeAttribute.isPresent()) {
-			final List<String> typeNames = Instructions.findTypeNames(this.classFile, this.optionalCodeAttribute.get());
-			
-			for(final String typeName : typeNames) {
-				doAddTypeToImportIfNecessary(Type.valueOf(typeName), importableTypes);
-			}
-		}
-		
-		this.importableTypes.clear();
-		this.importableTypes.addAll(importableTypes);
 		
 		return new ArrayList<>(this.importableTypes);
 	}
@@ -681,7 +618,18 @@ final class Method implements Comparable<Method> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private void doAddTypeToImportIfNecessary(final Type importableType, final Set<Type> importableTypes) {
+	private List<Type> doGetImportableTypes() {
+		final Set<Type> importableTypes = new LinkedHashSet<>();
+		
+		doAddImportableTypeIfNecessary(getReturnType(), importableTypes);
+		
+		this.parameterList.getParameters().forEach(parameter -> doAddImportableTypeIfNecessary(parameter.getType(), importableTypes));
+		this.optionalCodeAttribute.ifPresent(codeAttribute -> Instructions.findTypeNames(this.classFile, codeAttribute).forEach(typeName -> doAddImportableTypeIfNecessary(Type.valueOf(typeName), importableTypes)));
+		
+		return new ArrayList<>(importableTypes);
+	}
+	
+	private void doAddImportableTypeIfNecessary(final Type importableType, final Set<Type> importableTypes) {
 		Type type = importableType;
 		
 		while(type instanceof ArrayType) {
@@ -708,6 +656,53 @@ final class Method implements Comparable<Method> {
 		}
 		
 		importableTypes.add(type);
+	}
+	
+	private void doGenerateComment(final DecompilerConfiguration decompilerConfiguration, final Document document) {
+		final List<AttributeInfo> attributeInfos = getAttributeInfos();
+		final List<Instruction> instructions = getInstructions();
+		
+		final boolean isDisplayingAttributeInfos = decompilerConfiguration.isDisplayingAttributeInfos() && attributeInfos.size() > 0;
+		final boolean isDisplayingInstructions = decompilerConfiguration.isDisplayingInstructions() && instructions.size() > 0;
+		
+		if(isDisplayingAttributeInfos || isDisplayingInstructions) {
+			document.line("/*");
+		}
+		
+		if(isDisplayingAttributeInfos) {
+			for(final AttributeInfo attributeInfo : attributeInfos) {
+				document.linef(" * %s", attributeInfo.getName());
+			}
+		}
+		
+		if(isDisplayingAttributeInfos && isDisplayingInstructions) {
+			document.line(" * ");
+		}
+		
+		if(isDisplayingInstructions) {
+			document.linef(" * %-15s    %-5s    %-13s    %-13s    %-20s    %-20s    %s", "Mnemonic", "Index", "Opcode (Hex.)", "Opcode (Dec.)", "Operands", "Branch Offsets", "Data");
+			document.linef(" * ");
+			
+			final AtomicInteger index = new AtomicInteger();
+			
+			for(final Instruction instruction : instructions) {
+				final String mnemonic = instruction.getMnemonic();
+				final String indexAsString = String.format("%04d", Integer.valueOf(index.get()));
+				final String opcodeHex = String.format("0x%02X", Integer.valueOf(instruction.getOpcode()));
+				final String opcodeDec = String.format("%03d", Integer.valueOf(instruction.getOpcode()));
+				final String operands = Strings.optional(IntStream.of(instruction.getOperands()).boxed().collect(Collectors.toList()), "{", "}", ", ");
+				final String branchOffsets = Arrays.toString(instruction.getBranchOffsets(index.get()));
+				final String description = Instructions.toString(this.classFile, instruction);
+				
+				document.linef(" * %-15s    %-5s    %-13s    %-13s    %-20s    %-20s    %s", mnemonic, indexAsString, opcodeHex, opcodeDec, operands, branchOffsets, description);
+				
+				index.addAndGet(instruction.getLength());
+			}
+		}
+		
+		if(isDisplayingAttributeInfos || isDisplayingInstructions) {
+			document.linef(" */");
+		}
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -40,8 +40,6 @@ import org.macroing.cel4j.java.binary.classfile.signature.SuperInterfaceSignatur
 import org.macroing.cel4j.java.binary.classfile.signature.TypeParameters;
 import org.macroing.cel4j.java.binary.reader.ClassFileReader;
 import org.macroing.cel4j.node.NodeFormatException;
-import org.macroing.cel4j.util.Document;
-import org.macroing.cel4j.util.Strings;
 
 final class InterfaceType extends Type {
 	private static final Map<String, ClassFile> CLASS_FILES = new HashMap<>();
@@ -87,75 +85,6 @@ final class InterfaceType extends Type {
 	
 	public ClassFile getAssociatedClassFile() {
 		return this.associatedClassFile;
-	}
-	
-	public Document decompile() {
-		return decompile(new DecompilerConfiguration());
-	}
-	
-	public Document decompile(final DecompilerConfiguration decompilerConfiguration) {
-		return decompile(decompilerConfiguration, new Document());
-	}
-	
-	public Document decompile(final DecompilerConfiguration decompilerConfiguration, final Document document) {
-		Objects.requireNonNull(decompilerConfiguration, "decompilerConfiguration == null");
-		Objects.requireNonNull(document, "document == null");
-		
-		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
-		final boolean isSeparatingGroups = decompilerConfiguration.isSeparatingGroups();
-		
-		final List<Type> typesToImport = getTypesToImport();
-		
-		final String packageName = getPackageName();
-		final String modifiers = Strings.optional(getModifiers(), "", " ", " ", modifier -> modifier.getKeyword());
-		final String simpleName = getSimpleName();
-		final String typeParameters = UtilitiesToRefactor.generateTypeParameters(decompilerConfiguration, typesToImport, getTypeParameters());
-		final String extendsClause = UtilitiesToRefactor.generateExtendsClause(decompilerConfiguration, getInterfaces(), typesToImport, getClassSignature(), getPackageName());
-		
-		final List<Field> jFields = getFields();
-		final List<Method> jMethods = getMethods();
-		
-		document.linef("package %s;", packageName);
-		
-		if(isImportingTypes && typesToImport.size() > 0) {
-			document.line();
-			
-			for(final Type typeToImport : typesToImport) {
-				document.linef("import %s;", typeToImport.getName());
-			}
-		}
-		
-		document.linef("");
-		document.linef("%sinterface %s%s%s {", modifiers, simpleName, typeParameters, extendsClause);
-		document.indent();
-		
-		for(final Field jField : jFields) {
-			jField.decompile(decompilerConfiguration, document);
-		}
-		
-		if(jFields.size() > 0 && jMethods.size() > 0) {
-			document.line();
-			
-			if(isSeparatingGroups) {
-				document.line("////////////////////////////////////////////////////////////////////////////////////////////////////");
-				document.line("");
-			}
-		}
-		
-		for(int i = 0; i < jMethods.size(); i++) {
-			if(i > 0) {
-				document.line();
-			}
-			
-			final
-			Method jMethod = jMethods.get(i);
-			jMethod.decompile(decompilerConfiguration, document);
-		}
-		
-		document.outdent();
-		document.linef("}");
-		
-		return document;
 	}
 	
 	public List<Field> getFields() {

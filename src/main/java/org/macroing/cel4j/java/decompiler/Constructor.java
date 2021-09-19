@@ -43,7 +43,7 @@ import org.macroing.cel4j.util.Strings;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-final class Constructor {
+final class Constructor implements Comparable<Constructor> {
 	private final ClassFile classFile;
 	private final MethodInfo methodInfo;
 	private final ParameterList parameterList;
@@ -327,6 +327,53 @@ final class Constructor {
 	}
 	
 	/**
+	 * Compares this {@code Constructor} instance with {@code constructor} for order.
+	 * <p>
+	 * Returns a negative integer, zero or a positive integer as this {@code Constructor} instance is less than, equal to or greater than {@code constructor}.
+	 * <p>
+	 * If {@code constructor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param constructor a {@code Constructor} instance
+	 * @return a negative integer, zero or a positive integer as this {@code Constructor} instance is less than, equal to or greater than {@code constructor}
+	 * @throws NullPointerException thrown if, and only if, {@code constructor} is {@code null}
+	 */
+	@Override
+	public int compareTo(final Constructor constructor) {
+		final Constructor constructorThis = this;
+		final Constructor constructorThat = constructor;
+		
+		final boolean isPublicThis = constructorThis.isPublic();
+		final boolean isPublicThat = constructorThat.isPublic();
+		
+		if(isPublicThis != isPublicThat) {
+			return isPublicThis ? -1 : 1;
+		}
+		
+		final boolean isProtectedThis = constructorThis.isProtected();
+		final boolean isProtectedThat = constructorThat.isProtected();
+		
+		if(isProtectedThis != isProtectedThat) {
+			return isProtectedThis ? -1 : 1;
+		}
+		
+		final boolean isPackageProtectedThis = constructorThis.isPackageProtected();
+		final boolean isPackageProtectedThat = constructorThat.isPackageProtected();
+		
+		if(isPackageProtectedThis != isPackageProtectedThat) {
+			return isPackageProtectedThis ? -1 : 1;
+		}
+		
+		final boolean isPrivateThis = constructorThis.isPrivate();
+		final boolean isPrivateThat = constructorThat.isPrivate();
+		
+		if(isPrivateThis != isPrivateThat) {
+			return isPrivateThis ? -1 : 1;
+		}
+		
+		return constructorThis.getParameterList().compareTo(constructorThat.getParameterList());
+	}
+	
+	/**
 	 * Returns a hash code for this {@code Constructor} instance.
 	 * 
 	 * @return a hash code for this {@code Constructor} instance
@@ -334,6 +381,38 @@ final class Constructor {
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.classFile, this.methodInfo);
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Returns {@code true} if, and only if, {@code constructorA} and {@code constructorB} are in different groups, {@code false} otherwise.
+	 * <p>
+	 * If either {@code constructorA} or {@code constructorB} are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param constructorA a {@code Constructor} instance
+	 * @param constructorB a {@code Constructor} instance
+	 * @return {@code true} if, and only if, {@code constructorA} and {@code constructorB} are in different groups, {@code false} otherwise
+	 * @throws NullPointerException thrown if, and only if, either {@code constructorA} or {@code constructorB} are {@code null}
+	 */
+	public static boolean inDifferentGroups(final Constructor constructorA, final Constructor constructorB) {
+		if(constructorA.isPublic() != constructorB.isPublic()) {
+			return true;
+		}
+		
+		if(constructorA.isProtected() != constructorB.isProtected()) {
+			return true;
+		}
+		
+		if(constructorA.isPackageProtected() != constructorB.isPackageProtected()) {
+			return true;
+		}
+		
+		if(constructorA.isPrivate() != constructorB.isPrivate()) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
