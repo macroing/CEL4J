@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Objects;
 
 public final class Person {
-	private static final String FIRST_NAME = "Per";
-	private static final String LAST_NAME = "Svensson";
+	private static final String FIRST_NAME = "John";
+	private static final String LAST_NAME = "Doe";
 	private static final int AGE = 18;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,7 +50,7 @@ public final class Person {
 	public Person(final String firstName, final String lastName, final int age) {
 		this.firstName = Objects.requireNonNull(firstName, "firstName == null");
 		this.lastName = Objects.requireNonNull(lastName, "lastName == null");
-		this.age = age;
+		this.age = Utilities.requireRange(age, 0, Integer.MAX_VALUE);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,5 +100,25 @@ public final class Person {
 		Objects.requireNonNull(firstName, "firstName == null");
 		
 		return new ArrayList<>();
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static final class Utilities {
+		private Utilities() {
+			
+		}
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		public static int requireRange(final int value, final int minimumValue, final int maximumValue) {
+			if(value < minimumValue) {
+				throw new IllegalArgumentException();
+			} else if(value > maximumValue) {
+				throw new IllegalArgumentException();
+			} else {
+				return value;
+			}
+		}
 	}
 }

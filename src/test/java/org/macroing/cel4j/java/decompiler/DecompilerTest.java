@@ -26,6 +26,8 @@ public final class DecompilerTest {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public static void main(final String[] args) {
+		final long currentTimeMillis = System.currentTimeMillis();
+		
 		final
 		Decompiler decompiler = Decompiler.newInstance();
 		decompiler.getDecompilerConfiguration().setAnnotatingDeprecatedMethods(true);
@@ -42,5 +44,9 @@ public final class DecompilerTest {
 		decompiler.getDecompilerConfiguration().setSortingGroups(true);
 		decompiler.addClass(Person.class);
 		decompiler.decompile();
+		
+		final long elapsedTimeMillis = System.currentTimeMillis() - currentTimeMillis;
+		
+		System.out.println("Decompilation took " + elapsedTimeMillis + " milliseconds.");
 	}
 }
