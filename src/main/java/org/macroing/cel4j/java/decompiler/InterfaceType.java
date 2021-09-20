@@ -55,7 +55,12 @@ final class InterfaceType extends Type {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final AtomicBoolean hasInitialized;
+	private final AtomicBoolean hasInitializedFields;
+	private final AtomicBoolean hasInitializedImportableTypes;
+	private final AtomicBoolean hasInitializedInterfaceTypes;
+	private final AtomicBoolean hasInitializedMethods;
+	private final AtomicBoolean hasInitializedModifiers;
+	private final AtomicBoolean hasInitializedSuperClassSignatures;
 	private final ClassFile classFile;
 	private final List<Field> fields;
 	private final List<InterfaceType> interfaceTypes;
@@ -71,7 +76,12 @@ final class InterfaceType extends Type {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private InterfaceType(final ClassFile classFile) {
-		this.hasInitialized = new AtomicBoolean();
+		this.hasInitializedFields = new AtomicBoolean();
+		this.hasInitializedImportableTypes = new AtomicBoolean();
+		this.hasInitializedInterfaceTypes = new AtomicBoolean();
+		this.hasInitializedMethods = new AtomicBoolean();
+		this.hasInitializedModifiers = new AtomicBoolean();
+		this.hasInitializedSuperClassSignatures = new AtomicBoolean();
 		this.classFile = classFile;
 		this.fields = new ArrayList<>();
 		this.interfaceTypes = new ArrayList<>();
@@ -115,6 +125,8 @@ final class InterfaceType extends Type {
 	 * @return a {@code List} that contains all {@code Field} instances associated with this {@code InterfaceType} instance
 	 */
 	public List<Field> getFields() {
+		doInitializeFields();
+		
 		return this.fields;
 	}
 	
@@ -137,6 +149,8 @@ final class InterfaceType extends Type {
 	 * @return a {@code List} that contains all {@code InterfaceType} instances associated with this {@code InterfaceType} instance
 	 */
 	public List<InterfaceType> getInterfaceTypes() {
+		doInitializeInterfaceTypes();
+		
 		return this.interfaceTypes;
 	}
 	
@@ -148,6 +162,8 @@ final class InterfaceType extends Type {
 	 * @return a {@code List} that contains all {@code Method} instances associated with this {@code InterfaceType} instance
 	 */
 	public List<Method> getMethods() {
+		doInitializeMethods();
+		
 		return this.methods;
 	}
 	
@@ -170,6 +186,8 @@ final class InterfaceType extends Type {
 	 * @return a {@code List} that contains all {@code Modifier} instances associated with this {@code InterfaceType} instance
 	 */
 	public List<Modifier> getModifiers() {
+		doInitializeModifiers();
+		
 		return new ArrayList<>(this.modifiers);
 	}
 	
@@ -182,9 +200,7 @@ final class InterfaceType extends Type {
 	 */
 	@Override
 	public List<Type> getImportableTypes() {
-		if(this.importableTypes.isEmpty()) {
-			this.importableTypes.addAll(doGetImportableTypesSorted());
-		}
+		doInitializeImportableTypes();
 		
 		return new ArrayList<>(this.importableTypes);
 	}
@@ -197,6 +213,8 @@ final class InterfaceType extends Type {
 	 * @return a {@code List} that contains all {@code SuperInterfaceSignature} instances associated with this {@code InterfaceType} instance
 	 */
 	public List<SuperInterfaceSignature> getSuperInterfaceSignatures() {
+		doInitializeSuperInterfaceSignatures();
+		
 		return new ArrayList<>(this.superInterfaceSignatures);
 	}
 	
@@ -283,7 +301,7 @@ final class InterfaceType extends Type {
 	 * @return {@code true} if, and only if, this {@code InterfaceType} instance has {@code Field} instances, {@code false} otherwise
 	 */
 	public boolean hasFields() {
-		return this.fields.size() > 0;
+		return getFields().size() > 0;
 	}
 	
 	/**
@@ -344,7 +362,7 @@ final class InterfaceType extends Type {
 	 * @return {@code true} if, and only if, this {@code InterfaceType} instance has {@code Method} instances, {@code false} otherwise
 	 */
 	public boolean hasMethods() {
-		return this.methods.size() > 0;
+		return getMethods().size() > 0;
 	}
 	
 	/**
@@ -410,11 +428,7 @@ final class InterfaceType extends Type {
 		
 		try {
 			synchronized(INTERFACE_TYPES) {
-				final
-				InterfaceType interfaceType = INTERFACE_TYPES.computeIfAbsent(clazz.getName(), name -> new InterfaceType(CLASS_FILES.computeIfAbsent(name, key -> new ClassFileReader().read(clazz))));
-				interfaceType.doInitialize();
-				
-				return interfaceType;
+				return INTERFACE_TYPES.computeIfAbsent(clazz.getName(), name -> new InterfaceType(CLASS_FILES.computeIfAbsent(name, key -> new ClassFileReader().read(clazz))));
 			}
 		} catch(final NodeFormatException e) {
 			throw new TypeException(e);
@@ -458,10 +472,10 @@ final class InterfaceType extends Type {
 	private List<Type> doGetImportableTypes() {
 		final Set<Type> importableTypes = new LinkedHashSet<>();
 		
-		this.fields.forEach(field -> doAddImportableTypeIfNecessary(field.getType(), importableTypes));
-		this.interfaceTypes.forEach(interfaceType -> doAddImportableTypeIfNecessary(interfaceType, importableTypes));
-		this.methods.forEach(method -> method.getImportableTypes().forEach(type -> doAddImportableTypeIfNecessary(type, importableTypes)));
-		this.optionalTypeParameters.ifPresent(typeParameters -> typeParameters.collectNames().forEach(name -> doAddImportableTypeIfNecessary(Type.valueOf(name), importableTypes)));
+		getFields().forEach(field -> doAddImportableTypeIfNecessary(field.getType(), importableTypes));
+		getInterfaceTypes().forEach(interfaceType -> doAddImportableTypeIfNecessary(interfaceType, importableTypes));
+		getMethods().forEach(method -> method.getImportableTypes().forEach(type -> doAddImportableTypeIfNecessary(type, importableTypes)));
+		getOptionalTypeParameters().ifPresent(typeParameters -> typeParameters.collectNames().forEach(name -> doAddImportableTypeIfNecessary(Type.valueOf(name), importableTypes)));
 		
 		return new ArrayList<>(importableTypes);
 	}
@@ -503,47 +517,53 @@ final class InterfaceType extends Type {
 		importableTypes.add(type);
 	}
 	
-	private void doInitialize() {
-		if(this.hasInitialized.compareAndSet(false, true)) {
-			doInitializeFields();
-			doInitializeInterfaceTypes();
-			doInitializeMethods();
-			doInitializeModifiers();
-			doInitializeSuperInterfaceSignatures();
+	private void doInitializeFields() {
+		if(this.hasInitializedFields.compareAndSet(false, true)) {
+			this.classFile.getFieldInfos().stream().filter(fieldInfo -> fieldInfo.isInterfaceCompatible()).forEach(fieldInfo -> this.fields.add(new Field(this.classFile, fieldInfo, this)));
 		}
 	}
 	
-	private void doInitializeFields() {
-		this.classFile.getFieldInfos().stream().filter(fieldInfo -> fieldInfo.isInterfaceCompatible()).forEach(fieldInfo -> this.fields.add(new Field(this.classFile, fieldInfo, this)));
+	private void doInitializeImportableTypes() {
+		if(this.hasInitializedImportableTypes.compareAndSet(false, true)) {
+			this.importableTypes.addAll(doGetImportableTypesSorted());
+		}
 	}
 	
 	private void doInitializeInterfaceTypes() {
-		final ClassFile classFile = this.classFile;
-		
-		final List<Integer> interfaceIndices = this.classFile.getInterfaces();
-		final List<InterfaceType> interfaceTypes = this.interfaceTypes;
-		
-		for(final int interfaceIndex : interfaceIndices) {
-			final String interfaceNameInternalForm = ConstantUTF8Info.findByNameIndex(classFile, classFile.getCPInfo(interfaceIndex, ConstantClassInfo.class)).getStringValue();
-			final String interfaceNameExternalForm = ClassName.parseClassName(interfaceNameInternalForm).toExternalForm();
+		if(this.hasInitializedInterfaceTypes.compareAndSet(false, true)) {
+			final ClassFile classFile = this.classFile;
 			
-			interfaceTypes.add(InterfaceType.valueOf(interfaceNameExternalForm));
+			final List<Integer> interfaceIndices = this.classFile.getInterfaces();
+			final List<InterfaceType> interfaceTypes = this.interfaceTypes;
+			
+			for(final int interfaceIndex : interfaceIndices) {
+				final String interfaceNameInternalForm = ConstantUTF8Info.findByNameIndex(classFile, classFile.getCPInfo(interfaceIndex, ConstantClassInfo.class)).getStringValue();
+				final String interfaceNameExternalForm = ClassName.parseClassName(interfaceNameInternalForm).toExternalForm();
+				
+				interfaceTypes.add(InterfaceType.valueOf(interfaceNameExternalForm));
+			}
 		}
 	}
 	
 	private void doInitializeMethods() {
-		MethodInfos.findMethods(this.classFile).forEach(methodInfo -> this.methods.add(new Method(this.classFile, methodInfo, this)));
+		if(this.hasInitializedMethods.compareAndSet(false, true)) {
+			MethodInfos.findMethods(this.classFile).forEach(methodInfo -> this.methods.add(new Method(this.classFile, methodInfo, this)));
+		}
 	}
 	
 	private void doInitializeModifiers() {
-		final List<Modifier> modifiers = this.modifiers;
-		
-		if(isPublic()) {
-			modifiers.add(Modifier.PUBLIC);
+		if(this.hasInitializedModifiers.compareAndSet(false, true)) {
+			final List<Modifier> modifiers = this.modifiers;
+			
+			if(isPublic()) {
+				modifiers.add(Modifier.PUBLIC);
+			}
 		}
 	}
 	
 	private void doInitializeSuperInterfaceSignatures() {
-		this.optionalClassSignature.ifPresent(classSignature -> this.superInterfaceSignatures.addAll(classSignature.getSuperInterfaceSignatures()));
+		if(this.hasInitializedSuperClassSignatures.compareAndSet(false, true)) {
+			this.optionalClassSignature.ifPresent(classSignature -> this.superInterfaceSignatures.addAll(classSignature.getSuperInterfaceSignatures()));
+		}
 	}
 }

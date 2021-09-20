@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public final class Person {
+public final class Person implements Comparable<Person> {
 	private static final String FIRST_NAME = "John";
 	private static final String LAST_NAME = "Doe";
 	private static final int AGE = 18;
@@ -83,6 +83,11 @@ public final class Person {
 		} else {
 			return true;
 		}
+	}
+	
+	@Override
+	public int compareTo(final Person person) {
+		return Integer.compare(getAge(), person.getAge());
 	}
 	
 	public int getAge() {

@@ -43,7 +43,7 @@ final class EnumType extends Type {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final AtomicBoolean hasInitialized;
+	private final AtomicBoolean hasInitializedModifiers;
 	private final ClassFile classFile;
 	private final List<Modifier> modifiers;
 	private final String name;
@@ -51,7 +51,7 @@ final class EnumType extends Type {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private EnumType(final ClassFile classFile) {
-		this.hasInitialized = new AtomicBoolean();
+		this.hasInitializedModifiers = new AtomicBoolean();
 		this.classFile = classFile;
 		this.modifiers = new ArrayList<>();
 		this.name = ClassName.parseClassNameThisClass(this.classFile).toExternalForm();
@@ -76,6 +76,8 @@ final class EnumType extends Type {
 	 * @return a {@code List} that contains all {@code Modifier} instances associated with this {@code EnumType} instance
 	 */
 	public List<Modifier> getModifiers() {
+		doInitializeModifiers();
+		
 		return new ArrayList<>(this.modifiers);
 	}
 	
@@ -174,11 +176,7 @@ final class EnumType extends Type {
 		
 		try {
 			synchronized(ENUM_TYPES) {
-				final
-				EnumType enumType = ENUM_TYPES.computeIfAbsent(clazz.getName(), name -> new EnumType(CLASS_FILES.computeIfAbsent(name, key -> new ClassFileReader().read(clazz))));
-				enumType.doInitialize();
-				
-				return enumType;
+				return ENUM_TYPES.computeIfAbsent(clazz.getName(), name -> new EnumType(CLASS_FILES.computeIfAbsent(name, key -> new ClassFileReader().read(clazz))));
 			}
 		} catch(final NodeFormatException e) {
 			throw new TypeException(e);
@@ -219,17 +217,13 @@ final class EnumType extends Type {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private void doInitialize() {
-		if(this.hasInitialized.compareAndSet(false, true)) {
-			doInitializeModifiers();
-		}
-	}
-	
 	private void doInitializeModifiers() {
-		final List<Modifier> modifiers = this.modifiers;
-		
-		if(isPublic()) {
-			modifiers.add(Modifier.PUBLIC);
+		if(this.hasInitializedModifiers.compareAndSet(false, true)) {
+			final List<Modifier> modifiers = this.modifiers;
+			
+			if(isPublic()) {
+				modifiers.add(Modifier.PUBLIC);
+			}
 		}
 	}
 }

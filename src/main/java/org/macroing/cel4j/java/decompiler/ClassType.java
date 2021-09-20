@@ -56,7 +56,14 @@ final class ClassType extends Type {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private final AtomicBoolean hasInitialized;
+	private final AtomicBoolean hasInitializedConstructors;
+	private final AtomicBoolean hasInitializedFields;
+	private final AtomicBoolean hasInitializedImportableTypes;
+	private final AtomicBoolean hasInitializedInnerTypes;
+	private final AtomicBoolean hasInitializedInterfaceTypes;
+	private final AtomicBoolean hasInitializedMethods;
+	private final AtomicBoolean hasInitializedModifiers;
+	private final AtomicBoolean hasInitializedSuperClassSignatures;
 	private final ClassFile classFile;
 	private final List<Constructor> constructors;
 	private final List<Field> fields;
@@ -74,7 +81,14 @@ final class ClassType extends Type {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private ClassType(final ClassFile classFile) {
-		this.hasInitialized = new AtomicBoolean();
+		this.hasInitializedConstructors = new AtomicBoolean();
+		this.hasInitializedFields = new AtomicBoolean();
+		this.hasInitializedImportableTypes = new AtomicBoolean();
+		this.hasInitializedInnerTypes = new AtomicBoolean();
+		this.hasInitializedInterfaceTypes = new AtomicBoolean();
+		this.hasInitializedMethods = new AtomicBoolean();
+		this.hasInitializedModifiers = new AtomicBoolean();
+		this.hasInitializedSuperClassSignatures = new AtomicBoolean();
 		this.classFile = classFile;
 		this.constructors = new ArrayList<>();
 		this.fields = new ArrayList<>();
@@ -120,6 +134,8 @@ final class ClassType extends Type {
 	 * @return a {@code List} that contains all {@code Constructor} instances associated with this {@code ClassType} instance
 	 */
 	public List<Constructor> getConstructors() {
+		doInitializeConstructors();
+		
 		return new ArrayList<>(this.constructors);
 	}
 	
@@ -142,6 +158,8 @@ final class ClassType extends Type {
 	 * @return a {@code List} that contains all {@code Field} instances associated with this {@code ClassType} instance
 	 */
 	public List<Field> getFields() {
+		doInitializeFields();
+		
 		return new ArrayList<>(this.fields);
 	}
 	
@@ -164,6 +182,8 @@ final class ClassType extends Type {
 	 * @return a {@code List} that contains all {@code InnerType} instances associated with this {@code ClassType} instance
 	 */
 	public List<InnerType> getInnerTypes() {
+		doInitializeInnerTypes();
+		
 		return new ArrayList<>(this.innerTypes);
 	}
 	
@@ -175,6 +195,8 @@ final class ClassType extends Type {
 	 * @return a {@code List} that contains all {@code InterfaceType} instances associated with this {@code ClassType} instance
 	 */
 	public List<InterfaceType> getInterfaceTypes() {
+		doInitializeInterfaceTypes();
+		
 		return new ArrayList<>(this.interfaceTypes);
 	}
 	
@@ -186,6 +208,8 @@ final class ClassType extends Type {
 	 * @return a {@code List} that contains all {@code Method} instances associated with this {@code ClassType} instance
 	 */
 	public List<Method> getMethods() {
+		doInitializeMethods();
+		
 		return new ArrayList<>(this.methods);
 	}
 	
@@ -208,6 +232,8 @@ final class ClassType extends Type {
 	 * @return a {@code List} that contains all {@code Modifier} instances associated with this {@code ClassType} instance
 	 */
 	public List<Modifier> getModifiers() {
+		doInitializeModifiers();
+		
 		return new ArrayList<>(this.modifiers);
 	}
 	
@@ -220,9 +246,7 @@ final class ClassType extends Type {
 	 */
 	@Override
 	public List<Type> getImportableTypes() {
-		if(this.importableTypes.isEmpty()) {
-			this.importableTypes.addAll(doGetImportableTypesSorted());
-		}
+		doInitializeImportableTypes();
 		
 		return new ArrayList<>(this.importableTypes);
 	}
@@ -235,6 +259,8 @@ final class ClassType extends Type {
 	 * @return a {@code List} that contains all {@code SuperInterfaceSignature} instances associated with this {@code ClassType} instance
 	 */
 	public List<SuperInterfaceSignature> getSuperInterfaceSignatures() {
+		doInitializeSuperInterfaceSignatures();
+		
 		return new ArrayList<>(this.superInterfaceSignatures);
 	}
 	
@@ -321,7 +347,7 @@ final class ClassType extends Type {
 	 * @return {@code true} if, and only if, this {@code ClassType} instance has {@code Constructor} instances, {@code false} otherwise
 	 */
 	public boolean hasConstructors() {
-		return this.constructors.size() > 0;
+		return getConstructors().size() > 0;
 	}
 	
 	/**
@@ -330,7 +356,7 @@ final class ClassType extends Type {
 	 * @return {@code true} if, and only if, this {@code ClassType} instance has {@code Field} instances, {@code false} otherwise
 	 */
 	public boolean hasFields() {
-		return this.fields.size() > 0;
+		return getFields().size() > 0;
 	}
 	
 	/**
@@ -339,7 +365,7 @@ final class ClassType extends Type {
 	 * @return {@code true} if, and only if, this {@code ClassType} instance has {@code InnerType} instances, {@code false} otherwise
 	 */
 	public boolean hasInnerTypes() {
-		return this.innerTypes.size() > 0;
+		return getInnerTypes().size() > 0;
 	}
 	
 	/**
@@ -400,7 +426,7 @@ final class ClassType extends Type {
 	 * @return {@code true} if, and only if, this {@code ClassType} instance has {@code Method} instances, {@code false} otherwise
 	 */
 	public boolean hasMethods() {
-		return this.methods.size() > 0;
+		return getMethods().size() > 0;
 	}
 	
 	/**
@@ -500,11 +526,7 @@ final class ClassType extends Type {
 		} else {
 			try {
 				synchronized(CLASS_TYPES) {
-					final
-					ClassType classType = CLASS_TYPES.computeIfAbsent(clazz.getName(), name -> new ClassType(CLASS_FILES.computeIfAbsent(name, key -> new ClassFileReader().read(clazz))));
-					classType.doInitialize();
-					
-					return classType;
+					return CLASS_TYPES.computeIfAbsent(clazz.getName(), name -> new ClassType(CLASS_FILES.computeIfAbsent(name, key -> new ClassFileReader().read(clazz))));
 				}
 			} catch(final NodeFormatException e) {
 				throw new TypeException(e);
@@ -549,13 +571,13 @@ final class ClassType extends Type {
 	private List<Type> doGetImportableTypes() {
 		final Set<Type> importableTypes = new LinkedHashSet<>();
 		
-		this.constructors.forEach(constructor -> constructor.getParameterList().getParameters().forEach(parameter -> doAddImportableTypeIfNecessary(parameter.getType(), importableTypes)));
-		this.fields.forEach(field -> doAddImportableTypeIfNecessary(field.getType(), importableTypes));
+		getConstructors().forEach(constructor -> constructor.getParameterList().getParameters().forEach(parameter -> doAddImportableTypeIfNecessary(parameter.getType(), importableTypes)));
+		getFields().forEach(field -> doAddImportableTypeIfNecessary(field.getType(), importableTypes));
 //		TODO: Fix StackOverflowError in javax.swing.JFrame and javax.swing.JPanel.
-//		this.innerTypes.forEach(innerType -> innerType.getType().getImportableTypes().forEach(type -> doAddImportableTypeIfNecessary(type, importableTypes)));
-		this.interfaceTypes.forEach(interfaceType -> doAddImportableTypeIfNecessary(interfaceType, importableTypes));
-		this.methods.forEach(method -> method.getImportableTypes().forEach(type -> doAddImportableTypeIfNecessary(type, importableTypes)));
-		this.optionalTypeParameters.ifPresent(typeParameters -> typeParameters.collectNames().forEach(name -> doAddImportableTypeIfNecessary(Type.valueOf(name), importableTypes)));
+//		getInnerTypes().forEach(innerType -> innerType.getType().getImportableTypes().forEach(type -> doAddImportableTypeIfNecessary(type, importableTypes)));
+		getInterfaceTypes().forEach(interfaceType -> doAddImportableTypeIfNecessary(interfaceType, importableTypes));
+		getMethods().forEach(method -> method.getImportableTypes().forEach(type -> doAddImportableTypeIfNecessary(type, importableTypes)));
+		getOptionalTypeParameters().ifPresent(typeParameters -> typeParameters.collectNames().forEach(name -> doAddImportableTypeIfNecessary(Type.valueOf(name), importableTypes)));
 		
 		return new ArrayList<>(importableTypes);
 	}
@@ -597,79 +619,87 @@ final class ClassType extends Type {
 		importableTypes.add(type);
 	}
 	
-	private void doInitialize() {
-		if(this.hasInitialized.compareAndSet(false, true)) {
-			doInitializeConstructors();
-			doInitializeFields();
-			doInitializeInnerTypes();
-			doInitializeInterfaceTypes();
-			doInitializeMethods();
-			doInitializeModifiers();
-			doInitializeSuperInterfaceSignatures();
+	private void doInitializeConstructors() {
+		if(this.hasInitializedConstructors.compareAndSet(false, true)) {
+			MethodInfos.findConstructors(this.classFile).forEach(methodInfo -> this.constructors.add(new Constructor(this.classFile, methodInfo, this)));
 		}
 	}
 	
-	private void doInitializeConstructors() {
-		MethodInfos.findConstructors(this.classFile).forEach(methodInfo -> this.constructors.add(new Constructor(this.classFile, methodInfo, this)));
+	private void doInitializeFields() {
+		if(this.hasInitializedFields.compareAndSet(false, true)) {
+			this.classFile.getFieldInfos().stream().filter(fieldInfo -> !fieldInfo.isEnum()).forEach(fieldInfo -> this.fields.add(new Field(this.classFile, fieldInfo, this)));
+		}
 	}
 	
-	private void doInitializeFields() {
-		this.classFile.getFieldInfos().stream().filter(fieldInfo -> !fieldInfo.isEnum()).forEach(fieldInfo -> this.fields.add(new Field(this.classFile, fieldInfo, this)));
+	private void doInitializeImportableTypes() {
+		if(this.hasInitializedImportableTypes.compareAndSet(false, true)) {
+			this.importableTypes.addAll(doGetImportableTypesSorted());
+		}
 	}
 	
 	private void doInitializeInnerTypes() {
-		final ClassFile classFile = this.classFile;
-		
-		final List<InnerType> innerTypes = this.innerTypes;
-		
-		InnerClassesAttribute.find(classFile).ifPresent(innerClassesAttribute -> {
-			for(final InnerClass innerClass : innerClassesAttribute.getInnerClasses()) {
-				if(innerClass.getInnerNameIndex() != 0) {
-					final InnerType innerType = new InnerType(classFile, innerClass);
-					
-					final Type type = innerType.getType();
-					
-					if(!type.equals(this)) {
-						innerTypes.add(innerType);
+		if(this.hasInitializedInnerTypes.compareAndSet(false, true)) {
+			final ClassFile classFile = this.classFile;
+			
+			final List<InnerType> innerTypes = this.innerTypes;
+			
+			InnerClassesAttribute.find(classFile).ifPresent(innerClassesAttribute -> {
+				for(final InnerClass innerClass : innerClassesAttribute.getInnerClasses()) {
+					if(innerClass.getInnerNameIndex() != 0) {
+						final InnerType innerType = new InnerType(classFile, innerClass);
+						
+						final Type type = innerType.getType();
+						
+						if(!type.equals(this)) {
+							innerTypes.add(innerType);
+						}
 					}
 				}
-			}
-		});
+			});
+		}
 	}
 	
 	private void doInitializeInterfaceTypes() {
-		final ClassFile classFile = this.classFile;
-		
-		final List<Integer> interfaceIndices = this.classFile.getInterfaces();
-		final List<InterfaceType> interfaceTypes = this.interfaceTypes;
-		
-		for(final int interfaceIndex : interfaceIndices) {
-			final String interfaceNameInternalForm = ConstantUTF8Info.findByNameIndex(classFile, classFile.getCPInfo(interfaceIndex, ConstantClassInfo.class)).getStringValue();
-			final String interfaceNameExternalForm = ClassName.parseClassName(interfaceNameInternalForm).toExternalForm();
+		if(this.hasInitializedInterfaceTypes.compareAndSet(false, true)) {
+			final ClassFile classFile = this.classFile;
 			
-			interfaceTypes.add(InterfaceType.valueOf(interfaceNameExternalForm));
+			final List<Integer> interfaceIndices = this.classFile.getInterfaces();
+			final List<InterfaceType> interfaceTypes = this.interfaceTypes;
+			
+			for(final int interfaceIndex : interfaceIndices) {
+				final String interfaceNameInternalForm = ConstantUTF8Info.findByNameIndex(classFile, classFile.getCPInfo(interfaceIndex, ConstantClassInfo.class)).getStringValue();
+				final String interfaceNameExternalForm = ClassName.parseClassName(interfaceNameInternalForm).toExternalForm();
+				
+				interfaceTypes.add(InterfaceType.valueOf(interfaceNameExternalForm));
+			}
 		}
 	}
 	
 	private void doInitializeMethods() {
-		MethodInfos.findMethods(this.classFile).forEach(methodInfo -> this.methods.add(new Method(this.classFile, methodInfo, this)));
+		if(this.hasInitializedMethods.compareAndSet(false, true)) {
+			MethodInfos.findMethods(this.classFile).forEach(methodInfo -> this.methods.add(new Method(this.classFile, methodInfo, this)));
+		}
 	}
 	
 	private void doInitializeModifiers() {
-		final List<Modifier> modifiers = this.modifiers;
-		
-		if(isPublic()) {
-			modifiers.add(Modifier.PUBLIC);
-		}
-		
-		if(isAbstract()) {
-			modifiers.add(Modifier.ABSTRACT);
-		} else if(isFinal()) {
-			modifiers.add(Modifier.FINAL);
+		if(this.hasInitializedModifiers.compareAndSet(false, true)) {
+			final List<Modifier> modifiers = this.modifiers;
+			
+			if(isPublic()) {
+				modifiers.add(Modifier.PUBLIC);
+			}
+			
+			if(isAbstract()) {
+				modifiers.add(Modifier.ABSTRACT);
+			} else if(isFinal()) {
+				modifiers.add(Modifier.FINAL);
+			}
 		}
 	}
 	
 	private void doInitializeSuperInterfaceSignatures() {
-		this.optionalClassSignature.ifPresent(classSignature -> this.superInterfaceSignatures.addAll(classSignature.getSuperInterfaceSignatures()));
+		if(this.hasInitializedSuperClassSignatures.compareAndSet(false, true)) {
+			this.optionalClassSignature.ifPresent(classSignature -> this.superInterfaceSignatures.addAll(classSignature.getSuperInterfaceSignatures()));
+		}
 	}
 }

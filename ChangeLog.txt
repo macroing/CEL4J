@@ -1,3 +1,9 @@
+2021-09-20  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Decompiler:
+
+		* CHANGE:		Optimize the load time for the internal model. The Person class that is currently part of the Test API used to take around 7000 milliseconds to decompile. Now it takes around 500 milliseconds.
+
 2021-09-19  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
