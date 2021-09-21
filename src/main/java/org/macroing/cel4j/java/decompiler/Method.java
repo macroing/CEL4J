@@ -450,7 +450,7 @@ final class Method implements Comparable<Method> {
 			return isStaticThis ? 1 : -1;
 		}
 		
-		final int returnType = methodThis.getReturnType().getSimpleName().compareTo(methodThat.getReturnType().getSimpleName());
+		final int returnType = methodThis.getReturnType().getExternalSimpleName().compareTo(methodThat.getReturnType().getExternalSimpleName());
 		
 		if(returnType != 0) {
 			return returnType;
@@ -539,14 +539,14 @@ final class Method implements Comparable<Method> {
 			return;
 		}
 		
-		final String packageNameThis = getEnclosingType().getPackageName();
-		final String packageNameType = type.getPackageName();
+		final String externalPackageNameThis = getEnclosingType().getExternalPackageName();
+		final String externalPackageNameType = type.getExternalPackageName();
 		
-		if(packageNameType.equals("java.lang")) {
+		if(externalPackageNameType.equals("java.lang")) {
 			return;
 		}
 		
-		if(packageNameType.equals(packageNameThis)) {
+		if(externalPackageNameType.equals(externalPackageNameThis)) {
 			return;
 		}
 		

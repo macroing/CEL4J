@@ -56,7 +56,7 @@ final class DecompilerImpl extends AbstractDecompiler {
 				
 				final Type type = classInfo.getType();
 				
-				notifyOfProgress("Decompiling " + type.getName() + "...");
+				notifyOfProgress("Decompiling " + type.getExternalName() + "...");
 				
 				final
 				SourceCodeGenerator sourceCodeGenerator = new SourceCodeGenerator(getDecompilerConfiguration());

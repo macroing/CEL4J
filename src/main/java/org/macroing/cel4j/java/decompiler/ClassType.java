@@ -76,7 +76,7 @@ final class ClassType extends Type {
 	private final Optional<ClassSignature> optionalClassSignature;
 	private final Optional<SuperClassSignature> optionalSuperClassSignature;
 	private final Optional<TypeParameters> optionalTypeParameters;
-	private final String name;
+	private final String externalName;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -101,7 +101,7 @@ final class ClassType extends Type {
 		this.optionalClassSignature = ClassSignature.parseClassSignatureOptionally(this.classFile);
 		this.optionalSuperClassSignature = this.optionalClassSignature.isPresent() ? Optional.of(this.optionalClassSignature.get().getSuperClassSignature()) : Optional.empty();
 		this.optionalTypeParameters = this.optionalClassSignature.isPresent() ? this.optionalClassSignature.get().getTypeParameters() : Optional.empty();
-		this.name = ClassName.parseClassNameThisClass(this.classFile).toExternalForm();
+		this.externalName = ClassName.parseClassNameThisClass(this.classFile).toExternalForm();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -301,13 +301,13 @@ final class ClassType extends Type {
 	}
 	
 	/**
-	 * Returns the name of this {@code ClassType} instance.
+	 * Returns the external name of this {@code ClassType} instance.
 	 * 
-	 * @return the name of this {@code ClassType} instance
+	 * @return the external name of this {@code ClassType} instance
 	 */
 	@Override
-	public String getName() {
-		return this.name;
+	public String getExternalName() {
+		return this.externalName;
 	}
 	
 	/**
@@ -317,7 +317,7 @@ final class ClassType extends Type {
 	 */
 	@Override
 	public String toString() {
-		return String.format("ClassType.valueOf(%s.class)", getName());
+		return String.format("ClassType.valueOf(%s.class)", getExternalName());
 	}
 	
 	/**
@@ -472,7 +472,7 @@ final class ClassType extends Type {
 	 * @return {@code true} if, and only if, this {@code ClassType} instance represents {@code java.lang.Object}, {@code false} otherwise
 	 */
 	public boolean isObject() {
-		return getName().equals("java.lang.Object");
+		return getExternalName().equals("java.lang.Object");
 	}
 	
 	/**
@@ -541,7 +541,7 @@ final class ClassType extends Type {
 	 * <p>
 	 * If {@code Class.forName(className)} fails or {@code Class.forName(className)} is not referring to a class type, a {@code TypeException} will be thrown.
 	 * <p>
-	 * This method will cache all {@code ArrayType} instances.
+	 * This method will cache all {@code ClassType} instances.
 	 * 
 	 * @param className the fully qualified name of the desired class
 	 * @return a {@code ClassType} instance that represents {@code Class.forName(className)}
@@ -585,7 +585,7 @@ final class ClassType extends Type {
 	private List<Type> doGetImportableTypesSorted() {
 		final List<Type> importableTypes = doGetImportableTypes();
 		
-		Collections.sort(importableTypes, (a, b) -> a.getName().compareTo(b.getName()));
+		Collections.sort(importableTypes, (a, b) -> a.getExternalName().compareTo(b.getExternalName()));
 		
 		return importableTypes;
 	}
@@ -605,14 +605,14 @@ final class ClassType extends Type {
 			return;
 		}
 		
-		final String packageNameThis = getPackageName();
-		final String packageNameType = type.getPackageName();
+		final String externalPackageNameThis = getExternalPackageName();
+		final String externalPackageNameType = type.getExternalPackageName();
 		
-		if(packageNameType.equals("java.lang")) {
+		if(externalPackageNameType.equals("java.lang")) {
 			return;
 		}
 		
-		if(packageNameType.equals(packageNameThis)) {
+		if(externalPackageNameType.equals(externalPackageNameThis)) {
 			return;
 		}
 		

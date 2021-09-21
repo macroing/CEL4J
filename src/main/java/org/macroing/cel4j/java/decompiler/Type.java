@@ -26,58 +26,163 @@ import org.macroing.cel4j.java.binary.classfile.descriptor.FieldDescriptor;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ParameterDescriptor;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ReturnDescriptor;
 
+/**
+ * A {@code Type} represents a type.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 abstract class Type {
+	/**
+	 * Constructs a new {@code Type} instance.
+	 */
 	protected Type() {
 		
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * Returns a {@code List} that contains all {@link Type} instances associated with this {@code Type} instance that are importable.
+	 * <p>
+	 * The default implementation will return an empty {@code List} instance.
+	 * 
+	 * @return a {@code List} that contains all {@code Type} instances associated with this {@code Type} instance that are importable
+	 */
 	@SuppressWarnings("static-method")
 	public List<Type> getImportableTypes() {
 		return new ArrayList<>();
 	}
 	
-	public abstract String getName();
+	/**
+	 * Returns the external name of this {@code Type} instance.
+	 * 
+	 * @return the external name of this {@code Type} instance
+	 */
+	public abstract String getExternalName();
 	
-	public final String getPackageName() {
-		final String fullyQualifiedTypeName = getName();
-		final String packageName = fullyQualifiedTypeName.lastIndexOf(".") >= 0 ? fullyQualifiedTypeName.substring(0, fullyQualifiedTypeName.lastIndexOf(".")) : "";
+	/**
+	 * Returns the external package name of this {@code Type} instance.
+	 * 
+	 * @return the external package name of this {@code Type} instance
+	 */
+	public final String getExternalPackageName() {
+		final String externalName = getExternalName();
 		
-		return packageName;
+		final int lastIndexOfPeriod = externalName.lastIndexOf(".");
+		
+		if(lastIndexOfPeriod >= 0) {
+			return externalName.substring(0, lastIndexOfPeriod);
+		}
+		
+		return "";
 	}
 	
-	public final String getSimpleName() {
-		final String fullyQualifiedTypeName = getName();
-		final String simpleName0 = fullyQualifiedTypeName.lastIndexOf(".") >= 0 ? fullyQualifiedTypeName.substring(fullyQualifiedTypeName.lastIndexOf(".") + 1) : fullyQualifiedTypeName;
-		final String simpleName1 = isInnerType() && simpleName0.lastIndexOf('$') >= 0 ? simpleName0.substring(simpleName0.lastIndexOf('$') + 1) : simpleName0;
+	/**
+	 * Returns the external simple name of this {@code Type} instance.
+	 * 
+	 * @return the external simple name of this {@code Type} instance
+	 */
+	public final String getExternalSimpleName() {
+		final String externalName = getExternalName();
 		
-		return simpleName1;
+		final int lastIndexOfPeriod = externalName.lastIndexOf(".");
+		
+		if(lastIndexOfPeriod >= 0) {
+			final String externalSimpleName = externalName.substring(lastIndexOfPeriod + 1);
+			
+			if(isInnerType()) {
+				final int lastIndexOfDollarSign = externalSimpleName.lastIndexOf("$");
+				
+				if(lastIndexOfDollarSign >= 0) {
+					return externalSimpleName.substring(lastIndexOfDollarSign + 1);
+				}
+			}
+			
+			return externalSimpleName;
+		}
+		
+		if(isInnerType()) {
+			final int lastIndexOfDollarSign = externalName.lastIndexOf("$");
+			
+			if(lastIndexOfDollarSign >= 0) {
+				return externalName.substring(lastIndexOfDollarSign + 1);
+			}
+		}
+		
+		return externalName;
 	}
 	
+	/**
+	 * Returns {@code true} if, and only if, this {@code Type} instance has a {@link Method} instance with a signature that is equal to the signature of {@code method}, {@code false} otherwise.
+	 * <p>
+	 * If {@code method} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * The default implementation returns {@code false}.
+	 * 
+	 * @param method a {@code Method} instance
+	 * @return {@code true} if, and only if, this {@code Type} instance has a {@code Method} instance with a signature that is equal to the signature of {@code method}, {@code false} otherwise
+	 * @throws NullPointerException thrown if, and only if, {@code method} is {@code null}
+	 */
 	@SuppressWarnings("static-method")
-	public boolean hasMethod(final Method jMethod) {
-		Objects.requireNonNull(jMethod, "jMethod == null");
+	public boolean hasMethod(final Method method) {
+		Objects.requireNonNull(method, "method == null");
 		
 		return false;
 	}
 	
+	/**
+	 * Returns {@code true} if, and only if, this {@code Type} instance has inherited a {@link Method} instance with a signature that is equal to the signature of {@code method}, {@code false} otherwise.
+	 * <p>
+	 * If {@code method} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * The default implementation returns {@code false}.
+	 * 
+	 * @param method a {@code Method} instance
+	 * @return {@code true} if, and only if, this {@code Type} instance has inherited a {@code Method} instance with a signature that is equal to the signature of {@code method}, {@code false} otherwise
+	 * @throws NullPointerException thrown if, and only if, {@code method} is {@code null}
+	 */
 	@SuppressWarnings("static-method")
-	public boolean hasMethodInherited(final Method jMethod) {
-		Objects.requireNonNull(jMethod, "jMethod == null");
+	public boolean hasMethodInherited(final Method method) {
+		Objects.requireNonNull(method, "method == null");
 		
 		return false;
 	}
 	
-	public final boolean hasMethodOverridden(final Method jMethod) {
-		return hasMethod(jMethod) && hasMethodInherited(jMethod);
+	/**
+	 * Returns {@code true} if, and only if, this {@code Type} instance has an overridden {@code Method} instance with a signature that is equal to the signature of {@code method}, {@code false} otherwise.
+	 * <p>
+	 * If {@code method} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param method a {@code Method} instance
+	 * @return {@code true} if, and only if, this {@code Type} instance has an overridden {@code Method} instance with a signature that is equal to the signature of {@code method}, {@code false} otherwise
+	 * @throws NullPointerException thrown if, and only if, {@code method} is {@code null}
+	 */
+	public final boolean hasMethodOverridden(final Method method) {
+		return hasMethod(method) && hasMethodInherited(method);
 	}
 	
+	/**
+	 * Returns {@code true} if, and only if, this {@code Type} instance is an inner type, {@code false} otherwise.
+	 * 
+	 * @return {@code true} if, and only if, this {@code Type} instance is an inner type, {@code false} otherwise
+	 */
 	public abstract boolean isInnerType();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * Returns a {@code Type} instance that represents {@code clazz}.
+	 * <p>
+	 * If {@code clazz} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param clazz a {@code Class} instance
+	 * @return a {@code Type} instance that represents {@code clazz}
+	 * @throws NullPointerException thrown if, and only if, {@code clazz} is {@code null}
+	 */
 	public static Type valueOf(final Class<?> clazz) {
+		Objects.requireNonNull(clazz, "clazz == null");
+		
 		if(clazz == Void.TYPE) {
 			return VoidType.valueOf(clazz);
 		} else if(clazz.isAnnotation()) {
@@ -95,6 +200,18 @@ abstract class Type {
 		}
 	}
 	
+	/**
+	 * Returns a {@code Type} instance given {@code fieldDescriptor}.
+	 * <p>
+	 * If {@code fieldDescriptor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code fieldDescriptor.toClass()} fails, a {@code TypeException} will be thrown.
+	 * 
+	 * @param fieldDescriptor a {@link FieldDescriptor} instance
+	 * @return a {@code Type} instance given {@code fieldDescriptor}
+	 * @throws NullPointerException thrown if, and only if, {@code fieldDescriptor} is {@code null}
+	 * @throws TypeException thrown if, and only if, {@code fieldDescriptor.toClass()} fails
+	 */
 	public static Type valueOf(final FieldDescriptor fieldDescriptor) {
 		try {
 			return valueOf(fieldDescriptor.toClass());
@@ -103,6 +220,18 @@ abstract class Type {
 		}
 	}
 	
+	/**
+	 * Returns a {@code Type} instance given {@code parameterDescriptor}.
+	 * <p>
+	 * If {@code parameterDescriptor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code parameterDescriptor.toClass()} fails, a {@code TypeException} will be thrown.
+	 * 
+	 * @param parameterDescriptor a {@link ParameterDescriptor} instance
+	 * @return a {@code Type} instance given {@code parameterDescriptor}
+	 * @throws NullPointerException thrown if, and only if, {@code parameterDescriptor} is {@code null}
+	 * @throws TypeException thrown if, and only if, {@code parameterDescriptor.toClass()} fails
+	 */
 	public static Type valueOf(final ParameterDescriptor parameterDescriptor) {
 		try {
 			return valueOf(parameterDescriptor.toClass());
@@ -111,6 +240,18 @@ abstract class Type {
 		}
 	}
 	
+	/**
+	 * Returns a {@code Type} instance given {@code returnDescriptor}.
+	 * <p>
+	 * If {@code returnDescriptor} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code returnDescriptor.toClass()} fails, a {@code TypeException} will be thrown.
+	 * 
+	 * @param returnDescriptor a {@link ReturnDescriptor} instance
+	 * @return a {@code Type} instance given {@code returnDescriptor}
+	 * @throws NullPointerException thrown if, and only if, {@code returnDescriptor} is {@code null}
+	 * @throws TypeException thrown if, and only if, {@code returnDescriptor.toClass()} fails
+	 */
 	public static Type valueOf(final ReturnDescriptor returnDescriptor) {
 		try {
 			return valueOf(returnDescriptor.toClass());
@@ -119,7 +260,21 @@ abstract class Type {
 		}
 	}
 	
+	/**
+	 * Returns a {@code Type} instance given {@code name} in external or internal format.
+	 * <p>
+	 * If {@code name} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * <p>
+	 * If {@code Class.forName(name)} fails, a {@code TypeException} will be thrown.
+	 * 
+	 * @param name the name in external or internal format
+	 * @return a {@code Type} instance given {@code name} in external or internal format
+	 * @throws NullPointerException thrown if, and only if, {@code name} is {@code null}
+	 * @throws TypeException thrown if, and only if, {@code Class.forName(name)} fails
+	 */
 	public static Type valueOf(final String name) {
+		Objects.requireNonNull(name, "name == null");
+		
 		switch(name) {
 			case PrimitiveType.BOOLEAN_EXTERNAL_NAME:
 			case PrimitiveType.BOOLEAN_INTERNAL_NAME:

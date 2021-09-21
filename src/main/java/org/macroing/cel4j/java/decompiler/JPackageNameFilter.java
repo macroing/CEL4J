@@ -37,7 +37,7 @@ interface JPackageNameFilter {
 				
 				if(isImportingTypes) {
 					for(final Type typeToImport : typesToImport) {
-						if(packageName0.equals(typeToImport.getPackageName())) {
+						if(packageName0.equals(typeToImport.getExternalPackageName())) {
 							return false;
 						}
 					}

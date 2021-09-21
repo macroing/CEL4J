@@ -160,12 +160,12 @@ final class PrimitiveType extends Type {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns the name of this {@code PrimitiveType} instance.
+	 * Returns the external name of this {@code PrimitiveType} instance.
 	 * 
-	 * @return the name of this {@code PrimitiveType} instance
+	 * @return the external name of this {@code PrimitiveType} instance
 	 */
 	@Override
-	public String getName() {
+	public String getExternalName() {
 		return this.clazz.getName();
 	}
 	

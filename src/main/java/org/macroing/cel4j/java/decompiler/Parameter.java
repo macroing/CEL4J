@@ -18,10 +18,12 @@
  */
 package org.macroing.cel4j.java.decompiler;
 
+import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.Objects;
 
 import org.macroing.cel4j.java.binary.classfile.signature.JavaTypeSignature;
 
+//TODO: Add Javadocs!
 final class Parameter implements Comparable<Parameter> {
 	private final Type type;
 	private final JavaTypeSignature javaTypeSignature;
@@ -30,14 +32,17 @@ final class Parameter implements Comparable<Parameter> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+//	TODO: Add Javadocs!
 	public Parameter(final Type type) {
 		this(type, "");
 	}
 	
+//	TODO: Add Javadocs!
 	public Parameter(final Type type, final String name) {
 		this(type, name, false);
 	}
 	
+//	TODO: Add Javadocs!
 	public Parameter(final Type type, final String name, final boolean isFinal) {
 		this.type = Objects.requireNonNull(type, "type == null");
 		this.name = Objects.requireNonNull(name, "name == null");
@@ -45,6 +50,7 @@ final class Parameter implements Comparable<Parameter> {
 		this.javaTypeSignature = null;
 	}
 	
+//	TODO: Add Javadocs!
 	public Parameter(final Type type, final String name, final boolean isFinal, final JavaTypeSignature javaTypeSignature) {
 		this.type = Objects.requireNonNull(type, "type == null");
 		this.name = Objects.requireNonNull(name, "name == null");
@@ -54,31 +60,38 @@ final class Parameter implements Comparable<Parameter> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public Type getType() {
-		return this.type;
-	}
-	
+//	TODO: Add Javadocs!
 	public String getName() {
 		return this.name;
 	}
 	
+//	TODO: Add Javadocs!
 	public String getNameOrGenerate(final LocalVariableNameGenerator localVariableNameGenerator, final int index) {
-		return isNamed() ? getName() : localVariableNameGenerator.generateLocalVariableName(getType().getName(), index);
+		return isNamed() ? getName() : localVariableNameGenerator.generateLocalVariableName(getType().getExternalName(), index);
 	}
 	
+//	TODO: Add Javadocs!
 	public String getTypeName(final JPackageNameFilter jPackageNameFilter) {
-		return Names.filterPackageNames(jPackageNameFilter, this.javaTypeSignature != null ? this.javaTypeSignature.toExternalForm() : getType().getName());
+		return Names.filterPackageNames(jPackageNameFilter, this.javaTypeSignature != null ? this.javaTypeSignature.toExternalForm() : getType().getExternalName());
 	}
 	
+//	TODO: Add Javadocs!
 	public String toExternalForm(final JPackageNameFilter jPackageNameFilter, final LocalVariableNameGenerator localVariableNameGenerator, final int index) {
 		return String.format("%s%s %s", isFinal() ? "final " : "", getTypeName(jPackageNameFilter), getNameOrGenerate(localVariableNameGenerator, index));
 	}
 	
+//	TODO: Add Javadocs!
 	@Override
 	public String toString() {
 		return String.format("JParameter: [Type=%s], [Name=%s], [IsFinal=%s]", getType(), getName(), Boolean.valueOf(isFinal()));
 	}
 	
+//	TODO: Add Javadocs!
+	public Type getType() {
+		return this.type;
+	}
+	
+//	TODO: Add Javadocs!
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
@@ -98,19 +111,23 @@ final class Parameter implements Comparable<Parameter> {
 		}
 	}
 	
+//	TODO: Add Javadocs!
 	public boolean isFinal() {
 		return this.isFinal;
 	}
 	
+//	TODO: Add Javadocs!
 	public boolean isNamed() {
 		return !this.name.isEmpty();
 	}
 	
+//	TODO: Add Javadocs!
 	@Override
 	public int compareTo(final Parameter parameter) {
-		return getType().getSimpleName().compareTo(parameter.getType().getSimpleName());
+		return getType().getExternalSimpleName().compareTo(parameter.getType().getExternalSimpleName());
 	}
 	
+//	TODO: Add Javadocs!
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.type, this.javaTypeSignature, this.name, Boolean.valueOf(this.isFinal));

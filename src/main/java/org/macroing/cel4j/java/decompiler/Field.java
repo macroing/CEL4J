@@ -354,10 +354,10 @@ final class Field implements Comparable<Field> {
 			return isPrivateThis ? -1 : 1;
 		}
 		
-		final int simpleTypeName = fieldThis.getType().getSimpleName().compareTo(fieldThat.getType().getSimpleName());
+		final int externalSimpleName = fieldThis.getType().getExternalSimpleName().compareTo(fieldThat.getType().getExternalSimpleName());
 		
-		if(simpleTypeName != 0) {
-			return simpleTypeName;
+		if(externalSimpleName != 0) {
+			return externalSimpleName;
 		}
 		
 		return fieldThis.getName().compareTo(fieldThat.getName());

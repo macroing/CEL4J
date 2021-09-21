@@ -94,7 +94,7 @@ final class SourceCodeGenerator {
 		
 		final
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append(String.format("%s decompiled by CEL4J Java Decompiler.", jType.getName()));
+		stringBuilder.append(String.format("%s decompiled by CEL4J Java Decompiler.", jType.getExternalName()));
 		stringBuilder.append("\n");
 		stringBuilder.append("\n");
 		stringBuilder.append(String.format("<AnnotatingDeprecatedMethods>: %s", Boolean.toString(decompilerConfiguration.isAnnotatingDeprecatedMethods())));
@@ -125,9 +125,9 @@ final class SourceCodeGenerator {
 	}
 	
 	private void doGenerateAnnotationType(final AnnotationType annotationType) {
-		final String packageName = annotationType.getPackageName();
+		final String packageName = annotationType.getExternalPackageName();
 		final String modifiers = Modifier.toExternalForm(annotationType.getModifiers());
-		final String simpleName = annotationType.getSimpleName();
+		final String simpleName = annotationType.getExternalSimpleName();
 		
 		final
 		Document document = this.document;
@@ -174,10 +174,10 @@ final class SourceCodeGenerator {
 		final List<Type> importableTypes = classType.getImportableTypes();
 		
 		final String modifiers = Modifier.toExternalForm(classType.getModifiers());
-		final String simpleName = classType.getSimpleName();
+		final String simpleName = classType.getExternalSimpleName();
 		final String typeParameters = UtilitiesToRefactor.generateTypeParameters(decompilerConfiguration, importableTypes, classType.getOptionalTypeParameters());
 		final String extendsClause = UtilitiesToRefactor.generateExtendsClause(decompilerConfiguration, classType, importableTypes);
-		final String implementsClause = UtilitiesToRefactor.generateImplementsClause(decompilerConfiguration, classType.getInterfaceTypes(), importableTypes, classType.getOptionalClassSignature(), classType.getPackageName());
+		final String implementsClause = UtilitiesToRefactor.generateImplementsClause(decompilerConfiguration, classType.getInterfaceTypes(), importableTypes, classType.getOptionalClassSignature(), classType.getExternalPackageName());
 		
 		final
 		Document document = this.document;
@@ -261,7 +261,7 @@ final class SourceCodeGenerator {
 			final Document document = this.document;
 			
 			for(final Type importableType : importableTypes) {
-				document.linef("import %s;", importableType.getName());
+				document.linef("import %s;", importableType.getExternalName());
 			}
 			
 			document.line();
@@ -306,7 +306,7 @@ final class SourceCodeGenerator {
 	private void doGenerateClassTypePackageDeclaration(final ClassType classType) {
 		final
 		Document document = this.document;
-		document.linef("package %s;", classType.getPackageName());
+		document.linef("package %s;", classType.getExternalPackageName());
 		document.linef("");
 	}
 	
@@ -317,7 +317,7 @@ final class SourceCodeGenerator {
 		
 		final ParameterList parameterList = constructor.getParameterList();
 		
-		final String simpleName = constructor.getEnclosingType().getSimpleName();
+		final String simpleName = constructor.getEnclosingType().getExternalSimpleName();
 		final String modifiers = Modifier.toExternalForm(constructor.getModifiers());
 		final String type = UtilitiesToRefactor.generateTypeWithOptionalTypeParameters(decompilerConfiguration, constructor, simpleName);
 		final String parameters = parameterList.toExternalForm(decompilerConfiguration, constructor, new ArrayList<>());
@@ -389,9 +389,9 @@ final class SourceCodeGenerator {
 	}
 	
 	private void doGenerateEnumType(final EnumType enumType) {
-		final String packageName = enumType.getPackageName();
+		final String packageName = enumType.getExternalPackageName();
 		final String modifiers = Modifier.toExternalForm(enumType.getModifiers());
-		final String simpleName = enumType.getSimpleName();
+		final String simpleName = enumType.getExternalSimpleName();
 		
 		final
 		Document document = this.document;
@@ -475,7 +475,7 @@ final class SourceCodeGenerator {
 		final String simpleName = innerType.getSimpleName();
 		final String typeParameters = UtilitiesToRefactor.generateTypeParameters(decompilerConfiguration, importableTypes, classType.getOptionalTypeParameters());
 		final String extendsClause = UtilitiesToRefactor.generateExtendsClause(decompilerConfiguration, classType, importableTypes);
-		final String implementsClause = UtilitiesToRefactor.generateImplementsClause(decompilerConfiguration, classType.getInterfaceTypes(), importableTypes, classType.getOptionalClassSignature(), classType.getPackageName());
+		final String implementsClause = UtilitiesToRefactor.generateImplementsClause(decompilerConfiguration, classType.getInterfaceTypes(), importableTypes, classType.getOptionalClassSignature(), classType.getExternalPackageName());
 		
 		final
 		Document document = this.document;
@@ -491,11 +491,11 @@ final class SourceCodeGenerator {
 		
 		final List<Type> importableTypes = interfaceType.getImportableTypes();
 		
-		final String packageName = interfaceType.getPackageName();
+		final String packageName = interfaceType.getExternalPackageName();
 		final String modifiers = Modifier.toExternalForm(interfaceType.getModifiers());
-		final String simpleName = interfaceType.getSimpleName();
+		final String simpleName = interfaceType.getExternalSimpleName();
 		final String typeParameters = UtilitiesToRefactor.generateTypeParameters(decompilerConfiguration, importableTypes, interfaceType.getOptionalTypeParameters());
-		final String extendsClause = UtilitiesToRefactor.generateExtendsClause(decompilerConfiguration, interfaceType.getInterfaceTypes(), importableTypes, interfaceType.getOptionalClassSignature(), interfaceType.getPackageName());
+		final String extendsClause = UtilitiesToRefactor.generateExtendsClause(decompilerConfiguration, interfaceType.getInterfaceTypes(), importableTypes, interfaceType.getOptionalClassSignature(), interfaceType.getExternalPackageName());
 		
 		final List<Field> fields = interfaceType.getFields();
 		final List<Method> methods = interfaceType.getMethods();
@@ -508,7 +508,7 @@ final class SourceCodeGenerator {
 			document.line();
 			
 			for(final Type importableType : importableTypes) {
-				document.linef("import %s;", importableType.getName());
+				document.linef("import %s;", importableType.getExternalName());
 			}
 		}
 		

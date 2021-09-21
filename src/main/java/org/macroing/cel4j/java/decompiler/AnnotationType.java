@@ -46,7 +46,7 @@ final class AnnotationType extends Type {
 	private final AtomicBoolean hasInitializedModifiers;
 	private final ClassFile classFile;
 	private final List<Modifier> modifiers;
-	private final String name;
+	private final String externalName;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -54,7 +54,7 @@ final class AnnotationType extends Type {
 		this.hasInitializedModifiers = new AtomicBoolean();
 		this.classFile = classFile;
 		this.modifiers = new ArrayList<>();
-		this.name = ClassName.parseClassNameThisClass(this.classFile).toExternalForm();
+		this.externalName = ClassName.parseClassNameThisClass(this.classFile).toExternalForm();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,13 +82,13 @@ final class AnnotationType extends Type {
 	}
 	
 	/**
-	 * Returns the name of this {@code AnnotationType} instance.
+	 * Returns the external name of this {@code AnnotationType} instance.
 	 * 
-	 * @return the name of this {@code AnnotationType} instance
+	 * @return the external name of this {@code AnnotationType} instance
 	 */
 	@Override
-	public String getName() {
-		return this.name;
+	public String getExternalName() {
+		return this.externalName;
 	}
 	
 	/**
@@ -98,7 +98,7 @@ final class AnnotationType extends Type {
 	 */
 	@Override
 	public String toString() {
-		return String.format("AnnotationType.valueOf(%s.class)", getName());
+		return String.format("AnnotationType.valueOf(%s.class)", getExternalName());
 	}
 	
 	/**

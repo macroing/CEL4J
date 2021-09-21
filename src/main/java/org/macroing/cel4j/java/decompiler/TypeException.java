@@ -18,23 +18,48 @@
  */
 package org.macroing.cel4j.java.decompiler;
 
+/**
+ * A {@code TypeException} is thrown to indicate that a {@link Type} instance could not be created.
+ * 
+ * @since 1.0.0
+ * @author J&#246;rgen Lundgren
+ */
 final class TypeException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * Constructs a {@code TypeException} with no detail message or cause.
+	 */
 	public TypeException() {
 		
 	}
 	
+	/**
+	 * Constructs a {@code TypeException} with a detail message but no cause.
+	 * 
+	 * @param message a message describing this {@code TypeException}
+	 */
 	public TypeException(final String message) {
 		super(message);
 	}
 	
+	/**
+	 * Constructs a {@code TypeException} with a detail message and a cause.
+	 * 
+	 * @param message a message describing this {@code TypeException}
+	 * @param cause the {@code Throwable} that caused this {@code TypeException} to be thrown
+	 */
 	public TypeException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 	
+	/**
+	 * Constructs a {@code TypeException} with no detail message but a cause.
+	 * 
+	 * @param cause the {@code Throwable} that caused this {@code TypeException} to be thrown
+	 */
 	public TypeException(final Throwable cause) {
 		super(cause);
 	}

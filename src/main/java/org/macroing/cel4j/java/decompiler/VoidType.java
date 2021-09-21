@@ -55,12 +55,12 @@ final class VoidType extends Type {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns the name of this {@code VoidType} instance.
+	 * Returns the external name of this {@code VoidType} instance.
 	 * 
-	 * @return the name of this {@code VoidType} instance
+	 * @return the external name of this {@code VoidType} instance
 	 */
 	@Override
-	public String getName() {
+	public String getExternalName() {
 		return this.clazz.getName();
 	}
 	

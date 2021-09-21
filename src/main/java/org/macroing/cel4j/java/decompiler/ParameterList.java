@@ -18,6 +18,7 @@
  */
 package org.macroing.cel4j.java.decompiler;
 
+import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,21 +33,25 @@ import org.macroing.cel4j.java.binary.classfile.signature.JavaTypeSignature;
 import org.macroing.cel4j.java.binary.classfile.signature.MethodSignature;
 import org.macroing.cel4j.util.ParameterArguments;
 
+//TODO: Add Javadocs!
 final class ParameterList implements Comparable<ParameterList> {
 	private final List<Parameter> parameters;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+//	TODO: Add Javadocs!
 	public ParameterList(final List<Parameter> parameters) {
 		this.parameters = ParameterArguments.requireNonNullList(parameters, "parameters");
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+//	TODO: Add Javadocs!
 	public List<Parameter> getParameters() {
 		return new ArrayList<>(this.parameters);
 	}
 	
+//	TODO: Add Javadocs!
 	public String toExternalForm(final DecompilerConfiguration decompilerConfiguration, final Constructor constructor, final List<Type> typesToImport) {
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
@@ -58,7 +63,7 @@ final class ParameterList implements Comparable<ParameterList> {
 		final List<Parameter> parameters = this.parameters;
 		
 		if(parameters.size() > 0) {
-			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(constructor.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes);
+			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(constructor.getEnclosingType().getExternalPackageName(), isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes);
 			
 			for(int i = 0; i < parameters.size(); i++) {
 				stringBuilder.append(i > 0 ? ", " : "");
@@ -69,6 +74,7 @@ final class ParameterList implements Comparable<ParameterList> {
 		return stringBuilder.toString();
 	}
 	
+//	TODO: Add Javadocs!
 	public String toExternalForm(final DecompilerConfiguration decompilerConfiguration, final Method jMethod, final List<Type> typesToImport) {
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
@@ -80,7 +86,7 @@ final class ParameterList implements Comparable<ParameterList> {
 		final List<Parameter> parameters = this.parameters;
 		
 		if(parameters.size() > 0) {
-			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(jMethod.getEnclosingType().getPackageName(), isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes);
+			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(jMethod.getEnclosingType().getExternalPackageName(), isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes);
 			
 			for(int i = 0; i < parameters.size(); i++) {
 				stringBuilder.append(i > 0 ? ", " : "");
@@ -91,6 +97,7 @@ final class ParameterList implements Comparable<ParameterList> {
 		return stringBuilder.toString();
 	}
 	
+//	TODO: Add Javadocs!
 	@Override
 	public int compareTo(final ParameterList parameterList) {
 		final ParameterList parameterListThis = this;
@@ -118,6 +125,7 @@ final class ParameterList implements Comparable<ParameterList> {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+//	TODO: Add Javadocs!
 	public static ParameterList load(final ClassFile classFile, final MethodInfo methodInfo) {
 		Objects.requireNonNull(classFile, "classFile == null");
 		Objects.requireNonNull(methodInfo, "methodInfo == null");

@@ -130,7 +130,7 @@ public final class TypeParameters implements Node {
 	 * @return a {@code String} representation of this {@code TypeParameters} instance in internal form
 	 */
 	public String toInternalForm() {
-		return String.format("<%s>", this.typeParameters.stream().map(typeParameter -> typeParameter.toInternalForm()).collect(StringBuilder::new, StringBuilder::append, StringBuilder::append));
+		return String.format("<%s>", this.typeParameters.stream().map(typeParameter -> typeParameter.toInternalForm()).<StringBuilder>collect(StringBuilder::new, StringBuilder::append, StringBuilder::append));
 	}
 	
 	/**

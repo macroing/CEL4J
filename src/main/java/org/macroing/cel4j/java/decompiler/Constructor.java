@@ -129,12 +129,12 @@ final class Constructor implements Comparable<Constructor> {
 	}
 	
 	/**
-	 * Returns the name of this {@code Constructor} instance.
+	 * Returns the external name of this {@code Constructor} instance.
 	 * 
-	 * @return the name of this {@code Constructor} instance
+	 * @return the external name of this {@code Constructor} instance
 	 */
-	public String getName() {
-		return getEnclosingType().getName();
+	public String getExternalName() {
+		return getEnclosingType().getExternalName();
 	}
 	
 	/**

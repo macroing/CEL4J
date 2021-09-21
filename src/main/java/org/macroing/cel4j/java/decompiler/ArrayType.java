@@ -52,13 +52,13 @@ final class ArrayType extends Type {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns the name of this {@code ArrayType} instance.
+	 * Returns the external name of this {@code ArrayType} instance.
 	 * 
-	 * @return the name of this {@code ArrayType} instance
+	 * @return the external name of this {@code ArrayType} instance
 	 */
 	@Override
-	public String getName() {
-		return getComponentType().getName() + "[]";
+	public String getExternalName() {
+		return getComponentType().getExternalName() + "[]";
 	}
 	
 	/**
