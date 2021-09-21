@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.java.decompiler;
+package org.macroing.cel4j.java.model;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -42,7 +42,7 @@ import org.macroing.cel4j.java.binary.classfile.signature.MethodSignature;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-final class Method implements Comparable<Method> {
+public final class Method implements Comparable<Method> {
 	private final ClassFile classFile;
 	private final List<Type> importableTypes;
 	private final MethodInfo methodInfo;

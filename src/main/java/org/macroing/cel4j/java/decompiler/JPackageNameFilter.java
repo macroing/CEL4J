@@ -21,6 +21,8 @@ package org.macroing.cel4j.java.decompiler;
 import java.util.List;
 import java.util.Objects;
 
+import org.macroing.cel4j.java.model.Type;
+
 interface JPackageNameFilter {
 	boolean isAccepted(final String packageName, final String simpleName);
 	

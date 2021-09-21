@@ -26,6 +26,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import org.macroing.cel4j.java.model.Type;
+
 final class DecompilerImpl extends AbstractDecompiler {
 	private final Map<Class<?>, Consumer<String>> classes;
 	

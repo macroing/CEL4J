@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.java.decompiler;
+package org.macroing.cel4j.java.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ import org.macroing.cel4j.java.binary.classfile.descriptor.ClassName;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-final class InnerType {
+public final class InnerType {
 	private final ClassFile classFile;
 	private final InnerClass innerClass;
 	private final Type type;

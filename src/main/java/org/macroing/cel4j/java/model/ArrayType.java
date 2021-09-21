@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.java.decompiler;
+package org.macroing.cel4j.java.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +28,7 @@ import java.util.Objects;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-final class ArrayType extends Type {
+public final class ArrayType extends Type {
 	private static final Map<String, ArrayType> ARRAY_TYPES = new HashMap<>();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

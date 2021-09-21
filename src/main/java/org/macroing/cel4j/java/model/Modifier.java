@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.java.decompiler;
+package org.macroing.cel4j.java.model;
 
-import java.lang.reflect.Field;//TODO: Add Javadocs!
 import java.util.List;
 import java.util.Objects;
 
@@ -30,7 +29,7 @@ import org.macroing.cel4j.util.Strings;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-enum Modifier {
+public enum Modifier {
 	/**
 	 * A {@code Modifier} instance that represents the abstract modifier.
 	 */
@@ -114,7 +113,15 @@ enum Modifier {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//	TODO: Add Javadocs!
+	/**
+	 * Returns a {@code String} representation of all {@code Modifier} instances in {@code modifiers} in external form.
+	 * <p>
+	 * If {@code modifiers} or at least one of its elements are {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param modifiers a {@code List} of {@code Modifier} instances
+	 * @return a {@code String} representation of all {@code Modifier} instances in {@code modifiers} in external form
+	 * @throws NullPointerException thrown if, and only if, {@code modifiers} or at least one of its elements are {@code null}
+	 */
 	public static String toExternalForm(final List<Modifier> modifiers) {
 		return Strings.optional(modifiers, "", " ", " ", modifier -> modifier.getKeyword());
 	}

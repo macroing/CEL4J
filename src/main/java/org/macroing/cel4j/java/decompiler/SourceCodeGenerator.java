@@ -29,6 +29,17 @@ import java.util.stream.IntStream;
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.Instruction;
+import org.macroing.cel4j.java.model.AnnotationType;
+import org.macroing.cel4j.java.model.ClassType;
+import org.macroing.cel4j.java.model.Constructor;
+import org.macroing.cel4j.java.model.EnumType;
+import org.macroing.cel4j.java.model.Field;
+import org.macroing.cel4j.java.model.InnerType;
+import org.macroing.cel4j.java.model.InterfaceType;
+import org.macroing.cel4j.java.model.Method;
+import org.macroing.cel4j.java.model.Modifier;
+import org.macroing.cel4j.java.model.ParameterList;
+import org.macroing.cel4j.java.model.Type;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 
@@ -320,7 +331,7 @@ final class SourceCodeGenerator {
 		final String simpleName = constructor.getEnclosingType().getExternalSimpleName();
 		final String modifiers = Modifier.toExternalForm(constructor.getModifiers());
 		final String type = UtilitiesToRefactor.generateTypeWithOptionalTypeParameters(decompilerConfiguration, constructor, simpleName);
-		final String parameters = parameterList.toExternalForm(decompilerConfiguration, constructor, new ArrayList<>());
+		final String parameters = UtilitiesToRefactor.toExternalForm(decompilerConfiguration, parameterList, constructor, new ArrayList<>());
 		
 		doGenerateConstructorComment(constructor);
 		
@@ -557,7 +568,7 @@ final class SourceCodeGenerator {
 		final String modifiers = Modifier.toExternalForm(doDiscardInterfaceMethodModifiers(enclosingType, method.getModifiers()));
 		final String returnType = UtilitiesToRefactor.generateReturnTypeWithOptionalTypeParameters(decompilerConfiguration, method, importableTypes);
 		final String name = method.getName();
-		final String parameters = parameterList.toExternalForm(decompilerConfiguration, method, importableTypes);
+		final String parameters = UtilitiesToRefactor.toExternalForm(decompilerConfiguration, parameterList, method, importableTypes);
 		final String returnStatement = UtilitiesToRefactor.generateDefaultReturnStatement(method);
 		
 		doGenerateMethodComment(method);

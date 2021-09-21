@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.java.decompiler;
+package org.macroing.cel4j.java.model;
 
 /**
  * A {@code TypeException} is thrown to indicate that a {@link Type} instance could not be created.
@@ -24,7 +24,7 @@ package org.macroing.cel4j.java.decompiler;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-final class TypeException extends RuntimeException {
+public final class TypeException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

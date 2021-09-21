@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.java.decompiler;
+package org.macroing.cel4j.java.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,7 +50,7 @@ import org.macroing.cel4j.node.NodeFormatException;
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-final class ClassType extends Type {
+public final class ClassType extends Type {
 	private static final Map<String, ClassFile> CLASS_FILES = new HashMap<>();
 	private static final Map<String, ClassType> CLASS_TYPES = new HashMap<>();
 	

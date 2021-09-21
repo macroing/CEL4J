@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with org.macroing.cel4j. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.macroing.cel4j.java.decompiler;
+package org.macroing.cel4j.java.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,14 +32,14 @@ import org.macroing.cel4j.java.binary.reader.ClassFileReader;
 import org.macroing.cel4j.node.NodeFormatException;
 
 /**
- * An {@code EnumType} is a {@link Type} implementation that represents an enum type.
+ * An {@code AnnotationType} is a {@link Type} implementation that represents an annotation type.
  * 
  * @since 1.0.0
  * @author J&#246;rgen Lundgren
  */
-final class EnumType extends Type {
+public final class AnnotationType extends Type {
+	private static final Map<String, AnnotationType> ANNOTATION_TYPES = new HashMap<>();
 	private static final Map<String, ClassFile> CLASS_FILES = new HashMap<>();
-	private static final Map<String, EnumType> ENUM_TYPES = new HashMap<>();
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -50,7 +50,7 @@ final class EnumType extends Type {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private EnumType(final ClassFile classFile) {
+	private AnnotationType(final ClassFile classFile) {
 		this.hasInitializedModifiers = new AtomicBoolean();
 		this.classFile = classFile;
 		this.modifiers = new ArrayList<>();
@@ -60,20 +60,20 @@ final class EnumType extends Type {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns the {@link ClassFile} instance associated with this {@code EnumType} instance.
+	 * Returns the {@link ClassFile} instance associated with this {@code AnnotationType} instance.
 	 * 
-	 * @return the {@code ClassFile} instance associated with this {@code EnumType} instance
+	 * @return the {@code ClassFile} instance associated with this {@code AnnotationType} instance
 	 */
 	public ClassFile getClassFile() {
 		return this.classFile;
 	}
 	
 	/**
-	 * Returns a {@code List} that contains all {@link Modifier} instances associated with this {@code EnumType} instance.
+	 * Returns a {@code List} that contains all {@link Modifier} instances associated with this {@code AnnotationType} instance.
 	 * <p>
-	 * Modifications to the returned {@code List} will not affect this {@code EnumType} instance.
+	 * Modifications to the returned {@code List} will not affect this {@code AnnotationType} instance.
 	 * 
-	 * @return a {@code List} that contains all {@code Modifier} instances associated with this {@code EnumType} instance
+	 * @return a {@code List} that contains all {@code Modifier} instances associated with this {@code AnnotationType} instance
 	 */
 	public List<Modifier> getModifiers() {
 		doInitializeModifiers();
@@ -82,9 +82,9 @@ final class EnumType extends Type {
 	}
 	
 	/**
-	 * Returns the external name of this {@code EnumType} instance.
+	 * Returns the external name of this {@code AnnotationType} instance.
 	 * 
-	 * @return the external name of this {@code EnumType} instance
+	 * @return the external name of this {@code AnnotationType} instance
 	 */
 	@Override
 	public String getExternalName() {
@@ -92,30 +92,30 @@ final class EnumType extends Type {
 	}
 	
 	/**
-	 * Returns a {@code String} representation of this {@code EnumType} instance.
+	 * Returns a {@code String} representation of this {@code AnnotationType} instance.
 	 * 
-	 * @return a {@code String} representation of this {@code EnumType} instance
+	 * @return a {@code String} representation of this {@code AnnotationType} instance
 	 */
 	@Override
 	public String toString() {
-		return String.format("EnumType.valueOf(%s.class)", getExternalName());
+		return String.format("AnnotationType.valueOf(%s.class)", getExternalName());
 	}
 	
 	/**
-	 * Compares {@code object} to this {@code EnumType} instance for equality.
+	 * Compares {@code object} to this {@code AnnotationType} instance for equality.
 	 * <p>
-	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code EnumType}, and their respective values are equal, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, {@code object} is an instance of {@code AnnotationType}, and their respective values are equal, {@code false} otherwise.
 	 * 
-	 * @param object the {@code Object} to compare to this {@code EnumType} instance for equality
-	 * @return {@code true} if, and only if, {@code object} is an instance of {@code EnumType}, and their respective values are equal, {@code false} otherwise
+	 * @param object the {@code Object} to compare to this {@code AnnotationType} instance for equality
+	 * @return {@code true} if, and only if, {@code object} is an instance of {@code AnnotationType}, and their respective values are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object object) {
 		if(object == this) {
 			return true;
-		} else if(!(object instanceof EnumType)) {
+		} else if(!(object instanceof AnnotationType)) {
 			return false;
-		} else if(!Objects.equals(this.classFile, EnumType.class.cast(object).classFile)) {
+		} else if(!Objects.equals(this.classFile, AnnotationType.class.cast(object).classFile)) {
 			return false;
 		} else {
 			return true;
@@ -123,9 +123,9 @@ final class EnumType extends Type {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, this {@code EnumType} instance is an inner enum, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, this {@code AnnotationType} instance is an inner annotation, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, this {@code EnumType} instance is an inner enum, {@code false} otherwise
+	 * @return {@code true} if, and only if, this {@code AnnotationType} instance is an inner annotation, {@code false} otherwise
 	 */
 	@Override
 	public boolean isInnerType() {
@@ -133,18 +133,18 @@ final class EnumType extends Type {
 	}
 	
 	/**
-	 * Returns {@code true} if, and only if, this {@code EnumType} instance is public, {@code false} otherwise.
+	 * Returns {@code true} if, and only if, this {@code AnnotationType} instance is public, {@code false} otherwise.
 	 * 
-	 * @return {@code true} if, and only if, this {@code EnumType} instance is public, {@code false} otherwise
+	 * @return {@code true} if, and only if, this {@code AnnotationType} instance is public, {@code false} otherwise
 	 */
 	public boolean isPublic() {
 		return this.classFile.isPublic();
 	}
 	
 	/**
-	 * Returns a hash code for this {@code EnumType} instance.
+	 * Returns a hash code for this {@code AnnotationType} instance.
 	 * 
-	 * @return a hash code for this {@code EnumType} instance
+	 * @return a hash code for this {@code AnnotationType} instance
 	 */
 	@Override
 	public int hashCode() {
@@ -154,29 +154,29 @@ final class EnumType extends Type {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns an {@code EnumType} instance that represents {@code clazz}.
+	 * Returns an {@code AnnotationType} instance that represents {@code clazz}.
 	 * <p>
 	 * If {@code clazz} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code clazz.isEnum() == false}, a {@code TypeException} will be thrown.
+	 * If {@code clazz.isAnnotation() == false}, a {@code TypeException} will be thrown.
 	 * <p>
-	 * This method will cache all {@code EnumType} instances.
+	 * This method will cache all {@code AnnotationType} instances.
 	 * 
 	 * @param clazz a {@code Class} instance
-	 * @return an {@code EnumType} instance that represents {@code clazz}
+	 * @return an {@code AnnotationType} instance that represents {@code clazz}
 	 * @throws NullPointerException thrown if, and only if, {@code clazz} is {@code null}
-	 * @throws TypeException thrown if, and only if, {@code clazz.isEnum() == false}
+	 * @throws TypeException thrown if, and only if, {@code clazz.isAnnotation() == false}
 	 */
-	public static EnumType valueOf(final Class<?> clazz) {
+	public static AnnotationType valueOf(final Class<?> clazz) {
 		Objects.requireNonNull(clazz, "clazz == null");
 		
-		if(!clazz.isEnum()) {
-			throw new TypeException(String.format("An EnumType must refer to an enum type: %s", clazz));
+		if(!clazz.isAnnotation()) {
+			throw new TypeException(String.format("An AnnotationType must refer to an annotation type: %s", clazz));
 		}
 		
 		try {
-			synchronized(ENUM_TYPES) {
-				return ENUM_TYPES.computeIfAbsent(clazz.getName(), name -> new EnumType(CLASS_FILES.computeIfAbsent(name, key -> new ClassFileReader().read(clazz))));
+			synchronized(ANNOTATION_TYPES) {
+				return ANNOTATION_TYPES.computeIfAbsent(clazz.getName(), name -> new AnnotationType(CLASS_FILES.computeIfAbsent(name, key -> new ClassFileReader().read(clazz))));
 			}
 		} catch(final NodeFormatException e) {
 			throw new TypeException(e);
@@ -184,20 +184,20 @@ final class EnumType extends Type {
 	}
 	
 	/**
-	 * Returns an {@code EnumType} instance that represents {@code Class.forName(className)}.
+	 * Returns an {@code AnnotationType} instance that represents {@code Class.forName(className)}.
 	 * <p>
 	 * If {@code className} is {@code null}, a {@code NullPointerException} will be thrown.
 	 * <p>
-	 * If {@code Class.forName(className)} fails or {@code Class.forName(className).isEnum() == false}, a {@code TypeException} will be thrown.
+	 * If {@code Class.forName(className)} fails or {@code Class.forName(className).isAnnotation() == false}, a {@code TypeException} will be thrown.
 	 * <p>
-	 * This method will cache all {@code EnumType} instances.
+	 * This method will cache all {@code AnnotationType} instances.
 	 * 
 	 * @param className the fully qualified name of the desired class
-	 * @return an {@code EnumType} instance that represents {@code Class.forName(className)}
+	 * @return an {@code AnnotationType} instance that represents {@code Class.forName(className)}
 	 * @throws NullPointerException thrown if, and only if, {@code className} is {@code null}
-	 * @throws TypeException thrown if, and only if, {@code Class.forName(className)} fails or {@code Class.forName(className).isEnum() == false}
+	 * @throws TypeException thrown if, and only if, {@code Class.forName(className)} fails or {@code Class.forName(className).isAnnotation() == false}
 	 */
-	public static EnumType valueOf(final String className) {
+	public static AnnotationType valueOf(final String className) {
 		try {
 			return valueOf(Class.forName(Objects.requireNonNull(className, "className == null")));
 		} catch(final ClassNotFoundException | LinkageError e) {
@@ -209,9 +209,9 @@ final class EnumType extends Type {
 	 * Clears the cache.
 	 */
 	public static void clearCache() {
-		synchronized(ENUM_TYPES) {
+		synchronized(ANNOTATION_TYPES) {
+			ANNOTATION_TYPES.clear();
 			CLASS_FILES.clear();
-			ENUM_TYPES.clear();
 		}
 	}
 	
