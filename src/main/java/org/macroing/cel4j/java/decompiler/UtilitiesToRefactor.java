@@ -53,30 +53,6 @@ final class UtilitiesToRefactor {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public static String filterPackageNames(final JPackageNameFilter jPackageNameFilter, final String string) {
-		return filterPackageNames(jPackageNameFilter, string, false);
-	}
-	
-	public static String filterPackageNames(final JPackageNameFilter jPackageNameFilter, final String string, final boolean isInnerType) {
-		final Matcher matcher = PATTERN_FULLY_QUALIFIED_TYPE_NAME.matcher(string);
-		
-		final StringBuffer stringBuffer = new StringBuffer();
-		
-		while(matcher.find()) {
-			final String fullyQualifiedName = matcher.group();
-			final String packageName = getPackageName(fullyQualifiedName);
-			final String simpleName = getSimpleName(fullyQualifiedName, isInnerType);
-			
-			if(!jPackageNameFilter.isAccepted(packageName, simpleName)) {
-				matcher.appendReplacement(stringBuffer, Matcher.quoteReplacement(simpleName));
-			}
-		}
-		
-		matcher.appendTail(stringBuffer);
-		
-		return stringBuffer.toString();
-	}
-	
 	public static String generateAssignment(final Field field) {
 		final Optional<Object> optionalAssignment = field.getAssignment();
 		
@@ -129,10 +105,6 @@ final class UtilitiesToRefactor {
 		}
 	}
 	
-	public static String generateExtendsClause(final DecompilerConfiguration decompilerConfiguration, final ClassType classType) {
-		return generateExtendsClause(decompilerConfiguration, classType, new ArrayList<>());
-	}
-	
 	public static String generateExtendsClause(final DecompilerConfiguration decompilerConfiguration, final ClassType classType, final List<Type> importableTypes) {
 		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
@@ -149,7 +121,7 @@ final class UtilitiesToRefactor {
 				final Optional<ClassSignature> optionalClassSignature = classType.getOptionalClassSignature();
 				
 				final String string0 = optionalClassSignature.isPresent() ? optionalClassSignature.get().getSuperClassSignature().toExternalForm() : superClass.getExternalName();
-				final String string1 = isDiscardingUnnecessaryPackageNames ? filterPackageNames(JPackageNameFilter.newUnnecessaryPackageName(classType.getExternalPackageName(), isDiscardingUnnecessaryPackageNames, importableTypes, isImportingTypes), string0) : string0;
+				final String string1 = isDiscardingUnnecessaryPackageNames ? doFilterPackageNames(JPackageNameFilter.newUnnecessaryPackageName(classType.getExternalPackageName(), isDiscardingUnnecessaryPackageNames, importableTypes, isImportingTypes), string0) : string0;
 				
 				stringBuilder.append(string1);
 			}
@@ -180,7 +152,7 @@ final class UtilitiesToRefactor {
 					final SuperInterfaceSignature superInterfaceSignature = superInterfaceSignatures.get(i);
 					
 					final String string0 = superInterfaceSignature.toExternalForm();
-					final String string1 = isDiscardingUnnecessaryPackageNames ? filterPackageNames(jPackageNameFilter, string0) : string0;
+					final String string1 = isDiscardingUnnecessaryPackageNames ? doFilterPackageNames(jPackageNameFilter, string0) : string0;
 					
 					stringBuilder.append(i > 0 ? ", " : "");
 					stringBuilder.append(string1);
@@ -188,7 +160,7 @@ final class UtilitiesToRefactor {
 			} else {
 				for(int i = 0; i < interfaceTypes.size(); i++) {
 					final String string0 = interfaceTypes.get(i).getExternalName();
-					final String string1 = isDiscardingUnnecessaryPackageNames ? filterPackageNames(jPackageNameFilter, string0) : string0;
+					final String string1 = isDiscardingUnnecessaryPackageNames ? doFilterPackageNames(jPackageNameFilter, string0) : string0;
 					
 					stringBuilder.append(i > 0 ? ", " : "");
 					stringBuilder.append(string1);
@@ -221,7 +193,7 @@ final class UtilitiesToRefactor {
 					final SuperInterfaceSignature superInterfaceSignature = superInterfaceSignatures.get(i);
 					
 					final String string0 = superInterfaceSignature.toExternalForm();
-					final String string1 = isDiscardingUnnecessaryPackageNames ? filterPackageNames(jPackageNameFilter, string0) : string0;
+					final String string1 = isDiscardingUnnecessaryPackageNames ? doFilterPackageNames(jPackageNameFilter, string0) : string0;
 					
 					stringBuilder.append(i > 0 ? ", " : "");
 					stringBuilder.append(string1);
@@ -229,7 +201,7 @@ final class UtilitiesToRefactor {
 			} else {
 				for(int i = 0; i < interfaceTypes.size(); i++) {
 					final String string0 = interfaceTypes.get(i).getExternalName();
-					final String string1 = isDiscardingUnnecessaryPackageNames ? filterPackageNames(jPackageNameFilter, string0) : string0;
+					final String string1 = isDiscardingUnnecessaryPackageNames ? doFilterPackageNames(jPackageNameFilter, string0) : string0;
 					
 					stringBuilder.append(i > 0 ? ", " : "");
 					stringBuilder.append(string1);
@@ -263,16 +235,16 @@ final class UtilitiesToRefactor {
 				
 				final String string = isDiscardingExtendsObject ? typeParameters.toExternalForm().replaceAll(" extends java\\.lang\\.Object", "") : typeParameters.toExternalForm();
 				
-				stringBuilder.append(filterPackageNames(jPackageNameFilter, string));
+				stringBuilder.append(doFilterPackageNames(jPackageNameFilter, string));
 				stringBuilder.append(" ");
 			}
 			
-			stringBuilder.append(filterPackageNames(jPackageNameFilter, result.toExternalForm(), method.getReturnType().isInnerType()));
+			stringBuilder.append(doFilterPackageNames(jPackageNameFilter, result.toExternalForm(), method.getReturnType().isInnerType()));
 			
 			return stringBuilder.toString();
 		}
 		
-		return filterPackageNames(jPackageNameFilter, method.getReturnType().getExternalName(), method.getReturnType().isInnerType());
+		return doFilterPackageNames(jPackageNameFilter, method.getReturnType().getExternalName(), method.getReturnType().isInnerType());
 	}
 	
 	public static String generateType(final DecompilerConfiguration decompilerConfiguration, final Field field) {
@@ -286,10 +258,10 @@ final class UtilitiesToRefactor {
 		if(optionalFieldSignature.isPresent()) {
 			final FieldSignature fieldSignature = optionalFieldSignature.get();
 			
-			return filterPackageNames(jPackageNameFilter, fieldSignature.toExternalForm());
+			return doFilterPackageNames(jPackageNameFilter, fieldSignature.toExternalForm());
 		}
 		
-		return filterPackageNames(jPackageNameFilter, field.getType().getExternalName());
+		return doFilterPackageNames(jPackageNameFilter, field.getType().getExternalName());
 	}
 	
 	public static String generateTypeParameters(final DecompilerConfiguration decompilerConfiguration, final List<Type> importableTypes, final Optional<TypeParameters> optionalTypeParameters) {
@@ -346,7 +318,7 @@ final class UtilitiesToRefactor {
 				
 				final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(enclosingType.getExternalPackageName(), isDiscardingUnnecessaryPackageNames, new ArrayList<>(), isImportingTypes);
 				
-				stringBuilder.append(filterPackageNames(jPackageNameFilter, typeParameters.toExternalForm()));
+				stringBuilder.append(doFilterPackageNames(jPackageNameFilter, typeParameters.toExternalForm()));
 				stringBuilder.append(" ");
 			}
 			
@@ -356,21 +328,6 @@ final class UtilitiesToRefactor {
 		}
 		
 		return Objects.requireNonNull(simpleName, "simpleName == null");
-	}
-	
-	public static String getNameOrGenerate(final LocalVariableNameGenerator localVariableNameGenerator, final Parameter parameter, final int index) {
-		return parameter.isNamed() ? parameter.getName() : localVariableNameGenerator.generateLocalVariableName(parameter.getType().getExternalName(), index);
-	}
-	
-	public static String getPackageName(final String fullyQualifiedTypeName) {
-		return fullyQualifiedTypeName.lastIndexOf(".") >= 0 ? fullyQualifiedTypeName.substring(0, fullyQualifiedTypeName.lastIndexOf(".")) : "";
-	}
-	
-	public static String getSimpleName(final String fullyQualifiedTypeName, final boolean isInnerType) {
-		final String simpleName0 = fullyQualifiedTypeName.lastIndexOf(".") >= 0 ? fullyQualifiedTypeName.substring(fullyQualifiedTypeName.lastIndexOf(".") + 1) : fullyQualifiedTypeName;
-		final String simpleName1 = isInnerType && simpleName0.lastIndexOf('$') >= 0 ? simpleName0.substring(simpleName0.lastIndexOf('$') + 1) : simpleName0;
-		
-		return simpleName1;
 	}
 	
 	public static String toExternalForm(final DecompilerConfiguration decompilerConfiguration, final ParameterList parameterList, final Constructor constructor, final List<Type> typesToImport) {
@@ -388,7 +345,7 @@ final class UtilitiesToRefactor {
 			
 			for(int i = 0; i < parameters.size(); i++) {
 				stringBuilder.append(i > 0 ? ", " : "");
-				stringBuilder.append(toExternalForm(jPackageNameFilter, localVariableNameGenerator, parameters.get(i), i));
+				stringBuilder.append(doToExternalForm(jPackageNameFilter, localVariableNameGenerator, parameters.get(i), i));
 			}
 		}
 		
@@ -410,18 +367,55 @@ final class UtilitiesToRefactor {
 			
 			for(int i = 0; i < parameters.size(); i++) {
 				stringBuilder.append(i > 0 ? ", " : "");
-				stringBuilder.append(toExternalForm(jPackageNameFilter, localVariableNameGenerator, parameters.get(i), i));
+				stringBuilder.append(doToExternalForm(jPackageNameFilter, localVariableNameGenerator, parameters.get(i), i));
 			}
 		}
 		
 		return stringBuilder.toString();
 	}
 	
-	public static String getTypeName(final JPackageNameFilter jPackageNameFilter, final Parameter parameter) {
-		return UtilitiesToRefactor.filterPackageNames(jPackageNameFilter, parameter.getOptionalJavaTypeSignature().map(javaTypeSignature -> javaTypeSignature.toExternalForm()).orElse(parameter.getType().getExternalName()));
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static String doFilterPackageNames(final JPackageNameFilter jPackageNameFilter, final String string) {
+		return doFilterPackageNames(jPackageNameFilter, string, false);
 	}
 	
-	public static String toExternalForm(final JPackageNameFilter jPackageNameFilter, final LocalVariableNameGenerator localVariableNameGenerator, final Parameter parameter, final int index) {
-		return String.format("%s%s %s", parameter.isFinal() ? "final " : "", getTypeName(jPackageNameFilter, parameter), getNameOrGenerate(localVariableNameGenerator, parameter, index));
+	private static String doFilterPackageNames(final JPackageNameFilter jPackageNameFilter, final String string, final boolean isInnerType) {
+		final Matcher matcher = PATTERN_FULLY_QUALIFIED_TYPE_NAME.matcher(string);
+		
+		final StringBuffer stringBuffer = new StringBuffer();
+		
+		while(matcher.find()) {
+			final String fullyQualifiedName = matcher.group();
+			final String packageName = doGetPackageName(fullyQualifiedName);
+			final String simpleName = doGetSimpleName(fullyQualifiedName, isInnerType);
+			
+			if(!jPackageNameFilter.isAccepted(packageName, simpleName)) {
+				matcher.appendReplacement(stringBuffer, Matcher.quoteReplacement(simpleName));
+			}
+		}
+		
+		matcher.appendTail(stringBuffer);
+		
+		return stringBuffer.toString();
+	}
+	
+	private static String doGetPackageName(final String fullyQualifiedTypeName) {
+		return fullyQualifiedTypeName.lastIndexOf(".") >= 0 ? fullyQualifiedTypeName.substring(0, fullyQualifiedTypeName.lastIndexOf(".")) : "";
+	}
+	
+	private static String doGetSimpleName(final String fullyQualifiedTypeName, final boolean isInnerType) {
+		final String simpleName0 = fullyQualifiedTypeName.lastIndexOf(".") >= 0 ? fullyQualifiedTypeName.substring(fullyQualifiedTypeName.lastIndexOf(".") + 1) : fullyQualifiedTypeName;
+		final String simpleName1 = isInnerType && simpleName0.lastIndexOf('$') >= 0 ? simpleName0.substring(simpleName0.lastIndexOf('$') + 1) : simpleName0;
+		
+		return simpleName1;
+	}
+	
+	private static String doToExternalForm(final JPackageNameFilter jPackageNameFilter, final LocalVariableNameGenerator localVariableNameGenerator, final Parameter parameter, final int index) {
+		final String a = parameter.isFinal() ? "final " : "";
+		final String b = doFilterPackageNames(jPackageNameFilter, parameter.getOptionalJavaTypeSignature().map(javaTypeSignature -> javaTypeSignature.toExternalForm()).orElse(parameter.getType().getExternalName()));
+		final String c = parameter.isNamed() ? parameter.getName() : localVariableNameGenerator.generateLocalVariableName(parameter.getType().getExternalName(), index);
+		
+		return String.format("%s%s %s", a, b, c);
 	}
 }
