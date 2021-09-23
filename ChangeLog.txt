@@ -1,7 +1,12 @@
 2021-09-23  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
+	CEL4J Java Binary:
+
+		* ADD:			Add the method find(MethodInfo) to the ExceptionsAttribute class.
+
 	CEL4J Java Model:
 
+		* ADD:			Add the methods getExceptionTypes() and getOptionalExceptionsAttribute() to the Method class.
 		* ADD:			Add the method getOptionalEnclosingType() to the InnerType class.
 
 2021-09-21  Jörgen Lundgren  <joergen.lundgren@macroing.org>

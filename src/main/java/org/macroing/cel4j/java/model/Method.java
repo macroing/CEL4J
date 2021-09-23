@@ -24,14 +24,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.MethodInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.CodeAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.DeprecatedAttribute;
+import org.macroing.cel4j.java.binary.classfile.attributeinfo.ExceptionsAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.Instruction;
+import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantClassInfo;
 import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
+import org.macroing.cel4j.java.binary.classfile.descriptor.ClassName;
 import org.macroing.cel4j.java.binary.classfile.descriptor.MethodDescriptor;
 import org.macroing.cel4j.java.binary.classfile.descriptor.ParameterDescriptor;
 import org.macroing.cel4j.java.binary.classfile.signature.MethodSignature;
@@ -43,7 +47,12 @@ import org.macroing.cel4j.java.binary.classfile.signature.MethodSignature;
  * @author J&#246;rgen Lundgren
  */
 public final class Method implements Comparable<Method> {
+	private final AtomicBoolean hasInitializedExceptionTypes;
+	private final AtomicBoolean hasInitializedImportableTypes;
+	private final AtomicBoolean hasInitializedModifiers;
 	private final ClassFile classFile;
+	private final List<Modifier> modifiers;
+	private final List<Type> exceptionTypes;
 	private final List<Type> importableTypes;
 	private final MethodInfo methodInfo;
 	private final Optional<CodeAttribute> optionalCodeAttribute;
@@ -57,6 +66,11 @@ public final class Method implements Comparable<Method> {
 		this.classFile = Objects.requireNonNull(classFile, "classFile == null");
 		this.methodInfo = Objects.requireNonNull(methodInfo, "methodInfo == null");
 		this.enclosingType = Objects.requireNonNull(enclosingType, "enclosingType == null");
+		this.hasInitializedExceptionTypes = new AtomicBoolean();
+		this.hasInitializedImportableTypes = new AtomicBoolean();
+		this.hasInitializedModifiers = new AtomicBoolean();
+		this.modifiers = new ArrayList<>();
+		this.exceptionTypes = new ArrayList<>();
 		this.importableTypes = new ArrayList<>();
 		this.optionalCodeAttribute = CodeAttribute.find(this.methodInfo);
 		this.parameterList = ParameterList.load(classFile, methodInfo);
@@ -110,43 +124,22 @@ public final class Method implements Comparable<Method> {
 	 * @return a {@code List} that contains all {@code Modifier} instances associated with this {@code Method} instance
 	 */
 	public List<Modifier> getModifiers() {
-		final List<Modifier> modifiers = new ArrayList<>();
+		doInitializeModifiers();
 		
-		if(isPrivate()) {
-			modifiers.add(Modifier.PRIVATE);
-		} else if(isProtected()) {
-			modifiers.add(Modifier.PROTECTED);
-		} else if(isPublic()) {
-			modifiers.add(Modifier.PUBLIC);
-		}
+		return new ArrayList<>(this.modifiers);
+	}
+	
+	/**
+	 * Returns a {@code List} that contains all {@link Type} instances associated with this {@code Method} instance that are exceptions.
+	 * <p>
+	 * Modifications to the returned {@code List} will not affect this {@code Method} instance.
+	 * 
+	 * @return a {@code List} that contains all {@code Type} instances associated with this {@code Method} instance that are exceptions
+	 */
+	public List<Type> getExceptionTypes() {
+		doInitializeExceptionTypes();
 		
-		if(isStatic()) {
-			modifiers.add(Modifier.STATIC);
-		}
-		
-		if(isEnclosedByInterface() && !isAbstract() && !isStatic()) {
-			modifiers.add(Modifier.DEFAULT);
-		}
-		
-		if(isAbstract()) {
-			modifiers.add(Modifier.ABSTRACT);
-		} else if(isFinal()) {
-			modifiers.add(Modifier.FINAL);
-		}
-		
-		if(isSynchronized()) {
-			modifiers.add(Modifier.SYNCHRONIZED);
-		}
-		
-		if(isNative()) {
-			modifiers.add(Modifier.NATIVE);
-		}
-		
-		if(isStrict()) {
-			modifiers.add(Modifier.STRICT_F_P);
-		}
-		
-		return modifiers;
+		return new ArrayList<>(this.exceptionTypes);
 	}
 	
 	/**
@@ -157,11 +150,18 @@ public final class Method implements Comparable<Method> {
 	 * @return a {@code List} that contains all {@code Type} instances associated with this {@code Method} instance that are importable
 	 */
 	public List<Type> getImportableTypes() {
-		if(this.importableTypes.isEmpty()) {
-			this.importableTypes.addAll(doGetImportableTypes());
-		}
+		doInitializeImportableTypes();
 		
 		return new ArrayList<>(this.importableTypes);
+	}
+	
+	/**
+	 * Returns the optional {@link ExceptionsAttribute} instance associated with this {@code Method} instance.
+	 * 
+	 * @return the optional {@code ExceptionsAttribute} instance associated with this {@code Method} instance
+	 */
+	public Optional<ExceptionsAttribute> getOptionalExceptionsAttribute() {
+		return ExceptionsAttribute.find(this.methodInfo);
 	}
 	
 	/**
@@ -551,5 +551,59 @@ public final class Method implements Comparable<Method> {
 		}
 		
 		importableTypes.add(type);
+	}
+	
+	private void doInitializeExceptionTypes() {
+		if(this.hasInitializedExceptionTypes.compareAndSet(false, true)) {
+			getOptionalExceptionsAttribute().ifPresent(exceptionsAttribute -> {
+				exceptionsAttribute.getExceptionIndexTable().forEach(exceptionIndex -> {
+					this.exceptionTypes.add(Type.valueOf(ClassName.parseClassName(this.classFile.getCPInfo(this.classFile.getCPInfo(exceptionIndex.intValue(), ConstantClassInfo.class).getNameIndex(), ConstantUTF8Info.class).getStringValue()).toExternalForm()));
+				});
+			});
+		}
+	}
+	
+	private void doInitializeImportableTypes() {
+		if(this.hasInitializedImportableTypes.compareAndSet(false, true)) {
+			this.importableTypes.addAll(doGetImportableTypes());
+		}
+	}
+	
+	private void doInitializeModifiers() {
+		if(this.hasInitializedModifiers.compareAndSet(false, true)) {
+			if(isPrivate()) {
+				this.modifiers.add(Modifier.PRIVATE);
+			} else if(isProtected()) {
+				this.modifiers.add(Modifier.PROTECTED);
+			} else if(isPublic()) {
+				this.modifiers.add(Modifier.PUBLIC);
+			}
+			
+			if(isStatic()) {
+				this.modifiers.add(Modifier.STATIC);
+			}
+			
+			if(isEnclosedByInterface() && !isAbstract() && !isStatic()) {
+				this.modifiers.add(Modifier.DEFAULT);
+			}
+			
+			if(isAbstract()) {
+				this.modifiers.add(Modifier.ABSTRACT);
+			} else if(isFinal()) {
+				this.modifiers.add(Modifier.FINAL);
+			}
+			
+			if(isSynchronized()) {
+				this.modifiers.add(Modifier.SYNCHRONIZED);
+			}
+			
+			if(isNative()) {
+				this.modifiers.add(Modifier.NATIVE);
+			}
+			
+			if(isStrict()) {
+				this.modifiers.add(Modifier.STRICT_F_P);
+			}
+		}
 	}
 }

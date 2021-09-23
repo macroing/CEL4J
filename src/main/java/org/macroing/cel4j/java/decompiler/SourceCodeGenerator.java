@@ -473,7 +473,7 @@ final class SourceCodeGenerator {
 		doGenerateSeparator(hasSeparatorB, hasSeparatorB && hasSeparatorG, hasSeparatorB && hasSeparatorG);
 		doGenerateClassTypeMethods(classType);
 		doGenerateSeparator(hasSeparatorC, hasSeparatorC && hasSeparatorG, hasSeparatorC && hasSeparatorG);
-//		doGenerateClassTypeInnerTypes(classType);//TODO: Fix StackOverflowError in javax.swing.JPanel.
+		doGenerateClassTypeInnerTypes(classType);//TODO: Fix StackOverflowError in javax.swing.JPanel.
 		doGenerateClassTypeClassDeclarationBottom();
 	}
 	

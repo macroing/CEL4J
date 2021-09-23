@@ -24,8 +24,10 @@ import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
+import org.macroing.cel4j.java.binary.classfile.MethodInfo;
 import org.macroing.cel4j.node.Node;
 import org.macroing.cel4j.node.NodeFilter;
 import org.macroing.cel4j.node.NodeHierarchicalVisitor;
@@ -249,5 +251,20 @@ public final class ExceptionsAttribute extends AttributeInfo {
 	 */
 	public static List<ExceptionsAttribute> filter(final Node node) {
 		return NodeFilter.filter(node, NodeFilter.any(), ExceptionsAttribute.class);
+	}
+	
+	/**
+	 * Attempts to find an {@code ExceptionsAttribute} instance in {@code methodInfo}.
+	 * <p>
+	 * Returns an {@code Optional} with the optional {@code ExceptionsAttribute} instance.
+	 * <p>
+	 * If {@code methodInfo} is {@code null}, a {@code NullPointerException} will be thrown.
+	 * 
+	 * @param methodInfo the {@link MethodInfo} to check in
+	 * @return an {@code Optional} with the optional {@code ExceptionsAttribute} instance
+	 * @throws NullPointerException thrown if, and only if, {@code methodInfo} is {@code null}
+	 */
+	public static Optional<ExceptionsAttribute> find(final MethodInfo methodInfo) {
+		return methodInfo.getAttributeInfos().stream().filter(attributeInfo -> attributeInfo instanceof ExceptionsAttribute).map(attributeInfo -> ExceptionsAttribute.class.cast(attributeInfo)).findFirst();
 	}
 }

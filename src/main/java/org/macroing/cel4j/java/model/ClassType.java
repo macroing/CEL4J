@@ -574,7 +574,7 @@ public final class ClassType extends Type {
 		getConstructors().forEach(constructor -> constructor.getParameterList().getParameters().forEach(parameter -> doAddImportableTypeIfNecessary(parameter.getType(), importableTypes)));
 		getFields().forEach(field -> doAddImportableTypeIfNecessary(field.getType(), importableTypes));
 //		TODO: Fix StackOverflowError in javax.swing.JFrame and javax.swing.JPanel.
-//		getInnerTypes().forEach(innerType -> innerType.getType().getImportableTypes().forEach(type -> doAddImportableTypeIfNecessary(type, importableTypes)));
+		getInnerTypes().forEach(innerType -> innerType.getType().getImportableTypes().forEach(type -> doAddImportableTypeIfNecessary(type, importableTypes)));
 		getInterfaceTypes().forEach(interfaceType -> doAddImportableTypeIfNecessary(interfaceType, importableTypes));
 		getMethods().forEach(method -> method.getImportableTypes().forEach(type -> doAddImportableTypeIfNecessary(type, importableTypes)));
 		getOptionalTypeParameters().ifPresent(typeParameters -> typeParameters.collectNames().forEach(name -> doAddImportableTypeIfNecessary(Type.valueOf(name), importableTypes)));
@@ -648,9 +648,9 @@ public final class ClassType extends Type {
 					if(innerClass.getInnerNameIndex() != 0) {
 						final InnerType innerType = new InnerType(classFile, innerClass);
 						
-						final Type type = innerType.getType();
+						final Optional<Type> optionalEnclosingType = innerType.getOptionalEnclosingType();
 						
-						if(!type.equals(this)) {
+						if(optionalEnclosingType.isPresent() && getExternalName().equals(optionalEnclosingType.get().getExternalName())) {
 							innerTypes.add(innerType);
 						}
 					}
