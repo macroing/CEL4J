@@ -21,6 +21,7 @@ package org.macroing.cel4j.java.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.InnerClass;
@@ -37,6 +38,7 @@ import org.macroing.cel4j.java.binary.classfile.descriptor.ClassName;
 public final class InnerType {
 	private final ClassFile classFile;
 	private final InnerClass innerClass;
+	private final Type enclosingType;
 	private final Type type;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,6 +46,7 @@ public final class InnerType {
 	InnerType(final ClassFile classFile, final InnerClass innerClass) {
 		this.classFile = Objects.requireNonNull(classFile, "classFile == null");
 		this.innerClass = Objects.requireNonNull(innerClass, "innerClass == null");
+		this.enclosingType = innerClass.getOuterClassInfoIndex() != 0 ? Type.valueOf(ClassName.parseClassName(classFile.getCPInfo(classFile.getCPInfo(innerClass.getOuterClassInfoIndex(), ConstantClassInfo.class).getNameIndex(), ConstantUTF8Info.class).getStringValue()).toExternalForm()) : null;
 		this.type = Type.valueOf(ClassName.parseClassName(classFile.getCPInfo(classFile.getCPInfo(innerClass.getInnerClassInfoIndex(), ConstantClassInfo.class).getNameIndex(), ConstantUTF8Info.class).getStringValue()).toExternalForm());
 	}
 	
@@ -87,6 +90,15 @@ public final class InnerType {
 	 */
 	public String getSimpleName() {
 		return this.innerClass.getInnerNameIndex() != 0 ? this.classFile.getCPInfo(this.innerClass.getInnerNameIndex(), ConstantUTF8Info.class).getStringValue() : "";
+	}
+	
+	/**
+	 * Returns the optional enclosing {@link Type} instance associated with this {@code InnerType} instance.
+	 * 
+	 * @return the optional enclosing {@code Type} instance associated with this {@code InnerType} instance
+	 */
+	public Optional<Type> getOptionalEnclosingType() {
+		return Optional.ofNullable(this.enclosingType);
 	}
 	
 	/**
