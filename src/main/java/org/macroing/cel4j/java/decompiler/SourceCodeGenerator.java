@@ -22,13 +22,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.Instruction;
+import org.macroing.cel4j.java.binary.classfile.signature.ClassSignature;
+import org.macroing.cel4j.java.binary.classfile.signature.FieldSignature;
+import org.macroing.cel4j.java.binary.classfile.signature.MethodSignature;
+import org.macroing.cel4j.java.binary.classfile.signature.Result;
+import org.macroing.cel4j.java.binary.classfile.signature.SuperInterfaceSignature;
+import org.macroing.cel4j.java.binary.classfile.signature.TypeParameters;
 import org.macroing.cel4j.java.model.AnnotationType;
 import org.macroing.cel4j.java.model.ClassType;
 import org.macroing.cel4j.java.model.Constructor;
@@ -38,12 +47,19 @@ import org.macroing.cel4j.java.model.InnerType;
 import org.macroing.cel4j.java.model.InterfaceType;
 import org.macroing.cel4j.java.model.Method;
 import org.macroing.cel4j.java.model.Modifier;
+import org.macroing.cel4j.java.model.Parameter;
 import org.macroing.cel4j.java.model.ParameterList;
+import org.macroing.cel4j.java.model.PrimitiveType;
 import org.macroing.cel4j.java.model.Type;
+import org.macroing.cel4j.java.model.VoidType;
 import org.macroing.cel4j.util.Document;
 import org.macroing.cel4j.util.Strings;
 
 final class SourceCodeGenerator {
+	private static final Pattern PATTERN_FULLY_QUALIFIED_TYPE_NAME = Pattern.compile("(?!(extends|super)([^\\p{javaJavaIdentifierPart}]|$))\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*(\\.(?!(extends|super)([^\\p{javaJavaIdentifierPart}]|$))\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)*");
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	private final DecompilerConfiguration decompilerConfiguration;
 	private final Document document;
 	
@@ -100,6 +116,273 @@ final class SourceCodeGenerator {
 		return newModifiers;
 	}
 	
+	private static String doFilterPackageNames(final JPackageNameFilter jPackageNameFilter, final String string) {
+		return doFilterPackageNames(jPackageNameFilter, string, false);
+	}
+	
+	private static String doFilterPackageNames(final JPackageNameFilter jPackageNameFilter, final String string, final boolean isInnerType) {
+		final Matcher matcher = PATTERN_FULLY_QUALIFIED_TYPE_NAME.matcher(string);
+		
+		final StringBuffer stringBuffer = new StringBuffer();
+		
+		while(matcher.find()) {
+			final String fullyQualifiedName = matcher.group();
+			final String packageName = doGetPackageName(fullyQualifiedName);
+			final String simpleName = doGetSimpleName(fullyQualifiedName, isInnerType);
+			
+			if(!jPackageNameFilter.isAccepted(packageName, simpleName)) {
+				matcher.appendReplacement(stringBuffer, Matcher.quoteReplacement(simpleName));
+			}
+		}
+		
+		matcher.appendTail(stringBuffer);
+		
+		return stringBuffer.toString();
+	}
+	
+	private static String doGenerateClassTypeExtendsClause(final DecompilerConfiguration decompilerConfiguration, final ClassType classType, final List<Type> importableTypes) {
+		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
+		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
+		
+		final StringBuilder stringBuilder = new StringBuilder();
+		
+		classType.getOptionalSuperClassType().ifPresent(superClass -> {
+			if(!(isDiscardingExtendsObject && superClass.isObject())) {
+				stringBuilder.append(" ");
+				stringBuilder.append("extends");
+				stringBuilder.append(" ");
+				
+				final Optional<ClassSignature> optionalClassSignature = classType.getOptionalClassSignature();
+				
+				final String string0 = optionalClassSignature.isPresent() ? optionalClassSignature.get().getSuperClassSignature().toExternalForm() : superClass.getExternalName();
+				final String string1 = isDiscardingUnnecessaryPackageNames ? doFilterPackageNames(JPackageNameFilter.newUnnecessaryPackageName(classType.getExternalPackageName(), isDiscardingUnnecessaryPackageNames, importableTypes, isImportingTypes), string0) : string0;
+				
+				stringBuilder.append(string1);
+			}
+		});
+		
+		return stringBuilder.toString();
+	}
+	
+	private static String doGenerateConstructorTypeWithOptionalTypeParameters(final DecompilerConfiguration decompilerConfiguration, final Constructor constructor, final String simpleName) {
+		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
+		
+		final Optional<MethodSignature> optionalMethodSignature = constructor.getOptionalMethodSignature();
+		
+		final Type enclosingType = constructor.getEnclosingType();
+		
+		if(optionalMethodSignature.isPresent()) {
+			final MethodSignature methodSignature = optionalMethodSignature.get();
+			
+			final Optional<TypeParameters> optionalTypeParameters = methodSignature.getTypeParameters();
+			
+			final StringBuilder stringBuilder = new StringBuilder();
+			
+			if(optionalTypeParameters.isPresent()) {
+				final TypeParameters typeParameters = optionalTypeParameters.get();
+				
+				final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(enclosingType.getExternalPackageName(), isDiscardingUnnecessaryPackageNames, new ArrayList<>(), isImportingTypes);
+				
+				stringBuilder.append(doFilterPackageNames(jPackageNameFilter, typeParameters.toExternalForm()));
+				stringBuilder.append(" ");
+			}
+			
+			stringBuilder.append(Objects.requireNonNull(simpleName, "simpleName == null"));
+			
+			return stringBuilder.toString();
+		}
+		
+		return Objects.requireNonNull(simpleName, "simpleName == null");
+	}
+	
+	private static String doGenerateFieldAssignment(final Field field) {
+		final Optional<Object> optionalAssignment = field.getAssignment();
+		
+		if(optionalAssignment.isPresent()) {
+			final Object assignment = optionalAssignment.get();
+			
+			if(assignment instanceof Double) {
+				return " = " + assignment + "D";
+			} else if(assignment instanceof Float) {
+				return " = " + assignment + "F";
+			} else if(assignment instanceof Long) {
+				return " = " + assignment + "L";
+			} else if(assignment instanceof String) {
+				return " = \"" + assignment + "\"";
+			} else {
+				return " = " + assignment;
+			}
+		}
+		
+		return "";
+	}
+	
+	private static String doGenerateFieldType(final DecompilerConfiguration decompilerConfiguration, final Field field) {
+		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
+		
+		final Optional<FieldSignature> optionalFieldSignature = field.getFieldSignature();
+		
+		final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(field.getEnclosingType().getExternalPackageName(), isDiscardingUnnecessaryPackageNames, new ArrayList<>(), isImportingTypes);
+		
+		if(optionalFieldSignature.isPresent()) {
+			final FieldSignature fieldSignature = optionalFieldSignature.get();
+			
+			return doFilterPackageNames(jPackageNameFilter, fieldSignature.toExternalForm());
+		}
+		
+		return doFilterPackageNames(jPackageNameFilter, field.getType().getExternalName());
+	}
+	
+	private static String doGenerateInterfaceTypeExtendsClause(final DecompilerConfiguration decompilerConfiguration, final List<InterfaceType> interfaceTypes, final List<Type> importableTypes, final Optional<ClassSignature> optionalClassSignature, final String packageName) {
+		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
+		
+		final StringBuilder stringBuilder = new StringBuilder();
+		
+		if(interfaceTypes.size() > 0) {
+			stringBuilder.append(" ");
+			stringBuilder.append("extends");
+			stringBuilder.append(" ");
+			
+			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(packageName, isDiscardingUnnecessaryPackageNames, importableTypes, isImportingTypes);
+			
+			if(optionalClassSignature.isPresent()) {
+				final ClassSignature classSignature = optionalClassSignature.get();
+				
+				final List<SuperInterfaceSignature> superInterfaceSignatures = classSignature.getSuperInterfaceSignatures();
+				
+				for(int i = 0; i < superInterfaceSignatures.size(); i++) {
+					final SuperInterfaceSignature superInterfaceSignature = superInterfaceSignatures.get(i);
+					
+					final String string0 = superInterfaceSignature.toExternalForm();
+					final String string1 = isDiscardingUnnecessaryPackageNames ? doFilterPackageNames(jPackageNameFilter, string0) : string0;
+					
+					stringBuilder.append(i > 0 ? ", " : "");
+					stringBuilder.append(string1);
+				}
+			} else {
+				for(int i = 0; i < interfaceTypes.size(); i++) {
+					final String string0 = interfaceTypes.get(i).getExternalName();
+					final String string1 = isDiscardingUnnecessaryPackageNames ? doFilterPackageNames(jPackageNameFilter, string0) : string0;
+					
+					stringBuilder.append(i > 0 ? ", " : "");
+					stringBuilder.append(string1);
+				}
+			}
+		}
+		
+		return stringBuilder.toString();
+	}
+	
+	private static String doGenerateInterfaceTypeImplementsClause(final DecompilerConfiguration decompilerConfiguration, final List<InterfaceType> interfaceTypes, final List<Type> importableTypes, final Optional<ClassSignature> optionalClassSignature, final String packageName) {
+		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
+		
+		final StringBuilder stringBuilder = new StringBuilder();
+		
+		if(interfaceTypes.size() > 0) {
+			stringBuilder.append(" ");
+			stringBuilder.append("implements");
+			stringBuilder.append(" ");
+			
+			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(packageName, isDiscardingUnnecessaryPackageNames, importableTypes, isImportingTypes);
+			
+			if(optionalClassSignature.isPresent()) {
+				final ClassSignature classSignature = optionalClassSignature.get();
+				
+				final List<SuperInterfaceSignature> superInterfaceSignatures = classSignature.getSuperInterfaceSignatures();
+				
+				for(int i = 0; i < superInterfaceSignatures.size(); i++) {
+					final SuperInterfaceSignature superInterfaceSignature = superInterfaceSignatures.get(i);
+					
+					final String string0 = superInterfaceSignature.toExternalForm();
+					final String string1 = isDiscardingUnnecessaryPackageNames ? doFilterPackageNames(jPackageNameFilter, string0) : string0;
+					
+					stringBuilder.append(i > 0 ? ", " : "");
+					stringBuilder.append(string1);
+				}
+			} else {
+				for(int i = 0; i < interfaceTypes.size(); i++) {
+					final String string0 = interfaceTypes.get(i).getExternalName();
+					final String string1 = isDiscardingUnnecessaryPackageNames ? doFilterPackageNames(jPackageNameFilter, string0) : string0;
+					
+					stringBuilder.append(i > 0 ? ", " : "");
+					stringBuilder.append(string1);
+				}
+			}
+		}
+		
+		return stringBuilder.toString();
+	}
+	
+	private static String doGenerateMethodDefaultReturnStatement(final Method method) {
+		final Type returnType = method.getReturnType();
+		
+		if(returnType instanceof VoidType) {
+			return "";
+		} else if(returnType instanceof PrimitiveType) {
+			final PrimitiveType primitiveType = PrimitiveType.class.cast(returnType);
+			
+			if(primitiveType.equals(PrimitiveType.BOOLEAN)) {
+				return "return false;";
+			} else if(primitiveType.equals(PrimitiveType.BYTE)) {
+				return "return 0;";
+			} else if(primitiveType.equals(PrimitiveType.CHAR)) {
+				return "return '\\u0000';";
+			} else if(primitiveType.equals(PrimitiveType.DOUBLE)) {
+				return "return 0.0D;";
+			} else if(primitiveType.equals(PrimitiveType.FLOAT)) {
+				return "return 0.0F;";
+			} else if(primitiveType.equals(PrimitiveType.INT)) {
+				return "return 0;";
+			} else if(primitiveType.equals(PrimitiveType.LONG)) {
+				return "return 0L;";
+			} else {
+				return "return 0;";
+			}
+		} else {
+			return "return null;";
+		}
+	}
+	
+	private static String doGenerateMethodReturnTypeWithOptionalTypeParameters(final DecompilerConfiguration decompilerConfiguration, final Method method, final List<Type> importableTypes) {
+		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
+		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
+		
+		final Optional<MethodSignature> optionalMethodSignature = method.getMethodSignature();
+		
+		final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(method.getEnclosingType().getExternalPackageName(), isDiscardingUnnecessaryPackageNames, importableTypes, isImportingTypes);
+		
+		if(optionalMethodSignature.isPresent()) {
+			final MethodSignature methodSignature = optionalMethodSignature.get();
+			
+			final Optional<TypeParameters> optionalTypeParameters = methodSignature.getTypeParameters();
+			
+			final Result result = methodSignature.getResult();
+			
+			final StringBuilder stringBuilder = new StringBuilder();
+			
+			if(optionalTypeParameters.isPresent()) {
+				final TypeParameters typeParameters = optionalTypeParameters.get();
+				
+				final String string = isDiscardingExtendsObject ? typeParameters.toExternalForm().replaceAll(" extends java\\.lang\\.Object", "") : typeParameters.toExternalForm();
+				
+				stringBuilder.append(doFilterPackageNames(jPackageNameFilter, string));
+				stringBuilder.append(" ");
+			}
+			
+			stringBuilder.append(doFilterPackageNames(jPackageNameFilter, result.toExternalForm(), method.getReturnType().isInnerType()));
+			
+			return stringBuilder.toString();
+		}
+		
+		return doFilterPackageNames(jPackageNameFilter, method.getReturnType().getExternalName(), method.getReturnType().isInnerType());
+	}
+	
 	private String doGenerateTraditionalCommentAtTop(final Type jType) {
 		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
 		
@@ -133,6 +416,103 @@ final class SourceCodeGenerator {
 		stringBuilder.append(String.format("<SortingGroups>: %s", Boolean.toString(decompilerConfiguration.isSortingGroups())));
 		
 		return stringBuilder.toString();
+	}
+	
+	private static String doGenerateTypeParameters(final DecompilerConfiguration decompilerConfiguration, final List<Type> importableTypes, final Optional<TypeParameters> optionalTypeParameters) {
+		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
+		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
+		
+		if(optionalTypeParameters.isPresent()) {
+			final TypeParameters typeParameters = optionalTypeParameters.get();
+			
+			final String typeParametersToExternalForm = typeParameters.toExternalForm((packageName0, simpleName) -> {
+				if(packageName0.equals("java.lang.")) {
+					if(simpleName.equals("Object")) {
+						return isDiscardingExtendsObject ? null : isDiscardingUnnecessaryPackageNames ? "Object" : packageName0 + simpleName;
+					} else if(isDiscardingUnnecessaryPackageNames) {
+						return simpleName;
+					}
+				}
+				
+				if(isImportingTypes) {
+					for(final Type importableType : importableTypes) {
+						if(importableType.getExternalName().equals(packageName0 + simpleName)) {
+							return simpleName;
+						}
+					}
+				}
+				
+				return packageName0 + simpleName;
+			});
+			
+			return typeParametersToExternalForm;
+		}
+		
+		return "";
+	}
+	
+	private static String doGetPackageName(final String fullyQualifiedTypeName) {
+		return fullyQualifiedTypeName.lastIndexOf(".") >= 0 ? fullyQualifiedTypeName.substring(0, fullyQualifiedTypeName.lastIndexOf(".")) : "";
+	}
+	
+	private static String doGetSimpleName(final String fullyQualifiedTypeName, final boolean isInnerType) {
+		final String simpleName0 = fullyQualifiedTypeName.lastIndexOf(".") >= 0 ? fullyQualifiedTypeName.substring(fullyQualifiedTypeName.lastIndexOf(".") + 1) : fullyQualifiedTypeName;
+		final String simpleName1 = isInnerType && simpleName0.lastIndexOf('$') >= 0 ? simpleName0.substring(simpleName0.lastIndexOf('$') + 1) : simpleName0;
+		
+		return simpleName1;
+	}
+	
+	private static String doToExternalForm(final DecompilerConfiguration decompilerConfiguration, final ParameterList parameterList, final Constructor constructor, final List<Type> typesToImport) {
+		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
+		
+		final LocalVariableNameGenerator localVariableNameGenerator = decompilerConfiguration.getLocalVariableNameGenerator();
+		
+		final StringBuilder stringBuilder = new StringBuilder();
+		
+		final List<Parameter> parameters = parameterList.getParameters();
+		
+		if(parameters.size() > 0) {
+			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(constructor.getEnclosingType().getExternalPackageName(), isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes);
+			
+			for(int i = 0; i < parameters.size(); i++) {
+				stringBuilder.append(i > 0 ? ", " : "");
+				stringBuilder.append(doToExternalForm(jPackageNameFilter, localVariableNameGenerator, parameters.get(i), i));
+			}
+		}
+		
+		return stringBuilder.toString();
+	}
+	
+	private static String doToExternalForm(final DecompilerConfiguration decompilerConfiguration, final ParameterList parameterList, final Method method, final List<Type> typesToImport) {
+		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
+		
+		final LocalVariableNameGenerator localVariableNameGenerator = decompilerConfiguration.getLocalVariableNameGenerator();
+		
+		final StringBuilder stringBuilder = new StringBuilder();
+		
+		final List<Parameter> parameters = parameterList.getParameters();
+		
+		if(parameters.size() > 0) {
+			final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(method.getEnclosingType().getExternalPackageName(), isDiscardingUnnecessaryPackageNames, typesToImport, isImportingTypes);
+			
+			for(int i = 0; i < parameters.size(); i++) {
+				stringBuilder.append(i > 0 ? ", " : "");
+				stringBuilder.append(doToExternalForm(jPackageNameFilter, localVariableNameGenerator, parameters.get(i), i));
+			}
+		}
+		
+		return stringBuilder.toString();
+	}
+	
+	private static String doToExternalForm(final JPackageNameFilter jPackageNameFilter, final LocalVariableNameGenerator localVariableNameGenerator, final Parameter parameter, final int index) {
+		final String a = parameter.isFinal() ? "final " : "";
+		final String b = doFilterPackageNames(jPackageNameFilter, parameter.getOptionalJavaTypeSignature().map(javaTypeSignature -> javaTypeSignature.toExternalForm()).orElse(parameter.getType().getExternalName()));
+		final String c = parameter.isNamed() ? parameter.getName() : localVariableNameGenerator.generateLocalVariableName(parameter.getType().getExternalName(), index);
+		
+		return String.format("%s%s %s", a, b, c);
 	}
 	
 	private void doGenerateAnnotationType(final AnnotationType annotationType) {
@@ -186,9 +566,9 @@ final class SourceCodeGenerator {
 		
 		final String modifiers = Modifier.toExternalForm(classType.getModifiers());
 		final String simpleName = classType.getExternalSimpleName();
-		final String typeParameters = UtilitiesToRefactor.generateTypeParameters(decompilerConfiguration, importableTypes, classType.getOptionalTypeParameters());
-		final String extendsClause = UtilitiesToRefactor.generateExtendsClause(decompilerConfiguration, classType, importableTypes);
-		final String implementsClause = UtilitiesToRefactor.generateImplementsClause(decompilerConfiguration, classType.getInterfaceTypes(), importableTypes, classType.getOptionalClassSignature(), classType.getExternalPackageName());
+		final String typeParameters = doGenerateTypeParameters(decompilerConfiguration, importableTypes, classType.getOptionalTypeParameters());
+		final String extendsClause = doGenerateClassTypeExtendsClause(decompilerConfiguration, classType, importableTypes);
+		final String implementsClause = doGenerateInterfaceTypeImplementsClause(decompilerConfiguration, classType.getInterfaceTypes(), importableTypes, classType.getOptionalClassSignature(), classType.getExternalPackageName());
 		
 		final
 		Document document = this.document;
@@ -330,8 +710,8 @@ final class SourceCodeGenerator {
 		
 		final String simpleName = constructor.getEnclosingType().getExternalSimpleName();
 		final String modifiers = Modifier.toExternalForm(constructor.getModifiers());
-		final String type = UtilitiesToRefactor.generateTypeWithOptionalTypeParameters(decompilerConfiguration, constructor, simpleName);
-		final String parameters = UtilitiesToRefactor.toExternalForm(decompilerConfiguration, parameterList, constructor, new ArrayList<>());
+		final String type = doGenerateConstructorTypeWithOptionalTypeParameters(decompilerConfiguration, constructor, simpleName);
+		final String parameters = doToExternalForm(decompilerConfiguration, parameterList, constructor, new ArrayList<>());
 		
 		doGenerateConstructorComment(constructor);
 		
@@ -420,9 +800,9 @@ final class SourceCodeGenerator {
 		final Document document = this.document;
 		
 		final String modifiers = Modifier.toExternalForm(field.getModifiers());
-		final String type = UtilitiesToRefactor.generateType(decompilerConfiguration, field);
+		final String type = doGenerateFieldType(decompilerConfiguration, field);
 		final String name = field.getName();
-		final String assignment = UtilitiesToRefactor.generateAssignment(field);
+		final String assignment = doGenerateFieldAssignment(field);
 		
 		doGenerateFieldComment(field);
 		
@@ -473,7 +853,7 @@ final class SourceCodeGenerator {
 		doGenerateSeparator(hasSeparatorB, hasSeparatorB && hasSeparatorG, hasSeparatorB && hasSeparatorG);
 		doGenerateClassTypeMethods(classType);
 		doGenerateSeparator(hasSeparatorC, hasSeparatorC && hasSeparatorG, hasSeparatorC && hasSeparatorG);
-		doGenerateClassTypeInnerTypes(classType);//TODO: Fix StackOverflowError in javax.swing.JPanel.
+		doGenerateClassTypeInnerTypes(classType);
 		doGenerateClassTypeClassDeclarationBottom();
 	}
 	
@@ -484,9 +864,9 @@ final class SourceCodeGenerator {
 		
 		final String modifiers = Modifier.toExternalForm(innerType.getModifiers());
 		final String simpleName = innerType.getSimpleName();
-		final String typeParameters = UtilitiesToRefactor.generateTypeParameters(decompilerConfiguration, importableTypes, classType.getOptionalTypeParameters());
-		final String extendsClause = UtilitiesToRefactor.generateExtendsClause(decompilerConfiguration, classType, importableTypes);
-		final String implementsClause = UtilitiesToRefactor.generateImplementsClause(decompilerConfiguration, classType.getInterfaceTypes(), importableTypes, classType.getOptionalClassSignature(), classType.getExternalPackageName());
+		final String typeParameters = doGenerateTypeParameters(decompilerConfiguration, importableTypes, classType.getOptionalTypeParameters());
+		final String extendsClause = doGenerateClassTypeExtendsClause(decompilerConfiguration, classType, importableTypes);
+		final String implementsClause = doGenerateInterfaceTypeImplementsClause(decompilerConfiguration, classType.getInterfaceTypes(), importableTypes, classType.getOptionalClassSignature(), classType.getExternalPackageName());
 		
 		final
 		Document document = this.document;
@@ -505,8 +885,8 @@ final class SourceCodeGenerator {
 		final String packageName = interfaceType.getExternalPackageName();
 		final String modifiers = Modifier.toExternalForm(interfaceType.getModifiers());
 		final String simpleName = interfaceType.getExternalSimpleName();
-		final String typeParameters = UtilitiesToRefactor.generateTypeParameters(decompilerConfiguration, importableTypes, interfaceType.getOptionalTypeParameters());
-		final String extendsClause = UtilitiesToRefactor.generateExtendsClause(decompilerConfiguration, interfaceType.getInterfaceTypes(), importableTypes, interfaceType.getOptionalClassSignature(), interfaceType.getExternalPackageName());
+		final String typeParameters = doGenerateTypeParameters(decompilerConfiguration, importableTypes, interfaceType.getOptionalTypeParameters());
+		final String extendsClause = doGenerateInterfaceTypeExtendsClause(decompilerConfiguration, interfaceType.getInterfaceTypes(), importableTypes, interfaceType.getOptionalClassSignature(), interfaceType.getExternalPackageName());
 		
 		final List<Field> fields = interfaceType.getFields();
 		final List<Method> methods = interfaceType.getMethods();
@@ -566,10 +946,10 @@ final class SourceCodeGenerator {
 		final List<Type> importableTypes = method.getImportableTypes();
 		
 		final String modifiers = Modifier.toExternalForm(doDiscardInterfaceMethodModifiers(enclosingType, method.getModifiers()));
-		final String returnType = UtilitiesToRefactor.generateReturnTypeWithOptionalTypeParameters(decompilerConfiguration, method, importableTypes);
+		final String returnType = doGenerateMethodReturnTypeWithOptionalTypeParameters(decompilerConfiguration, method, importableTypes);
 		final String name = method.getName();
-		final String parameters = UtilitiesToRefactor.toExternalForm(decompilerConfiguration, parameterList, method, importableTypes);
-		final String returnStatement = UtilitiesToRefactor.generateDefaultReturnStatement(method);
+		final String parameters = doToExternalForm(decompilerConfiguration, parameterList, method, importableTypes);
+		final String returnStatement = doGenerateMethodDefaultReturnStatement(method);
 		
 		doGenerateMethodComment(method);
 		

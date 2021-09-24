@@ -573,7 +573,6 @@ public final class ClassType extends Type {
 		
 		getConstructors().forEach(constructor -> constructor.getParameterList().getParameters().forEach(parameter -> doAddImportableTypeIfNecessary(parameter.getType(), importableTypes)));
 		getFields().forEach(field -> doAddImportableTypeIfNecessary(field.getType(), importableTypes));
-//		TODO: Fix StackOverflowError in javax.swing.JFrame and javax.swing.JPanel.
 		getInnerTypes().forEach(innerType -> innerType.getType().getImportableTypes().forEach(type -> doAddImportableTypeIfNecessary(type, importableTypes)));
 		getInterfaceTypes().forEach(interfaceType -> doAddImportableTypeIfNecessary(interfaceType, importableTypes));
 		getMethods().forEach(method -> method.getImportableTypes().forEach(type -> doAddImportableTypeIfNecessary(type, importableTypes)));
