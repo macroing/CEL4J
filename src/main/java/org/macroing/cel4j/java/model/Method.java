@@ -56,6 +56,7 @@ public final class Method implements Comparable<Method> {
 	private final List<Type> importableTypes;
 	private final MethodInfo methodInfo;
 	private final Optional<CodeAttribute> optionalCodeAttribute;
+	private final Optional<ExceptionsAttribute> optionalExceptionsAttribute;
 	private final ParameterList parameterList;
 	private final Type enclosingType;
 	private final Type returnType;
@@ -73,6 +74,7 @@ public final class Method implements Comparable<Method> {
 		this.exceptionTypes = new ArrayList<>();
 		this.importableTypes = new ArrayList<>();
 		this.optionalCodeAttribute = CodeAttribute.find(this.methodInfo);
+		this.optionalExceptionsAttribute = ExceptionsAttribute.find(this.methodInfo);
 		this.parameterList = ParameterList.load(classFile, methodInfo);
 		this.returnType = Type.valueOf(MethodDescriptor.parseMethodDescriptor(classFile, methodInfo).getReturnDescriptor());
 	}
@@ -156,12 +158,21 @@ public final class Method implements Comparable<Method> {
 	}
 	
 	/**
+	 * Returns the optional {@link CodeAttribute} instance associated with this {@code Method} instance.
+	 * 
+	 * @return the optional {@code CodeAttribute} instance associated with this {@code Method} instance
+	 */
+	public Optional<CodeAttribute> getOptionalCodeAttribute() {
+		return this.optionalCodeAttribute;
+	}
+	
+	/**
 	 * Returns the optional {@link ExceptionsAttribute} instance associated with this {@code Method} instance.
 	 * 
 	 * @return the optional {@code ExceptionsAttribute} instance associated with this {@code Method} instance
 	 */
 	public Optional<ExceptionsAttribute> getOptionalExceptionsAttribute() {
-		return ExceptionsAttribute.find(this.methodInfo);
+		return this.optionalExceptionsAttribute;
 	}
 	
 	/**
@@ -518,8 +529,9 @@ public final class Method implements Comparable<Method> {
 		
 		doAddImportableTypeIfNecessary(getReturnType(), importableTypes);
 		
-		this.parameterList.getParameters().forEach(parameter -> doAddImportableTypeIfNecessary(parameter.getType(), importableTypes));
-		this.optionalCodeAttribute.ifPresent(codeAttribute -> Instructions.findTypeNames(this.classFile, codeAttribute).forEach(typeName -> doAddImportableTypeIfNecessary(Type.valueOf(typeName), importableTypes)));
+		getExceptionTypes().forEach(exceptionType -> doAddImportableTypeIfNecessary(exceptionType, importableTypes));
+		getOptionalCodeAttribute().ifPresent(codeAttribute -> Instructions.findTypeNames(this.classFile, codeAttribute).forEach(typeName -> doAddImportableTypeIfNecessary(Type.valueOf(typeName), importableTypes)));
+		getParameterList().getParameters().forEach(parameter -> doAddImportableTypeIfNecessary(parameter.getType(), importableTypes));
 		
 		return new ArrayList<>(importableTypes);
 	}

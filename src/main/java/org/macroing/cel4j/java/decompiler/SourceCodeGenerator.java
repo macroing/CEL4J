@@ -116,31 +116,9 @@ final class SourceCodeGenerator {
 		return newModifiers;
 	}
 	
-	private static String doFilterPackageNames(final JPackageNameFilter jPackageNameFilter, final String string) {
-		return doFilterPackageNames(jPackageNameFilter, string, false);
-	}
-	
-	private static String doFilterPackageNames(final JPackageNameFilter jPackageNameFilter, final String string, final boolean isInnerType) {
-		final Matcher matcher = PATTERN_FULLY_QUALIFIED_TYPE_NAME.matcher(string);
+	private String doGenerateClassTypeExtendsClause(final ClassType classType, final List<Type> importableTypes) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
 		
-		final StringBuffer stringBuffer = new StringBuffer();
-		
-		while(matcher.find()) {
-			final String fullyQualifiedName = matcher.group();
-			final String packageName = doGetPackageName(fullyQualifiedName);
-			final String simpleName = doGetSimpleName(fullyQualifiedName, isInnerType);
-			
-			if(!jPackageNameFilter.isAccepted(packageName, simpleName)) {
-				matcher.appendReplacement(stringBuffer, Matcher.quoteReplacement(simpleName));
-			}
-		}
-		
-		matcher.appendTail(stringBuffer);
-		
-		return stringBuffer.toString();
-	}
-	
-	private static String doGenerateClassTypeExtendsClause(final DecompilerConfiguration decompilerConfiguration, final ClassType classType, final List<Type> importableTypes) {
 		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
@@ -165,7 +143,9 @@ final class SourceCodeGenerator {
 		return stringBuilder.toString();
 	}
 	
-	private static String doGenerateConstructorTypeWithOptionalTypeParameters(final DecompilerConfiguration decompilerConfiguration, final Constructor constructor, final String simpleName) {
+	private String doGenerateConstructorTypeWithOptionalTypeParameters(final Constructor constructor, final String simpleName) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
+		
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
@@ -197,29 +177,9 @@ final class SourceCodeGenerator {
 		return Objects.requireNonNull(simpleName, "simpleName == null");
 	}
 	
-	private static String doGenerateFieldAssignment(final Field field) {
-		final Optional<Object> optionalAssignment = field.getAssignment();
+	private String doGenerateFieldType(final Field field) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
 		
-		if(optionalAssignment.isPresent()) {
-			final Object assignment = optionalAssignment.get();
-			
-			if(assignment instanceof Double) {
-				return " = " + assignment + "D";
-			} else if(assignment instanceof Float) {
-				return " = " + assignment + "F";
-			} else if(assignment instanceof Long) {
-				return " = " + assignment + "L";
-			} else if(assignment instanceof String) {
-				return " = \"" + assignment + "\"";
-			} else {
-				return " = " + assignment;
-			}
-		}
-		
-		return "";
-	}
-	
-	private static String doGenerateFieldType(final DecompilerConfiguration decompilerConfiguration, final Field field) {
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
@@ -236,7 +196,9 @@ final class SourceCodeGenerator {
 		return doFilterPackageNames(jPackageNameFilter, field.getType().getExternalName());
 	}
 	
-	private static String doGenerateInterfaceTypeExtendsClause(final DecompilerConfiguration decompilerConfiguration, final List<InterfaceType> interfaceTypes, final List<Type> importableTypes, final Optional<ClassSignature> optionalClassSignature, final String packageName) {
+	private String doGenerateInterfaceTypeExtendsClause(final List<InterfaceType> interfaceTypes, final List<Type> importableTypes, final Optional<ClassSignature> optionalClassSignature, final String packageName) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
+		
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
@@ -277,7 +239,9 @@ final class SourceCodeGenerator {
 		return stringBuilder.toString();
 	}
 	
-	private static String doGenerateInterfaceTypeImplementsClause(final DecompilerConfiguration decompilerConfiguration, final List<InterfaceType> interfaceTypes, final List<Type> importableTypes, final Optional<ClassSignature> optionalClassSignature, final String packageName) {
+	private String doGenerateInterfaceTypeImplementsClause(final List<InterfaceType> interfaceTypes, final List<Type> importableTypes, final Optional<ClassSignature> optionalClassSignature, final String packageName) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
+		
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
@@ -318,37 +282,9 @@ final class SourceCodeGenerator {
 		return stringBuilder.toString();
 	}
 	
-	private static String doGenerateMethodDefaultReturnStatement(final Method method) {
-		final Type returnType = method.getReturnType();
+	private String doGenerateMethodReturnTypeWithOptionalTypeParameters(final Method method, final List<Type> importableTypes) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
 		
-		if(returnType instanceof VoidType) {
-			return "";
-		} else if(returnType instanceof PrimitiveType) {
-			final PrimitiveType primitiveType = PrimitiveType.class.cast(returnType);
-			
-			if(primitiveType.equals(PrimitiveType.BOOLEAN)) {
-				return "return false;";
-			} else if(primitiveType.equals(PrimitiveType.BYTE)) {
-				return "return 0;";
-			} else if(primitiveType.equals(PrimitiveType.CHAR)) {
-				return "return '\\u0000';";
-			} else if(primitiveType.equals(PrimitiveType.DOUBLE)) {
-				return "return 0.0D;";
-			} else if(primitiveType.equals(PrimitiveType.FLOAT)) {
-				return "return 0.0F;";
-			} else if(primitiveType.equals(PrimitiveType.INT)) {
-				return "return 0;";
-			} else if(primitiveType.equals(PrimitiveType.LONG)) {
-				return "return 0L;";
-			} else {
-				return "return 0;";
-			}
-		} else {
-			return "return null;";
-		}
-	}
-	
-	private static String doGenerateMethodReturnTypeWithOptionalTypeParameters(final DecompilerConfiguration decompilerConfiguration, final Method method, final List<Type> importableTypes) {
 		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
@@ -383,12 +319,42 @@ final class SourceCodeGenerator {
 		return doFilterPackageNames(jPackageNameFilter, method.getReturnType().getExternalName(), method.getReturnType().isInnerType());
 	}
 	
-	private String doGenerateTraditionalCommentAtTop(final Type jType) {
+	private String doGenerateMethodThrowsClause(final Method method, final List<Type> importableTypes) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
+		
+		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
+		
+		final List<Type> exceptionTypes = method.getExceptionTypes();
+		
+		if(exceptionTypes.isEmpty()) {
+			return "";
+		}
+		
+		final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(method.getEnclosingType().getExternalPackageName(), isDiscardingUnnecessaryPackageNames, importableTypes, isImportingTypes);
+		
+		final
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(" ");
+		stringBuilder.append("throws");
+		stringBuilder.append(" ");
+		
+		for(int i = 0; i < exceptionTypes.size(); i++) {
+			final Type exceptionType = exceptionTypes.get(i);
+			
+			stringBuilder.append(i > 0 ? ", " : "");
+			stringBuilder.append(doFilterPackageNames(jPackageNameFilter, exceptionType.getExternalName(), exceptionType.isInnerType()));
+		}
+		
+		return stringBuilder.toString();
+	}
+	
+	private String doGenerateTraditionalCommentAtTop(final Type type) {
 		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
 		
 		final
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append(String.format("%s decompiled by CEL4J Java Decompiler.", jType.getExternalName()));
+		stringBuilder.append(String.format("%s decompiled by CEL4J Java Decompiler.", type.getExternalName()));
 		stringBuilder.append("\n");
 		stringBuilder.append("\n");
 		stringBuilder.append(String.format("<AnnotatingDeprecatedMethods>: %s", Boolean.toString(decompilerConfiguration.isAnnotatingDeprecatedMethods())));
@@ -418,7 +384,9 @@ final class SourceCodeGenerator {
 		return stringBuilder.toString();
 	}
 	
-	private static String doGenerateTypeParameters(final DecompilerConfiguration decompilerConfiguration, final List<Type> importableTypes, final Optional<TypeParameters> optionalTypeParameters) {
+	private String doGenerateTypeParameters(final List<Type> importableTypes, final Optional<TypeParameters> optionalTypeParameters) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
+		
 		final boolean isDiscardingExtendsObject = decompilerConfiguration.isDiscardingExtendsObject();
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
@@ -452,18 +420,9 @@ final class SourceCodeGenerator {
 		return "";
 	}
 	
-	private static String doGetPackageName(final String fullyQualifiedTypeName) {
-		return fullyQualifiedTypeName.lastIndexOf(".") >= 0 ? fullyQualifiedTypeName.substring(0, fullyQualifiedTypeName.lastIndexOf(".")) : "";
-	}
-	
-	private static String doGetSimpleName(final String fullyQualifiedTypeName, final boolean isInnerType) {
-		final String simpleName0 = fullyQualifiedTypeName.lastIndexOf(".") >= 0 ? fullyQualifiedTypeName.substring(fullyQualifiedTypeName.lastIndexOf(".") + 1) : fullyQualifiedTypeName;
-		final String simpleName1 = isInnerType && simpleName0.lastIndexOf('$') >= 0 ? simpleName0.substring(simpleName0.lastIndexOf('$') + 1) : simpleName0;
+	private String doToExternalForm(final ParameterList parameterList, final Constructor constructor, final List<Type> typesToImport) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
 		
-		return simpleName1;
-	}
-	
-	private static String doToExternalForm(final DecompilerConfiguration decompilerConfiguration, final ParameterList parameterList, final Constructor constructor, final List<Type> typesToImport) {
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
@@ -485,7 +444,9 @@ final class SourceCodeGenerator {
 		return stringBuilder.toString();
 	}
 	
-	private static String doToExternalForm(final DecompilerConfiguration decompilerConfiguration, final ParameterList parameterList, final Method method, final List<Type> typesToImport) {
+	private String doToExternalForm(final ParameterList parameterList, final Method method, final List<Type> typesToImport) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
+		
 		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
 		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
 		
@@ -505,14 +466,6 @@ final class SourceCodeGenerator {
 		}
 		
 		return stringBuilder.toString();
-	}
-	
-	private static String doToExternalForm(final JPackageNameFilter jPackageNameFilter, final LocalVariableNameGenerator localVariableNameGenerator, final Parameter parameter, final int index) {
-		final String a = parameter.isFinal() ? "final " : "";
-		final String b = doFilterPackageNames(jPackageNameFilter, parameter.getOptionalJavaTypeSignature().map(javaTypeSignature -> javaTypeSignature.toExternalForm()).orElse(parameter.getType().getExternalName()));
-		final String c = parameter.isNamed() ? parameter.getName() : localVariableNameGenerator.generateLocalVariableName(parameter.getType().getExternalName(), index);
-		
-		return String.format("%s%s %s", a, b, c);
 	}
 	
 	private void doGenerateAnnotationType(final AnnotationType annotationType) {
@@ -560,15 +513,13 @@ final class SourceCodeGenerator {
 	}
 	
 	private void doGenerateClassTypeClassDeclarationTop(final ClassType classType) {
-		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
-		
 		final List<Type> importableTypes = classType.getImportableTypes();
 		
 		final String modifiers = Modifier.toExternalForm(classType.getModifiers());
 		final String simpleName = classType.getExternalSimpleName();
-		final String typeParameters = doGenerateTypeParameters(decompilerConfiguration, importableTypes, classType.getOptionalTypeParameters());
-		final String extendsClause = doGenerateClassTypeExtendsClause(decompilerConfiguration, classType, importableTypes);
-		final String implementsClause = doGenerateInterfaceTypeImplementsClause(decompilerConfiguration, classType.getInterfaceTypes(), importableTypes, classType.getOptionalClassSignature(), classType.getExternalPackageName());
+		final String typeParameters = doGenerateTypeParameters(importableTypes, classType.getOptionalTypeParameters());
+		final String extendsClause = doGenerateClassTypeExtendsClause(classType, importableTypes);
+		final String implementsClause = doGenerateInterfaceTypeImplementsClause(classType.getInterfaceTypes(), importableTypes, classType.getOptionalClassSignature(), classType.getExternalPackageName());
 		
 		final
 		Document document = this.document;
@@ -702,16 +653,14 @@ final class SourceCodeGenerator {
 	}
 	
 	private void doGenerateConstructor(final Constructor constructor) {
-		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
-		
 		final Document document = this.document;
 		
 		final ParameterList parameterList = constructor.getParameterList();
 		
 		final String simpleName = constructor.getEnclosingType().getExternalSimpleName();
 		final String modifiers = Modifier.toExternalForm(constructor.getModifiers());
-		final String type = doGenerateConstructorTypeWithOptionalTypeParameters(decompilerConfiguration, constructor, simpleName);
-		final String parameters = doToExternalForm(decompilerConfiguration, parameterList, constructor, new ArrayList<>());
+		final String type = doGenerateConstructorTypeWithOptionalTypeParameters(constructor, simpleName);
+		final String parameters = doToExternalForm(parameterList, constructor, new ArrayList<>());
 		
 		doGenerateConstructorComment(constructor);
 		
@@ -795,12 +744,10 @@ final class SourceCodeGenerator {
 	}
 	
 	private void doGenerateField(final Field field) {
-		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
-		
 		final Document document = this.document;
 		
 		final String modifiers = Modifier.toExternalForm(field.getModifiers());
-		final String type = doGenerateFieldType(decompilerConfiguration, field);
+		final String type = doGenerateFieldType(field);
 		final String name = field.getName();
 		final String assignment = doGenerateFieldAssignment(field);
 		
@@ -858,15 +805,13 @@ final class SourceCodeGenerator {
 	}
 	
 	private void doGenerateInnerTypeClassTypeClassDeclarationTop(final InnerType innerType, final ClassType classType) {
-		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
-		
 		final List<Type> importableTypes = classType.getImportableTypes();
 		
 		final String modifiers = Modifier.toExternalForm(innerType.getModifiers());
 		final String simpleName = innerType.getSimpleName();
-		final String typeParameters = doGenerateTypeParameters(decompilerConfiguration, importableTypes, classType.getOptionalTypeParameters());
-		final String extendsClause = doGenerateClassTypeExtendsClause(decompilerConfiguration, classType, importableTypes);
-		final String implementsClause = doGenerateInterfaceTypeImplementsClause(decompilerConfiguration, classType.getInterfaceTypes(), importableTypes, classType.getOptionalClassSignature(), classType.getExternalPackageName());
+		final String typeParameters = doGenerateTypeParameters(importableTypes, classType.getOptionalTypeParameters());
+		final String extendsClause = doGenerateClassTypeExtendsClause(classType, importableTypes);
+		final String implementsClause = doGenerateInterfaceTypeImplementsClause(classType.getInterfaceTypes(), importableTypes, classType.getOptionalClassSignature(), classType.getExternalPackageName());
 		
 		final
 		Document document = this.document;
@@ -885,8 +830,8 @@ final class SourceCodeGenerator {
 		final String packageName = interfaceType.getExternalPackageName();
 		final String modifiers = Modifier.toExternalForm(interfaceType.getModifiers());
 		final String simpleName = interfaceType.getExternalSimpleName();
-		final String typeParameters = doGenerateTypeParameters(decompilerConfiguration, importableTypes, interfaceType.getOptionalTypeParameters());
-		final String extendsClause = doGenerateInterfaceTypeExtendsClause(decompilerConfiguration, interfaceType.getInterfaceTypes(), importableTypes, interfaceType.getOptionalClassSignature(), interfaceType.getExternalPackageName());
+		final String typeParameters = doGenerateTypeParameters(importableTypes, interfaceType.getOptionalTypeParameters());
+		final String extendsClause = doGenerateInterfaceTypeExtendsClause(interfaceType.getInterfaceTypes(), importableTypes, interfaceType.getOptionalClassSignature(), interfaceType.getExternalPackageName());
 		
 		final List<Field> fields = interfaceType.getFields();
 		final List<Method> methods = interfaceType.getMethods();
@@ -946,10 +891,11 @@ final class SourceCodeGenerator {
 		final List<Type> importableTypes = method.getImportableTypes();
 		
 		final String modifiers = Modifier.toExternalForm(doDiscardInterfaceMethodModifiers(enclosingType, method.getModifiers()));
-		final String returnType = doGenerateMethodReturnTypeWithOptionalTypeParameters(decompilerConfiguration, method, importableTypes);
+		final String returnType = doGenerateMethodReturnTypeWithOptionalTypeParameters(method, importableTypes);
 		final String name = method.getName();
-		final String parameters = doToExternalForm(decompilerConfiguration, parameterList, method, importableTypes);
+		final String parameters = doToExternalForm(parameterList, method, importableTypes);
 		final String returnStatement = doGenerateMethodDefaultReturnStatement(method);
+		final String throwsClause = doGenerateMethodThrowsClause(method, importableTypes);
 		
 		doGenerateMethodComment(method);
 		
@@ -962,9 +908,9 @@ final class SourceCodeGenerator {
 		}
 		
 		if(method.isAbstract() || method.isNative()) {
-			document.linef("%s%s %s(%s);", modifiers, returnType, name, parameters);
+			document.linef("%s%s %s(%s)%s;", modifiers, returnType, name, parameters, throwsClause);
 		} else {
-			document.linef("%s%s %s(%s) {", modifiers, returnType, name, parameters);
+			document.linef("%s%s %s(%s)%s {", modifiers, returnType, name, parameters, throwsClause);
 			document.indent();
 			
 			if(!returnStatement.isEmpty()) {
@@ -1059,5 +1005,102 @@ final class SourceCodeGenerator {
 		}
 		
 		document.line(" */");
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static String doFilterPackageNames(final JPackageNameFilter jPackageNameFilter, final String string) {
+		return doFilterPackageNames(jPackageNameFilter, string, false);
+	}
+	
+	private static String doFilterPackageNames(final JPackageNameFilter jPackageNameFilter, final String string, final boolean isInnerType) {
+		final Matcher matcher = PATTERN_FULLY_QUALIFIED_TYPE_NAME.matcher(string);
+		
+		final StringBuffer stringBuffer = new StringBuffer();
+		
+		while(matcher.find()) {
+			final String fullyQualifiedName = matcher.group();
+			final String packageName = doGetPackageName(fullyQualifiedName);
+			final String simpleName = doGetSimpleName(fullyQualifiedName, isInnerType);
+			
+			if(!jPackageNameFilter.isAccepted(packageName, simpleName)) {
+				matcher.appendReplacement(stringBuffer, Matcher.quoteReplacement(simpleName));
+			}
+		}
+		
+		matcher.appendTail(stringBuffer);
+		
+		return stringBuffer.toString();
+	}
+	
+	private static String doGenerateFieldAssignment(final Field field) {
+		final Optional<Object> optionalAssignment = field.getAssignment();
+		
+		if(optionalAssignment.isPresent()) {
+			final Object assignment = optionalAssignment.get();
+			
+			if(assignment instanceof Double) {
+				return " = " + assignment + "D";
+			} else if(assignment instanceof Float) {
+				return " = " + assignment + "F";
+			} else if(assignment instanceof Long) {
+				return " = " + assignment + "L";
+			} else if(assignment instanceof String) {
+				return " = \"" + assignment + "\"";
+			} else {
+				return " = " + assignment;
+			}
+		}
+		
+		return "";
+	}
+	
+	private static String doGenerateMethodDefaultReturnStatement(final Method method) {
+		final Type returnType = method.getReturnType();
+		
+		if(returnType instanceof VoidType) {
+			return "";
+		} else if(returnType instanceof PrimitiveType) {
+			final PrimitiveType primitiveType = PrimitiveType.class.cast(returnType);
+			
+			if(primitiveType.equals(PrimitiveType.BOOLEAN)) {
+				return "return false;";
+			} else if(primitiveType.equals(PrimitiveType.BYTE)) {
+				return "return 0;";
+			} else if(primitiveType.equals(PrimitiveType.CHAR)) {
+				return "return '\\u0000';";
+			} else if(primitiveType.equals(PrimitiveType.DOUBLE)) {
+				return "return 0.0D;";
+			} else if(primitiveType.equals(PrimitiveType.FLOAT)) {
+				return "return 0.0F;";
+			} else if(primitiveType.equals(PrimitiveType.INT)) {
+				return "return 0;";
+			} else if(primitiveType.equals(PrimitiveType.LONG)) {
+				return "return 0L;";
+			} else {
+				return "return 0;";
+			}
+		} else {
+			return "return null;";
+		}
+	}
+	
+	private static String doGetPackageName(final String fullyQualifiedTypeName) {
+		return fullyQualifiedTypeName.lastIndexOf(".") >= 0 ? fullyQualifiedTypeName.substring(0, fullyQualifiedTypeName.lastIndexOf(".")) : "";
+	}
+	
+	private static String doGetSimpleName(final String fullyQualifiedTypeName, final boolean isInnerType) {
+		final String simpleName0 = fullyQualifiedTypeName.lastIndexOf(".") >= 0 ? fullyQualifiedTypeName.substring(fullyQualifiedTypeName.lastIndexOf(".") + 1) : fullyQualifiedTypeName;
+		final String simpleName1 = isInnerType && simpleName0.lastIndexOf('$') >= 0 ? simpleName0.substring(simpleName0.lastIndexOf('$') + 1) : simpleName0;
+		
+		return simpleName1;
+	}
+	
+	private static String doToExternalForm(final JPackageNameFilter jPackageNameFilter, final LocalVariableNameGenerator localVariableNameGenerator, final Parameter parameter, final int index) {
+		final String a = parameter.isFinal() ? "final " : "";
+		final String b = doFilterPackageNames(jPackageNameFilter, parameter.getOptionalJavaTypeSignature().map(javaTypeSignature -> javaTypeSignature.toExternalForm()).orElse(parameter.getType().getExternalName()));
+		final String c = parameter.isNamed() ? parameter.getName() : localVariableNameGenerator.generateLocalVariableName(parameter.getType().getExternalName(), index);
+		
+		return String.format("%s%s %s", a, b, c);
 	}
 }

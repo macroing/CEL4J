@@ -1,3 +1,13 @@
+2021-09-25  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Decompiler:
+
+		* ADD:			Add support for throws clause to methods.
+
+	CEL4J Java Model:
+
+		* ADD:			Add the method getOptionalCodeAttribute() to the Method class.
+
 2021-09-23  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:

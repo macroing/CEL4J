@@ -116,7 +116,7 @@ public final class Person implements Comparable<Person> {
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		public static int requireRange(final int value, final int minimumValue, final int maximumValue) {
+		public static int requireRange(final int value, final int minimumValue, final int maximumValue) throws IllegalArgumentException {
 			if(value < minimumValue) {
 				throw new IllegalArgumentException();
 			} else if(value > maximumValue) {
