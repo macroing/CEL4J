@@ -19,16 +19,23 @@
 package org.macroing.cel4j.java.model;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.MethodInfo;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.CodeAttribute;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.Instruction;
+import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantClassInfo;
+import org.macroing.cel4j.java.binary.classfile.cpinfo.ConstantUTF8Info;
+import org.macroing.cel4j.java.binary.classfile.descriptor.ClassName;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.DeprecatedAttribute;
+import org.macroing.cel4j.java.binary.classfile.attributeinfo.ExceptionsAttribute;
 import org.macroing.cel4j.java.binary.classfile.signature.MethodSignature;
 
 /**
@@ -38,8 +45,16 @@ import org.macroing.cel4j.java.binary.classfile.signature.MethodSignature;
  * @author J&#246;rgen Lundgren
  */
 public final class Constructor implements Comparable<Constructor> {
+	private final AtomicBoolean hasInitializedExceptionTypes;
+	private final AtomicBoolean hasInitializedImportableTypes;
+	private final AtomicBoolean hasInitializedModifiers;
 	private final ClassFile classFile;
+	private final List<Modifier> modifiers;
+	private final List<Type> exceptionTypes;
+	private final List<Type> importableTypes;
 	private final MethodInfo methodInfo;
+	private final Optional<CodeAttribute> optionalCodeAttribute;
+	private final Optional<ExceptionsAttribute> optionalExceptionsAttribute;
 	private final ParameterList parameterList;
 	private final Type enclosingType;
 	
@@ -48,8 +63,16 @@ public final class Constructor implements Comparable<Constructor> {
 	Constructor(final ClassFile classFile, final MethodInfo methodInfo, final Type enclosingType) {
 		this.classFile = Objects.requireNonNull(classFile, "classFile == null");
 		this.methodInfo = Objects.requireNonNull(methodInfo, "methodInfo == null");
-		this.parameterList = ParameterList.load(classFile, methodInfo);
 		this.enclosingType = Objects.requireNonNull(enclosingType, "enclosingType == null");
+		this.hasInitializedExceptionTypes = new AtomicBoolean();
+		this.hasInitializedImportableTypes = new AtomicBoolean();
+		this.hasInitializedModifiers = new AtomicBoolean();
+		this.modifiers = new ArrayList<>();
+		this.exceptionTypes = new ArrayList<>();
+		this.importableTypes = new ArrayList<>();
+		this.optionalCodeAttribute = CodeAttribute.find(this.methodInfo);
+		this.optionalExceptionsAttribute = ExceptionsAttribute.find(this.methodInfo);
+		this.parameterList = ParameterList.load(classFile, methodInfo);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,7 +105,13 @@ public final class Constructor implements Comparable<Constructor> {
 	 * @return a {@code List} that contains all {@code Instruction} instances associated with this {@code Constructor} instance
 	 */
 	public List<Instruction> getInstructions() {
-		return CodeAttribute.find(this.methodInfo).map(codeAttribute -> codeAttribute.getInstructions()).orElse(new ArrayList<>());
+		if(this.optionalCodeAttribute.isPresent()) {
+			final CodeAttribute codeAttribute = this.optionalCodeAttribute.get();
+			
+			return codeAttribute.getInstructions();
+		}
+		
+		return new ArrayList<>();
 	}
 	
 	/**
@@ -93,21 +122,53 @@ public final class Constructor implements Comparable<Constructor> {
 	 * @return a {@code List} that contains all {@code Modifier} instances associated with this {@code Constructor} instance
 	 */
 	public List<Modifier> getModifiers() {
-		final List<Modifier> modifiers = new ArrayList<>();
+		doInitializeModifiers();
 		
-		if(isPrivate()) {
-			modifiers.add(Modifier.PRIVATE);
-		} else if(isProtected()) {
-			modifiers.add(Modifier.PROTECTED);
-		} else if(isPublic()) {
-			modifiers.add(Modifier.PUBLIC);
-		}
+		return new ArrayList<>(this.modifiers);
+	}
+	
+	/**
+	 * Returns a {@code List} that contains all {@link Type} instances associated with this {@code Constructor} instance that are exceptions.
+	 * <p>
+	 * Modifications to the returned {@code List} will not affect this {@code Constructor} instance.
+	 * 
+	 * @return a {@code List} that contains all {@code Type} instances associated with this {@code Constructor} instance that are exceptions
+	 */
+	public List<Type> getExceptionTypes() {
+		doInitializeExceptionTypes();
 		
-		if(isStrict()) {
-			modifiers.add(Modifier.STRICT_F_P);
-		}
+		return new ArrayList<>(this.exceptionTypes);
+	}
+	
+	/**
+	 * Returns a {@code List} that contains all {@link Type} instances associated with this {@code Constructor} instance that are importable.
+	 * <p>
+	 * Modifications to the returned {@code List} will not affect this {@code Constructor} instance.
+	 * 
+	 * @return a {@code List} that contains all {@code Type} instances associated with this {@code Constructor} instance that are importable
+	 */
+	public List<Type> getImportableTypes() {
+		doInitializeImportableTypes();
 		
-		return modifiers;
+		return new ArrayList<>(this.importableTypes);
+	}
+	
+	/**
+	 * Returns the optional {@link CodeAttribute} instance associated with this {@code Constructor} instance.
+	 * 
+	 * @return the optional {@code CodeAttribute} instance associated with this {@code Constructor} instance
+	 */
+	public Optional<CodeAttribute> getOptionalCodeAttribute() {
+		return this.optionalCodeAttribute;
+	}
+	
+	/**
+	 * Returns the optional {@link ExceptionsAttribute} instance associated with this {@code Constructor} instance.
+	 * 
+	 * @return the optional {@code ExceptionsAttribute} instance associated with this {@code Constructor} instance
+	 */
+	public Optional<ExceptionsAttribute> getOptionalExceptionsAttribute() {
+		return this.optionalExceptionsAttribute;
 	}
 	
 	/**
@@ -338,5 +399,78 @@ public final class Constructor implements Comparable<Constructor> {
 		}
 		
 		return false;
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private List<Type> doGetImportableTypes() {
+		final Set<Type> importableTypes = new LinkedHashSet<>();
+		
+		getExceptionTypes().forEach(exceptionType -> doAddImportableTypeIfNecessary(exceptionType, importableTypes));
+		getOptionalCodeAttribute().ifPresent(codeAttribute -> Instructions.findTypeNames(this.classFile, codeAttribute).forEach(typeName -> doAddImportableTypeIfNecessary(Type.valueOf(typeName), importableTypes)));
+		getParameterList().getParameters().forEach(parameter -> doAddImportableTypeIfNecessary(parameter.getType(), importableTypes));
+		
+		return new ArrayList<>(importableTypes);
+	}
+	
+	private void doAddImportableTypeIfNecessary(final Type importableType, final Set<Type> importableTypes) {
+		Type type = importableType;
+		
+		while(type instanceof ArrayType) {
+			type = ArrayType.class.cast(type).getComponentType();
+		}
+		
+		if(type instanceof PrimitiveType) {
+			return;
+		}
+		
+		if(type instanceof VoidType) {
+			return;
+		}
+		
+		final String externalPackageNameThis = getEnclosingType().getExternalPackageName();
+		final String externalPackageNameType = type.getExternalPackageName();
+		
+		if(externalPackageNameType.equals("java.lang")) {
+			return;
+		}
+		
+		if(externalPackageNameType.equals(externalPackageNameThis)) {
+			return;
+		}
+		
+		importableTypes.add(type);
+	}
+	
+	private void doInitializeExceptionTypes() {
+		if(this.hasInitializedExceptionTypes.compareAndSet(false, true)) {
+			getOptionalExceptionsAttribute().ifPresent(exceptionsAttribute -> {
+				exceptionsAttribute.getExceptionIndexTable().forEach(exceptionIndex -> {
+					this.exceptionTypes.add(Type.valueOf(ClassName.parseClassName(this.classFile.getCPInfo(this.classFile.getCPInfo(exceptionIndex.intValue(), ConstantClassInfo.class).getNameIndex(), ConstantUTF8Info.class).getStringValue()).toExternalForm()));
+				});
+			});
+		}
+	}
+	
+	private void doInitializeImportableTypes() {
+		if(this.hasInitializedImportableTypes.compareAndSet(false, true)) {
+			this.importableTypes.addAll(doGetImportableTypes());
+		}
+	}
+	
+	private void doInitializeModifiers() {
+		if(this.hasInitializedModifiers.compareAndSet(false, true)) {
+			if(isPrivate()) {
+				this.modifiers.add(Modifier.PRIVATE);
+			} else if(isProtected()) {
+				this.modifiers.add(Modifier.PROTECTED);
+			} else if(isPublic()) {
+				this.modifiers.add(Modifier.PUBLIC);
+			}
+			
+			if(isStrict()) {
+				this.modifiers.add(Modifier.STRICT_F_P);
+			}
+		}
 	}
 }

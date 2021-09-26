@@ -39,15 +39,15 @@ public final class Person implements Comparable<Person> {
 		this(FIRST_NAME);
 	}
 	
-	public Person(final String firstName) {
+	public Person(final String firstName) throws NullPointerException {
 		this(firstName, LAST_NAME);
 	}
 	
-	public Person(final String firstName, final String lastName) {
+	public Person(final String firstName, final String lastName) throws NullPointerException {
 		this(firstName, lastName, AGE);
 	}
 	
-	public Person(final String firstName, final String lastName, final int age) {
+	public Person(final String firstName, final String lastName, final int age) throws IllegalArgumentException, NullPointerException {
 		this.firstName = Objects.requireNonNull(firstName, "firstName == null");
 		this.lastName = Objects.requireNonNull(lastName, "lastName == null");
 		this.age = Utilities.requireRange(age, 0, Integer.MAX_VALUE);

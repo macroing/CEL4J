@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
@@ -56,15 +57,25 @@ public final class ClassType extends Type {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	private final AtomicBoolean hasInitializedClassFile;
+	private final AtomicBoolean hasInitializedClassSignature;
 	private final AtomicBoolean hasInitializedConstructors;
+	private final AtomicBoolean hasInitializedExternalName;
 	private final AtomicBoolean hasInitializedFields;
 	private final AtomicBoolean hasInitializedImportableTypes;
 	private final AtomicBoolean hasInitializedInnerTypes;
 	private final AtomicBoolean hasInitializedInterfaceTypes;
 	private final AtomicBoolean hasInitializedMethods;
 	private final AtomicBoolean hasInitializedModifiers;
-	private final AtomicBoolean hasInitializedSuperClassSignatures;
-	private final ClassFile classFile;
+	private final AtomicBoolean hasInitializedSuperClassSignature;
+	private final AtomicBoolean hasInitializedSuperInterfaceSignatures;
+	private final AtomicBoolean hasInitializedTypeParameters;
+	private final AtomicReference<ClassFile> classFile;
+	private final AtomicReference<ClassSignature> classSignature;
+	private final AtomicReference<String> externalName;
+	private final AtomicReference<SuperClassSignature> superClassSignature;
+	private final AtomicReference<TypeParameters> typeParameters;
+	private final Class<?> clazz;
 	private final List<Constructor> constructors;
 	private final List<Field> fields;
 	private final List<InnerType> innerTypes;
@@ -73,23 +84,29 @@ public final class ClassType extends Type {
 	private final List<Modifier> modifiers;
 	private final List<SuperInterfaceSignature> superInterfaceSignatures;
 	private final List<Type> importableTypes;
-	private final Optional<ClassSignature> optionalClassSignature;
-	private final Optional<SuperClassSignature> optionalSuperClassSignature;
-	private final Optional<TypeParameters> optionalTypeParameters;
-	private final String externalName;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ClassType(final ClassFile classFile) {
+	private ClassType(final Class<?> clazz) {
+		this.hasInitializedClassFile = new AtomicBoolean();
+		this.hasInitializedClassSignature = new AtomicBoolean();
 		this.hasInitializedConstructors = new AtomicBoolean();
+		this.hasInitializedExternalName = new AtomicBoolean();
 		this.hasInitializedFields = new AtomicBoolean();
 		this.hasInitializedImportableTypes = new AtomicBoolean();
 		this.hasInitializedInnerTypes = new AtomicBoolean();
 		this.hasInitializedInterfaceTypes = new AtomicBoolean();
 		this.hasInitializedMethods = new AtomicBoolean();
 		this.hasInitializedModifiers = new AtomicBoolean();
-		this.hasInitializedSuperClassSignatures = new AtomicBoolean();
-		this.classFile = classFile;
+		this.hasInitializedSuperClassSignature = new AtomicBoolean();
+		this.hasInitializedSuperInterfaceSignatures = new AtomicBoolean();
+		this.hasInitializedTypeParameters = new AtomicBoolean();
+		this.classFile = new AtomicReference<>();
+		this.classSignature = new AtomicReference<>();
+		this.externalName = new AtomicReference<>();
+		this.superClassSignature = new AtomicReference<>();
+		this.typeParameters = new AtomicReference<>();
+		this.clazz = clazz;
 		this.constructors = new ArrayList<>();
 		this.fields = new ArrayList<>();
 		this.innerTypes = new ArrayList<>();
@@ -98,10 +115,6 @@ public final class ClassType extends Type {
 		this.modifiers = new ArrayList<>();
 		this.superInterfaceSignatures = new ArrayList<>();
 		this.importableTypes = new ArrayList<>();
-		this.optionalClassSignature = ClassSignature.parseClassSignatureOptionally(this.classFile);
-		this.optionalSuperClassSignature = this.optionalClassSignature.isPresent() ? Optional.of(this.optionalClassSignature.get().getSuperClassSignature()) : Optional.empty();
-		this.optionalTypeParameters = this.optionalClassSignature.isPresent() ? this.optionalClassSignature.get().getTypeParameters() : Optional.empty();
-		this.externalName = ClassName.parseClassNameThisClass(this.classFile).toExternalForm();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,7 +125,9 @@ public final class ClassType extends Type {
 	 * @return the {@code ClassFile} instance associated with this {@code ClassType} instance
 	 */
 	public ClassFile getClassFile() {
-		return this.classFile;
+		doInitializeClassFile();
+		
+		return this.classFile.get();
 	}
 	
 	/**
@@ -123,7 +138,7 @@ public final class ClassType extends Type {
 	 * @return a {@code List} that contains all {@code AttributeInfo} instances associated with this {@code ClassType} instance
 	 */
 	public List<AttributeInfo> getAttributeInfos() {
-		return this.classFile.getAttributeInfos();
+		return getClassFile().getAttributeInfos();
 	}
 	
 	/**
@@ -270,7 +285,9 @@ public final class ClassType extends Type {
 	 * @return the optional {@code ClassSignature} instance associated with this {@code ClassType} instance
 	 */
 	public Optional<ClassSignature> getOptionalClassSignature() {
-		return this.optionalClassSignature;
+		doInitializeClassSignature();
+		
+		return Optional.ofNullable(this.classSignature.get());
 	}
 	
 	/**
@@ -279,7 +296,7 @@ public final class ClassType extends Type {
 	 * @return the optional super {@code ClassType} instance associated with this {@code ClassType} instance
 	 */
 	public Optional<ClassType> getOptionalSuperClassType() {
-		return hasSuperClass() ? Optional.of(ClassType.valueOf(ClassName.parseClassNameSuperClass(this.classFile).toExternalForm())) : Optional.empty();
+		return hasSuperClass() ? Optional.of(ClassType.valueOf(ClassName.parseClassNameSuperClass(getClassFile()).toExternalForm())) : Optional.empty();
 	}
 	
 	/**
@@ -288,7 +305,9 @@ public final class ClassType extends Type {
 	 * @return the optional {@code SuperClassSignature} instance associated with this {@code ClassType} instance
 	 */
 	public Optional<SuperClassSignature> getOptionalSuperClassSignature() {
-		return this.optionalSuperClassSignature;
+		doInitializeSuperClassSignature();
+		
+		return Optional.ofNullable(this.superClassSignature.get());
 	}
 	
 	/**
@@ -297,7 +316,9 @@ public final class ClassType extends Type {
 	 * @return the optional {@code TypeParameters} instance associated with this {@code ClassType} instance
 	 */
 	public Optional<TypeParameters> getOptionalTypeParameters() {
-		return this.optionalTypeParameters;
+		doInitializeTypeParameters();
+		
+		return Optional.ofNullable(this.typeParameters.get());
 	}
 	
 	/**
@@ -307,7 +328,9 @@ public final class ClassType extends Type {
 	 */
 	@Override
 	public String getExternalName() {
-		return this.externalName;
+		doInitializeExternalName();
+		
+		return this.externalName.get();
 	}
 	
 	/**
@@ -334,7 +357,7 @@ public final class ClassType extends Type {
 			return true;
 		} else if(!(object instanceof ClassType)) {
 			return false;
-		} else if(!Objects.equals(this.classFile, ClassType.class.cast(object).classFile)) {
+		} else if(!Objects.equals(getClassFile(), ClassType.class.cast(object).getClassFile())) {
 			return false;
 		} else {
 			return true;
@@ -435,7 +458,7 @@ public final class ClassType extends Type {
 	 * @return {@code true} if, and only if, this {@code ClassType} instance is extending a super class, {@code false} otherwise
 	 */
 	public boolean hasSuperClass() {
-		return !isObject() && this.classFile.getSuperClass() >= 1;
+		return !isObject() && getClassFile().getSuperClass() >= 1;
 	}
 	
 	/**
@@ -444,7 +467,7 @@ public final class ClassType extends Type {
 	 * @return {@code true} if, and only if, this {@code ClassType} instance is abstract, {@code false} otherwise
 	 */
 	public boolean isAbstract() {
-		return this.classFile.isAbstract();
+		return getClassFile().isAbstract();
 	}
 	
 	/**
@@ -453,7 +476,7 @@ public final class ClassType extends Type {
 	 * @return {@code true} if, and only if, this {@code ClassType} instance is final, {@code false} otherwise
 	 */
 	public boolean isFinal() {
-		return this.classFile.isFinal();
+		return getClassFile().isFinal();
 	}
 	
 	/**
@@ -463,7 +486,7 @@ public final class ClassType extends Type {
 	 */
 	@Override
 	public boolean isInnerType() {
-		return InnerClassesAttribute.find(this.classFile).filter(innerClassesAttribute -> innerClassesAttribute.getInnerClasses().stream().anyMatch(innerClass -> innerClass.getOuterClassInfoIndex() != 0)).isPresent();
+		return InnerClassesAttribute.find(getClassFile()).filter(innerClassesAttribute -> innerClassesAttribute.getInnerClasses().stream().anyMatch(innerClass -> innerClass.getOuterClassInfoIndex() != 0)).isPresent();
 	}
 	
 	/**
@@ -481,7 +504,7 @@ public final class ClassType extends Type {
 	 * @return {@code true} if, and only if, this {@code ClassType} instance is public, {@code false} otherwise
 	 */
 	public boolean isPublic() {
-		return this.classFile.isPublic();
+		return getClassFile().isPublic();
 	}
 	
 	/**
@@ -491,7 +514,7 @@ public final class ClassType extends Type {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.classFile);
+		return Objects.hash(getClassFile());
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -526,7 +549,7 @@ public final class ClassType extends Type {
 		} else {
 			try {
 				synchronized(CLASS_TYPES) {
-					return CLASS_TYPES.computeIfAbsent(clazz.getName(), name -> new ClassType(CLASS_FILES.computeIfAbsent(name, key -> new ClassFileReader().read(clazz))));
+					return CLASS_TYPES.computeIfAbsent(clazz.getName(), name -> new ClassType(clazz));
 				}
 			} catch(final NodeFormatException e) {
 				throw new TypeException(e);
@@ -560,8 +583,11 @@ public final class ClassType extends Type {
 	 * Clears the cache.
 	 */
 	public static void clearCache() {
-		synchronized(CLASS_TYPES) {
+		synchronized(CLASS_FILES) {
 			CLASS_FILES.clear();
+		}
+		
+		synchronized(CLASS_TYPES) {
 			CLASS_TYPES.clear();
 		}
 	}
@@ -571,7 +597,7 @@ public final class ClassType extends Type {
 	private List<Type> doGetImportableTypes() {
 		final Set<Type> importableTypes = new LinkedHashSet<>();
 		
-		getConstructors().forEach(constructor -> constructor.getParameterList().getParameters().forEach(parameter -> doAddImportableTypeIfNecessary(parameter.getType(), importableTypes)));
+		getConstructors().forEach(constructor -> constructor.getImportableTypes().forEach(type -> doAddImportableTypeIfNecessary(type, importableTypes)));
 		getFields().forEach(field -> doAddImportableTypeIfNecessary(field.getType(), importableTypes));
 		getInnerTypes().forEach(innerType -> innerType.getType().getImportableTypes().forEach(type -> doAddImportableTypeIfNecessary(type, importableTypes)));
 		getInterfaceTypes().forEach(interfaceType -> doAddImportableTypeIfNecessary(interfaceType, importableTypes));
@@ -618,15 +644,39 @@ public final class ClassType extends Type {
 		importableTypes.add(type);
 	}
 	
+	private void doInitializeClassFile() {
+		if(this.hasInitializedClassFile.compareAndSet(false, true)) {
+			synchronized(CLASS_FILES) {
+				this.classFile.set(CLASS_FILES.computeIfAbsent(this.clazz.getName(), key -> new ClassFileReader().read(this.clazz)));
+			}
+		}
+	}
+	
+	private void doInitializeClassSignature() {
+		if(this.hasInitializedClassSignature.compareAndSet(false, true)) {
+			this.classSignature.set(ClassSignature.parseClassSignatureOptionally(getClassFile()).orElse(null));
+		}
+	}
+	
 	private void doInitializeConstructors() {
 		if(this.hasInitializedConstructors.compareAndSet(false, true)) {
-			MethodInfos.findConstructors(this.classFile).forEach(methodInfo -> this.constructors.add(new Constructor(this.classFile, methodInfo, this)));
+			final ClassFile classFile = getClassFile();
+			
+			MethodInfos.findConstructors(classFile).forEach(methodInfo -> this.constructors.add(new Constructor(classFile, methodInfo, this)));
+		}
+	}
+	
+	private void doInitializeExternalName() {
+		if(this.hasInitializedExternalName.compareAndSet(false, true)) {
+			this.externalName.set(ClassName.parseClassNameThisClass(getClassFile()).toExternalForm());
 		}
 	}
 	
 	private void doInitializeFields() {
 		if(this.hasInitializedFields.compareAndSet(false, true)) {
-			this.classFile.getFieldInfos().stream().filter(fieldInfo -> !fieldInfo.isEnum()).forEach(fieldInfo -> this.fields.add(new Field(this.classFile, fieldInfo, this)));
+			final ClassFile classFile = getClassFile();
+			
+			classFile.getFieldInfos().stream().filter(fieldInfo -> !fieldInfo.isEnum()).forEach(fieldInfo -> this.fields.add(new Field(classFile, fieldInfo, this)));
 		}
 	}
 	
@@ -638,7 +688,7 @@ public final class ClassType extends Type {
 	
 	private void doInitializeInnerTypes() {
 		if(this.hasInitializedInnerTypes.compareAndSet(false, true)) {
-			final ClassFile classFile = this.classFile;
+			final ClassFile classFile = getClassFile();
 			
 			final List<InnerType> innerTypes = this.innerTypes;
 			
@@ -660,9 +710,9 @@ public final class ClassType extends Type {
 	
 	private void doInitializeInterfaceTypes() {
 		if(this.hasInitializedInterfaceTypes.compareAndSet(false, true)) {
-			final ClassFile classFile = this.classFile;
+			final ClassFile classFile = getClassFile();
 			
-			final List<Integer> interfaceIndices = this.classFile.getInterfaces();
+			final List<Integer> interfaceIndices = classFile.getInterfaces();
 			final List<InterfaceType> interfaceTypes = this.interfaceTypes;
 			
 			for(final int interfaceIndex : interfaceIndices) {
@@ -676,7 +726,9 @@ public final class ClassType extends Type {
 	
 	private void doInitializeMethods() {
 		if(this.hasInitializedMethods.compareAndSet(false, true)) {
-			MethodInfos.findMethods(this.classFile).forEach(methodInfo -> this.methods.add(new Method(this.classFile, methodInfo, this)));
+			final ClassFile classFile = getClassFile();
+			
+			MethodInfos.findMethods(classFile).forEach(methodInfo -> this.methods.add(new Method(classFile, methodInfo, this)));
 		}
 	}
 	
@@ -696,9 +748,21 @@ public final class ClassType extends Type {
 		}
 	}
 	
+	private void doInitializeSuperClassSignature() {
+		if(this.hasInitializedSuperClassSignature.compareAndSet(false, true)) {
+			getOptionalClassSignature().ifPresent(classSignature -> this.superClassSignature.set(classSignature.getSuperClassSignature()));
+		}
+	}
+	
 	private void doInitializeSuperInterfaceSignatures() {
-		if(this.hasInitializedSuperClassSignatures.compareAndSet(false, true)) {
-			this.optionalClassSignature.ifPresent(classSignature -> this.superInterfaceSignatures.addAll(classSignature.getSuperInterfaceSignatures()));
+		if(this.hasInitializedSuperInterfaceSignatures.compareAndSet(false, true)) {
+			getOptionalClassSignature().ifPresent(classSignature -> this.superInterfaceSignatures.addAll(classSignature.getSuperInterfaceSignatures()));
+		}
+	}
+	
+	private void doInitializeTypeParameters() {
+		if(this.hasInitializedTypeParameters.compareAndSet(false, true)) {
+			getOptionalClassSignature().ifPresent(classSignature -> this.typeParameters.set(classSignature.getTypeParameters().orElse(null)));
 		}
 	}
 }

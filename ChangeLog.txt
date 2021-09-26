@@ -1,3 +1,15 @@
+2021-09-26  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Java Decompiler:
+
+		* ADD:			Add support for throws clause to constructors.
+		* ADD:			Add support for more importable types from constructors.
+
+	CEL4J Java Model:
+
+		* ADD:			Add the methods getExceptionTypes(), getImportableTypes(), getOptionalCodeAttribute() and getOptionalExceptionsAttribute() to the Constructor class.
+		* CHANGE:		Optimize the load time for the AnnotationType, ClassType, EnumType and InterfaceType classes.
+
 2021-09-25  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:

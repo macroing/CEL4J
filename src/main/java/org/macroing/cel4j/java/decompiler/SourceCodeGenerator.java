@@ -143,6 +143,36 @@ final class SourceCodeGenerator {
 		return stringBuilder.toString();
 	}
 	
+	private String doGenerateConstructorThrowsClause(final Constructor constructor, final List<Type> importableTypes) {
+		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
+		
+		final boolean isDiscardingUnnecessaryPackageNames = decompilerConfiguration.isDiscardingUnnecessaryPackageNames();
+		final boolean isImportingTypes = decompilerConfiguration.isImportingTypes();
+		
+		final List<Type> exceptionTypes = constructor.getExceptionTypes();
+		
+		if(exceptionTypes.isEmpty()) {
+			return "";
+		}
+		
+		final JPackageNameFilter jPackageNameFilter = JPackageNameFilter.newUnnecessaryPackageName(constructor.getEnclosingType().getExternalPackageName(), isDiscardingUnnecessaryPackageNames, importableTypes, isImportingTypes);
+		
+		final
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(" ");
+		stringBuilder.append("throws");
+		stringBuilder.append(" ");
+		
+		for(int i = 0; i < exceptionTypes.size(); i++) {
+			final Type exceptionType = exceptionTypes.get(i);
+			
+			stringBuilder.append(i > 0 ? ", " : "");
+			stringBuilder.append(doFilterPackageNames(jPackageNameFilter, exceptionType.getExternalName(), exceptionType.isInnerType()));
+		}
+		
+		return stringBuilder.toString();
+	}
+	
 	private String doGenerateConstructorTypeWithOptionalTypeParameters(final Constructor constructor, final String simpleName) {
 		final DecompilerConfiguration decompilerConfiguration = this.decompilerConfiguration;
 		
@@ -657,10 +687,13 @@ final class SourceCodeGenerator {
 		
 		final ParameterList parameterList = constructor.getParameterList();
 		
+		final List<Type> importableTypes = constructor.getImportableTypes();
+		
 		final String simpleName = constructor.getEnclosingType().getExternalSimpleName();
 		final String modifiers = Modifier.toExternalForm(constructor.getModifiers());
 		final String type = doGenerateConstructorTypeWithOptionalTypeParameters(constructor, simpleName);
 		final String parameters = doToExternalForm(parameterList, constructor, new ArrayList<>());
+		final String throwsClause = doGenerateConstructorThrowsClause(constructor, importableTypes);
 		
 		doGenerateConstructorComment(constructor);
 		
@@ -668,7 +701,7 @@ final class SourceCodeGenerator {
 			document.linef("@Deprecated");
 		}
 		
-		document.linef("%s%s(%s) {", modifiers, type, parameters);
+		document.linef("%s%s(%s)%s {", modifiers, type, parameters, throwsClause);
 		document.indent();
 		document.line();
 		document.outdent();

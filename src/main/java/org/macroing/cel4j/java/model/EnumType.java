@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
 import org.macroing.cel4j.java.binary.classfile.attributeinfo.InnerClassesAttribute;
@@ -43,18 +44,24 @@ public final class EnumType extends Type {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	private final AtomicBoolean hasInitializedClassFile;
+	private final AtomicBoolean hasInitializedExternalName;
 	private final AtomicBoolean hasInitializedModifiers;
-	private final ClassFile classFile;
+	private final AtomicReference<ClassFile> classFile;
+	private final AtomicReference<String> externalName;
+	private final Class<?> clazz;
 	private final List<Modifier> modifiers;
-	private final String externalName;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private EnumType(final ClassFile classFile) {
+	private EnumType(final Class<?> clazz) {
+		this.hasInitializedClassFile = new AtomicBoolean();
+		this.hasInitializedExternalName = new AtomicBoolean();
 		this.hasInitializedModifiers = new AtomicBoolean();
-		this.classFile = classFile;
+		this.classFile = new AtomicReference<>();
+		this.externalName = new AtomicReference<>();
+		this.clazz = clazz;
 		this.modifiers = new ArrayList<>();
-		this.externalName = ClassName.parseClassNameThisClass(this.classFile).toExternalForm();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,7 +72,9 @@ public final class EnumType extends Type {
 	 * @return the {@code ClassFile} instance associated with this {@code EnumType} instance
 	 */
 	public ClassFile getClassFile() {
-		return this.classFile;
+		doInitializeClassFile();
+		
+		return this.classFile.get();
 	}
 	
 	/**
@@ -88,7 +97,9 @@ public final class EnumType extends Type {
 	 */
 	@Override
 	public String getExternalName() {
-		return this.externalName;
+		doInitializeExternalName();
+		
+		return this.externalName.get();
 	}
 	
 	/**
@@ -115,7 +126,7 @@ public final class EnumType extends Type {
 			return true;
 		} else if(!(object instanceof EnumType)) {
 			return false;
-		} else if(!Objects.equals(this.classFile, EnumType.class.cast(object).classFile)) {
+		} else if(!Objects.equals(getClassFile(), EnumType.class.cast(object).getClassFile())) {
 			return false;
 		} else {
 			return true;
@@ -129,7 +140,7 @@ public final class EnumType extends Type {
 	 */
 	@Override
 	public boolean isInnerType() {
-		return InnerClassesAttribute.find(this.classFile).filter(innerClassesAttribute -> innerClassesAttribute.getInnerClasses().stream().anyMatch(innerClass -> innerClass.getOuterClassInfoIndex() != 0)).isPresent();
+		return InnerClassesAttribute.find(getClassFile()).filter(innerClassesAttribute -> innerClassesAttribute.getInnerClasses().stream().anyMatch(innerClass -> innerClass.getOuterClassInfoIndex() != 0)).isPresent();
 	}
 	
 	/**
@@ -138,7 +149,7 @@ public final class EnumType extends Type {
 	 * @return {@code true} if, and only if, this {@code EnumType} instance is public, {@code false} otherwise
 	 */
 	public boolean isPublic() {
-		return this.classFile.isPublic();
+		return getClassFile().isPublic();
 	}
 	
 	/**
@@ -148,7 +159,7 @@ public final class EnumType extends Type {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.classFile);
+		return Objects.hash(getClassFile());
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -176,7 +187,7 @@ public final class EnumType extends Type {
 		
 		try {
 			synchronized(ENUM_TYPES) {
-				return ENUM_TYPES.computeIfAbsent(clazz.getName(), name -> new EnumType(CLASS_FILES.computeIfAbsent(name, key -> new ClassFileReader().read(clazz))));
+				return ENUM_TYPES.computeIfAbsent(clazz.getName(), name -> new EnumType(clazz));
 			}
 		} catch(final NodeFormatException e) {
 			throw new TypeException(e);
@@ -209,13 +220,30 @@ public final class EnumType extends Type {
 	 * Clears the cache.
 	 */
 	public static void clearCache() {
-		synchronized(ENUM_TYPES) {
+		synchronized(CLASS_FILES) {
 			CLASS_FILES.clear();
+		}
+		
+		synchronized(ENUM_TYPES) {
 			ENUM_TYPES.clear();
 		}
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private void doInitializeClassFile() {
+		if(this.hasInitializedClassFile.compareAndSet(false, true)) {
+			synchronized(CLASS_FILES) {
+				this.classFile.set(CLASS_FILES.computeIfAbsent(this.clazz.getName(), key -> new ClassFileReader().read(this.clazz)));
+			}
+		}
+	}
+	
+	private void doInitializeExternalName() {
+		if(this.hasInitializedExternalName.compareAndSet(false, true)) {
+			this.externalName.set(ClassName.parseClassNameThisClass(getClassFile()).toExternalForm());
+		}
+	}
 	
 	private void doInitializeModifiers() {
 		if(this.hasInitializedModifiers.compareAndSet(false, true)) {

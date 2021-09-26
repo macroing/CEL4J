@@ -8,7 +8,7 @@ CEL4J Java Binary:
 
 CEL4J Java Decompiler:
 
-	* ADD:			Add support for a throws clause to constructors.
+	* CHANGE:		Fix duplicate methods when overriding a generic method. For example the methods compareTo(Object) and compareTo(Person) in the Person class. The compareTo(Person) method does not have an @Override annotation either, because of different method signatures.
 	* CHANGE:		Change the extends clause of inner classes. Currently it may look like extends JComponent$AccessibleJComponent.
 	* CHANGE:		Take the generic type name into account when sorting methods and other members of classes. Currently they are sorted as if they were Object or some other type.
 	* REMOVE:		Remove synthetic fields from classes.

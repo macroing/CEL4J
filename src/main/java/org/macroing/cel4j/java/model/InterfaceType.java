@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.macroing.cel4j.java.binary.classfile.AttributeInfo;
 import org.macroing.cel4j.java.binary.classfile.ClassFile;
@@ -55,44 +56,58 @@ public final class InterfaceType extends Type {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	private final AtomicBoolean hasInitializedClassFile;
+	private final AtomicBoolean hasInitializedClassSignature;
+	private final AtomicBoolean hasInitializedExternalName;
 	private final AtomicBoolean hasInitializedFields;
 	private final AtomicBoolean hasInitializedImportableTypes;
 	private final AtomicBoolean hasInitializedInterfaceTypes;
 	private final AtomicBoolean hasInitializedMethods;
 	private final AtomicBoolean hasInitializedModifiers;
-	private final AtomicBoolean hasInitializedSuperClassSignatures;
-	private final ClassFile classFile;
+	private final AtomicBoolean hasInitializedSuperClassSignature;
+	private final AtomicBoolean hasInitializedSuperInterfaceSignatures;
+	private final AtomicBoolean hasInitializedTypeParameters;
+	private final AtomicReference<ClassFile> classFile;
+	private final AtomicReference<ClassSignature> classSignature;
+	private final AtomicReference<String> externalName;
+	private final AtomicReference<SuperClassSignature> superClassSignature;
+	private final AtomicReference<TypeParameters> typeParameters;
+	private final Class<?> clazz;
 	private final List<Field> fields;
 	private final List<InterfaceType> interfaceTypes;
 	private final List<Method> methods;
 	private final List<Modifier> modifiers;
 	private final List<SuperInterfaceSignature> superInterfaceSignatures;
 	private final List<Type> importableTypes;
-	private final Optional<ClassSignature> optionalClassSignature;
-	private final Optional<SuperClassSignature> optionalSuperClassSignature;
-	private final Optional<TypeParameters> optionalTypeParameters;
-	private final String externalName;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private InterfaceType(final ClassFile classFile) {
+	private InterfaceType(final Class<?> clazz) {
+		this.hasInitializedClassFile = new AtomicBoolean();
+		this.hasInitializedClassSignature = new AtomicBoolean();
+		this.hasInitializedExternalName = new AtomicBoolean();
 		this.hasInitializedFields = new AtomicBoolean();
 		this.hasInitializedImportableTypes = new AtomicBoolean();
 		this.hasInitializedInterfaceTypes = new AtomicBoolean();
 		this.hasInitializedMethods = new AtomicBoolean();
 		this.hasInitializedModifiers = new AtomicBoolean();
-		this.hasInitializedSuperClassSignatures = new AtomicBoolean();
-		this.classFile = classFile;
+		this.hasInitializedSuperClassSignature = new AtomicBoolean();
+		this.hasInitializedSuperInterfaceSignatures = new AtomicBoolean();
+		this.hasInitializedTypeParameters = new AtomicBoolean();
+		this.classFile = new AtomicReference<>();
+		this.classSignature = new AtomicReference<>();
+		this.externalName = new AtomicReference<>();
+		this.superClassSignature = new AtomicReference<>();
+		this.typeParameters = new AtomicReference<>();
+		this.clazz = clazz;
 		this.fields = new ArrayList<>();
 		this.interfaceTypes = new ArrayList<>();
 		this.methods = new ArrayList<>();
 		this.modifiers = new ArrayList<>();
 		this.superInterfaceSignatures = new ArrayList<>();
 		this.importableTypes = new ArrayList<>();
-		this.optionalClassSignature = ClassSignature.parseClassSignatureOptionally(this.classFile);
-		this.optionalSuperClassSignature = this.optionalClassSignature.isPresent() ? Optional.of(this.optionalClassSignature.get().getSuperClassSignature()) : Optional.empty();
-		this.optionalTypeParameters = this.optionalClassSignature.isPresent() ? this.optionalClassSignature.get().getTypeParameters() : Optional.empty();
-		this.externalName = ClassName.parseClassNameThisClass(this.classFile).toExternalForm();
+//		this.optionalSuperClassSignature = this.optionalClassSignature.isPresent() ? Optional.of(this.optionalClassSignature.get().getSuperClassSignature()) : Optional.empty();
+//		this.optionalTypeParameters = this.optionalClassSignature.isPresent() ? this.optionalClassSignature.get().getTypeParameters() : Optional.empty();
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -103,7 +118,9 @@ public final class InterfaceType extends Type {
 	 * @return the {@code ClassFile} instance associated with this {@code InterfaceType} instance
 	 */
 	public ClassFile getClassFile() {
-		return this.classFile;
+		doInitializeClassFile();
+		
+		return this.classFile.get();
 	}
 	
 	/**
@@ -114,7 +131,7 @@ public final class InterfaceType extends Type {
 	 * @return a {@code List} that contains all {@code AttributeInfo} instances associated with this {@code InterfaceType} instance
 	 */
 	public List<AttributeInfo> getAttributeInfos() {
-		return this.classFile.getAttributeInfos();
+		return getClassFile().getAttributeInfos();
 	}
 	
 	/**
@@ -224,7 +241,9 @@ public final class InterfaceType extends Type {
 	 * @return the optional {@code ClassSignature} instance associated with this {@code InterfaceType} instance
 	 */
 	public Optional<ClassSignature> getOptionalClassSignature() {
-		return ClassSignature.parseClassSignatureOptionally(this.classFile);
+		doInitializeClassSignature();
+		
+		return Optional.ofNullable(this.classSignature.get());
 	}
 	
 	/**
@@ -233,7 +252,7 @@ public final class InterfaceType extends Type {
 	 * @return the optional super {@code ClassType} instance associated with this {@code InterfaceType} instance
 	 */
 	public Optional<ClassType> getOptionalSuperClassType() {
-		return hasSuperClass() ? Optional.of(ClassType.valueOf(ClassName.parseClassNameSuperClass(this.classFile).toExternalForm())) : Optional.empty();
+		return hasSuperClass() ? Optional.of(ClassType.valueOf(ClassName.parseClassNameSuperClass(getClassFile()).toExternalForm())) : Optional.empty();
 	}
 	
 	/**
@@ -242,7 +261,9 @@ public final class InterfaceType extends Type {
 	 * @return the optional {@code SuperClassSignature} instance associated with this {@code InterfaceType} instance
 	 */
 	public Optional<SuperClassSignature> getOptionalSuperClassSignature() {
-		return this.optionalSuperClassSignature;
+		doInitializeSuperClassSignature();
+		
+		return Optional.ofNullable(this.superClassSignature.get());
 	}
 	
 	/**
@@ -251,7 +272,9 @@ public final class InterfaceType extends Type {
 	 * @return the optional {@code TypeParameters} instance associated with this {@code InterfaceType} instance
 	 */
 	public Optional<TypeParameters> getOptionalTypeParameters() {
-		return this.optionalTypeParameters;
+		doInitializeTypeParameters();
+		
+		return Optional.ofNullable(this.typeParameters.get());
 	}
 	
 	/**
@@ -261,7 +284,9 @@ public final class InterfaceType extends Type {
 	 */
 	@Override
 	public String getExternalName() {
-		return this.externalName;
+		doInitializeExternalName();
+		
+		return this.externalName.get();
 	}
 	
 	/**
@@ -288,7 +313,7 @@ public final class InterfaceType extends Type {
 			return true;
 		} else if(!(object instanceof InterfaceType)) {
 			return false;
-		} else if(!Objects.equals(this.classFile, InterfaceType.class.cast(object).classFile)) {
+		} else if(!Objects.equals(getClassFile(), InterfaceType.class.cast(object).getClassFile())) {
 			return false;
 		} else {
 			return true;
@@ -371,7 +396,7 @@ public final class InterfaceType extends Type {
 	 * @return {@code true} if, and only if, this {@code InterfaceType} instance is extending a super class, {@code false} otherwise
 	 */
 	public boolean hasSuperClass() {
-		return this.classFile.getSuperClass() >= 1;
+		return getClassFile().getSuperClass() >= 1;
 	}
 	
 	/**
@@ -381,7 +406,7 @@ public final class InterfaceType extends Type {
 	 */
 	@Override
 	public boolean isInnerType() {
-		return InnerClassesAttribute.find(this.classFile).filter(innerClassesAttribute -> innerClassesAttribute.getInnerClasses().stream().anyMatch(innerClass -> innerClass.getOuterClassInfoIndex() != 0)).isPresent();
+		return InnerClassesAttribute.find(getClassFile()).filter(innerClassesAttribute -> innerClassesAttribute.getInnerClasses().stream().anyMatch(innerClass -> innerClass.getOuterClassInfoIndex() != 0)).isPresent();
 	}
 	
 	/**
@@ -390,7 +415,7 @@ public final class InterfaceType extends Type {
 	 * @return {@code true} if, and only if, this {@code InterfaceType} instance is public, {@code false} otherwise
 	 */
 	public boolean isPublic() {
-		return this.classFile.isPublic();
+		return getClassFile().isPublic();
 	}
 	
 	/**
@@ -400,7 +425,7 @@ public final class InterfaceType extends Type {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.classFile);
+		return Objects.hash(getClassFile());
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -428,7 +453,7 @@ public final class InterfaceType extends Type {
 		
 		try {
 			synchronized(INTERFACE_TYPES) {
-				return INTERFACE_TYPES.computeIfAbsent(clazz.getName(), name -> new InterfaceType(CLASS_FILES.computeIfAbsent(name, key -> new ClassFileReader().read(clazz))));
+				return INTERFACE_TYPES.computeIfAbsent(clazz.getName(), name -> new InterfaceType(clazz));
 			}
 		} catch(final NodeFormatException e) {
 			throw new TypeException(e);
@@ -461,8 +486,11 @@ public final class InterfaceType extends Type {
 	 * Clears the cache.
 	 */
 	public static void clearCache() {
-		synchronized(INTERFACE_TYPES) {
+		synchronized(CLASS_FILES) {
 			CLASS_FILES.clear();
+		}
+		
+		synchronized(INTERFACE_TYPES) {
 			INTERFACE_TYPES.clear();
 		}
 	}
@@ -517,9 +545,31 @@ public final class InterfaceType extends Type {
 		importableTypes.add(type);
 	}
 	
+	private void doInitializeClassFile() {
+		if(this.hasInitializedClassFile.compareAndSet(false, true)) {
+			synchronized(CLASS_FILES) {
+				this.classFile.set(CLASS_FILES.computeIfAbsent(this.clazz.getName(), key -> new ClassFileReader().read(this.clazz)));
+			}
+		}
+	}
+	
+	private void doInitializeClassSignature() {
+		if(this.hasInitializedClassSignature.compareAndSet(false, true)) {
+			this.classSignature.set(ClassSignature.parseClassSignatureOptionally(getClassFile()).orElse(null));
+		}
+	}
+	
+	private void doInitializeExternalName() {
+		if(this.hasInitializedExternalName.compareAndSet(false, true)) {
+			this.externalName.set(ClassName.parseClassNameThisClass(getClassFile()).toExternalForm());
+		}
+	}
+	
 	private void doInitializeFields() {
 		if(this.hasInitializedFields.compareAndSet(false, true)) {
-			this.classFile.getFieldInfos().stream().filter(fieldInfo -> fieldInfo.isInterfaceCompatible()).forEach(fieldInfo -> this.fields.add(new Field(this.classFile, fieldInfo, this)));
+			final ClassFile classFile = getClassFile();
+			
+			classFile.getFieldInfos().stream().filter(fieldInfo -> fieldInfo.isInterfaceCompatible()).forEach(fieldInfo -> this.fields.add(new Field(classFile, fieldInfo, this)));
 		}
 	}
 	
@@ -531,9 +581,9 @@ public final class InterfaceType extends Type {
 	
 	private void doInitializeInterfaceTypes() {
 		if(this.hasInitializedInterfaceTypes.compareAndSet(false, true)) {
-			final ClassFile classFile = this.classFile;
+			final ClassFile classFile = getClassFile();
 			
-			final List<Integer> interfaceIndices = this.classFile.getInterfaces();
+			final List<Integer> interfaceIndices = classFile.getInterfaces();
 			final List<InterfaceType> interfaceTypes = this.interfaceTypes;
 			
 			for(final int interfaceIndex : interfaceIndices) {
@@ -547,7 +597,9 @@ public final class InterfaceType extends Type {
 	
 	private void doInitializeMethods() {
 		if(this.hasInitializedMethods.compareAndSet(false, true)) {
-			MethodInfos.findMethods(this.classFile).forEach(methodInfo -> this.methods.add(new Method(this.classFile, methodInfo, this)));
+			final ClassFile classFile = getClassFile();
+			
+			MethodInfos.findMethods(classFile).forEach(methodInfo -> this.methods.add(new Method(classFile, methodInfo, this)));
 		}
 	}
 	
@@ -561,9 +613,21 @@ public final class InterfaceType extends Type {
 		}
 	}
 	
+	private void doInitializeSuperClassSignature() {
+		if(this.hasInitializedSuperClassSignature.compareAndSet(false, true)) {
+			getOptionalClassSignature().ifPresent(classSignature -> this.superClassSignature.set(classSignature.getSuperClassSignature()));
+		}
+	}
+	
 	private void doInitializeSuperInterfaceSignatures() {
-		if(this.hasInitializedSuperClassSignatures.compareAndSet(false, true)) {
-			this.optionalClassSignature.ifPresent(classSignature -> this.superInterfaceSignatures.addAll(classSignature.getSuperInterfaceSignatures()));
+		if(this.hasInitializedSuperInterfaceSignatures.compareAndSet(false, true)) {
+			getOptionalClassSignature().ifPresent(classSignature -> this.superInterfaceSignatures.addAll(classSignature.getSuperInterfaceSignatures()));
+		}
+	}
+	
+	private void doInitializeTypeParameters() {
+		if(this.hasInitializedTypeParameters.compareAndSet(false, true)) {
+			getOptionalClassSignature().ifPresent(classSignature -> this.typeParameters.set(classSignature.getTypeParameters().orElse(null)));
 		}
 	}
 }
