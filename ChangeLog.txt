@@ -1,3 +1,9 @@
+2022-02-02  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J:
+
+		* CHANGE:		Update the copyright notice.
+
 2021-09-26  Jörgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
