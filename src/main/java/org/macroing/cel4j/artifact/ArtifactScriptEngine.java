@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -70,6 +69,7 @@ final class ArtifactScriptEngine extends AbstractScriptEngine implements Compila
 	
 	private final AtomicReference<String> packageName;
 	private final AtomicReference<String> superClassName;
+	private final DynamicURLClassLoader dynamicURLClassLoader;
 	private final List<String> importStatements;
 	private final List<String> importStatementsRequired;
 	private final Map<String, CompiledScript> compiledScripts;
@@ -81,6 +81,8 @@ final class ArtifactScriptEngine extends AbstractScriptEngine implements Compila
 	public ArtifactScriptEngine(final ScriptEngineFactory scriptEngineFactory) {
 		this.packageName = new AtomicReference<>(DEFAULT_PACKAGE_NAME);
 		this.superClassName = new AtomicReference<>(DEFAULT_SUPER_CLASS_NAME);
+		this.dynamicURLClassLoader = new DynamicURLClassLoader();
+		this.dynamicURLClassLoader.addURLsFromClassPath();
 		this.importStatements = new ArrayList<>();
 		this.importStatementsRequired = doCreateImportStatementsRequired();
 		this.compiledScripts = new HashMap<>();
@@ -149,12 +151,13 @@ final class ArtifactScriptEngine extends AbstractScriptEngine implements Compila
 		final File sourceFile = doGetSourceFile(directory, className);
 		
 		doAddToClassPath(binaryDirectory);
+		
 		doGenerateSourceCode(packageName, className, superClassName, script0, sourceFile);
 		
 		try {
 			final JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
 			
-			final List<File> files = doGetFiles(URLClassLoader.class.cast(ClassLoader.getSystemClassLoader()).getURLs());
+			final List<File> files = doGetFiles(this.dynamicURLClassLoader.getURLs());
 			
 			try(final StandardJavaFileManager standardJavaFileManager = javaCompiler.getStandardFileManager(null, null, null)) {
 				standardJavaFileManager.setLocation(StandardLocation.CLASS_OUTPUT, Arrays.asList(binaryDirectory));
@@ -174,7 +177,7 @@ final class ArtifactScriptEngine extends AbstractScriptEngine implements Compila
 		}
 		
 		try {
-			final Class<?> clazz = Class.forName(packageName + "." + className);
+			final Class<?> clazz = Class.forName(packageName + "." + className, true, this.dynamicURLClassLoader);
 			
 			final Object object = clazz.getConstructor(new Class<?>[] {ScriptEngine.class}).newInstance(new Object[] {this});
 			
@@ -381,6 +384,14 @@ final class ArtifactScriptEngine extends AbstractScriptEngine implements Compila
 		return stringBuffer.toString();
 	}
 	
+	private void doAddToClassPath(final File file) {
+		try {
+			this.dynamicURLClassLoader.addURL(file.toURI().toURL());
+		} catch(final MalformedURLException e) {
+			throw new UnsupportedOperationException(e);
+		}
+	}
+	
 	private void doGenerateSourceCode(final String packageName, final String className, final String superClassName, final String script, final File sourceFile) throws ScriptException {
 		final String sourceCode = doGenerateSourceCode(packageName, className, superClassName, script);
 		
@@ -497,17 +508,35 @@ final class ArtifactScriptEngine extends AbstractScriptEngine implements Compila
 		}
 	}
 	
-	private static void doAddToClassPath(final File file) {
-		try {
-			final Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class<?>[]{URL.class});
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static final class DynamicURLClassLoader extends URLClassLoader {
+		private static final String JAVA_CLASS_PATH = System.getProperty("java.class.path");
+		private static final String PATH_SEPARATOR = System.getProperty("path.separator");
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		public DynamicURLClassLoader() {
+			super(new URL[0], ClassLoader.getSystemClassLoader());
+		}
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		@Override
+		public void addURL(final URL uRL) {
+			super.addURL(uRL);
+		}
+		
+		public void addURLsFromClassPath() {
+			final String[] javaClassPathElements = JAVA_CLASS_PATH.split(PATH_SEPARATOR);
 			
-			final boolean isAccessible = method.isAccessible();
-			
-			method.setAccessible(true);
-			method.invoke(URLClassLoader.class.cast(ClassLoader.getSystemClassLoader()), new Object[]{file.toURI().toURL()});
-			method.setAccessible(isAccessible);
-		} catch(final IllegalAccessException | InvocationTargetException | MalformedURLException | NoSuchMethodException e) {
-			throw new UnsupportedOperationException(e);
+			for(final String javaClassPathElement : javaClassPathElements) {
+				try {
+					addURL(new File(javaClassPathElement).toURI().toURL());
+				} catch(final MalformedURLException e) {
+//					Do nothing for now!
+				}
+			}
 		}
 	}
 }
