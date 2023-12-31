@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 - 2022 J&#246;rgen Lundgren
+ * Copyright 2009 - 2024 J&#246;rgen Lundgren
  * 
  * This file is part of org.macroing.cel4j.
  * 
@@ -141,7 +141,7 @@ final class Constants {
 	public static final String REGEX_BINARY_INTEGER_LITERAL = String.format("(?<%s>(?<%s>0(?:B|b)(?:0|1)(?:(?:0|1|_)*(?:0|1))?)(?<%s>L|l|))", NAME_BINARY_INTEGER_LITERAL, NAME_BINARY_INTEGER_LITERAL_BINARY_NUMERAL, NAME_BINARY_INTEGER_LITERAL_INTEGER_TYPE_SUFFIX);
 	public static final String REGEX_BOOLEAN_LITERAL = String.format("(?<%s>false|true)", NAME_BOOLEAN_LITERAL);
 	public static final String REGEX_CHARACTER_LITERAL = String.format("(?<%s>'([^'\\\\]|\\\\([btnfr\"'\\\\0-7]|[0-7]{2}|[0-3][0-7]{2}|u+[0-9a-fA-F]{4}))')", NAME_CHARACTER_LITERAL);
-	public static final String REGEX_DECIMAL_FLOATING_POINT_LITERAL = String.format("(?<%s>\\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?[fFdD]?|[0-9]([0-9_]*[0-9])?\\.([0-9]([0-9_]*[0-9])?)?([eE][+-]?[0-9]([0-9_]*[0-9])?)?[fFdD]?|[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)[fFdD]?|[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?[fFdD])", NAME_DECIMAL_FLOATING_POINT_LITERAL);
+	public static final String REGEX_DECIMAL_FLOATING_POINT_LITERAL = String.format("(?<%s>\\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?[fFdD]?|[0-9]([0-9_]*[0-9])?\\.([0-9]([0-9_]*[0-9])?)?([eE][+-]?[0-9]([0-9_]*[0-9])?)?[fFdD]?|[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)[fFdD]?|[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?[fFdD]?)", NAME_DECIMAL_FLOATING_POINT_LITERAL);
 	public static final String REGEX_DECIMAL_INTEGER_LITERAL = String.format("(?<%s>(?<%s>0|[1-9](?:[0-9_]*[0-9])?)(?<%s>L|l|))", NAME_DECIMAL_INTEGER_LITERAL, NAME_DECIMAL_INTEGER_LITERAL_DECIMAL_NUMERAL, NAME_DECIMAL_INTEGER_LITERAL_INTEGER_TYPE_SUFFIX);
 	public static final String REGEX_END_OF_LINE_COMMENT = String.format("(?<%s>//.*(?=\\R|$))", NAME_END_OF_LINE_COMMENT);
 	public static final String REGEX_HEXADECIMAL_FLOATING_POINT_LITERAL = String.format("(?<%s>(?<%s>0[xX](?:(?:[0-9a-fA-F](?:[0-9a-fA-F_]*[0-9a-fA-F])?)\\.?|(?:[0-9a-fA-F](?:[0-9a-fA-F_]*[0-9a-fA-F])?)?\\.(?:[0-9a-fA-F](?:[0-9a-fA-F]*[0-9a-fA-F])?))?)(?<%s>[pP][+-]?(?:[0-9](?:[0-9_]*[0-9])?))(?<%s>[fFdD]?))", NAME_HEXADECIMAL_FLOATING_POINT_LITERAL, NAME_HEXADECIMAL_FLOATING_POINT_LITERAL_HEX_SIGNIFICAND, NAME_HEXADECIMAL_FLOATING_POINT_LITERAL_BINARY_EXPONENT, NAME_HEXADECIMAL_FLOATING_POINT_LITERAL_FLOAT_TYPE_SUFFIX);

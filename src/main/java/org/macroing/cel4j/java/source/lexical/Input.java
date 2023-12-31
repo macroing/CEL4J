@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 - 2022 J&#246;rgen Lundgren
+ * Copyright 2009 - 2024 J&#246;rgen Lundgren
  * 
  * This file is part of org.macroing.cel4j.
  * 

@@ -1,16 +1,26 @@
-2022-03-23  Jörgen Lundgren  <joergen.lundgren@macroing.org>
-
-	CEL4J Artifact:
-
-		* CHANGE:		Update the ScriptEngine implementation. The changes had to be made in order to support Java 11. In Java 9, Field.isAccessible() is deprecated. Calling Field.setAccessible(boolean) resulted in an illegal access in Java 11 (and possibly Java 9). In Java 9, ClassLoader.getSystemClassLoader() does not return a URLClassLoader anymore, which also had to be fixed. This change has only been partially tested in Java 11 at this point.
-
-2022-02-02  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2023-12-31  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J:
 
 		* CHANGE:		Update the copyright notice.
 
-2021-09-26  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+	CEL4J Java Source:
+
+		* CHANGE:		Fix a bug in the Lexical API.
+
+2022-03-23  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J Artifact:
+
+		* CHANGE:		Update the ScriptEngine implementation. The changes had to be made in order to support Java 11. In Java 9, Field.isAccessible() is deprecated. Calling Field.setAccessible(boolean) resulted in an illegal access in Java 11 (and possibly Java 9). In Java 9, ClassLoader.getSystemClassLoader() does not return a URLClassLoader anymore, which also had to be fixed. This change has only been partially tested in Java 11 at this point.
+
+2022-02-02  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
+
+	CEL4J:
+
+		* CHANGE:		Update the copyright notice.
+
+2021-09-26  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
@@ -22,7 +32,7 @@
 		* ADD:			Add the methods getExceptionTypes(), getImportableTypes(), getOptionalCodeAttribute() and getOptionalExceptionsAttribute() to the Constructor class.
 		* CHANGE:		Optimize the load time for the AnnotationType, ClassType, EnumType and InterfaceType classes.
 
-2021-09-25  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2021-09-25  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
@@ -32,7 +42,7 @@
 
 		* ADD:			Add the method getOptionalCodeAttribute() to the Method class.
 
-2021-09-23  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2021-09-23  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -43,19 +53,19 @@
 		* ADD:			Add the methods getExceptionTypes() and getOptionalExceptionsAttribute() to the Method class.
 		* ADD:			Add the method getOptionalEnclosingType() to the InnerType class.
 
-2021-09-21  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2021-09-21  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Model:
 
 		* ADD:			Add a new Java Model API. It used to be the internal model of the Java Decompiler API. Although it has been refactored quite a bit the last couple of days.
 
-2021-09-20  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2021-09-20  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
 		* CHANGE:		Optimize the load time for the internal model. The Person class that is currently part of the Test API used to take around 7000 milliseconds to decompile. Now it takes around 500 milliseconds.
 
-2021-09-19  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2021-09-19  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
@@ -63,14 +73,14 @@
 		* CHANGE:		More imported types can be found from classes and included in the import statements.
 		* CHANGE:		Comments are now above the members of class- and interface types when decompiled.
 
-2021-09-18  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2021-09-18  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary
 
 		* ADD:			Add the class MethodInfos to the new Java Binary ClassFile Support API.
 		* ADD:			Add the methods getParameterIsFinals() and getParameterNames(ClassFile) to the MethodParametersAttribute class.
 
-2021-09-17  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2021-09-17  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary
 
@@ -89,7 +99,7 @@
 		* ADD:			Add the methods excludePackageName(TypeParameter) and excludePackageName(TypeParameter, String) to the TypeParameter class.
 		* ADD:			Add the methods excludePackageName(TypeParameters) and excludePackageName(TypeParameters, String) to the TypeParameters class.
 
-2021-09-16  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2021-09-16  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary
 
@@ -113,14 +123,14 @@
 		* ADD:			Add the methods excludePackageName(ReturnDescriptor) and excludePackageName(ReturnDescriptor, String) to the ReturnDescriptor interface.
 		* ADD:			Add the method toClass() to ArrayType, BaseType, ComponentType, FieldDescriptor, ObjectType, ParameterDescriptor, ReturnDescriptor and VoidDescriptor.
 
-2021-09-14  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2021-09-14  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
 		* ADD:			Add sorting to methods. It can be enabled using the method setSortingGroups(boolean) in the DecompilerConfiguration class.
 		* ADD:			Add more separators to separated and sorted methods.
 
-2021-09-13  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2021-09-13  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -132,50 +142,50 @@
 		* ADD:			Add sorting to fields. It can be enabled using the method setSortingGroups(boolean) in the DecompilerConfiguration class.
 		* ADD:			Add more separators to separated and sorted fields.
 
-2021-04-10  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2021-04-10  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Source:
 
 		* ADD:			Add an early version of the Java Source Syntactic API.
 
-2020-07-24  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-24  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:
 
 		* ADD:			Add the method createDivJumbotron(String, String, Button[]) to the Bootstrap class.
 
-2020-07-23  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-23  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:
 
 		* ADD:			Add the methods createDivContainer(Element[]) and createDivContainerFluid(Element[]) to the Bootstrap class.
 
-2020-07-22  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-22  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:
 
 		* ADD:			Add the methods createDivCard(Element[]), createDivCardBody(Element[]), createH1CardTitle(String, String), createH2CardTitle(String, String), createH3CardTitle(String, String), createH4CardTitle(String, String), createH5CardTitle(String, String) and createH6CardTitle(String, String) to the Bootstrap class.
 
-2020-07-21  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-21  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:
 
 		* ADD:			Add the methods createH1(String, String), createH2(String, String), createH3(String, String), createH4(String, String), createH5(String, String) and createH6(String, String) to the Bootstrap class.
 
-2020-07-20  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-20  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:
 
 		* ADD:			Add the methods createDivAlertDark(Content, boolean), createDivAlertInfo(Content, boolean), createDivAlertLight(Content, boolean), createDivAlertPrimary(Content, boolean), createDivAlertSecondary(Content, boolean), createDivAlertSuccess(Content, boolean), createDivAlertWarning(Content, boolean) and createImgThumbnail(String, String, String, String) to the Bootstrap class.
 		* ADD:			Add the methods createSpanGitHub(), createSpanGitHub(String), createSpanHome(), createSpanHome(String), createSpanImage(), createSpanImage(String), createSpanInfo(), createSpanInfo(String), createSpanInstagram(), createSpanInstagram(String), createSpanLink(), createSpanLink(String), createSpanList(), createSpanList(String), createSpanNewspaper(), createSpanNewspaper(String), createSpanProjectDiagram(), createSpanProjectDiagram(String), createSpanSignIn(), createSpanSignIn(String), createSpanSignOut(), createSpanSignOut(String), createSpanStarRegular(), createSpanStarRegular(String), createSpanStarSolid(), createSpanStarSolid(String), createSpanUser(), createSpanUser(String), createSpanTrash(), createSpanTrash(String), createSpanWrench() and createSpanWrench(String) to the FontAwesome class.
 
-2020-07-18  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-18  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Rex:
 
 		* CHANGE:		Update the accept(NodeHierarchicalVisitor) method of the GroupReference class, in order to remove StackOverflowErrors.
 
-2020-07-17  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-17  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:
 
@@ -191,7 +201,7 @@
 		* ADD:			Add the constant NAME_JAVA_IDENTIFIER to the SymbolClass class and an implementation of it.
 		* CHANGE:		Change the SymbolClass syntax from %Name to %Name%. This allows for syntax highlighting of a User Defined Language (UDL) in Notepad++.
 
-2020-07-16  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-16  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Rex:
 
@@ -203,14 +213,14 @@
 		* CHANGE:		Change the name of the getSource() method in the MatchResult class to getInput().
 		* CHANGE:		Change the name of the getResult() method in the MatchResult class to getMatch().
 
-2020-07-15  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-15  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Rex:
 
 		* ADD:			Add the Regex class with the constants CHARACTER_LITERAL, REGEX_LITERAL and STRING_LITERAL to match Character, Regex and String literals. Parsing the Regex class is also added.
 		* ADD:			Add the constants NAME_CHARACTER_LITERAL, NAME_REGEX_LITERAL and NAME_STRING_LITERAL to the SymbolClass class, as well as the implementations for these names.
 
-2020-07-14  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-14  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Lexer:
 
@@ -242,25 +252,25 @@
 
 		* ADD:			Add a new CharPredicate interface.
 
-2020-07-13  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-13  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Rex:
 
 		* ADD:			Add Javadocs.
 
-2020-07-12  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-12  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Rex:
 
 		* ADD:			Add Javadocs.
 
-2020-07-11  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-11  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Rex:
 
 		* ADD:			Add Javadocs.
 
-2020-07-10  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-10  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Rex:
 
@@ -271,13 +281,13 @@
 		* ADD:			Add the methods stateSet(int) and stateSet(int, int) to the Scanner class.
 		* CHANGE:		Change the access modifiers of the methods getIndexAtBeginningInclusive(), getIndexAtEndExclusive(), setIndexAtBeginningInclusive(int), setIndexAtBeginningInclusiveAndIndexAtEndExclusive(int, int) and setIndexAtEndExclusive(int) from protected to public in the Scanner class.
 
-2020-07-09  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-09  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:
 
 		* ADD:			Add the methods createSpanFile(), createSpanFile(String), createSpanFolder(), createSpanFolder(String), createSpanFolderOpen() and createSpanFolderOpen(String) to the FontAwesome class.
 
-2020-07-08  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-08  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:
 
@@ -290,7 +300,7 @@
 		* ADD:			Add the methods combine(Span, Span) and combine(Span, Span, boolean) to the Span class.
 		* CHANGE:		Change the generic types of ContentElement from <T extends Content> to <T extends Element, U extends Content<T>> and update all classes that extends it.
 
-2020-07-07  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-07  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:
 
@@ -313,7 +323,7 @@
 		* ADD:			Add new constructors to most classes.
 		* ADD:			Add Javadocs.
 
-2020-07-06  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-06  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:
 
@@ -342,7 +352,7 @@
 		* CHANGE:		Update Javadocs.
 		* CHANGE:		Rename the methods getWide1(int, int, int) and getWide2(int, int, int, int, int) in the Instruction class to getWide(int, int, int) and getWide(int, int, int, int, int), respectively.
 
-2020-07-05  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-05  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:
 
@@ -357,7 +367,7 @@
 
 		* ADD:			Add a text(String) method to the Document class.
 
-2020-07-04  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-04  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J HTML:
 
@@ -375,13 +385,13 @@
 
 		* ADD:			Add the Documentable interface.
 
-2020-07-03  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-03  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
 		* CHANGE:		Update Javadocs.
 
-2020-07-02  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-02  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -394,7 +404,7 @@
 
 		* CHANGE:		Update the code affected by the change in CEL4J Java Binary.
 
-2020-07-01  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-07-01  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -411,7 +421,7 @@
 		* CHANGE:		Change the signatures of the methods setEnclosedByClass(boolean) and setEnclosedByInterface(boolean) of the PMethod class to setEnclosedByClass() and setEnclosedByInterface().
 		* CHANGE:		Update Javadocs.
 
-2020-06-30  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-30  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -428,7 +438,7 @@
 
 		* ADD:			Add the method toString(int[], boolean) to the Strings class.
 
-2020-06-28  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-28  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -439,14 +449,14 @@
 
 		* ADD:			The Token class now allows an Object to be associated with it.
 
-2020-06-27  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-27  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
 		* ADD:			Add Javadocs.
 		* CHANGE:		Update Javadocs.
 
-2020-06-26  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-26  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -457,14 +467,14 @@
 
 		* ADD:			Add Javadocs.
 
-2020-06-25  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-25  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
 		* ADD:			The simple name of implemented interfaces are used when both configuration parameters DiscardingUnnecessaryPackageNames and ImportingTypes are set to true.
 		* ADD:			The simple name of method parameter arguments are used when both configuration parameters DiscardingUnnecessaryPackageNames and ImportingTypes are set to true.
 
-2020-06-24  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-24  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
@@ -472,13 +482,13 @@
 		* ADD:			Constant field assignments of type double, float and long are appended with "D", "F" and "L", respectively.
 		* CHANGE:		Methods with the same signature as in their direct or indirect super-classes were given the annotation @Override. This occurred with private and static methods as well, which is wrong. This has been fixed.
 
-2020-06-23  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-23  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
 		* CHANGE:		Update Javadocs.
 
-2020-06-22  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-22  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -488,31 +498,31 @@
 
 		* CHANGE:		Update Javadocs.
 
-2020-06-21  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-21  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
 		* CHANGE:		Update Javadocs.
 
-2020-06-20  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-20  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
 		* CHANGE:		Update Javadocs.
 
-2020-06-19  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-19  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
 		* CHANGE:		Update Javadocs.
 
-2020-06-18  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-18  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
 		* CHANGE:		Update Javadocs.
 
-2020-06-17  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-17  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Source:
 
@@ -522,7 +532,7 @@
 
 		* CHANGE:		Update the Regex used when parsing end-of-line comments.
 
-2020-06-16  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-16  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Artifact:
 
@@ -536,7 +546,7 @@
 
 		* ADD:		Add a new Lexer API.
 
-2020-06-15  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-15  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -551,14 +561,14 @@
 
 		* ADD:		Add Javadocs to AbstractPropertyBuilder in the PHP Generator API.
 
-2020-06-14  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-14  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
 		* ADD:		Add a new method to retrieve an AttributeInfo from the ClassFile class.
 		* ADD:		Add Javadocs to the Java Binary ClassFile Signature API.
 
-2020-06-13  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-13  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -572,7 +582,7 @@
 
 		* CHANGE:	Update the code that used the Java Binary ClassFile String API. The code now uses the Java Binary ClassFile Descriptor API and the Java Binary ClassFile Signature API.
 
-2020-06-12  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-12  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -583,7 +593,7 @@
 
 		* ADD:		Add a new method for loading and deleting state at once.
 
-2020-06-11  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-11  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Artifact:
 
@@ -593,7 +603,7 @@
 
 		* ADD:		Add a new Scanner API for scanning data in various forms.
 
-2020-06-10  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-10  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -603,7 +613,7 @@
 
 		* ADD:		Add new methods to the class Strings that converts Unicode escape sequences in Strings and char arrays into new Strings.
 
-2020-06-09  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-09  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -646,7 +656,7 @@
 		* ADD:		Add a new generic Pair class that can hold two values, X and Y.
 		* CHANGE:	Update the Javadocs for package-info.java.
 
-2020-06-08  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-08  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
@@ -662,7 +672,7 @@
 		* ADD:		Javadocs has been added to the classes Model and Property, as well as the interface PropertyBuilder.
 		* CHANGE:	The field, method and variable names in almost all classes in the package org.macroing.cel4j.php.model have been simplified. For example the method getPMethods() has been simplified to getMethods(). In some cases they cannot be simplified, such as the parameter argument pInterface. This parameter argument would be simplified to interface, but that is a keyword.
 
-2020-06-07  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-07  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -713,7 +723,7 @@
 		* ADD:		Add all files to the new project CEL4J.
 		* CHANGE:	Update the copyright notice to org.macroing.cel4j and 2009 - 2020.
 
-2020-06-05  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-05  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -729,7 +739,7 @@
 		* REMOVE:	The package org.macroing.cel4j.java.decompiler.test was removed with all classes in it.
 		* REMOVE:	The package org.macroing.cel4j.java.decompiler.util was removed with all classes in it.
 
-2020-06-04  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-04  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -744,7 +754,7 @@
 		* REMOVE:	Remove the classes AttributeInfoFilters, CPInfoFilters and MethodInfoFilters, as well as their package, org.macroing.cel4j.java.binary.filter.
 		* REMOVE:	Remove the package org.macroing.cel4j.java.binary.visitor.
 
-2020-06-02  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-02  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -757,7 +767,7 @@
 
 		* CHANGE:	Update most of the models because CEL4J Java Binary was refactored.
 
-2020-06-01  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-06-01  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -776,7 +786,7 @@
 		* CHANGE:	Update most of the models because CEL4J Java Binary was refactored.
 		* CHANGE:	Update the code that handles type parameters. Breaking changes were made to CEL4J Java Binary.
 
-2020-05-31  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-05-31  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Binary:
 
@@ -788,7 +798,7 @@
 		* ADD:		Add support for discarding unnecessary or imported package names for type parameters.
 		* CHANGE:	Update the way type parameters are managed.
 
-2020-05-30  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-05-30  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
@@ -805,7 +815,7 @@
 		* CHANGE:	Update all getModifiers() methods to return a List of JModifier rather than a List of String.
 		* REMOVE:	Remove the StringUtilities class in the package org.macroing.cel4j.java.decompiler.model.
 
-2020-05-29  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-05-29  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
@@ -814,7 +824,7 @@
 		* ADD:		Add a new enum called JModifier.
 		* CHANGE:	Update the copyright notice to 2016 - 2020.
 
-2020-05-28  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2020-05-28  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J JSON:
 
@@ -825,7 +835,7 @@
 
 		* ADD:		Add all files for the library.
 
-2019-02-08  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2019-02-08  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
@@ -835,7 +845,7 @@
 
 		* CHANGE:	Update the copyright notice to 2009 - 2019.
 
-2018-03-23  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2018-03-23  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
@@ -848,33 +858,33 @@
 		* CHANGE:	Update the JSONLexer class. Possibly because a bug was found.
 		* CHANGE:	Update the copyright notice to 2009 - 2018.
 
-2017-11-08  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2017-11-08  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J JSON:
 
 		* ADD:		Add all files for the library.
 
-2017-08-24  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2017-08-24  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
 		* CHANGE:	Fix a few mistakes in the Javadocs.
 
-2017-08-15  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2017-08-15  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
 		* ADD:		Add a new method to the class Consumers.
 		* CHANGE:	Split the configuration parameter DiscardingPublicAndAbstractInterfaceMethodModifiers in the class DecompilerConfiguration into two. These are DiscardingAbstractInterfaceMethodModifier and DiscardingPublicInterfaceMethodModifier. This change also affects the JField and JMethod classes.
 
-2017-02-27  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2017-02-27  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
 		* CHANGE:	Update the copyright notice to 2009 - 2017.
 		* REMOVE:	Remove the dependency to CEL4J Java Source.
 
-2016-10-23  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2016-10-23  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
@@ -882,13 +892,13 @@
 		* CHANGE:	Replace the method toString(ClassFile, MethodInfo, Instruction) in the class JMethod with the method toString(ClassFile, MethodInfo, Instruction) in the class ClassFiles.
 		* CHANGE:	Change the message provided to the IllegalArgumentException thrown when adding an invalid JClass to a JPackage.
 
-2016-06-17  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2016-06-17  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
 		* ADD:		Add support for more instructions in the method toString(ClassFile, MethodInfo, Instruction) of the class JMethod.
 
-2016-05-17  Jörgen Lundgren  <joergen.lundgren@macroing.org>
+2016-05-17  JÃ¶rgen Lundgren  <joergen.lundgren@macroing.org>
 
 	CEL4J Java Decompiler:
 
